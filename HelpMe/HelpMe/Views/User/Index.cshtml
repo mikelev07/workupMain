@@ -1,0 +1,204 @@
+﻿<!-- Page Content
+================================================== -->
+@using Microsoft.AspNet.Identity
+@model IEnumerable<HelpMe.Models.UserViewModel>
+<div class="full-page-container">
+
+    <div class="full-page-sidebar">
+        <div class="full-page-sidebar-inner" data-simplebar>
+            <div class="sidebar-container">
+
+                <!-- Location -->
+                <div class="sidebar-widget">
+                    <h3>Имя</h3>
+                    <div class="input-with-icon">
+                        <div id="autocomplete-container">
+                            <input id="autocomplete-input" type="text" placeholder="введите имя">
+                        </div>
+                        <i class="icon-material-outline-location-on"></i>
+                    </div>
+                </div>
+
+                <!-- Category -->
+                <div class="sidebar-widget">
+                    <h3>Навыки</h3>
+                    <select class="selectpicker default" multiple data-selected-text-format="count" data-size="7" title="Все категории">
+                        <option>Математик</option>
+                        <option>Физик</option>
+                        <option>Физрук</option>
+                    </select>
+                </div>
+
+                <!-- Keywords -->
+                <div class="sidebar-widget">
+                    <h3>Инфа</h3>
+                    <div class="keywords-container">
+                        <div class="keyword-input-container">
+                            <input type="text" class="keyword-input" placeholder="добавьте сюда" />
+                            <button class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
+                        </div>
+                        <div class="keywords-list"><!-- keywords go here --></div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+
+                <!-- Hourly Rate -->
+                <div class="sidebar-widget">
+                    <h3>Берет за час</h3>
+                    <div class="margin-top-55"></div>
+
+                    <!-- Range Slider -->
+                    <input class="range-slider" type="text" value="" data-slider-currency="$" data-slider-min="10" data-slider-max="250" data-slider-step="5" data-slider-value="[10,250]" />
+                </div>
+
+                <!-- Tags -->
+                <div class="sidebar-widget">
+                    <h3>Скиллы</h3>
+
+                    <div class="tags-container">
+                        <div class="tag">
+                            <input type="checkbox" id="tag1" />
+                            <label for="tag1">front-end dev</label>
+                        </div>
+                        <div class="tag">
+                            <input type="checkbox" id="tag2" />
+                            <label for="tag2">angular</label>
+                        </div>
+                        <div class="tag">
+                            <input type="checkbox" id="tag3" />
+                            <label for="tag3">react</label>
+                        </div>
+                        <div class="tag">
+                            <input type="checkbox" id="tag4" />
+                            <label for="tag4">vue js</label>
+                        </div>
+                        <div class="tag">
+                            <input type="checkbox" id="tag5" />
+                            <label for="tag5">web apps</label>
+                        </div>
+                        <div class="tag">
+                            <input type="checkbox" id="tag6" />
+                            <label for="tag6">design</label>
+                        </div>
+                        <div class="tag">
+                            <input type="checkbox" id="tag7" />
+                            <label for="tag7">wordpress</label>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <!-- More Skills -->
+                    <div class="keywords-container margin-top-20">
+                        <div class="keyword-input-container">
+                            <input type="text" class="keyword-input" placeholder="добавь сюда" />
+                            <button class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
+                        </div>
+                        <div class="keywords-list"><!-- keywords go here --></div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="margin-bottom-40"></div>
+
+            </div>
+            <!-- Sidebar Container / End -->
+            <!-- Search Button -->
+            <div class="sidebar-search-button-container">
+                <button class="button ripple-effect">Поиск</button>
+            </div>
+            <!-- Search Button / End-->
+
+        </div>
+    </div>
+    <!-- Full Page Sidebar / End -->
+    <!-- Full Page Content -->
+    <div class="full-page-content-container" data-simplebar>
+        <div class="full-page-content-inner">
+
+            <h3 class="page-title">Результаты поиска</h3>
+
+            <div class="notify-box margin-top-15">
+                <div class="switch-container">
+                    <label class="switch"><input type="checkbox"><span class="switch-button"></span><span class="switch-text">Включить уведомление по почте для новых задач</span></label>
+                </div>
+
+                <div class="sort-by">
+                    <span>Сортировать по:</span>
+                    <select class="selectpicker hide-tick">
+                        <option>Рейтингу</option>
+                        <option>Новизне</option>
+                        <option>Рандомно</option>
+                        <option>Старости</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Freelancers List Container -->
+            <div class="freelancers-container freelancers-list-layout compact-list margin-top-35">
+                @foreach (var i in Model)
+                {
+                    <!--Freelancer -->
+                <div class="freelancer">
+
+                    <!-- Overview -->
+                    <div class="freelancer-overview">
+                        <div class="freelancer-overview-inner">
+
+                            <!-- Bookmark Icon -->
+                            <span class="bookmark-icon"></span>
+
+                            <!-- Avatar -->
+                            <div class="freelancer-avatar">
+                                <div class="verified-badge"></div>
+                                <a href="single-freelancer-profile.html"><img src="~/Content/Custom/images/user-avatar-big-01.jpg" alt=""></a>
+                            </div>
+
+                            <!-- Name -->
+                            <div class="freelancer-name">
+                                <h4><a href="single-freelancer-profile.html">@i.Username <img class="flag" src="images/flags/gb.svg" alt="" title="United Kingdom" data-tippy-placement="top"></a></h4>
+                                <span>Дисциплина</span>
+                            </div>
+
+                            <!-- Rating -->
+                            <div style="margin-left:25px;" class="freelancer-rating">
+                                <div class="star-rating" data-rating="4.9"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Details -->
+                    <div class="freelancer-details">
+                        <div class="freelancer-details-list">
+                            <ul>
+                              
+                                <li>Рейтинг <strong>$60 / hr</strong></li>
+                                <li>Выполнено работ <strong>95</strong></li>
+                            </ul>
+                        </div>
+                        <a href=@Url.Action("Details", new { userName = i.Username }) class="button button-sliding-icon ripple-effect">Посмотреть профиль <i class="icon-material-outline-arrow-right-alt"></i></a>
+                    </div>
+                </div>
+                }
+                <!-- Freelancer / End -->
+
+            </div>
+            <!-- Freelancers Container / End -->
+            <!-- Pagination -->
+            <div class="clearfix"></div>
+            <div class="pagination-container margin-top-20 margin-bottom-20">
+                <nav class="pagination">
+                    <ul>
+                        <li class="pagination-arrow"><a href="#" class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-left"></i></a></li>
+                        <li><a href="#" class="ripple-effect">1</a></li>
+                        <li><a href="#" class="ripple-effect current-page">2</a></li>
+                        <li><a href="#" class="ripple-effect">3</a></li>
+                        <li><a href="#" class="ripple-effect">4</a></li>
+                        <li class="pagination-arrow"><a href="#" class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-right"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>

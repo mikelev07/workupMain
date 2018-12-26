@@ -1,0 +1,61 @@
+﻿@using HelpMe.Helpers
+@using Microsoft.AspNet.Identity
+
+@foreach (var i in Model)
+{
+    
+<div style="border-bottom: 1px solid #e4e4e4; margin-bottom:35px;" id="itemAttach">
+    <div class="attachments-container">
+        <a style='@(i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased && i.CustomViewModel.ExecutorId != User.Identity.GetUserId() ? "pointer-events: none;" : "")' href="@Url.Action("GetFileAttach", "Custom", new { path = i.AttachFilePath, id = i.Id })" class="attachment-box ripple-effect "><span>Файл исполнителя</span><i>Скачать</i></a>
+        @if (i.CustomViewModel.ExecutorId == User.Identity.GetUserId())
+        {
+            @Ajax.RawActionLink(
+                 "<i class='icon-feather-trash-2'></i>",
+                  "DeleteAttach",
+                  "Custom",
+                  new
+                  {
+                      id = i.Id,
+                  },
+                  new AjaxOptions
+                  {
+                      OnBegin = "return ConfirmDone()",
+                      HttpMethod = "POST",
+                      OnSuccess = "OnSuccess"
+                  }, new { @class = "button gray ripple-effect ico", @style = "margin-bottom:50px;", title = "Удалить", data_tippy_placement = "top" }
+              )
+        }
+    </div>
+    @if (i.CustomViewModel.UserId == User.Identity.GetUserId())
+    {
+        if (i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
+        {
+            @Ajax.RawActionLink(
+                              "<i class='icon-material-outline-monetization-on'></i>Купить решение",
+                               "Buy",
+                               "Custom",
+                               new
+                               {
+                                   id = i.Id,
+                               },
+                               new AjaxOptions
+                               {
+                                   OnSuccess = "OnSuccess",
+                                   HttpMethod = "POST"
+                               }, new { @class = "button ripple-effect margin-top-18", @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:" : ""), title = "Удалить", data_tippy_placement = "top" }
+                           )
+        }
+        else
+        {
+            <div class="task-tags">
+                <span>Работа куплена</span>
+            </div>
+
+        }
+    }
+
+    <br />
+
+</div>
+
+}
