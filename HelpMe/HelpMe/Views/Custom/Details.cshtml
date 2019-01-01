@@ -51,7 +51,7 @@
             </div>
 
             <div style="margin-bottom: 30px;" class="single-page-section">
-                <h3>Вложения</h3>
+                <h3>Вложения </h3>
                 <div class="attachments-container">
                     <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom",new { path = Model.AttachFilePath })"><span>Файл задания</span><i>PDF</i></a>
                 </div>
@@ -102,7 +102,7 @@
             @if (Model.ExecutorId == User.Identity.GetUserId() || Model.UserId == User.Identity.GetUserId())
             {
                 <div class="single-page-section">
-                    <h3>Вложения исполнителя (@Model.Attachments.Count)</h3>
+                    <h3>Вложения исполнителя <span style="color: white" class="nav-tag" id="attaches">@Model.Attachments.Count </span></h3>
                     <div id="Uploaded_Results">
                         @foreach (var i in Model.Attachments)
                         {
@@ -180,7 +180,7 @@
 
             <div class="boxed-list margin-bottom-60">
                 <div class="boxed-list-headline">
-                    <h3><i class="icon-material-outline-group"></i>Предложения исполнителей (@Model.Comments.Count)</h3>
+                    <h3><i class="icon-material-outline-group"></i>Предложения исполнителей  <span style="color:white" class="nav-tag" id="votes">@Model.Comments.Count </span> </h3>
                 </div>
 
 
@@ -629,7 +629,11 @@
                     processData: false,
                     data: data,
                     success: function (result) {
-                        $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id='+@Model.Id)
+                        $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id='+@Model.Id);
+          var votes = $("#attaches");
+                var num = $("#attaches").text();
+        
+                votes.text(parseInt(num)+1);
                     },
                     error: function (xhr, status, p3) {
                         alert(xhr.responseText);
@@ -681,6 +685,10 @@
                 success: function (data) {
                   var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li><a href="#tab">Редактировать предложение</a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab"><form method="post" action="/Comment/Edit/' + data.Id + '">  @Html.AntiForgeryToken() <input type="hidden" value="' + data.UserId + '" name="UserId" /> <input type="hidden" value="' + data.Description + '" name="Description" />   <input type="hidden" value="' + data.CustomViewModelId + '" name="CustomViewModelId" />  <input type="hidden" value="' + data.OfferPrice + '" name="OfferPrice" /> <div class="bidding-widget"><span class="bidding-detail margin-top-30">Укажите время выполнения</span><div class="bidding-fields"><div class="bidding-field"><div class="qtyButtons with-border"><div class="qtyDec"></div><input id="Days" type="text" name="Days" value="2"><div class="qtyInc"></div></div></div><div class="bidding-field"><select class="selectpicker default with-border"><option selected>Дней</option><option>Часов</option></select></div></div></div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>'
                   $("#boxed-list-ul").append(modalEdit);
+                var votes = $("#votes");
+                var num = $("#votes").text();
+        
+                votes.text(parseInt(num)+1);
                 }
             }); 
 
@@ -804,6 +812,7 @@
                 });
                 $('#starId')[0].click();
                 countUserComment++;
+               
             }
         });
 
