@@ -59,7 +59,6 @@
     <!-- Wrapper -->
     <div id="wrapper">
         <header id="header-container" class="fullwidth ">
-
             <!-- Header -->
             <div id="header">
                 <div class="container">
@@ -75,26 +74,19 @@
                                 <li>
                                     <a href="/User/">Исполнители</a>
                                 </li>
-
                                 <li>
                                     <a href="#">Готовые работы</a>
-
                                 </li>
-
                                 <li>
                                     <a href="#">Сервисы</a>
-
                                 </li>
-
 
                             </ul>
                         </nav>
                         <div class="clearfix"></div>
                         <!-- Main Navigation / End -->
-
                     </div>
                     <!-- Left Side Content / End -->
-
                     @if (Request.IsAuthenticated)
                     {
                         <!-- Right Side Content / End -->
@@ -105,25 +97,20 @@
                             </div>
                             <!--  User Notifications -->
                             <div class="header-widget hide-on-mobile">
-
                                 <!-- Notifications -->
                                 <div class="header-notifications">
-
                                     <!-- Trigger -->
                                     <div class="header-notifications-trigger">
                                         <a href="#"><i class="icon-feather-bell"></i><span>4</span></a>
                                     </div>
-
                                     <!-- Dropdown -->
                                     <div class="header-notifications-dropdown">
-
                                         <div class="header-notifications-headline">
                                             <h4>Уведомления</h4>
                                             <button class="mark-as-read ripple-effect-dark" title="Пометить как прочитанное" data-tippy-placement="left">
                                                 <i class="icon-feather-check-square"></i>
                                             </button>
                                         </div>
-
                                         <div class="header-notifications-content">
                                             <div class="header-notifications-scroll" data-simplebar>
                                                 <ul>
@@ -136,7 +123,6 @@
                                                             </span>
                                                         </a>
                                                     </li>
-
                                                     <!-- Notification -->
                                                     <li>
                                                         <a href="dashboard-manage-bidders.html">
@@ -146,7 +132,6 @@
                                                             </span>
                                                         </a>
                                                     </li>
-
                                                     <!-- Notification -->
                                                     <li>
                                                         <a href="dashboard-manage-bidders.html">
@@ -156,7 +141,6 @@
                                                             </span>
                                                         </a>
                                                     </li>
-
                                                     <!-- Notification -->
                                                     <li>
                                                         <a href="dashboard-manage-bidders.html">
@@ -166,31 +150,24 @@
                                                             </span>
                                                         </a>
                                                     </li>
-
                                                 </ul>
                                             </div>
                                         </div>
-
                                     </div>
-
                                 </div>
-
                                 <!-- Messages -->
                                 <div class="header-notifications">
                                     <div class="header-notifications-trigger">
                                         <a href="#"><i class="icon-feather-mail"></i><span>3</span></a>
                                     </div>
-
                                     <!-- Dropdown -->
                                     <div class="header-notifications-dropdown">
-
                                         <div class="header-notifications-headline">
                                             <h4>Сообщения</h4>
                                             <button class="mark-as-read ripple-effect-dark" title="Пометить как прочитанное" data-tippy-placement="left">
                                                 <i class="icon-feather-check-square"></i>
                                             </button>
                                         </div>
-
                                         <div class="header-notifications-content">
                                             <div class="header-notifications-scroll" data-simplebar>
                                                 <ul>
@@ -227,32 +204,25 @@
                                                             </div>
                                                         </a>
                                                     </li>
-
                                                 </ul>
                                             </div>
                                         </div>
-
                                         <a href="/chat" class="header-notifications-button ripple-effect button-sliding-icon">Посмотреть все сообщения<i class="icon-material-outline-arrow-right-alt"></i></a>
                                     </div>
                                 </div>
-
                             </div>
                             <!--  User Notifications / End -->
                             <!-- User Menu -->
                             <div class="header-widget">
-
                                 <!-- Messages -->
                                 <div class="header-notifications user-menu">
                                     <div class="header-notifications-trigger">
                                         <a href="#"><div class="user-avatar status-online"><img src="~/Content/Custom/images/user-avatar-small-01.jpg" alt=""></div></a>
                                     </div>
-
                                     <!-- Dropdown -->
                                     <div class="header-notifications-dropdown">
-
                                         <!-- User Status -->
                                         <div class="user-status">
-
                                             <!-- User Name / Avatar -->
                                             <div class="user-details">
                                                 <div class="user-avatar status-online"><img src="~/Content/Custom/images/user-avatar-small-01.jpg" alt=""></div>
@@ -260,7 +230,6 @@
                                                     @User.Identity.GetUserName() <span></span>
                                                 </div>
                                             </div>
-
                                             <!-- User Status Switcher -->
                                             <div class="status-switch" id="snackbar-user-status">
                                                 <label class="user-online current-status">Онлайн</label>
@@ -269,7 +238,6 @@
                                                 <span class="status-indicator" aria-hidden="true"></span>
                                             </div>
                                         </div>
-
                                         <ul class="user-menu-small-nav">
                                             <li><a href="/manage/dashboard"><i class="icon-material-outline-dashboard"></i> Рабочая доска</a></li>
                                             <li><a href="/wallet"><i class="icon-material-outline-account-balance-wallet"></i> Баланс</a></li>
@@ -280,12 +248,9 @@
                                                 <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="icon-material-outline-power-settings-new"></i> Выйти</a></li>
                                             }
                                         </ul>
-
                                     </div>
                                 </div>
-
                             </div>
-
                             <!-- User Menu / End -->
                             <!-- Mobile Navigation Button -->
                             <span class="mmenu-trigger">
@@ -295,18 +260,15 @@
                                     </span>
                                 </button>
                             </span>
-
                         </div>
                     }
                     else
                     {
                         <!-- Right Side Content / End -->
                         <div class="right-side">
-
                             <div class="header-widget">
                                 <a href="#sign-in-dialog" class="popup-with-zoom-anim log-in-button"><i class="icon-feather-log-in"></i> <span>Войти / Регистрация</span></a>
                             </div>
-
                             <!-- Mobile Navigation Button -->
                             <span class="mmenu-trigger">
                                 <button class="hamburger hamburger--collapse" type="button">
@@ -315,31 +277,24 @@
                                     </span>
                                 </button>
                             </span>
-
                         </div>
                         <!-- Right Side Content / End -->
                     }
                 </div>
             </div>
             <!-- Header / End -->
-
         </header>
         <!-- Sign In Popup
         ================================================== -->
         <div id="sign-in-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
-
             <!--Tabs -->
             <div class="sign-in-form">
-
                 <ul class="popup-tabs-nav">
                     <li><a href="#login">Войти</a></li>
                     <li><a href="#register">Регистрация</a></li>
                 </ul>
 
-
-
                 <div class="popup-tabs-container">
-
                     <div class="popup-tab-content" id="login">
                         @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
                         {
@@ -355,16 +310,12 @@
                                 <div class="input-with-icon-left">
                                     <i class="icon-material-baseline-mail-outline"></i>
                                     @Html.TextBox("Email", "", new { @class = "input-text with-border", @placeholder = "Ваша почта" })
-
                                 </div>
-
                                 <div class="input-with-icon-left">
                                     <i class="icon-material-outline-lock"></i>
                                     @Html.Password("Password", "", new { @class = "input-text with-border", @placeholder = "Пароль" })
-
                                 </div>
                                 <a href="#" class="forgot-password">Забыл пароль?</a>
-
                                 <!-- Button -->
                                 <input value="Войти" class="button full-width button-sliding-icon ripple-effect" type="submit">
                             </form>
@@ -376,83 +327,70 @@
                             </div>
                         }
                     </div>
-
                     <!-- Register -->
                     <div class="popup-tab-content" id="register">
-
                         <!-- Welcome Text -->
                         <div class="welcome-text">
                             <h3>Давай создадим аккаунт!</h3>
                         </div>
-
                         <!-- Account Type -->
                         <div class="account-type">
                             <div>
                                 <input type="radio" name="account-type-radio" id="freelancer-radio" class="account-type-radio" checked />
                                 <label for="freelancer-radio" class="ripple-effect-dark"><i class="icon-material-outline-account-circle"></i> Исполнитель</label>
                             </div>
-
                             <div>
                                 <input type="radio" name="account-type-radio" id="employer-radio" class="account-type-radio" />
                                 <label for="employer-radio" class="ripple-effect-dark"><i class="icon-material-outline-business-center"></i> Заказчик</label>
                             </div>
                         </div>
-
                         <!-- Form -->
                         <form method="post" id="register-account-form">
                             <div class="input-with-icon-left">
                                 <i class="icon-material-baseline-mail-outline"></i>
                                 <input type="text" class="input-text with-border" name="emailaddress-register" id="emailaddress-register" placeholder="Ваша почта" required />
                             </div>
-
                             <div class="input-with-icon-left" title="Should be at least 8 characters long" data-tippy-placement="bottom">
                                 <i class="icon-material-outline-lock"></i>
                                 <input type="password" class="input-text with-border" name="password-register" id="password-register" placeholder="Пароль" required />
                             </div>
-
                             <div class="input-with-icon-left">
                                 <i class="icon-material-outline-lock"></i>
                                 <input type="password" class="input-text with-border" name="password-repeat-register" id="password-repeat-register" placeholder="Повторите пароль" required />
                             </div>
                         </form>
-
                         <!-- Button -->
                         <button class="margin-top-10 button full-width button-sliding-icon ripple-effect" type="submit" form="register-account-form">Создать <i class="icon-material-outline-arrow-right-alt"></i></button>
-
                         <!-- Social Login -->
                         <div class="social-login-separator"><span>или</span></div>
                         <div class="social-login-buttons">
                             <button class="facebook-login ripple-effect"><i class="icon-brand-facebook-f"></i> Регаться via Facebook</button>
                             <button class="google-login ripple-effect"><i class="icon-brand-google-plus-g"></i> Регаться via Google+</button>
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
         </div>
         <div class="clearfix"></div>
 
-
         @RenderBody()
-
 
     </div>
     <!--Ссылка на библиотеку SignalR -->
-
     @Scripts.Render("~/bundles/jquery")
     <script src="~/Scripts/Custom/simplebar.min.js"></script>
     <script src="~/Scripts/jquery.signalR-2.3.0.min.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
-    <!--Ссылка  <script src="~/signalr/hubs"></script>
-    <script src="~/Scripts/util.js"></script>на автоматически сгенерированный скрипт хаба SignalR -->
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/util.js"></script>
+    <script src="~/Scripts/iwc-all.min.js"></script>
+    <script src="~/Scripts/signalr-patch.js"></script>
+    <script src="~/Scripts/iwc-signalr.js"></script>
 
 
     @Scripts.Render("~/bundles/Scripts/Custom/js")
-
     <!-- Snackbar // documentation: https://www.polonel.com/snackbar/ -->
     <script>
         // Snackbar for user status switcher
@@ -468,7 +406,6 @@
             });
         });
     </script>
-
 
     <!-- Google Autocomplete -->
     <script>
@@ -490,8 +427,6 @@
         }
 
     </script>
-
     @RenderSection("scripts", required: false)
-
 </body>
 </html>

@@ -12,6 +12,17 @@ using Microsoft.AspNet.SignalR;
 
 namespace HelpMe.Hubs
 {
+    [System.Web.Http.Authorize]
+    public class CustomUserIdProvider : IUserIdProvider
+    {
+        ApplicationDbContext db = new ApplicationDbContext();
+        [System.Web.Http.Authorize]
+        public string GetUserId(IRequest request)
+        {
+            var userId = db.Users.Where(n => n.UserName == request.User.Identity.Name).FirstOrDefault().Id;
+            return userId.ToString();
+        }
+    }
     /// <summary>
     /// Хаб для общего чата
     /// </summary>
@@ -25,8 +36,12 @@ namespace HelpMe.Hubs
         {
             MessageStoreViewModel messageStoreViewModel = new MessageStoreViewModel();
             string reqId = Context.User.Identity.GetUserId();
-            Clients.Client(partnerId).addMessage(name, message, partnerId);
-            Clients.Client(Context.ConnectionId).addMessage(name, message);
+
+            var uId = db.Users.Where(x => x.UserName == toUserName).FirstOrDefault().Id;
+            Clients.User(uId).addMessage(name, message, partnerId);
+            Clients.User(reqId).addMessage(name, message);
+            //Clients.Client(partnerId).addMessage(name, message, partnerId);
+            //Clients.Client(Context.ConnectionId).addMessage(name, message);
 
             messageStoreViewModel.UserFromId = db.Users.Where(x => x.Id == reqId).FirstOrDefault().Id;
             messageStoreViewModel.UserToId = db.Users.Where(x => x.UserName == toUserName).FirstOrDefault().Id;
@@ -36,6 +51,17 @@ namespace HelpMe.Hubs
             db.Messages.Add(messageStoreViewModel);
             db.SaveChanges();
             SendMessage("Новое сообщение...", partnerId);
+        }
+
+        public void IsTyping(string html)
+        {
+            SayWhoIsTyping(html);
+        }
+
+        public void SayWhoIsTyping(string html)
+        {
+            IHubContext context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
+            context.Clients.All.sayWhoIsTyping(html);
         }
 
         // Подключение нового пользователя

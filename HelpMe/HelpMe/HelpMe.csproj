@@ -400,6 +400,8 @@
     <Content Include="Scripts\Custom\slick.min.js" />
     <Content Include="Scripts\Custom\snackbar.js" />
     <Content Include="Scripts\Custom\tippy.all.min.js" />
+    <Content Include="Scripts\iwc-all.min.js" />
+    <Content Include="Scripts\iwc-signalr.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -415,6 +417,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\signalr-patch.js" />
     <Content Include="Scripts\util.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

@@ -1,4 +1,5 @@
 ﻿$(function () {
+   
     $('#chatroom').scrollTop($('#chatroom').prop('scrollHeight'));
         // Ссылка на автоматически-сгенерированный прокси хаба
         var chat = $.connection.chatHub;
@@ -6,23 +7,34 @@
         chat.client.displayMessage = function (message) {
             $('#notification').html(message);
         };
-
+        chat.client.SayWhoIsTyping = function (html) {
+            $('#Status').html('<div class="message-bubble"><div class= "message-bubble-inner" ><div class="message-avatar"><img src="images/user-avatar-small-02.jpg" alt="" /></div><div class="message-text"><div class="typing-indicator"><span></span><span></span><span></span>' + htmlEncode(html) + '</div></div></div ><div class="clearfix"></div></div >');
+            setInterval(function () { $('#Status').html(''); },3000);
+        };
         // Объявление функции, которая хаб вызывает при получении сообщений
         chat.client.addMessage = function (name, message, partnerId) {
         if (htmlEncode(name) == $('#username').val()) {
             var messageHtml = '<div class="message-bubble me"><div class="message-bubble-inner"><div class="message-avatar"><img src="/Content/Custom/images/user-avatar-small-01.jpg" alt="" /></div><div class="message-text"><p>' + htmlEncode(message) + '</p></div></div><div class="clearfix"></div></div>';
         } else {
             var messageHtml = '<div class="message-bubble"><div class="message-bubble-inner"><div class="message-avatar"><img src="/Content/Custom/images/user-avatar-small-01.jpg" alt="" /></div><div class="message-text"><p>' + htmlEncode(message) + '</p></div></div><div class="clearfix"></div></div>';
-        }
-        
-        if ($('#toUserName').val() != '') {
-            $('#chatroom').append(messageHtml);
+            }
+
+        if ($('#username').val() != htmlEncode(name)) {
+            if ($('#toUserName').val() != htmlEncode(name)) {
+                    alert("Сообщение от " + htmlEncode(name));
+            } else {
+                    $('#chatroom').append(messageHtml);
+                }
+            }
+        else if ($('#toUserName').val() == '') {
+             alert("Новое сообщение")
         }
         else
         {
-            alert("new message");
+             $('#chatroom').append(messageHtml);
         }
-        
+          
+
         // Добавление сообщений на веб-страницу 
        // $('#chatroom').append(messageHtml);
       
@@ -65,7 +77,7 @@
            // $(conidName).attr('class', 'status-icon status-offline');
             $('.' + id).remove();
             $('#' + id).attr('id', conidName);
-            $('#partnerId').val() = id;
+          //  $('#partnerId').val() = id;
     }
 
   
@@ -84,6 +96,10 @@
                 });
             }
             });  
+            $('#message').keydown(function () {
+                var encodedName = $('<div />').text($('#username').val() + " печатает...").html();
+                chat.server.isTyping(encodedName);
+            });
 
             $('#message').keypress(function (e) {
                 var key = e.which;
@@ -105,6 +121,8 @@ function setValue(id) {
 
 function loadHistory(name) {
     document.getElementById('toUserName').value = name;
+    $('#dName').text('Диалог с ' + name);
+
     $.ajax({
         url: '/Chat/LoadHistory',
         type: 'GET',
