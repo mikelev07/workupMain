@@ -630,10 +630,9 @@
                     data: data,
                     success: function (result) {
                         $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id='+@Model.Id);
-          var votes = $("#attaches");
-                var num = $("#attaches").text();
-        
-                votes.text(parseInt(num)+1);
+                      var votes = $("#attaches");
+                      var num = $("#attaches").text();
+                      votes.text(parseInt(num)+1);
                     },
                     error: function (xhr, status, p3) {
                         alert(xhr.responseText);

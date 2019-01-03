@@ -271,6 +271,14 @@
     <Compile Include="Migrations\201812212154077_fixModelUpdate.Designer.cs">
       <DependentUpon>201812212154077_fixModelUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901031423076_addMessageStatus.cs" />
+    <Compile Include="Migrations\201901031423076_addMessageStatus.Designer.cs">
+      <DependentUpon>201901031423076_addMessageStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901031527150_addDialogModel.cs" />
+    <Compile Include="Migrations\201901031527150_addDialogModel.Designer.cs">
+      <DependentUpon>201901031527150_addDialogModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationRoleManager.cs" />
@@ -553,6 +561,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812212154077_fixModelUpdate.resx">
       <DependentUpon>201812212154077_fixModelUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901031423076_addMessageStatus.resx">
+      <DependentUpon>201901031423076_addMessageStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901031527150_addDialogModel.resx">
+      <DependentUpon>201901031527150_addDialogModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

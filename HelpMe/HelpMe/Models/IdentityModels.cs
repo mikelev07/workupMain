@@ -36,6 +36,7 @@ namespace HelpMe.Models
         public ICollection<CustomViewModel> Customs { get; set; }
         public ICollection<CommentViewModel> Comments { get; set; }
         public ICollection<MessageStoreViewModel> Messages { get; set; }
+        public ICollection<ChatDialog> ChatDialogs { get; set; }
         public ICollection<Review> Reviews { get; set; }
         public ICollection<Note> Notes { get; set; }
         public ICollection<Wallet> Wallets { get; set; } // создаем универсальную коллекцию
@@ -47,6 +48,7 @@ namespace HelpMe.Models
             Customs = new List<CustomViewModel>();
             Messages = new List<MessageStoreViewModel>();
             Reviews = new List<Review>();
+            ChatDialogs = new List<ChatDialog>();
             Notes = new List<Note>();
             Attachments = new List<AttachModel>();
             Wallets = new List<Wallet>(); // добавляем список кошельков
@@ -73,6 +75,7 @@ namespace HelpMe.Models
 
             modelBuilder.Entity<User>().HasMany(m => m.Customs).WithRequired(m => m.Executor);
             modelBuilder.Entity<User>().HasMany(m => m.Messages).WithRequired(m => m.UserTo);
+            modelBuilder.Entity<User>().HasMany(m => m.ChatDialogs).WithRequired(m => m.UserTo);
             modelBuilder.Entity<User>().HasMany(m => m.Reviews).WithRequired(m => m.Owner);
         }
 
@@ -84,9 +87,9 @@ namespace HelpMe.Models
         public DbSet<TaskCategory> TaskCategories { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Note> Notes { get; set; }
+        public DbSet<ChatDialog> ChatDialogs { get; set; }
         public DbSet<Wallet> Wallets { get; set; } // коллекция сущностей типа Wallet
-        // public DbSet<UserProfile> UserProfiles { get; set; }
-
+      
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();

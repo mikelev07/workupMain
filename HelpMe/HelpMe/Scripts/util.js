@@ -1,5 +1,5 @@
 ﻿$(function () {
-   
+
     $('#chatroom').scrollTop($('#chatroom').prop('scrollHeight'));
         // Ссылка на автоматически-сгенерированный прокси хаба
         var chat = $.connection.chatHub;
@@ -7,8 +7,8 @@
         chat.client.displayMessage = function (message) {
             $('#notification').html(message);
         };
-        chat.client.SayWhoIsTyping = function (html) {
-            $('#Status').html('<div class="message-bubble"><div class= "message-bubble-inner" ><div class="message-avatar"><img src="images/user-avatar-small-02.jpg" alt="" /></div><div class="message-text"><div class="typing-indicator"><span></span><span></span><span></span>' + htmlEncode(html) + '</div></div></div ><div class="clearfix"></div></div >');
+    chat.client.SayWhoIsTyping = function (html) {
+        $('#Status').html('<div>' + htmlEncode(html) + '</div >');
             setInterval(function () { $('#Status').html(''); },3000);
         };
         // Объявление функции, которая хаб вызывает при получении сообщений
@@ -21,7 +21,10 @@
 
         if ($('#username').val() != htmlEncode(name)) {
             if ($('#toUserName').val() != htmlEncode(name)) {
-                    alert("Сообщение от " + htmlEncode(name));
+                var votes = $("#" + htmlEncode(name) + "-notif");
+                var num = $("#" + htmlEncode(name) + "-notif").text();
+                votes.text(parseInt(num) + 1);
+                  
             } else {
                     $('#chatroom').append(messageHtml);
                 }
@@ -118,11 +121,13 @@
 function setValue(id) {
     document.getElementById('partnerId').value = id;
 }
-
+/*
 function loadHistory(name) {
     document.getElementById('toUserName').value = name;
     $('#dName').text('Диалог с ' + name);
-
+    $("ul#chatusers>li.active-message").removeClass("active-message")
+    if (!$('#' + name + '-conid').hasClass("active-message"))
+        $('#'+name+'-conid').addClass("active-message");
     $.ajax({
         url: '/Chat/LoadHistory',
         type: 'GET',
@@ -132,9 +137,8 @@ function loadHistory(name) {
         $('#chatroom').html(result);
         $('#chatroom').scrollTop($('#chatroom').prop('scrollHeight'));
     });
-
 }
-
+*/
 // Кодирование тегов
 function htmlEncode(value) {
         var encodedValue = $('<div />').text(value).html();
