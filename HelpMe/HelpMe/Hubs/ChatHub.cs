@@ -35,6 +35,7 @@ namespace HelpMe.Hubs
         public void Send(string name, string message, string partnerId, string toUserName)
         {
             MessageStoreViewModel messageStoreViewModel = new MessageStoreViewModel();
+            MessageStoreViewModel messageStoreViewModelPartner = new MessageStoreViewModel();
             string reqId = Context.User.Identity.GetUserId();
 
             var uId = db.Users.Where(x => x.UserName == toUserName).FirstOrDefault().Id;
@@ -42,13 +43,23 @@ namespace HelpMe.Hubs
             Clients.User(reqId).addMessage(name, message);
             //Clients.Client(partnerId).addMessage(name, message, partnerId);
             //Clients.Client(Context.ConnectionId).addMessage(name, message);
+            int myDialogId = db.ChatDialogs.Where(i => i.UserFromId == reqId && i.UserToId == uId).FirstOrDefault().Id;
+            int partnerDialogId = db.ChatDialogs.Where(i => i.UserFromId == uId && i.UserToId == reqId).FirstOrDefault().Id;
 
             messageStoreViewModel.UserFromId = db.Users.Where(x => x.Id == reqId).FirstOrDefault().Id;
             messageStoreViewModel.UserToId = db.Users.Where(x => x.UserName == toUserName).FirstOrDefault().Id;
             messageStoreViewModel.Description = message;
             messageStoreViewModel.DateSend = DateTime.Now;
+            messageStoreViewModel.ChatDialogId = myDialogId;
+
+            messageStoreViewModelPartner.UserFromId = db.Users.Where(x => x.Id == reqId).FirstOrDefault().Id;
+            messageStoreViewModelPartner.UserToId = db.Users.Where(x => x.UserName == toUserName).FirstOrDefault().Id;
+            messageStoreViewModelPartner.Description = message;
+            messageStoreViewModelPartner.DateSend = DateTime.Now;
+            messageStoreViewModelPartner.ChatDialogId = partnerDialogId;
 
             db.Messages.Add(messageStoreViewModel);
+            db.Messages.Add(messageStoreViewModelPartner);
             db.SaveChanges();
             SendMessage("Новое сообщение...", partnerId);
         }

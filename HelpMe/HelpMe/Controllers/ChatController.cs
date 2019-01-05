@@ -28,6 +28,7 @@ namespace HelpMe.Controllers
 
                 var messages = db.Messages.Include(u => u.UserFrom)
                                           .Include(u => u.UserTo)
+                                          .Where(d => d.ChatDialogId == dialogId)
                                           .Where(m => (m.UserFromId == userFrom.Id && m.UserToId == userTo.Id) ||
                                           (m.UserFromId == userTo.Id) && m.UserToId == userFrom.Id).OrderBy(m => m.DateSend);
 
@@ -47,7 +48,7 @@ namespace HelpMe.Controllers
             else
             {
                 string requestId = User.Identity.GetUserId();
-
+                
                 ViewBag.Dialogs = await db.ChatDialogs.Include(u => u.UserFrom)
                                                  .Include(u => u.UserTo)
                                                  .Where(u => u.UserFromId == requestId)
@@ -67,20 +68,26 @@ namespace HelpMe.Controllers
                                              .Include(u => u.UserTo)
                                              .Include(m => m.Messages);
 
-                if (!diaologs.Any(u => u.UserFromId == message.UserFromId && u.UserToId == message.UserToId))
+                if (!diaologs.Any(u => (u.UserFromId == message.UserFromId && u.UserToId == message.UserToId) 
+                            || (u.UserFromId == message.UserToId && u.UserToId == message.UserFromId)))
                 {
+                    MessageStoreViewModel messageStoreViewModelPartner = new MessageStoreViewModel();
                     ChatDialog dialog = new ChatDialog();
                     ChatDialog dialogTo = new ChatDialog();
                     dialog.Id = 1;
                     dialogTo.Id = 2;
                     message.DateSend = DateTime.Now;
                     message.Status = MessageStatus.Undreading;
-
+                    messageStoreViewModelPartner.UserFromId = db.Users.Where(x => x.Id == message.UserFromId).FirstOrDefault().Id;
+                    messageStoreViewModelPartner.UserToId = db.Users.Where(x => x.Id == message.UserToId).FirstOrDefault().Id;
+                    messageStoreViewModelPartner.Description = message.Description;
+                    messageStoreViewModelPartner.DateSend = DateTime.Now;
+                    
                     dialog.Messages.Add(message);
                     dialog.UserFromId = message.UserFromId;
                     dialog.UserToId = message.UserToId;
 
-                    dialogTo.Messages.Add(message);
+                    dialogTo.Messages.Add(messageStoreViewModelPartner);
                     dialogTo.UserFromId = message.UserToId;
                     dialogTo.UserToId = message.UserFromId;
 
@@ -92,14 +99,18 @@ namespace HelpMe.Controllers
                 else
                 {
                     var dialog = diaologs.Where(u => u.UserFromId == message.UserFromId && u.UserToId == message.UserToId).FirstOrDefault();
+                    var dialogTo = diaologs.Where(u => u.UserFromId == message.UserToId && u.UserToId == message.UserFromId).FirstOrDefault();
+                    MessageStoreViewModel messageStoreViewModelPartner = new MessageStoreViewModel();
                     message.DateSend = DateTime.Now;
                     message.Status = MessageStatus.Undreading;
+                    messageStoreViewModelPartner.UserFromId = db.Users.Where(x => x.Id == message.UserFromId).FirstOrDefault().Id;
+                    messageStoreViewModelPartner.UserToId = db.Users.Where(x => x.Id == message.UserToId).FirstOrDefault().Id;
+                    messageStoreViewModelPartner.Description = message.Description;
+                    messageStoreViewModelPartner.DateSend = DateTime.Now;
                     dialog.Messages.Add(message);
+                    dialogTo.Messages.Add(messageStoreViewModelPartner);
                     return RedirectToAction("Index", "Chat", new { dialogId = dialog.Id });
-                }
-
-
-               
+                }  
             }
 
             return View(message);
@@ -113,10 +124,13 @@ namespace HelpMe.Controllers
             string requestId = User.Identity.GetUserId();
             var userTo = db.Users.Include(u => u.Messages).Where(u => u.UserName == userName).FirstOrDefault();
             var userFrom = db.Users.Include(u => u.Messages).Where(u => u.Id == requestId).FirstOrDefault();
-           
+
+            var dialog = db.ChatDialogs.Include(c => c.UserFrom).Include(c => c.UserTo)
+                                        .Where(c => c.UserFromId == userFrom.Id && c.UserToId == userTo.Id).FirstOrDefault();
 
             var messages = db.Messages.Include(u => u.UserFrom)
                                       .Include(u => u.UserTo)
+                                      .Where(d => d.ChatDialogId == dialog.Id)
                                       .Where(m => (m.UserFromId == userFrom.Id && m.UserToId == userTo.Id) || 
                                       (m.UserFromId == userTo.Id) && m.UserToId == userFrom.Id).OrderBy(m => m.DateSend);
 
