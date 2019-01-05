@@ -39,7 +39,7 @@ namespace HelpMe.Controllers
 
                 ViewBag.Dialogs = await db.ChatDialogs.Include(u => u.UserFrom)
                                                 .Include(u => u.UserTo)
-                                                .Where(u => u.UserFromId == requestId)
+                                                .Where(u => u.UserFromId == requestId )
                                                 .ToListAsync();
 
                 return View(await messages.ToListAsync());
@@ -49,9 +49,9 @@ namespace HelpMe.Controllers
                 string requestId = User.Identity.GetUserId();
 
                 ViewBag.Dialogs = await db.ChatDialogs.Include(u => u.UserFrom)
-                                                .Include(u => u.UserTo)
-                                                .Where(u => u.UserFromId == requestId)
-                                                .ToListAsync();
+                                                 .Include(u => u.UserTo)
+                                                 .Where(u => u.UserFromId == requestId)
+                                                 .ToListAsync();
                 return View();
             }
         }
@@ -70,13 +70,21 @@ namespace HelpMe.Controllers
                 if (!diaologs.Any(u => u.UserFromId == message.UserFromId && u.UserToId == message.UserToId))
                 {
                     ChatDialog dialog = new ChatDialog();
+                    ChatDialog dialogTo = new ChatDialog();
                     dialog.Id = 1;
+                    dialogTo.Id = 2;
                     message.DateSend = DateTime.Now;
                     message.Status = MessageStatus.Undreading;
 
                     dialog.Messages.Add(message);
                     dialog.UserFromId = message.UserFromId;
                     dialog.UserToId = message.UserToId;
+
+                    dialogTo.Messages.Add(message);
+                    dialogTo.UserFromId = message.UserToId;
+                    dialogTo.UserToId = message.UserFromId;
+
+                    db.ChatDialogs.Add(dialogTo);
                     db.ChatDialogs.Add(dialog);
                     db.SaveChanges();
                     return RedirectToAction("Index", "Chat", new { dialogId = dialog.Id });
