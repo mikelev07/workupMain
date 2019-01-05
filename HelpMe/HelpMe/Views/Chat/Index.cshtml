@@ -19,7 +19,7 @@
                             <i class="icon-material-outline-search"></i>
                         </div>
                     </div>
-                   
+
                     <ul id="chatusers">
                         @foreach (HelpMe.Models.ChatDialog d in ViewBag.Dialogs)
                         {
@@ -33,7 +33,19 @@
                                                 4 часа назад
                                             </span>
                                         </div>
-                                        <p id="@d.UserTo.UserName-lastmess"> Новых сообщений <span style="color:white" id="@d.UserTo.UserName-notif" class="nav-tag-mess">1</span></p>
+                                            @if (d.Messages.Any(m => m.Status == HelpMe.Models.MessageStatus.Undreading))
+                                             {
+                                        <p id="@d.UserTo.UserName-lastmess">
+                                            Новых сообщений <span style="color:white" id="@d.UserTo.UserName-notif" class="nav-tag-mess">
+                                                @d.Messages.Where(m => m.Status == HelpMe.Models.MessageStatus.Undreading).Count()
+                                            </span>
+                                        </p>
+                                             }
+                                            else
+                                            {
+                                                @d.Messages.LastOrDefault().Description
+                                            }
+                                       
                                     </div>
                                 </a>
                             </li>
@@ -41,7 +53,7 @@
 
                     </ul>
                 </div>
-                <!-- Messages / End -->
+                <!-- Messages <span style="color:white" id="UserTo.UserName-notif" class="nav-tag-mess">1</span> / End -->
                 <!-- Message Content -->
                 <div class="message-content">
                     <div class="messages-headline">
@@ -94,52 +106,11 @@
                                 <br /><br /><br /> <br /><br /><br />
                                 <div> Начните с кем-нибудь чат</div>
                             </div>
-                            <div class="message-bubble me">
-                                <div class="message-bubble-inner">
-                                    <div class="message-avatar"><img src="images/user-avatar-small-01.jpg" alt="" /></div>
-                                    <div class="message-text"><p>Ok, I will. 😉</p></div>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="message-bubble me">
-                                <div class="message-bubble-inner">
-                                    <div class="message-avatar"><img src="images/user-avatar-small-01.jpg" alt="" /></div>
-                                    <div class="message-text"><p>Ok, I will. 😉</p></div>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div> 
-                            <div class="message-bubble me">
-                                <div class="message-bubble-inner">
-                                    <div class="message-avatar"><img src="images/user-avatar-small-01.jpg" alt="" /></div>
-                                    <div class="message-text"><p>Ok, I will. 😉</p></div>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div> 
-                            <div  class="message-bubble me">
-                                <div class="message-bubble-inner">
-                                    <div class="message-avatar"><img src="images/user-avatar-small-01.jpg" alt="" /></div>
-                                    <div class="message-text"><p>Ok, I will. 😉</p></div>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div> 
-                            <div class="message-bubble me">
-                                <div class="message-bubble-inner">
-                                    <div class="message-avatar"><img src="images/user-avatar-small-01.jpg" alt="" /></div>
-                                    <div class="message-text"><p>Ok, I will. 😉</p></div>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div> 
-                            <div class="message-bubble me">
-                                <div class="message-bubble-inner">
-                                    <div class="message-avatar"><img src="images/user-avatar-small-01.jpg" alt="" /></div>
-                                    <div class="message-text"><p>Ok, I will. 😉</p></div>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
+                            
                         }
                         <div id="Status"></div>
                     </div>
-                    
+
                     <!-- Message Content Inner / End -->
                     <!-- Reply Area -->
                     <div class="message-reply">
@@ -197,9 +168,8 @@
         document.getElementById('toUserName').value = name;
         $('#dName').text('Диалог с ' + name);
         $("ul#chatusers>li.active-message").removeClass("active-message");
-        var votes = $("#" + htmlEncode(name) + "-lastmess");
-       
-        votes.text("Тут последнее сообщение");
+        //var votes = $("#" + htmlEncode(name) + "-lastmess");
+        //votes.text("Тут последнее сообщение");
 
         if (!$('#' + name + '-conid').hasClass("active-message"))
             $('#' + name + '-conid').addClass("active-message");

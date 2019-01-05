@@ -50,12 +50,14 @@ namespace HelpMe.Hubs
             messageStoreViewModel.UserToId = db.Users.Where(x => x.UserName == toUserName).FirstOrDefault().Id;
             messageStoreViewModel.Description = message;
             messageStoreViewModel.DateSend = DateTime.Now;
+            messageStoreViewModel.Status = MessageStatus.Reading;
             messageStoreViewModel.ChatDialogId = myDialogId;
 
             messageStoreViewModelPartner.UserFromId = db.Users.Where(x => x.Id == reqId).FirstOrDefault().Id;
             messageStoreViewModelPartner.UserToId = db.Users.Where(x => x.UserName == toUserName).FirstOrDefault().Id;
             messageStoreViewModelPartner.Description = message;
             messageStoreViewModelPartner.DateSend = DateTime.Now;
+            messageStoreViewModelPartner.Status = MessageStatus.Undreading;
             messageStoreViewModelPartner.ChatDialogId = partnerDialogId;
 
             db.Messages.Add(messageStoreViewModel);
