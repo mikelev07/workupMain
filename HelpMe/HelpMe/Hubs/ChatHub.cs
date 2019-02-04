@@ -63,7 +63,10 @@ namespace HelpMe.Hubs
             db.Messages.Add(messageStoreViewModel);
             db.Messages.Add(messageStoreViewModelPartner);
             db.SaveChanges();
-            SendMessage("Новое сообщение...", partnerId);
+            if (partnerId == null)
+            {
+                SendMessage("Новое сообщение...", partnerId);
+            }
         }
 
         public void IsTyping(string html)
@@ -111,7 +114,7 @@ namespace HelpMe.Hubs
             // Получаем контекст хаба
             // var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
             // отправляем сообщение
-            Clients.Client(partnerId).displayMessage(message);
+            Clients.Client(partnerId).displayMessage(message, id);
         }
 
         public override System.Threading.Tasks.Task OnDisconnected(bool stopCalled)

@@ -165,7 +165,9 @@ namespace HelpMe.Controllers
         {
             // Получаем контекст хаба
             var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
-            // отправляем сообщение
+            Notification notification = new Notification { Id = 1, Title = "123", Status = NotificationStatus.Unreading };
+            db.Notifications.Add(notification);
+            db.SaveChanges();
             context.Clients.All.displayMessage(message);
         }
 

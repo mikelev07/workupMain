@@ -279,6 +279,18 @@
     <Compile Include="Migrations\201901031527150_addDialogModel.Designer.cs">
       <DependentUpon>201901031527150_addDialogModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901121816042_addOpenCloseDialogStatus.cs" />
+    <Compile Include="Migrations\201901121816042_addOpenCloseDialogStatus.Designer.cs">
+      <DependentUpon>201901121816042_addOpenCloseDialogStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901261742034_addNewModelMigration.cs" />
+    <Compile Include="Migrations\201901261742034_addNewModelMigration.Designer.cs">
+      <DependentUpon>201901261742034_addNewModelMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901261804339_addNewModelMigration123.cs" />
+    <Compile Include="Migrations\201901261804339_addNewModelMigration123.Designer.cs">
+      <DependentUpon>201901261804339_addNewModelMigration123.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationRoleManager.cs" />
@@ -290,6 +302,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MessageStoreViewModel.cs" />
     <Compile Include="Models\Note.cs" />
+    <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Models\RoleViewModel.cs" />
     <Compile Include="Models\TypeCustomViewModel.cs" />
@@ -567,6 +580,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901031527150_addDialogModel.resx">
       <DependentUpon>201901031527150_addDialogModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901121816042_addOpenCloseDialogStatus.resx">
+      <DependentUpon>201901121816042_addOpenCloseDialogStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901261742034_addNewModelMigration.resx">
+      <DependentUpon>201901261742034_addNewModelMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901261804339_addNewModelMigration123.resx">
+      <DependentUpon>201901261804339_addNewModelMigration123.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,11 +1,44 @@
 ﻿$(function () {
 
     $('#chatroom').scrollTop($('#chatroom').prop('scrollHeight'));
+
+    var page = 2;
+
+    var isLoading = false;
+
+    function loadNewPage() {
+        var temp = $("#chatroom").height(); // определяем высоту документа
+        page++;
+        $.ajax({
+            type: 'GET',
+            url: '/Chat/Index/' + page,
+            success: function (data) {
+                $("#chatroom").prepend(data); // добавляем дату
+                $("#chatroom").scrollTop($(document).height() - temp);
+            }
+        });
+
+        isLoading = false;
+    }
+
+    $("#chatroom").scroll(function () {
+        if ($("#chatroom").scrollTop() == 0 && !isLoading) {
+            isLoading = true;
+            setTimeout(loadNewPage, 500);
+        }
+    });
+
+            // scrolltop() если равен нулю (то есть если скролл наверху ->)
+            // !isLoading (если fasle = true)
+            // изначально он false, но при прокрутке isLoading = true
+            // setTimeout(loadNewPage, 500) устанавливаем таймаут и загружаем по аяксу
+
         // Ссылка на автоматически-сгенерированный прокси хаба
         var chat = $.connection.chatHub;
     
-        chat.client.displayMessage = function (message) {
-            $('#notification').html(message);
+    chat.client.displayMessage = function (message, partnerId) {
+      
+            $('#notification-'+partnerId).html(message);
         };
     chat.client.SayWhoIsTyping = function (html) {
         $('#Status').html('<div>' + htmlEncode(html) + '</div >');
@@ -21,17 +54,19 @@
 
         if ($('#username').val() != htmlEncode(name)) {
             if ($('#toUserName').val() != htmlEncode(name)) {
+                var divVote = $("#" + htmlEncode(name) + "-lastmess");
+                var note = '<span style="color:white" id="' + htmlEncode(name) + '-notif" class="nav-tag-mess">0</span>';
+               // if (divVote.text().indexOf("Новых сообщений") != 0) {
+                //    divVote.html("Новых сообщений" + note);
+               // }
                 var votes = $("#" + htmlEncode(name) + "-notif");
                 var num = $("#" + htmlEncode(name) + "-notif").text();
-                votes.text(parseInt(num) + 1);
+                votes.text(parseInt(num)+1);
                   
             } else {
                     $('#chatroom').append(messageHtml);
                 }
             }
-        else if ($('#toUserName').val() == '') {
-             alert("Новое сообщение")
-        }
         else
         {
              $('#chatroom').append(messageHtml);
@@ -120,6 +155,10 @@
 
 function setValue(id) {
     document.getElementById('partnerId').value = id;
+    $('#notification-' + id).html("4 часа назад");
+    $("ul#chatusers>li.active-message").removeClass("active-message")
+    if (!$('#' + id).hasClass("active-message"))
+        $('#' + id).addClass("active-message");
 }
 /*
 function loadHistory(name) {

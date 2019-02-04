@@ -23,41 +23,58 @@
                     <ul id="chatusers">
                         @foreach (HelpMe.Models.ChatDialog d in ViewBag.Dialogs)
                         {
-                            <li id="@d.UserTo.UserName-conid" onclick="setValue(this.id)">
-                                <a id="@d.UserTo.UserName" href="#" onclick="loadHistory(this.id)">
-                                    <div id="@d.UserToId" class="message-avatar"><i id="@d.UserTo.UserName-status" class="status-icon status-offline"></i><img src="~/Content/Custom/images/user-avatar-small-03.jpg" alt="" /></div>
-                                    <div class="message-by">
-                                        <div class="message-by-headline">
-                                            <h5>@d.UserTo.UserName </h5>
-                                            <span id="notification">
-                                                4 часа назад
-                                            </span>
-                                        </div>
+                                <li id="@d.UserTo.UserName-conid" class="@(ViewBag.UserToName != null && ViewBag.UserToName == d.UserTo.UserName  ? "active-message" : " ")" onclick="setValue(this.id)">
+                                    <a id="@d.UserTo.UserName" href="#" onclick="loadHistory(this.id)">
+                                        <div id="@d.UserToId" class="message-avatar"><i id="@d.UserTo.UserName-status" class="status-icon status-offline"></i><img src="~/Content/Custom/images/user-avatar-small-03.jpg" alt="" /></div>
+                                        <div class="message-by">
+                                            <div class="message-by-headline">
+                                                <h5>@d.UserTo.UserName </h5>
+                                                <span class="notificationNew" id="notification-@d.UserTo.ConnectionId">
+                                                    4 часа назад
+                                                </span>
+                                            </div>
                                             @if (d.Messages.Any(m => m.Status == HelpMe.Models.MessageStatus.Undreading))
-                                             {
-                                        <p id="@d.UserTo.UserName-lastmess">
-                                            Новых сообщений <span style="color:white" id="@d.UserTo.UserName-notif" class="nav-tag-mess">
-                                                @d.Messages.Where(m => m.Status == HelpMe.Models.MessageStatus.Undreading).Count()
-                                            </span>
-                                        </p>
-                                             }
+                                            {
+                                                <p id="@d.UserTo.UserName-lastmess">
+                                                    Новых сообщений<span style="color:white" id="@d.UserTo.UserName-notif" class="nav-tag-mess">
+                                                        @d.Messages.Where(m => m.Status == HelpMe.Models.MessageStatus.Undreading).Count()
+                                                    </span>
+                                                </p>
+                                            }
                                             else
                                             {
-                                                @d.Messages.LastOrDefault().Description
+                                                <p id="@d.UserTo.UserName-lastmess">
+                                                    @d.Messages.LastOrDefault().Description
+                                                </p>
                                             }
-                                       
-                                    </div>
-                                </a>
-                            </li>
-                        }
 
-                    </ul>
+                                        </div>
+                                    </a>
+                                </li>
+                            }
+
+                        </ul>
                 </div>
                 <!-- Messages <span style="color:white" id="UserTo.UserName-notif" class="nav-tag-mess">1</span> / End -->
                 <!-- Message Content -->
                 <div class="message-content">
                     <div class="messages-headline">
-                        <h4><span id="dName">Выбор диалога</span></h4>
+                        @if (ViewBag.UserToName != null)
+                        {
+                            <h4>
+                                <span id="dName">
+                                    Диалог с @ViewBag.UserToName
+                                </span>
+                            </h4>
+                        }
+                        else
+                        {
+                            <h4>
+                                <span id="dName">
+                                    Выбор диалога
+                                </span>
+                            </h4>
+                        }
                         <a href="#" class="message-action"><i class="icon-feather-trash-2"></i> Удалить переписку </a>
                     </div>
 
@@ -121,7 +138,7 @@
                     </div>
                     <input id="hdId" type="hidden" />
                     <input id="username" type="hidden" />
-                    <input id="toUserName" type="hidden" />
+                    <input id="toUserName" value="@(ViewBag.UserToName != null ? ViewBag.UserToName : " ")" type="hidden" />
                 </div>
                 <!-- Message Content -->
 
@@ -164,13 +181,20 @@
 </div>
 
 <script>
+
     function loadHistory(name) {
         document.getElementById('toUserName').value = name;
         $('#dName').text('Диалог с ' + name);
-        $("ul#chatusers>li.active-message").removeClass("active-message");
-        //var votes = $("#" + htmlEncode(name) + "-lastmess");
-        //votes.text("Тут последнее сообщение");
-
+        var divVote = $("#" + htmlEncode(name) + "-lastmess");
+        $.ajax({
+            url: '/Chat/GetLastMessage',
+            type: 'GET',
+            cache: false,
+            data: { userName: name }
+        }).done(function (result) {
+            divVote.html(result);
+        });
+        $("ul#chatusers>li.active-message").removeClass("active-message")
         if (!$('#' + name + '-conid').hasClass("active-message"))
             $('#' + name + '-conid').addClass("active-message");
         $.ajax({

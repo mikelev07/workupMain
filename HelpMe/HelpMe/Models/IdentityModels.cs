@@ -87,6 +87,7 @@ namespace HelpMe.Models
         public DbSet<TaskCategory> TaskCategories { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Note> Notes { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
         public DbSet<ChatDialog> ChatDialogs { get; set; }
         public DbSet<Wallet> Wallets { get; set; } // коллекция сущностей типа Wallet
       

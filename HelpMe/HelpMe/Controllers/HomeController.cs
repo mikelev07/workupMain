@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HelpMe.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,6 +9,8 @@ namespace HelpMe.Controllers
 {
     public class HomeController : Controller
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
+
         public ActionResult Index()
         {
             return View();
@@ -18,6 +21,12 @@ namespace HelpMe.Controllers
             ViewBag.Message = "Your application description page.";
 
             return View();
+        }
+
+        public JsonResult GetAllNotifications()
+        {
+            var notifications = db.Notifications.ToList();
+            return new JsonResult { Data = notifications, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
         public ActionResult Contact()
