@@ -61,6 +61,7 @@ namespace HelpMe.Controllers
                                   {
                                       user.Id,
                                       Username = user.UserName,
+                                      ImagePath = user.ImagePath,
                                       user.Email,
                                       RoleNames = (from userRole in user.Roles
                                                    join role in roles on userRole.RoleId equals role.Id
@@ -70,6 +71,7 @@ namespace HelpMe.Controllers
                                       Id = p.Id,
                                       Username = p.Username,
                                       Email = p.Email,
+                                      ImagePath = p.ImagePath ?? "~/Content/Custom/images/user-avatar-big-01.jpg",
                                       Role = string.Join(",", p.RoleNames)
                                   });
 

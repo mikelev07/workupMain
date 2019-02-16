@@ -78,6 +78,7 @@ namespace HelpMe.Hubs
         {
             IHubContext context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
             context.Clients.All.sayWhoIsTyping(html);
+            
         }
 
         // Подключение нового пользователя

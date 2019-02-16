@@ -10813,6 +10813,7 @@ img.mfp-img {
 	background-color: #e4f6e9;
 }
 
+
 .account-type input.account-type-radio:checked ~ label {
 	color: #fff;
 	background-color: #47bb67;

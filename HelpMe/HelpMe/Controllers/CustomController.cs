@@ -12,6 +12,9 @@ using Microsoft.AspNet.Identity;
 using HelpMe.Hubs;
 using System.IO;
 using PagedList;
+using System.Runtime.Remoting.Contexts;
+using Microsoft.AspNet.SignalR;
+
 
 namespace HelpMe.Controllers
 {
@@ -28,6 +31,18 @@ namespace HelpMe.Controllers
             PageInfo pageInfo = new PageInfo { PageNumber = page, PageSize = pageSize, TotalItems = customViewModels.Count() };
             CustomIndexViewModel ivm = new CustomIndexViewModel { PageInfo = pageInfo, Customs = customPerPages };
             return View(ivm);
+        }
+
+        public ActionResult Tasks()
+        {
+            var customViewModels = db.Customs.Include(c => c.Comments).Include(c => c.User).OrderBy(x => x.Id);
+            return View();
+        }
+
+        public ActionResult Bidders()
+        {
+            var customViewModels = db.Customs.Include(c => c.Comments).Include(c => c.User).OrderBy(x => x.Id);
+            return View();
         }
 
         public ActionResult LoadAttaches(int? id)
@@ -126,7 +141,12 @@ namespace HelpMe.Controllers
         }
 
 
-
+        /// <summary>
+        /// Выбрать исполнителя
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<ActionResult> ChooseExecutor(int? id, string userId)
         {
             if (id == null && userId == null)
@@ -145,7 +165,9 @@ namespace HelpMe.Controllers
                 customViewModel.ExecutorPrice = comment.OfferPrice;
                 customViewModel.Status = CustomStatus.Check; // заявка выполняется
             }
-           
+            string uName = db.Users.Where(c => c.Id == customViewModel.UserId).FirstOrDefault().UserName;
+            string exName = db.Users.Where(c => c.Id == customViewModel.ExecutorId).FirstOrDefault().UserName;
+            SendMessage("Добавлен новый заказ", customViewModel.Id, uName,exName,"Вы выбрали исполнителя");
             await db.SaveChangesAsync();
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
         }
@@ -161,16 +183,21 @@ namespace HelpMe.Controllers
             return PartialView(allCustoms);
         }
 
-        private void SendMessage(string message)
+        private void SendMessage(string message, int id, string userName, string exUsername, string descr)
         {
             // Получаем контекст хаба
+            var uId = db.Users.Where(x => x.UserName == userName).FirstOrDefault().Id;
+            var exId = db.Users.Where(x => x.UserName == exUsername).FirstOrDefault().Id;
+            string url = "/Custom/Details/" + id;
             var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
-            Notification notification = new Notification { Id = 1, Title = "123", Status = NotificationStatus.Unreading };
+            Notification notification = new Notification { Id = 1, Title = "123", Status = NotificationStatus.Unreading, Url = url, UserName = userName, ExUserName = exUsername, UserId = exId };
+            Notification notification2 = new Notification { Id = 2, Title = "123", Status = NotificationStatus.Unreading, Url = url, UserName = userName,ExUserName = exUsername, UserId = uId };
             db.Notifications.Add(notification);
+            db.Notifications.Add(notification2);
             db.SaveChanges();
-            context.Clients.All.displayMessage(message);
+            context.Clients.User(uId).displayMessage(message);
+            context.Clients.User(exId).displayMessage(message);
         }
-
 
         [HttpPost]
         public async Task<ActionResult> SendSolution(int? id, HttpPostedFileBase upload)
@@ -216,6 +243,14 @@ namespace HelpMe.Controllers
             return new JsonResult() { Data = results, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
+        /// <summary>
+        /// Разместить предложение
+        /// </summary>
+        /// <param name="Description"></param>
+        /// <param name="CustomViewModelId"></param>
+        /// <param name="OfferPrice"></param>
+        /// <param name="Days"></param>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult People(string Description, int CustomViewModelId, int OfferPrice, int Days)
         {
@@ -354,7 +389,8 @@ namespace HelpMe.Controllers
                 customViewModel.UserId = User.Identity.GetUserId();
                 db.Customs.Add(customViewModel);
                 await db.SaveChangesAsync();
-                SendMessage("Добавлен новый заказ");
+                string uName = db.Users.Where(c => c.Id == customViewModel.UserId).FirstOrDefault().UserName;
+               // SendMessage("Добавлен новый заказ", customViewModel.Id, uName);
                 return RedirectToAction("Index");
             }
         

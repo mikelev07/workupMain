@@ -291,6 +291,42 @@
     <Compile Include="Migrations\201901261804339_addNewModelMigration123.Designer.cs">
       <DependentUpon>201901261804339_addNewModelMigration123.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201902040146359_notifUtlEdit.cs" />
+    <Compile Include="Migrations\201902040146359_notifUtlEdit.Designer.cs">
+      <DependentUpon>201902040146359_notifUtlEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902040303339_notifUserNameEdit.cs" />
+    <Compile Include="Migrations\201902040303339_notifUserNameEdit.Designer.cs">
+      <DependentUpon>201902040303339_notifUserNameEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902050541324_UserNotEdit.cs" />
+    <Compile Include="Migrations\201902050541324_UserNotEdit.Designer.cs">
+      <DependentUpon>201902050541324_UserNotEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902050627203_UserNotEdit9.cs" />
+    <Compile Include="Migrations\201902050627203_UserNotEdit9.Designer.cs">
+      <DependentUpon>201902050627203_UserNotEdit9.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902050711453_UserNotEdit9a.cs" />
+    <Compile Include="Migrations\201902050711453_UserNotEdit9a.Designer.cs">
+      <DependentUpon>201902050711453_UserNotEdit9a.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902052147154_UserNotEdit9a1.cs" />
+    <Compile Include="Migrations\201902052147154_UserNotEdit9a1.Designer.cs">
+      <DependentUpon>201902052147154_UserNotEdit9a1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902052155424_UserNotEdit9a1a.cs" />
+    <Compile Include="Migrations\201902052155424_UserNotEdit9a1a.Designer.cs">
+      <DependentUpon>201902052155424_UserNotEdit9a1a.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902070555437_addUserPhoto.cs" />
+    <Compile Include="Migrations\201902070555437_addUserPhoto.Designer.cs">
+      <DependentUpon>201902070555437_addUserPhoto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902070615106_addImagePath.cs" />
+    <Compile Include="Migrations\201902070615106_addImagePath.Designer.cs">
+      <DependentUpon>201902070615106_addImagePath.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationRoleManager.cs" />
@@ -380,6 +416,7 @@
     <Content Include="Content\Custom\images\user-avatar-small-03.jpg" />
     <Content Include="Content\Custom\invoice.css" />
     <Content Include="Content\Custom\style.css" />
+    <Content Include="Content\intuition.mp3" />
     <Content Include="Content\jquery.ui.chatbox.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
@@ -532,6 +569,9 @@
     <Content Include="Views\Wallet\AddSumm.cshtml" />
     <Content Include="Views\Note\View.cshtml" />
     <Content Include="Views\Custom\LoadAttaches.cshtml" />
+    <Content Include="Views\Custom\Tasks.cshtml" />
+    <Content Include="Views\Custom\Bidders.cshtml" />
+    <Content Include="Views\Comment\MyComments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -589,6 +629,33 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901261804339_addNewModelMigration123.resx">
       <DependentUpon>201901261804339_addNewModelMigration123.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902040146359_notifUtlEdit.resx">
+      <DependentUpon>201902040146359_notifUtlEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902040303339_notifUserNameEdit.resx">
+      <DependentUpon>201902040303339_notifUserNameEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902050541324_UserNotEdit.resx">
+      <DependentUpon>201902050541324_UserNotEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902050627203_UserNotEdit9.resx">
+      <DependentUpon>201902050627203_UserNotEdit9.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902050711453_UserNotEdit9a.resx">
+      <DependentUpon>201902050711453_UserNotEdit9a.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902052147154_UserNotEdit9a1.resx">
+      <DependentUpon>201902052147154_UserNotEdit9a1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902052155424_UserNotEdit9a1a.resx">
+      <DependentUpon>201902052155424_UserNotEdit9a1a.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902070555437_addUserPhoto.resx">
+      <DependentUpon>201902070555437_addUserPhoto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902070615106_addImagePath.resx">
+      <DependentUpon>201902070615106_addImagePath.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

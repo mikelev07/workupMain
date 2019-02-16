@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -13,6 +14,9 @@ namespace HelpMe.Models
     {
         public string Id { get; set; }
         public string Username { get; set; }
+        [NotMapped]
+        public HttpPostedFileBase ImageFile { get; set; }
+        public string ImagePath { get; set; } = "~/Content/Custom/images/user-avatar-big-01.jpg";
         public string Email { get; set; }
         public string Role { get; set; }
     }
@@ -28,12 +32,15 @@ namespace HelpMe.Models
 
     public class User : IdentityUser
     {
+        public string ImagePath { get; set; }
+        [NotMapped]
+        public HttpPostedFileBase ImageFile { get; set; }
         public int Age { get; set; } // добавляем свойство Age
         public string Description { get; set; }
         public string ConnectionId { get; set; } // для SignalR
         //public UserProfile Profile { get; set; }
-        
         public ICollection<CustomViewModel> Customs { get; set; }
+        public ICollection<Notification> Notifications { get; set; }
         public ICollection<CommentViewModel> Comments { get; set; }
         public ICollection<MessageStoreViewModel> Messages { get; set; }
         public ICollection<ChatDialog> ChatDialogs { get; set; }
@@ -44,6 +51,7 @@ namespace HelpMe.Models
 
         public User()
         {
+            Notifications = new List<Notification>();
             Comments = new List<CommentViewModel>();
             Customs = new List<CustomViewModel>();
             Messages = new List<MessageStoreViewModel>();

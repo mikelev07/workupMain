@@ -23,6 +23,13 @@ namespace HelpMe.Controllers
             return View(await comments.ToListAsync());
         }
 
+        public ActionResult MyComments()
+        {
+            var comments = db.Comments.Include(c => c.CustomViewModel).Include(u => u.User);
+            return View();
+        }
+
+
         // GET: Comment/Details/5
         public async Task<ActionResult> Details(int? id)
         {

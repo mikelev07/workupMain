@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using HelpMe.Models;
 using System.Data.Entity;
+using System.IO;
 
 namespace HelpMe.Controllers
 {
@@ -66,14 +67,44 @@ namespace HelpMe.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             var model = new IndexViewModel
             {
+                Name = User.Identity.Name,
+                Age = user.Age,
+                ImagePath = user.ImagePath,
+                ImageFile = user.ImageFile,
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
+            return View(model);
+        }
+
+        // POST: /Manage/ChangePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Index(IndexViewModel model)
+        {
+           
+            if (ModelState.IsValid)
+            {
+                string fileName = Path.GetFileName(model.ImageFile.FileName);
+                string path = Server.MapPath("~/Files/" + fileName);
+                // сохраняем файл в папку Files в проекте
+           
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                model.ImageFile.SaveAs(path);
+                user.ImagePath = "~/Files/" + fileName;
+                user.Age = model.Age;
+                var updateResult = await UserManager.UpdateAsync(user);
+                await db.SaveChangesAsync();
+
+                return RedirectToAction("Index");
+            }
+            
             return View(model);
         }
 

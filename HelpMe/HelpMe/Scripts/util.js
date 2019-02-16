@@ -38,7 +38,8 @@
     
     chat.client.displayMessage = function (message, partnerId) {
       
-            $('#notification-'+partnerId).html(message);
+        $('#notification-' + partnerId).html(message);
+
         };
     chat.client.SayWhoIsTyping = function (html) {
         $('#Status').html('<div>' + htmlEncode(html) + '</div >');

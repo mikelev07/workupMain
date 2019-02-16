@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 
@@ -7,6 +9,11 @@ namespace HelpMe.Models
 {
     public class IndexViewModel
     {
+        public string Name { get; set; }
+        public string ImagePath { get; set; }
+        [NotMapped]
+        public HttpPostedFileBase ImageFile { get; set; }
+        public int Age { get; set; }
         public bool HasPassword { get; set; }
         public IList<UserLoginInfo> Logins { get; set; }
         public string PhoneNumber { get; set; }
