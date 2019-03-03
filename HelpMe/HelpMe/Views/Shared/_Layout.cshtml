@@ -98,10 +98,10 @@
                             <!--  User Notifications -->
                             <div class="header-widget hide-on-mobile">
                                 <!-- Notifications -->
-                                <div class="header-notifications">
+                                <div class="header-notifications" id="not-trigger">
                                     <!-- Trigger -->
-                                    <div class="header-notifications-trigger" id="not-trigger">
-                                        <a id="notCl" href="#"><i class="icon-feather-bell"></i><span class="ncount" id="notific">@ViewBag.Count</span></a>
+                                    <div class="header-notifications-trigger" >
+                                        <a id="notCl" href="#"><i class="icon-feather-bell"></i><span style="@(ViewBag.Count >= 1 ? "display:none" : "")" class="ncount" id="notific">@ViewBag.Count</span></a>
                                     </div>
                                     <!-- Dropdown -->
                                     <div class="header-notifications-dropdown">
@@ -113,15 +113,10 @@
                                         </div>
                                         <div class="header-notifications-content">
                                             <div class="header-notifications-scroll" data-simplebar>
-                                                <ul class="ncont" id="notifContent">
-                                                  
-                                                    
-                                                  
-
-
-                                                </ul>
+                                                <ul class="ncont" id="notifContent"></ul>
                                             </div>
                                         </div>
+                                        <a href="/chat" class="header-notifications-button ripple-effect button-sliding-icon">Посмотреть все уведомления <i class="icon-material-outline-arrow-right-alt"></i></a>
                                     </div>
                                 </div>
                                 <!-- Messages -->
@@ -384,55 +379,70 @@
             url: '/Home/GetUnreadingCount',
             success: function (response) {
                 count = response;
-                $('#notific').text(count);
-               // $('.ncount').text(count);
+                if (count == 0) {
+                    $('#notific').hide();
+                    $('.ncount').hide();
+                } else {
+                    $('#notific').text(count);
+                    $('.ncount').text(count);
+                }
             },
             error: function (error) {
                 console.log(error);
             }
         })
-      /* 
+        var isSucess = false;
         $("#not-trigger").on('click', '#notCl', function () {
+            
             $.ajax({
                 type: 'GET',
                 url: '/Home/GetAllNotifications',
                 success: function (response) {
-                    $('#notific').text(0);
-                    $('.ncount').text(0); /*
+                    $('.ncount').text(0);
+                    if (!isSucess) {
                     $('#notifContent').empty();
                     if (response.length == 0) {
-                        $('.ncont').append($('<li>Нет данных</li>'));
-                    } 
-                    $.each(response, function (index, value) {
-                        $('.ncont').append($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text"> <strong>' + value.UserName + '</strong> предлагает вам <span class="color">оценить работу</span></span></a></li>'));
-                    });
+                        $('#notifContent').append($('<li>Нет данных</li>'));
+                    }
+                        $.each(response, function (index, value) {
+                            if (value.UserName != "@User.Identity.Name") {
+                                $('.ncont').prepend($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text"> Пользователь <strong> ' + value.UserName + ' </strong> ' + value.Description + ' <span class="color"> к заказу</span></span></a></li>'));
+                            }
+                            else {
+                                $('.ncont').prepend($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Title + ' <span class="color"> к заказу</span></span></a></li>'));
+                            }
+                            })
+                    }
+                    isSucess = true;
+                        
                 },
                 error: function (error) {
                     console.log(error);
                 }
             })
+        });
 
-        });*/
-
-
-        $(function () {
-          
+       
             $('#notCl').click(function (e) {
                 $.ajax({
                     type: 'GET',
                     url: '/Home/GetAllNotifications',
                     success: function (response) {
-                        $('#notific').text(0);
-                        
+                        $('#notific').hide();
+                        $('.ncount').hide();
                         $('#notifContent').empty();
+
                         if (response.length == 0) {
                             $('#notifContent').append($('<li>Нет данных</li>'));
-                        } 
+                        }
+                      
                         $.each(response, function (index, value) {
-                            if (value.UserName != '@User.Identity.Name')
-                                $('#notifContent').append($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text"> <strong>' + value.UserName +'</strong> выбрал вас исполнителем <span class="color"> заказа</span></span></a></li>'));
-                            else 
-                                $('#notifContent').append($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text"> <strong>Вы</strong> выбрали ' + value.ExUserName + ' исполнителем <span class="color"> заказа</span></span></a></li>'));
+                            if (value.UserName != "@User.Identity.Name") {
+                                $('#notifContent').prepend($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text"> Пользователь <strong> ' + value.UserName + ' </strong> ' + value.Description + ' <span class="color"> к заказу</span></span></a></li>'));
+                            }
+                            else {
+                                $('#notifContent').prepend($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Title + ' <span class="color"> к заказу</span></span></a></li>'));
+                            }
                         });
                     },
                     error: function (error) {
@@ -444,8 +454,14 @@
             var notificationhub = $.connection.notificationHub;
 
             notificationhub.client.displayMessage = function (message) {
+                $('#notific').show();
+                $('.ncount').show();
                 var num = $('#notific').text();
-                $('#notific').text(parseInt(num) + 1);
+                var num1 = $('.ncount').text();
+                if (num == '') num = num1 = 0;
+                $('.ncount').text(parseInt(num) + 1);
+
+              
 
                 Snackbar.show({
                     text: 'Новое уведомление!',
@@ -465,7 +481,7 @@
 
             $.connection.hub.start();
 
-        });
+      
    
         function initAutocomplete() {
             var options = {

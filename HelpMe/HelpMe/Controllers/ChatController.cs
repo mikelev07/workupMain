@@ -18,7 +18,7 @@ namespace HelpMe.Controllers
         // GET: Chat
         public async Task<ActionResult> Index(int? id, int? dialogId = null)
         {
-            int page = id ?? 0;
+            //int page = id ?? 0;
             //var userToId = db.ChatDialogs.Where(i => i.Id == dialogId).FirstOrDefault().UserToId;
             if (dialogId != null)
             {
@@ -54,7 +54,7 @@ namespace HelpMe.Controllers
                                                .Where(s => s.Status == DialogStatus.Open)
                                                .FirstOrDefault();
 
-                ViewBag.UserToName = openDialog.UserTo.UserName;
+                ViewBag.UserToName = openDialog?.UserTo?.UserName;
 
                 if (openDialog != null)
                 {
@@ -77,10 +77,10 @@ namespace HelpMe.Controllers
                                                      .Where(u => u.UserFromId == requestId)
                                                      .ToListAsync();
 
-                    if (Request.IsAjaxRequest())
-                    {
-                        return PartialView("LoadHistory", GetItemsPage(page));
-                    }
+                  //  if (Request.IsAjaxRequest())
+                  //  {
+                   //     return PartialView("LoadHistory", GetItemsPage(page));
+                  //  }
                   //  return View(GetItemsPage(page));
 
                   return View(await messages.ToListAsync());
@@ -95,13 +95,13 @@ namespace HelpMe.Controllers
             }
         }
 
-        private List<MessageStoreViewModel> GetItemsPage(int page = 1)
-        {
-            var itemsToSkip = page * pageSize;
+       // private List<MessageStoreViewModel> GetItemsPage(int page = 1)
+      //  {
+        //    var itemsToSkip = page * pageSize;
             
-            return db.Messages.OrderBy(t => t.Id).Skip(itemsToSkip).
-                Take(pageSize).ToList();
-        }
+         //   return db.Messages.OrderBy(t => t.Id).Skip(itemsToSkip).
+           //     Take(pageSize).ToList();
+       // }
 
         [HttpPost]
         [ValidateAntiForgeryToken]

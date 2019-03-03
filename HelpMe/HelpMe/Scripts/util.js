@@ -5,7 +5,7 @@
     var page = 2;
 
     var isLoading = false;
-
+/*
     function loadNewPage() {
         var temp = $("#chatroom").height(); // определяем высоту документа
         page++;
@@ -19,7 +19,7 @@
         });
 
         isLoading = false;
-    }
+    } */
 
     $("#chatroom").scroll(function () {
         if ($("#chatroom").scrollTop() == 0 && !isLoading) {

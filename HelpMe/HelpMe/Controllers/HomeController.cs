@@ -16,8 +16,9 @@ namespace HelpMe.Controllers
 
         public ActionResult Index()
         {
-            var unreadCount = db.Notifications.Where(n => n.Status == NotificationStatus.Unreading).Count();
-            ViewBag.Count = unreadCount;
+            string uId = User.Identity.GetUserId();
+            var unreadCount = db.Notifications.Where(n => n.UserId == uId).Where(n => n.Status == NotificationStatus.Unreading).Count();
+           // ViewBag.Count = unreadCount;
             return View();
         }
 
@@ -42,8 +43,10 @@ namespace HelpMe.Controllers
             {
                 a.Url,
                 a.UserName,
-                a.ExUserName
-            }).ToListAsync();
+                a.ExUserName,
+                a.Description,
+                a.Title
+            }).Take(5).ToListAsync();
 
             return Json(notes, JsonRequestBehavior.AllowGet);
         }

@@ -26,7 +26,7 @@ namespace HelpMe.Controllers
         public ActionResult Index(int page = 1)
         {  
             var customViewModels = db.Customs.Include(c => c.Comments).Include(c => c.User).OrderBy(x => x.Id);
-            int pageSize = 9; // количество объектов на страницу
+            int pageSize = 8; // количество объектов на страницу
             IEnumerable<CustomViewModel> customPerPages = customViewModels.Skip((page - 1) * pageSize).Take(pageSize);
             PageInfo pageInfo = new PageInfo { PageNumber = page, PageSize = pageSize, TotalItems = customViewModels.Count() };
             CustomIndexViewModel ivm = new CustomIndexViewModel { PageInfo = pageInfo, Customs = customPerPages };
@@ -92,7 +92,7 @@ namespace HelpMe.Controllers
                         attach.AttachStatus = AttachStatus.NotPurchased;
                         attach.UserId = User.Identity.GetUserId();
                         db.Attachments.Add(attach);
-
+                        SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
                         await db.SaveChangesAsync();
                     }
                 }
@@ -167,7 +167,7 @@ namespace HelpMe.Controllers
             }
             string uName = db.Users.Where(c => c.Id == customViewModel.UserId).FirstOrDefault().UserName;
             string exName = db.Users.Where(c => c.Id == customViewModel.ExecutorId).FirstOrDefault().UserName;
-            SendMessage("Добавлен новый заказ", customViewModel.Id, uName,exName,"Вы выбрали исполнителя");
+            SendMessage("Вы выбрали исполнителем " + exName, customViewModel.Id, uName,exName,"выбрал вас исполнителем");
             await db.SaveChangesAsync();
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
         }
@@ -190,8 +190,8 @@ namespace HelpMe.Controllers
             var exId = db.Users.Where(x => x.UserName == exUsername).FirstOrDefault().Id;
             string url = "/Custom/Details/" + id;
             var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
-            Notification notification = new Notification { Id = 1, Title = "123", Status = NotificationStatus.Unreading, Url = url, UserName = userName, ExUserName = exUsername, UserId = exId };
-            Notification notification2 = new Notification { Id = 2, Title = "123", Status = NotificationStatus.Unreading, Url = url, UserName = userName,ExUserName = exUsername, UserId = uId };
+            Notification notification = new Notification { Id = 1, Title = message, Status = NotificationStatus.Unreading, Url = url, UserName = userName, ExUserName = exUsername, UserId = exId, Description = descr };
+            Notification notification2 = new Notification { Id = 2, Title = message, Status = NotificationStatus.Unreading, Url = url, UserName = userName, ExUserName = exUsername, UserId = uId, Description = descr };
             db.Notifications.Add(notification);
             db.Notifications.Add(notification2);
             db.SaveChanges();
