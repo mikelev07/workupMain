@@ -44,7 +44,18 @@
     chat.client.SayWhoIsTyping = function (html) {
         $('#Status').html('<div>' + htmlEncode(html) + '</div >');
             setInterval(function () { $('#Status').html(''); },3000);
+    };
+
+        
+        // Объявление функции, которая хаб вызывает при получении сообщений
+        chat.client.addDialog = function (name, message) {
+
+            var dialogHtml = '<li id="" class="" onclick="setValue(this.id)" ><a id="" href="#" onclick="loadHistory(this.id)"><div id="" class="message-avatar"><i id="" class="status-icon status-offline"></i><img src="~/Content/Custom/images/user-avatar-small-03.jpg" alt="" /></div><div class="message-by"><div class="message-by-headline"><h5>' + htmlEncode(name) + '</h5><span class="notificationNew" id="">4 часа назад</span></div><p> </p></div></a></li >';
+
+            $('#chatusers').append(dialogHtml);
+        
         };
+
         // Объявление функции, которая хаб вызывает при получении сообщений
         chat.client.addMessage = function (name, message, partnerId) {
         if (htmlEncode(name) == $('#username').val()) {

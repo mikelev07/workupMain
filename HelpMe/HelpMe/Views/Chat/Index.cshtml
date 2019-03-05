@@ -44,7 +44,7 @@
                                             else
                                             {
                                                 <p id="@d.UserTo.UserName-lastmess">
-                                                    @d.Messages.LastOrDefault()?.Description
+                                                    @d.Messages.OrderByDescending(o => o.Id).FirstOrDefault().Description
                                                 </p>
                                             }
 

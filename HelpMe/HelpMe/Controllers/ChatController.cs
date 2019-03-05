@@ -77,13 +77,15 @@ namespace HelpMe.Controllers
                                                      .Where(u => u.UserFromId == requestId)
                                                      .ToListAsync();
 
-                  //  if (Request.IsAjaxRequest())
-                  //  {
-                   //     return PartialView("LoadHistory", GetItemsPage(page));
-                  //  }
-                  //  return View(GetItemsPage(page));
+                    //ViewBag.LastMessage = messages.OrderByDescending(o => o.Id).FirstOrDefault().Description;
 
-                  return View(await messages.ToListAsync());
+                    //  if (Request.IsAjaxRequest())
+                    //  {
+                    //     return PartialView("LoadHistory", GetItemsPage(page));
+                    //  }
+                    //  return View(GetItemsPage(page));
+
+                    return View(await messages.ToListAsync());
                 }
                 ViewBag.Dialogs = await db.ChatDialogs.Include(u => u.UserFrom)
                                                     .Include(u => u.UserTo)
@@ -137,6 +139,13 @@ namespace HelpMe.Controllers
                     dialogTo.UserFromId = message.UserToId;
                     dialogTo.UserToId = message.UserFromId;
                     dialogTo.Status = DialogStatus.Close;
+
+                    var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
+                    string reqId = User.Identity.GetUserId();
+                    string uId = message.UserToId;
+                    var name = db.Users.Where(x => x.Id == uId).FirstOrDefault().UserName;
+                    context.Clients.User(uId).addDialog(name, message);
+                    context.Clients.User(reqId).addDialog(name, message);
 
                     db.ChatDialogs.Add(dialogTo);
                     db.ChatDialogs.Add(dialog);
