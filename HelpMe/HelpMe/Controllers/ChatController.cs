@@ -20,10 +20,33 @@ namespace HelpMe.Controllers
         {
             //int page = id ?? 0;
             //var userToId = db.ChatDialogs.Where(i => i.Id == dialogId).FirstOrDefault().UserToId;
+            string requestId = User.Identity.GetUserId();
+                    
+            //db.Entry(openDialog).State = EntityState.Modified;
+           // openDialog.Status = DialogStatus.Close;
+
             if (dialogId != null)
             {
+                var openDialog = db.ChatDialogs.Where(i => i.UserFromId == requestId)
+                                          .Where(s => s.Status == DialogStatus.Open).FirstOrDefault();
+                if (openDialog != null)
+                {
+                    if (openDialog.Id != dialogId)
+                        dialogId = openDialog.Id;
+
+                    ViewBag.UserToName = openDialog?.UserTo?.UserName;
+
+                } else
+                {
+                    var oDialog = db.ChatDialogs.Where(i => i.Id == dialogId).FirstOrDefault();
+                    db.Entry(oDialog).State = EntityState.Modified;
+                    oDialog.Status = DialogStatus.Open;
+                    await db.SaveChangesAsync();
+                    ViewBag.UserToName = oDialog?.UserTo?.UserName;
+                }
+
                 var userToId = db.ChatDialogs.Where(i => i.Id == dialogId).FirstOrDefault().UserToId;
-                string requestId = User.Identity.GetUserId();
+               // string requestId = User.Identity.GetUserId();
                 var userTo = db.Users.Include(u => u.Messages).Where(u => u.Id == userToId).FirstOrDefault();
                 var userFrom = db.Users.Include(u => u.Messages).Where(u => u.Id == requestId).FirstOrDefault();
 
@@ -49,7 +72,7 @@ namespace HelpMe.Controllers
             }
             else
             {
-                string requestId = User.Identity.GetUserId();
+                //string requestId = User.Identity.GetUserId();
                 var openDialog = db.ChatDialogs.Where(i => i.UserFromId == requestId)
                                                .Where(s => s.Status == DialogStatus.Open)
                                                .FirstOrDefault();
@@ -144,12 +167,20 @@ namespace HelpMe.Controllers
                     string reqId = User.Identity.GetUserId();
                     string uId = message.UserToId;
                     var name = db.Users.Where(x => x.Id == uId).FirstOrDefault().UserName;
-                    context.Clients.User(uId).addDialog(name, message);
-                    context.Clients.User(reqId).addDialog(name, message);
+                    var dName = db.Users.Where(x => x.Id == reqId).FirstOrDefault().UserName;
+                    var messDesc = message.Description;
+                    
+                    //context.Clients.User(reqId).addDialog(name, message);
 
                     db.ChatDialogs.Add(dialogTo);
                     db.ChatDialogs.Add(dialog);
                     db.SaveChanges();
+
+                    var unCount = dialogTo.Messages.Where(m => m.Status == MessageStatus.Undreading).Count();
+
+                    context.Clients.User(uId).addDialog(name, dName, messDesc, unCount);
+
+
                     return RedirectToAction("Index", "Chat", new { dialogId = dialog.Id });
                 }
                 else

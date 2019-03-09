@@ -30,7 +30,9 @@
                                             <div class="message-by-headline">
                                                 <h5>@d.UserTo.UserName </h5>
                                                 <span class="notificationNew" id="notification-@d.UserTo.ConnectionId">
-                                                    4 часа назад
+                                                  
+                                                       @d.Messages.OrderByDescending(o => o.Id).FirstOrDefault().DateSend.ToShortTimeString()
+                                                    
                                                 </span>
                                             </div>
                                             @if (d.Messages.Any(m => m.Status == HelpMe.Models.MessageStatus.Undreading))
@@ -84,13 +86,22 @@
                         {
                             foreach (var item in Model)
                             {
+                                if (item == Model.FirstOrDefault())
+                                {
+                                    <div class="message-time-sign">
+                                        <span>@item.DateSend.ToShortDateString()</span>
+                                    </div>
+                                }
+
+
                                 if (item.UserFromId == User.Identity.GetUserId())
                                 {
                                     <div class="message-bubble me">
                                         <div class="message-bubble-inner">
                                             <div class="message-avatar">
-                                                <img src="~/Content/Custom/images/user-avatar-small-01.jpg" alt="" />
+                                                <span style="font-size:14px"> @item.DateSend.ToShortTimeString() </span>
                                             </div>
+
                                             <div class="message-text">
                                                 <p> @item.Description </p>
                                             </div>
@@ -103,7 +114,7 @@
                                     <div class="message-bubble">
                                         <div class="message-bubble-inner">
                                             <div class="message-avatar">
-                                                <img src="~/Content/Custom/images/user-avatar-small-01.jpg" alt="" />
+                                                <span style="font-size:14px"> @item.DateSend.ToShortTimeString() </span>
                                             </div>
                                             <div class="message-text">
                                                 <p> @item.Description </p>
@@ -123,23 +134,24 @@
                                 <br /><br /><br /> <br /><br /><br />
                                 <div> Начните с кем-нибудь чат</div>
                             </div>
-                            
+
                         }
-                        <div id="Status"></div>
+
                     </div>
 
-                    <!-- Message Content Inner / End -->
-                    <!-- Reply Area -->
+                                        <!-- Message Content Inner / End -->
+                                        <!-- Reply Area -->
                     <div class="message-reply">
 
                         <input type="hidden" id="partnerId" />
-                        <textarea id="message" cols="1" rows="1" placeholder="Напишите сообщение..." data-autoresize></textarea>
+                        <a href="#" class="button gray ripple-effect ico" title="Добавить вложение" data-tippy-placement="top"><i class="icon-feather-paperclip"></i></a>
+                        <textarea id="message" cols="1" rows="1" placeholder="Ваше сообщение..." data-autoresize></textarea>
                         <button id="sendmessage" class="button ripple-effect">Отправить</button>
                     </div>
-                    <input id="hdId" type="hidden" />
-                    <input id="username" type="hidden" />
-                    <input id="toUserName" value="@(ViewBag.UserToName != null ? ViewBag.UserToName : " ")" type="hidden" />
-                </div>
+                                        <input id="hdId" type="hidden" />
+                                        <input id="username" type="hidden" />
+                                        <input id="toUserName" value="@(ViewBag.UserToName != null ? ViewBag.UserToName : " ")" type="hidden" />
+                                    </div>
                 <!-- Message Content -->
 
             </div>

@@ -7,7 +7,7 @@
             <div class="message-bubble me">
                 <div class="message-bubble-inner">
                     <div class="message-avatar">
-                        <img src="~/Content/Custom/images/user-avatar-small-01.jpg" alt="" />
+                        <span style="font-size:14px"> @item.DateSend.ToShortTimeString() </span>
                     </div>
                     <div class="message-text">
                         <p> @item.Description </p>
@@ -21,7 +21,7 @@
             <div class="message-bubble">
                 <div class="message-bubble-inner">
                     <div class="message-avatar">
-                        <img src="~/Content/Custom/images/user-avatar-small-01.jpg" alt="" />
+                        <span style="font-size:14px"> @item.DateSend.ToShortTimeString() </span>
                     </div>
                     <div class="message-text">
                         <p> @item.Description </p>

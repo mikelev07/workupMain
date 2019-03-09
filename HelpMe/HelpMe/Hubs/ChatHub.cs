@@ -19,7 +19,7 @@ namespace HelpMe.Hubs
         [System.Web.Http.Authorize]
         public string GetUserId(IRequest request)
         {
-            var userId = db.Users.Where(n => n.UserName == request.User.Identity.Name).FirstOrDefault().Id;
+            var userId = request.User.Identity.GetUserId();
             return userId.ToString();
         }
     }
@@ -39,8 +39,7 @@ namespace HelpMe.Hubs
             string reqId = Context.User.Identity.GetUserId();
 
             var uId = db.Users.Where(x => x.UserName == toUserName).FirstOrDefault().Id;
-            Clients.User(uId).addMessage(name, message, partnerId);
-            Clients.User(reqId).addMessage(name, message);
+          
             //Clients.Client(partnerId).addMessage(name, message, partnerId);
             //Clients.Client(Context.ConnectionId).addMessage(name, message);
             int myDialogId = db.ChatDialogs.Where(i => i.UserFromId == reqId && i.UserToId == uId).FirstOrDefault().Id;
@@ -53,12 +52,23 @@ namespace HelpMe.Hubs
             messageStoreViewModel.Status = MessageStatus.Reading;
             messageStoreViewModel.ChatDialogId = myDialogId;
 
-            messageStoreViewModelPartner.UserFromId = db.Users.Where(x => x.Id == reqId).FirstOrDefault().Id;
-            messageStoreViewModelPartner.UserToId = db.Users.Where(x => x.UserName == toUserName).FirstOrDefault().Id;
+            messageStoreViewModelPartner.UserFromId = messageStoreViewModel.UserFromId;
+            messageStoreViewModelPartner.UserToId = messageStoreViewModel.UserToId;
             messageStoreViewModelPartner.Description = message;
             messageStoreViewModelPartner.DateSend = DateTime.Now;
-            messageStoreViewModelPartner.Status = MessageStatus.Undreading;
+
+            var openDialog = db.ChatDialogs.Where(i => i.Id == partnerDialogId).FirstOrDefault();
+            if (openDialog.Status == DialogStatus.Open)
+                messageStoreViewModelPartner.Status = MessageStatus.Reading;
+            else
+                messageStoreViewModelPartner.Status = MessageStatus.Undreading;
+
+
             messageStoreViewModelPartner.ChatDialogId = partnerDialogId;
+
+            var dateSend = messageStoreViewModel.DateSend.ToShortTimeString();
+            Clients.User(uId).addMessage(name, message, dateSend);
+            Clients.User(reqId).addMessage(name, message, dateSend);
 
             db.Messages.Add(messageStoreViewModel);
             db.Messages.Add(messageStoreViewModelPartner);
@@ -69,16 +79,17 @@ namespace HelpMe.Hubs
             }
         }
 
-        public void IsTyping(string html)
+        public void IsTyping(string html, string toUserName, string username)
         {
-            SayWhoIsTyping(html);
+            SayWhoIsTyping(html, toUserName, username);
         }
 
-        public void SayWhoIsTyping(string html)
+        public void SayWhoIsTyping(string html, string toUserName, string username)
         {
+            var uId = db.Users.Where(x => x.UserName == toUserName).FirstOrDefault().Id;
             IHubContext context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
-            context.Clients.All.sayWhoIsTyping(html);
-            
+            context.Clients.User(uId).sayWhoIsTyping(html, toUserName, username);
+            // context.Clients.All.sayWhoIsTyping(html); 
         }
 
         // Подключение нового пользователя

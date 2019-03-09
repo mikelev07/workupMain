@@ -40,28 +40,43 @@
       
         $('#notification-' + partnerId).html(message);
 
-        };
-    chat.client.SayWhoIsTyping = function (html) {
-        $('#Status').html('<div>' + htmlEncode(html) + '</div >');
-            setInterval(function () { $('#Status').html(''); },3000);
+    };
+
+    var lastMessage;
+    chat.client.SayWhoIsTyping = function (html, toUserName, username) {
+        var toUserName = '#' + username + '-lastmess';
+        $.ajax({
+            url: '/Chat/GetLastMessage',
+            type: 'GET',
+            cache: false,
+            data: { userName: username }
+        }).done(function (result) {
+            lastMessage = result
+        });
+
+        lastMessage = $(toUserName).text()
+        
+        $(toUserName).html('<div>' + htmlEncode(html) + '</div >');
+        setInterval(function () { $(toUserName).html('<div>' + htmlEncode(lastMessage) + '</div >'); }, 9000);
     };
 
         
         // Объявление функции, которая хаб вызывает при получении сообщений
-        chat.client.addDialog = function (name, message) {
+    chat.client.addDialog = function (name, dName, messDesc, unCount) {
 
-            var dialogHtml = '<li id="" class="" onclick="setValue(this.id)" ><a id="" href="#" onclick="loadHistory(this.id)"><div id="" class="message-avatar"><i id="" class="status-icon status-offline"></i><img src="~/Content/Custom/images/user-avatar-small-03.jpg" alt="" /></div><div class="message-by"><div class="message-by-headline"><h5>' + htmlEncode(name) + '</h5><span class="notificationNew" id="">4 часа назад</span></div><p> </p></div></a></li >';
+            var dialogHtml = '<li id="' + htmlEncode(dName) + '-conid" class="" onclick="setValue(this.id)" ><a id="' + htmlEncode(dName) + '" href="#" onclick="loadHistory(this.id)"><div id="" class="message-avatar"><i id="' + htmlEncode(dName) + '-status" class="status-icon status-offline"></i><img src="../Content/Custom/images/user-avatar-small-03.jpg" alt="" /></div><div class="message-by"><div class="message-by-headline"><h5>' + htmlEncode(dName) + '</h5><span class="notificationNew" id="">4 часа назад</span></div><p id="' + htmlEncode(dName) + '-lastmess">Новых сообщений<span style="color:white" id="' + htmlEncode(dName) + '-notif" class="nav-tag-mess">' + htmlEncode(unCount) + '</span></p></div></a></li >';
 
             $('#chatusers').append(dialogHtml);
         
         };
 
+
         // Объявление функции, которая хаб вызывает при получении сообщений
-        chat.client.addMessage = function (name, message, partnerId) {
-        if (htmlEncode(name) == $('#username').val()) {
-            var messageHtml = '<div class="message-bubble me"><div class="message-bubble-inner"><div class="message-avatar"><img src="/Content/Custom/images/user-avatar-small-01.jpg" alt="" /></div><div class="message-text"><p>' + htmlEncode(message) + '</p></div></div><div class="clearfix"></div></div>';
+        chat.client.addMessage = function (name, message, dateSend) {
+            if (htmlEncode(name) == $('#username').val()) {
+                var messageHtml = '<div class="message-bubble me"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p></div></div><div class="clearfix"></div></div>';
         } else {
-            var messageHtml = '<div class="message-bubble"><div class="message-bubble-inner"><div class="message-avatar"><img src="/Content/Custom/images/user-avatar-small-01.jpg" alt="" /></div><div class="message-text"><p>' + htmlEncode(message) + '</p></div></div><div class="clearfix"></div></div>';
+                var messageHtml = '<div class="message-bubble"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p></div></div><div class="clearfix"></div></div>';
             }
 
         if ($('#username').val() != htmlEncode(name)) {
@@ -146,10 +161,27 @@
                 });
             }
             });  
-            $('#message').keydown(function () {
-                var encodedName = $('<div />').text($('#username').val() + " печатает...").html();
-                chat.server.isTyping(encodedName);
-            });
+
+
+            function delay(callback, ms) {
+                var timer = 0;
+                return function () {
+                    var context = this, args = arguments;
+                    clearTimeout(timer);
+                    timer = setTimeout(function () {
+                        callback.apply(context, args);
+                    }, ms || 0);
+                };
+            }
+
+            $('#message').keydown(delay(function (e) {
+                if (e.keyCode != 8) {
+                    var encodedName = $('<div />').text($('#username').val() + " печатает...").html();
+
+                    chat.server.isTyping(encodedName, $('#toUserName').val(), $('#username').val());
+                   
+                }
+            },500));
 
             $('#message').keypress(function (e) {
                 var key = e.which;
