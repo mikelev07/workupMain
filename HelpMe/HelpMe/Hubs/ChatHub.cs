@@ -32,7 +32,7 @@ namespace HelpMe.Hubs
         static List<User> userList = new List<User>();
         // Отправка сообщений
         
-        public void Send(string name, string message, string partnerId, string toUserName)
+        public void Send(string name, string message, string partnerId, string toUserName, string fileUrl)
         {
             MessageStoreViewModel messageStoreViewModel = new MessageStoreViewModel();
             MessageStoreViewModel messageStoreViewModelPartner = new MessageStoreViewModel();
@@ -51,11 +51,13 @@ namespace HelpMe.Hubs
             messageStoreViewModel.DateSend = DateTime.Now;
             messageStoreViewModel.Status = MessageStatus.Reading;
             messageStoreViewModel.ChatDialogId = myDialogId;
+            messageStoreViewModel.AttachUrl = fileUrl;
 
             messageStoreViewModelPartner.UserFromId = messageStoreViewModel.UserFromId;
             messageStoreViewModelPartner.UserToId = messageStoreViewModel.UserToId;
             messageStoreViewModelPartner.Description = message;
             messageStoreViewModelPartner.DateSend = DateTime.Now;
+            messageStoreViewModelPartner.AttachUrl = messageStoreViewModel.AttachUrl;
 
             var openDialog = db.ChatDialogs.Where(i => i.Id == partnerDialogId).FirstOrDefault();
             if (openDialog.Status == DialogStatus.Open)
@@ -67,8 +69,8 @@ namespace HelpMe.Hubs
             messageStoreViewModelPartner.ChatDialogId = partnerDialogId;
 
             var dateSend = messageStoreViewModel.DateSend.ToShortTimeString();
-            Clients.User(uId).addMessage(name, message, dateSend);
-            Clients.User(reqId).addMessage(name, message, dateSend);
+            Clients.User(uId).addMessage(name, message, dateSend, fileUrl);
+            Clients.User(reqId).addMessage(name, message, dateSend, fileUrl);
 
             db.Messages.Add(messageStoreViewModel);
             db.Messages.Add(messageStoreViewModelPartner);

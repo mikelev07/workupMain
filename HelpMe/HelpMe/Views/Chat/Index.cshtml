@@ -4,6 +4,12 @@
     Layout = "~/Views/Shared/_LayoutChat.cshtml";
 }
 
+<style>
+    body {
+        overflow: hidden;
+    }
+</style>
+
 <div class="dashboard-content-container" data-simplebar>
     <div class="dashboard-content-inner">
 
@@ -15,7 +21,7 @@
                 <div class="messages-inbox">
                     <div class="messages-headline">
                         <div class="input-with-icon">
-                            <input id="autocomplete-input" type="text" placeholder="Поиск">
+                            <input id="autocomplete-input" type="text" placeholder="Поиск собеседника">
                             <i class="icon-material-outline-search"></i>
                         </div>
                     </div>
@@ -82,12 +88,25 @@
 
                     <!-- Message Content Inner -->
                     <div id="chatroom" class="message-content-inner">
+                        <div style="margin-bottom:145px">
+
+                        </div>
                         @if (Model != null)
                         {
+                            var sad = Model.FirstOrDefault();
                             foreach (var item in Model)
                             {
+
                                 if (item == Model.FirstOrDefault())
                                 {
+                                    <div class="message-time-sign">
+                                        <span>@item.DateSend.ToShortDateString()</span>
+                                    </div>
+                                }
+
+                                if (item.DateSend.Date.Day > sad.DateSend.Day)
+                                {
+                                    sad = item;
                                     <div class="message-time-sign">
                                         <span>@item.DateSend.ToShortDateString()</span>
                                     </div>
@@ -101,9 +120,12 @@
                                             <div class="message-avatar">
                                                 <span style="font-size:14px"> @item.DateSend.ToShortTimeString() </span>
                                             </div>
-
                                             <div class="message-text">
                                                 <p> @item.Description </p>
+                                                @if (item.AttachUrl != null)
+                                                {
+                                                    <a href="@Url.Action("GetChatFile", "Chat",new { path = item.AttachUrl })" style="border:1px dashed white; background-color:#28b661; margin-top:5px;" class="attachment-box ripple-effect "><span style="color:white">Файл исполнителя</span><i style="color:white">Скачать</i></a>
+                                                }
                                             </div>
                                         </div>
                                         <div class="clearfix"> </div>
@@ -118,6 +140,10 @@
                                             </div>
                                             <div class="message-text">
                                                 <p> @item.Description </p>
+                                                @if (item.AttachUrl != null)
+                                                {
+                                                    <a href="@Url.Action("GetChatFile", "Chat",new { path = item.AttachUrl })" style="border:1px dashed #666; background-color:#f4f4f4;margin-top:5px;" class="attachment-box ripple-effect "><span>Файлa исполнителя</span><i style="color:#666">Скачать</i></a>
+                                                }
                                             </div>
                                         </div>
                                         <div class="clearfix"> </div>
@@ -139,60 +165,48 @@
 
                     </div>
 
-                                        <!-- Message Content Inner / End -->
-                                        <!-- Reply Area -->
+                    <div id="fileUp" style="display:none; margin:0px" class="task-tags">
+                        <span id="fileUpSpan"></span>
+                    </div>
+                    <div class="progress"></div>
                     <div class="message-reply">
-
                         <input type="hidden" id="partnerId" />
-                        <a href="#" class="button gray ripple-effect ico" title="Добавить вложение" data-tippy-placement="top"><i class="icon-feather-paperclip"></i></a>
+                        <input style="display:none" id="uploadAttache" type="file" name="upload" />
+                        <a id="upload_link" href="#" class="button gray ripple-effect ico" title="Добавить вложение" data-tippy-placement="top"><i class="icon-feather-paperclip"></i></a>
                         <textarea id="message" cols="1" rows="1" placeholder="Ваше сообщение..." data-autoresize></textarea>
                         <button id="sendmessage" class="button ripple-effect">Отправить</button>
                     </div>
-                                        <input id="hdId" type="hidden" />
-                                        <input id="username" type="hidden" />
-                                        <input id="toUserName" value="@(ViewBag.UserToName != null ? ViewBag.UserToName : " ")" type="hidden" />
-                                    </div>
+
+                    <input id="hdId" type="hidden" />
+                    <input id="username" type="hidden" />
+                    <input id="toUserName" value="@(ViewBag.UserToName != null ? ViewBag.UserToName : " ")" type="hidden" />
+                </div>
                 <!-- Message Content -->
 
             </div>
         </div>
-        <!-- Messages Container / End -->
-        <!-- Footer -->
-        <div class="dashboard-footer-spacer"></div>
-        <div class="small-footer margin-top-15">
-            <div class="small-footer-copyrights">
-                © 2018 <strong>WorkUp</strong>. Все права соблюдены.
-            </div>
-            <ul class="footer-social-links">
-                <li>
-                    <a href="#" title="Facebook" data-tippy-placement="top">
-                        <i class="icon-brand-facebook-f"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" title="Twitter" data-tippy-placement="top">
-                        <i class="icon-brand-twitter"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" title="Google Plus" data-tippy-placement="top">
-                        <i class="icon-brand-google-plus-g"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" title="LinkedIn" data-tippy-placement="top">
-                        <i class="icon-brand-linkedin-in"></i>
-                    </a>
-                </li>
-            </ul>
-            <div class="clearfix"></div>
-        </div>
-        <!-- Footer / End -->
+      
+       
 
     </div>
 </div>
 
 <script>
+    //disableScroll();
+    var objDiv = document.getElementById("chatroom");
+    objDiv.scrollTop = objDiv.scrollHeight;
+  
+    function loadAttachChat(fileUrl) {
+        $.ajax({
+            url: '/Chat/GetChatFile',
+            type: 'GET',
+            cache: false,
+            data: { path: fileUrl }
+        }).done(function (result) {
+            var f = fileUrl
+            window.location = '/Chat/GetChatFile?path=' + fileUrl;
+        });
+    }
 
     function loadHistory(name) {
         document.getElementById('toUserName').value = name;

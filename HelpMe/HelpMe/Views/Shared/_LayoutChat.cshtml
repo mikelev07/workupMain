@@ -31,6 +31,20 @@
             margin: 0 0 0 4px;
             top: -2px;
         }
+
+        .progress {
+            display: block;
+            text-align: center;
+            width: 0;
+            height: 3px;
+            background: #28b661;
+            transition: width .3s;
+        }
+
+            .progress.hide {
+                opacity: 0;
+                transition: opacity 1.3s;
+            }
     </style>
 </head>
 <body>

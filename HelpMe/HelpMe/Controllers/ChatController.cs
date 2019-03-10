@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -120,13 +121,56 @@ namespace HelpMe.Controllers
             }
         }
 
-       // private List<MessageStoreViewModel> GetItemsPage(int page = 1)
-      //  {
+        public FileResult GetChatFile(string path)
+        {
+            string file_type = "application/" + Path.GetExtension(path);
+            string file_name = Path.GetFileName(path);
+
+            return File(path, file_type, file_name);
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public async Task<JsonResult> DialogSearchAsync(string dName)
+        {
+            var requestId = User.Identity.GetUserId();
+            var dialogs = await db.ChatDialogs.Include(u => u.UserFrom)
+                                                    .Include(u => u.UserTo)
+                                                    .Include(m => m.Messages)
+                                                    .Where(u => u.UserFromId == requestId)
+                                                    .ToListAsync();
+
+            var filtDialog = dialogs.Where(a => a.UserTo.UserName.Contains(dName)).FirstOrDefault().UserTo.UserName;
+
+            return Json(filtDialog, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult UploadAttach()
+        {
+            //var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
+            string pathFile = null;
+            foreach (string file in Request.Files)
+            {
+                var upload = Request.Files[file];
+                if (upload != null)
+                {
+                    // получаем имя файла
+                    string fileName = System.IO.Path.GetFileName(upload.FileName);
+                    // сохраняем файл в папку Files в проекте
+                    upload.SaveAs(Server.MapPath("~/Files/" + fileName));
+                    pathFile = Server.MapPath("~/Files/" + fileName);
+                }
+            }
+            return Json(pathFile);
+        }
+
+        // private List<MessageStoreViewModel> GetItemsPage(int page = 1)
+        //  {
         //    var itemsToSkip = page * pageSize;
-            
-         //   return db.Messages.OrderBy(t => t.Id).Skip(itemsToSkip).
-           //     Take(pageSize).ToList();
-       // }
+
+        //   return db.Messages.OrderBy(t => t.Id).Skip(itemsToSkip).
+        //     Take(pageSize).ToList();
+        // }
 
         [HttpPost]
         [ValidateAntiForgeryToken]

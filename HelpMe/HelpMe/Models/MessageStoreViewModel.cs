@@ -14,6 +14,7 @@ namespace HelpMe.Models
         public DateTime DateSend { get; set; }
         public MessageStatus Status { get; set; }
 
+        public string AttachUrl { get; set; }
         public string UserFromId { get; set; }
         public virtual User UserFrom { get; set; }
 
