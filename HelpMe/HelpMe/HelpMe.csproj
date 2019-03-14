@@ -576,6 +576,7 @@
     <Content Include="Views\Custom\Tasks.cshtml" />
     <Content Include="Views\Custom\Bidders.cshtml" />
     <Content Include="Views\Comment\MyComments.cshtml" />
+    <Content Include="Views\Chat\CustomSearch.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

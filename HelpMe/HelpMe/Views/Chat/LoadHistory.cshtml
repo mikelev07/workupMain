@@ -5,9 +5,11 @@
 
 </div>
 
-@foreach (var item in Model)
-{
+@{ 
     var sad = Model.FirstOrDefault();
+foreach (var item in Model)
+{
+  
     if (item == Model.FirstOrDefault())
     {
         <div class="message-time-sign">
@@ -34,7 +36,7 @@
                     <p> @item.Description </p>
                     @if (item.AttachUrl != null)
                     {
-                        <a href="@Url.Action("GetChatFile", "Chat",new { path = item.AttachUrl })" style="border:1px dashed white; background-color:#28b661; margin-top:5px;" class="attachment-box ripple-effect "><span style="color:white">Файл исполнителя</span><i style="color:white">Скачать</i></a>
+                        <a href="@Url.Action("GetChatFile", "Chat", new { path = item.AttachUrl })" style="border:1px dashed white; background-color:#28b661; margin-top:5px;" class="attachment-box ripple-effect "><span style="color:white">Файл исполнителя</span><i style="color:white">Скачать</i></a>
                     }
                 </div>
             </div>
@@ -52,7 +54,7 @@
                     <p> @item.Description </p>
                     @if (item.AttachUrl != null)
                     {
-                        <a href="@Url.Action("GetChatFile", "Chat",new { path = item.AttachUrl })" style="border:1px dashed #666; background-color:#f4f4f4;margin-top:5px;" class="attachment-box ripple-effect "><span>Файлa исполнителя</span><i style="color:#666">Скачать</i></a>
+                        <a href="@Url.Action("GetChatFile", "Chat", new { path = item.AttachUrl })" style="border:1px dashed #666; background-color:#f4f4f4;margin-top:5px;" class="attachment-box ripple-effect "><span>Файлa исполнителя</span><i style="color:#666">Скачать</i></a>
                     }
                 </div>
             </div>
@@ -60,4 +62,5 @@
         </div>
     }
 }
+    }
 

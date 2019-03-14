@@ -1,0 +1,36 @@
+﻿@model IEnumerable<HelpMe.Models.ChatDialog>
+
+
+@foreach (HelpMe.Models.ChatDialog d in Model)
+{
+    <li id="@d.UserTo.UserName-conid" class="@(ViewBag.UserToName != null && ViewBag.UserToName == d.UserTo.UserName  ? "active-message" : " ")" onclick="setValue(this.id)">
+        <a id="@d.UserTo.UserName" href="#" onclick="loadHistory(this.id)">
+            <div id="@d.UserToId" class="message-avatar"><i id="@d.UserTo.UserName-status" class="status-icon status-offline"></i><img src="~/Content/Custom/images/user-avatar-small-03.jpg" alt="" /></div>
+            <div class="message-by">
+                <div class="message-by-headline">
+                    <h5>@d.UserTo.UserName </h5>
+                    <span class="notificationNew" id="notification-@d.UserTo.ConnectionId">
+
+                        @d.Messages.OrderByDescending(o => o.Id).FirstOrDefault().DateSend.ToShortTimeString()
+
+                    </span>
+                </div>
+                @if (d.Messages.Any(m => m.Status == HelpMe.Models.MessageStatus.Undreading))
+                {
+                    <p id="@d.UserTo.UserName-lastmess">
+                        Новых сообщений<span style="color:white" id="@d.UserTo.UserName-notif" class="nav-tag-mess">
+                            @d.Messages.Where(m => m.Status == HelpMe.Models.MessageStatus.Undreading).Count()
+                        </span>
+                    </p>
+                }
+                else
+                {
+                    <p id="@d.UserTo.UserName-lastmess">
+                        @d.Messages.OrderByDescending(o => o.Id).FirstOrDefault().Description
+                    </p>
+                }
+
+            </div>
+        </a>
+    </li>
+}

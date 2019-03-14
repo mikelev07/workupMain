@@ -3,13 +3,75 @@
 
     $('#chatroom').scrollTop($('#chatroom').prop('scrollHeight'));
 
+    /*
     $('#autocomplete-input').keyup(function (e) {
         clearTimeout($.data(this, 'timer'));
         if (e.keyCode == 13)
             search(true);
         else
             $(this).data('timer', setTimeout(search, 5));
+    }); */
+
+    function tog(v) { return v ? 'addClass' : 'removeClass'; }
+    $(document).on('input', '.clearable', function () {
+      
+        $(this)[tog(this.value)]('x');
+    }).on('mousemove', '.x', function (e) {
+        $(this)[tog(this.offsetWidth - 42 < e.clientX - this.getBoundingClientRect().left)]('onX');
+        }).on('touchstart click', '.onX', function (ev) {
+            $.ajax({
+                url: '/Chat/CustomSearch',
+                type: 'POST',
+                data: { dName: '' },
+                dataType: "html",
+                success: function (data) {
+                    $('#chatusers').html(data);
+                }
+            });
+        ev.preventDefault();
+        $(this).removeClass('x onX').val('').change();
     });
+
+
+    $('#autocomplete-input').keyup(function () {
+        var dialogName = $('#autocomplete-input').val();
+       
+
+        $.ajax({
+            url: '/Chat/CustomSearch',
+            type: 'POST',
+            data: { dName: dialogName },
+            dataType: "html", 
+            success: function (data) {
+
+                if (data == "''") {
+                    $('#chatusers').html('<li style="margin-top:20px;margin-left:90px">Не найдено диалога</li>');
+                    if (dialogName === "")
+                        $('#chatusers').html(data)
+                } else {
+
+                    $('#chatusers').html(data)
+                    if (data.length == 2)
+                        $('#chatusers').html('<li style="margin-top:20px;margin-left:90px">Не найдено диалога</li>');
+                }
+                
+              
+                  
+            }
+        });
+
+        /*
+        
+        $.ajax({
+            url: '/Chat/CustomSearch',
+            type: 'POST',
+            dataType: "html",
+            data: dName,
+            success: function (data) {
+                //$('#ProductsDiv').html(data);
+            }
+        }); */
+    });  
 
     function search(force) {
         var existingString = $("#autocomplete-input").val();
@@ -22,9 +84,9 @@
             cache: false,
             data: { dName: existingString }
         }).done(function (result) {
-            var dialogHtml = '<li id="-conid" class="" onclick="setValue(this.id)" ><a id="" href="#" onclick="loadHistory(this.id)"><div id="" class="message-avatar"><i id="status" class="status-icon status-offline"></i><img src="../Content/Custom/images/user-avatar-small-03.jpg" alt="" /></div><div class="message-by"><div class="message-by-headline"><h5></h5><span class="notificationNew" id="">4 часа назад</span></div><p id="-lastmess">Новых сообщений<span style="color:white" id="notif" class="nav-tag-mess"></span></p></div></a></li >';
-           alert(1)
-            $('#chatusers').append(dialogHtml);
+           // var dialogHtml = '<li id="-conid" class="" onclick="setValue(this.id)" ><a id="" href="#" onclick="loadHistory(this.id)"><div id="" class="message-avatar"><i id="status" class="status-icon status-offline"></i><img src="../Content/Custom/images/user-avatar-small-03.jpg" alt="" /></div><div class="message-by"><div class="message-by-headline"><h5></h5><span class="notificationNew" id="">4 часа назад</span></div><p id="-lastmess">Новых сообщений<span style="color:white" id="notif" class="nav-tag-mess"></span></p></div></a></li >';
+          // alert(1)
+           // $('#chatusers').append(dialogHtml);
         });
     }
 
@@ -116,14 +178,18 @@
 
         // Объявление функции, которая хаб вызывает при получении сообщений
     chat.client.addMessage = function (name, message, dateSend, fileUrl) {
+        var index = fileUrl.lastIndexOf('\\')
+        var fileName = fileUrl.slice(index + 1)
+      
         if (htmlEncode(name) == $('#username').val()) {
+          
             if (fileUrl != null)
-                var messageHtml = '<div class="message-bubble me"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p><a id="' + htmlEncode(fileUrl) +'" onclick="loadAttachChat(this.id)"  style="border:1px dashed ;background-color:#28b661; margin-top:5px;" class="attachment-box ripple-effect "><span style="color:white">Файл исполнителя</span><i style="color:white">Скачать</i></a> </div></div><div class="clearfix"></div></div>';
+                var messageHtml = '<div class="message-bubble me"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p><a id="' + htmlEncode(fileUrl) + '" onclick="loadAttachChat(this.id)"  style="border:1px dashed ;background-color:#28b661; margin-top:5px;" class="attachment-box ripple-effect "><span style="color:white">' + fileName +'</span><i style="color:white">Скачать</i></a> </div></div><div class="clearfix"></div></div>';
             else
                 var messageHtml = '<div class="message-bubble me"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p></div></div><div class="clearfix"></div></div>';
         } else {
             if (fileUrl != null)
-                var messageHtml = '<div class="message-bubble"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p><a  id="' + htmlEncode(fileUrl) + '" onclick="loadAttachChat(this.id)"  style="border:1px dashed #666; background-color:#f4f4f4;margin-top:5px;" class="attachment-box ripple-effect "><span style="color:#666">Файлa исполнителя</span><i style="color:#666">Скачать</i></a>  </div></div><div class="clearfix"></div></div>';
+                var messageHtml = '<div class="message-bubble"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p><a  id="' + htmlEncode(fileUrl) + '" onclick="loadAttachChat(this.id)"  style="border:1px dashed #666; background-color:#f4f4f4;margin-top:5px;" class="attachment-box ripple-effect "><span style="color:#666">' + fileName +'</span><i style="color:#666">Скачать</i></a>  </div></div><div class="clearfix"></div></div>';
             else
                 var messageHtml = '<div class="message-bubble"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p></div></div><div class="clearfix"></div></div>';
             }
@@ -247,6 +313,7 @@
                                 $('textarea#message').val('');
                                 $('#fileUp').hide();
                                 $('.message-reply').css('margin-top', "15px");
+                                document.getElementById("uploadAttache").value = "";
                             },
                             error: function (xhr, status, p3) {
                                 alert(xhr.responseText);
@@ -332,6 +399,7 @@
                                     $('textarea#message').val('');
                                     $('#fileUp').hide();
                                     $('.message-reply').css('margin-top', "15px");
+                                    document.getElementById("uploadAttache").value = "";
                                 },
                                 error: function (xhr, status, p3) {
                                     alert(xhr.responseText);

@@ -145,6 +145,26 @@ namespace HelpMe.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> CustomSearch(string dName)
+        {
+            var requestId = User.Identity.GetUserId();
+            var dialogs = await db.ChatDialogs.Include(u => u.UserFrom)
+                                                    .Include(u => u.UserTo)
+                                                    .Include(m => m.Messages)
+                                                    .Where(u => u.UserFromId == requestId)
+                                                    .ToListAsync();
+
+            var openDialog = db.ChatDialogs.Where(i => i.UserFromId == requestId)
+                                           .Where(s => s.Status == DialogStatus.Open)
+                                           .FirstOrDefault();
+
+            ViewBag.UserToName = openDialog?.UserTo?.UserName;
+
+            var filtDialog = dialogs.Where(a => a.UserTo.UserName.Contains(dName));
+            return PartialView(filtDialog);
+        }
+
+        [HttpPost]
         public JsonResult UploadAttach()
         {
             //var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
