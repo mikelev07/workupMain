@@ -53,6 +53,7 @@ namespace HelpMe.Controllers
 
                 var messages = db.Messages.Include(u => u.UserFrom)
                                           .Include(u => u.UserTo)
+                                          .Include(u => u.MessageAttaches)
                                           .Where(d => d.ChatDialogId == dialogId)
                                           .Where(m => (m.UserFromId == userFrom.Id && m.UserToId == userTo.Id) ||
                                           (m.UserFromId == userTo.Id) && m.UserToId == userFrom.Id).OrderBy(m => m.DateSend);
@@ -90,6 +91,7 @@ namespace HelpMe.Controllers
 
                     var messages = db.Messages.Include(u => u.UserFrom)
                                               .Include(u => u.UserTo)
+                                              .Include(u => u.MessageAttaches)
                                               .Where(d => d.ChatDialogId == openDialog.Id)
                                               .Where(m => (m.UserFromId == userFrom.Id && m.UserToId == userTo.Id) ||
                                               (m.UserFromId == userTo.Id) && m.UserToId == userFrom.Id).OrderBy(m => m.DateSend);
@@ -164,11 +166,32 @@ namespace HelpMe.Controllers
             return PartialView(filtDialog);
         }
 
+       
+        public async Task<ActionResult> LoadDialogs()
+        {
+            var requestId = User.Identity.GetUserId();
+            var dialogs = await db.ChatDialogs.Include(u => u.UserFrom)
+                                                    .Include(u => u.UserTo)
+                                                    .Include(m => m.Messages)
+                                                    .Where(u => u.UserFromId == requestId)
+                                                    .ToListAsync();
+
+            var openDialog = db.ChatDialogs.Where(i => i.UserFromId == requestId)
+                                           .Where(s => s.Status == DialogStatus.Open)
+                                           .FirstOrDefault();
+
+            ViewBag.UserToName = openDialog?.UserTo?.UserName;
+
+            return PartialView(dialogs);
+        }
+
         [HttpPost]
         public JsonResult UploadAttach()
         {
             //var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
             string pathFile = null;
+            List<string> pathList = new List<string>();
+
             foreach (string file in Request.Files)
             {
                 var upload = Request.Files[file];
@@ -179,9 +202,10 @@ namespace HelpMe.Controllers
                     // сохраняем файл в папку Files в проекте
                     upload.SaveAs(Server.MapPath("~/Files/" + fileName));
                     pathFile = Server.MapPath("~/Files/" + fileName);
+                    pathList.Add(pathFile);
                 }
             }
-            return Json(pathFile);
+            return Json(pathList);
         }
 
         // private List<MessageStoreViewModel> GetItemsPage(int page = 1)
@@ -249,8 +273,6 @@ namespace HelpMe.Controllers
                 }
                 else
                 {
-                    var dialog = diaologs.Where(u => u.UserFromId == message.UserFromId && u.UserToId == message.UserToId).FirstOrDefault();
-                    var dialogTo = diaologs.Where(u => u.UserFromId == message.UserToId && u.UserToId == message.UserFromId).FirstOrDefault();
                     MessageStoreViewModel messageStoreViewModelPartner = new MessageStoreViewModel();
                     message.DateSend = DateTime.Now;
                     message.Status = MessageStatus.Reading;
@@ -259,6 +281,19 @@ namespace HelpMe.Controllers
                     messageStoreViewModelPartner.Description = message.Description;
                     messageStoreViewModelPartner.DateSend = DateTime.Now;
                     messageStoreViewModelPartner.Status = MessageStatus.Undreading;
+                    var dialog = diaologs.Where(u => u.UserFromId == message.UserFromId && u.UserToId == message.UserToId).FirstOrDefault();
+                    if (dialog == null)
+                    {
+                        dialog = new ChatDialog();
+                        dialog.Id = 3;
+                        dialog.UserFromId = message.UserFromId;
+                        dialog.UserToId = message.UserToId;
+                        dialog.Status = DialogStatus.Close;
+                        db.ChatDialogs.Add(dialog);
+                        db.SaveChanges();
+                    }
+                    var dialogTo = diaologs.Where(u => u.UserFromId == message.UserToId && u.UserToId == message.UserFromId).FirstOrDefault();
+                
                     dialog.Messages.Add(message);
                     dialogTo.Messages.Add(messageStoreViewModelPartner);
                     db.SaveChanges();
@@ -286,6 +321,28 @@ namespace HelpMe.Controllers
             var lastMessage = messages.OrderByDescending(o => o.Id).FirstOrDefault().Description;
 
             return Json(lastMessage, JsonRequestBehavior.AllowGet);
+        }
+
+        public async Task<JsonResult> DeleteDialog(string userName)
+        {
+            string requestId = User.Identity.GetUserId();
+            var userTo = db.Users.Include(u => u.Messages).Where(u => u.UserName == userName).FirstOrDefault();
+            var userFrom = db.Users.Include(u => u.Messages).Where(u => u.Id == requestId).FirstOrDefault();
+            string userToId = userTo.Id;
+            var dialog = await db.ChatDialogs.Where(i => i.UserFromId == requestId)
+                                               .Where(i => i.UserToId == userToId).FirstOrDefaultAsync();
+
+            var messagesOfDialog = db.Messages.Where(i => i.ChatDialogId == dialog.Id);
+
+            db.Messages.RemoveRange(messagesOfDialog);
+                
+            
+            var openDialog = db.ChatDialogs.Where(i => i.UserFromId == requestId).FirstOrDefault();
+            openDialog.Status = DialogStatus.Open;
+
+            db.ChatDialogs.Remove(dialog);
+            await db.SaveChangesAsync();
+            return Json(true);
         }
 
         [HttpGet]

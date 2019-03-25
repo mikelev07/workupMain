@@ -14,7 +14,6 @@ namespace HelpMe.Models
         public DateTime DateSend { get; set; }
         public MessageStatus Status { get; set; }
 
-        public string AttachUrl { get; set; }
         public string UserFromId { get; set; }
         public virtual User UserFrom { get; set; }
 
@@ -24,6 +23,13 @@ namespace HelpMe.Models
 
         public int? ChatDialogId { get; set; }
         public virtual ChatDialog ChatDialog { get; set; }
+
+        public ICollection<MessageAttach> MessageAttaches { get; set; }
+
+        public MessageStoreViewModel()
+        {
+            MessageAttaches = new List<MessageAttach>();
+        }
 
         public class Comparer : IEqualityComparer<MessageStoreViewModel>
         {
@@ -43,6 +49,17 @@ namespace HelpMe.Models
             }
         }
 
+    }
+
+    /// <summary>
+    /// Для мульти-загрузки файлов
+    /// </summary>
+    public class MessageAttach
+    {
+        public int Id { get; set; }
+        public string AttachUrl { get; set; }
+        public int? MessageStoreViewModelId { get; set; }
+        public virtual MessageStoreViewModel MessageStoreViewModel { get; set; }
     }
 
     public class ChatDialog

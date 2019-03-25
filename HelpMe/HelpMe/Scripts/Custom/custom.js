@@ -773,7 +773,21 @@ $(document).ready(function(){
 
 		// removing keyword
 		$(document).on("click",".keyword-remove", function(){
-			$(this).parent().addClass('keyword-removed');
+            $(this).parent().addClass('keyword-removed');
+
+           /* var clone = $('#uploadAttache').clone();
+            clone.attr('id', 'field2');
+            $('#field2_area').html(clone);
+            alert($('#field2')[0].files[0].name)
+            alert($('#field2')[0].files[1].name) */
+
+            var idAttach = $(this).parent().attr('id');
+            var filesArray = $('#uploadAttache')[0].files;
+            var fileBuffer = [];
+            Array.prototype.push.apply(fileBuffer, filesArray);
+            finalFileBuffer.splice(idAttach, 1);
+            //alert(fileBuffer)
+            //finalFileBuffer = fileBuffer;
 
 			function removeFromMarkup(){
 			  $(".keyword-removed").remove();

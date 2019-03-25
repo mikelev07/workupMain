@@ -243,93 +243,13 @@
     <Compile Include="Migrations\201810120851500_Newmigra.Designer.cs">
       <DependentUpon>201810120851500_Newmigra.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201810120857437_MigraMessage.cs" />
-    <Compile Include="Migrations\201810120857437_MigraMessage.Designer.cs">
-      <DependentUpon>201810120857437_MigraMessage.cs</DependentUpon>
+    <Compile Include="Migrations\201903240046300_messageAttach.cs" />
+    <Compile Include="Migrations\201903240046300_messageAttach.Designer.cs">
+      <DependentUpon>201903240046300_messageAttach.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201812171618146_addWalletClass.cs" />
-    <Compile Include="Migrations\201812171618146_addWalletClass.Designer.cs">
-      <DependentUpon>201812171618146_addWalletClass.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812171829557_updateCustomClassAddPrice.cs" />
-    <Compile Include="Migrations\201812171829557_updateCustomClassAddPrice.Designer.cs">
-      <DependentUpon>201812171829557_updateCustomClassAddPrice.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812202142224_updateStatus.cs" />
-    <Compile Include="Migrations\201812202142224_updateStatus.Designer.cs">
-      <DependentUpon>201812202142224_updateStatus.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812202303520_newModelAttach.cs" />
-    <Compile Include="Migrations\201812202303520_newModelAttach.Designer.cs">
-      <DependentUpon>201812202303520_newModelAttach.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812202313235_newModelAttachCustomProperty.cs" />
-    <Compile Include="Migrations\201812202313235_newModelAttachCustomProperty.Designer.cs">
-      <DependentUpon>201812202313235_newModelAttachCustomProperty.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812212154077_fixModelUpdate.cs" />
-    <Compile Include="Migrations\201812212154077_fixModelUpdate.Designer.cs">
-      <DependentUpon>201812212154077_fixModelUpdate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201901031423076_addMessageStatus.cs" />
-    <Compile Include="Migrations\201901031423076_addMessageStatus.Designer.cs">
-      <DependentUpon>201901031423076_addMessageStatus.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201901031527150_addDialogModel.cs" />
-    <Compile Include="Migrations\201901031527150_addDialogModel.Designer.cs">
-      <DependentUpon>201901031527150_addDialogModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201901121816042_addOpenCloseDialogStatus.cs" />
-    <Compile Include="Migrations\201901121816042_addOpenCloseDialogStatus.Designer.cs">
-      <DependentUpon>201901121816042_addOpenCloseDialogStatus.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201901261742034_addNewModelMigration.cs" />
-    <Compile Include="Migrations\201901261742034_addNewModelMigration.Designer.cs">
-      <DependentUpon>201901261742034_addNewModelMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201901261804339_addNewModelMigration123.cs" />
-    <Compile Include="Migrations\201901261804339_addNewModelMigration123.Designer.cs">
-      <DependentUpon>201901261804339_addNewModelMigration123.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201902040146359_notifUtlEdit.cs" />
-    <Compile Include="Migrations\201902040146359_notifUtlEdit.Designer.cs">
-      <DependentUpon>201902040146359_notifUtlEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201902040303339_notifUserNameEdit.cs" />
-    <Compile Include="Migrations\201902040303339_notifUserNameEdit.Designer.cs">
-      <DependentUpon>201902040303339_notifUserNameEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201902050541324_UserNotEdit.cs" />
-    <Compile Include="Migrations\201902050541324_UserNotEdit.Designer.cs">
-      <DependentUpon>201902050541324_UserNotEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201902050627203_UserNotEdit9.cs" />
-    <Compile Include="Migrations\201902050627203_UserNotEdit9.Designer.cs">
-      <DependentUpon>201902050627203_UserNotEdit9.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201902050711453_UserNotEdit9a.cs" />
-    <Compile Include="Migrations\201902050711453_UserNotEdit9a.Designer.cs">
-      <DependentUpon>201902050711453_UserNotEdit9a.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201902052147154_UserNotEdit9a1.cs" />
-    <Compile Include="Migrations\201902052147154_UserNotEdit9a1.Designer.cs">
-      <DependentUpon>201902052147154_UserNotEdit9a1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201902052155424_UserNotEdit9a1a.cs" />
-    <Compile Include="Migrations\201902052155424_UserNotEdit9a1a.Designer.cs">
-      <DependentUpon>201902052155424_UserNotEdit9a1a.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201902070555437_addUserPhoto.cs" />
-    <Compile Include="Migrations\201902070555437_addUserPhoto.Designer.cs">
-      <DependentUpon>201902070555437_addUserPhoto.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201902070615106_addImagePath.cs" />
-    <Compile Include="Migrations\201902070615106_addImagePath.Designer.cs">
-      <DependentUpon>201902070615106_addImagePath.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201903101403415_attachFixModel.cs" />
-    <Compile Include="Migrations\201903101403415_attachFixModel.Designer.cs">
-      <DependentUpon>201903101403415_attachFixModel.cs</DependentUpon>
+    <Compile Include="Migrations\201903240100486_fixAttachModel.cs" />
+    <Compile Include="Migrations\201903240100486_fixAttachModel.Designer.cs">
+      <DependentUpon>201903240100486_fixAttachModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -443,6 +363,7 @@
     <Content Include="Content\Custom\fonts\Line-Awesome.woff" />
     <Content Include="Content\Custom\fonts\Material-Icons.ttf" />
     <Content Include="Content\Custom\fonts\Material-Icons.woff" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\Custom\bootstrap-select.min.js" />
     <Content Include="Scripts\Custom\bootstrap-slider.min.js" />
@@ -571,12 +492,12 @@
     <Content Include="Views\Wallet\Edit.cshtml" />
     <Content Include="Views\Wallet\Index.cshtml" />
     <Content Include="Views\Wallet\AddSumm.cshtml" />
-    <Content Include="Views\Note\View.cshtml" />
     <Content Include="Views\Custom\LoadAttaches.cshtml" />
     <Content Include="Views\Custom\Tasks.cshtml" />
     <Content Include="Views\Custom\Bidders.cshtml" />
     <Content Include="Views\Comment\MyComments.cshtml" />
     <Content Include="Views\Chat\CustomSearch.cshtml" />
+    <Content Include="Views\Chat\LoadDialogs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -599,71 +520,11 @@
     <EmbeddedResource Include="Migrations\201810120851500_Newmigra.resx">
       <DependentUpon>201810120851500_Newmigra.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810120857437_MigraMessage.resx">
-      <DependentUpon>201810120857437_MigraMessage.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201903240046300_messageAttach.resx">
+      <DependentUpon>201903240046300_messageAttach.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812171618146_addWalletClass.resx">
-      <DependentUpon>201812171618146_addWalletClass.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812171829557_updateCustomClassAddPrice.resx">
-      <DependentUpon>201812171829557_updateCustomClassAddPrice.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812202142224_updateStatus.resx">
-      <DependentUpon>201812202142224_updateStatus.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812202303520_newModelAttach.resx">
-      <DependentUpon>201812202303520_newModelAttach.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812202313235_newModelAttachCustomProperty.resx">
-      <DependentUpon>201812202313235_newModelAttachCustomProperty.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812212154077_fixModelUpdate.resx">
-      <DependentUpon>201812212154077_fixModelUpdate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201901031423076_addMessageStatus.resx">
-      <DependentUpon>201901031423076_addMessageStatus.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201901031527150_addDialogModel.resx">
-      <DependentUpon>201901031527150_addDialogModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201901121816042_addOpenCloseDialogStatus.resx">
-      <DependentUpon>201901121816042_addOpenCloseDialogStatus.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201901261742034_addNewModelMigration.resx">
-      <DependentUpon>201901261742034_addNewModelMigration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201901261804339_addNewModelMigration123.resx">
-      <DependentUpon>201901261804339_addNewModelMigration123.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201902040146359_notifUtlEdit.resx">
-      <DependentUpon>201902040146359_notifUtlEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201902040303339_notifUserNameEdit.resx">
-      <DependentUpon>201902040303339_notifUserNameEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201902050541324_UserNotEdit.resx">
-      <DependentUpon>201902050541324_UserNotEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201902050627203_UserNotEdit9.resx">
-      <DependentUpon>201902050627203_UserNotEdit9.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201902050711453_UserNotEdit9a.resx">
-      <DependentUpon>201902050711453_UserNotEdit9a.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201902052147154_UserNotEdit9a1.resx">
-      <DependentUpon>201902052147154_UserNotEdit9a1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201902052155424_UserNotEdit9a1a.resx">
-      <DependentUpon>201902052155424_UserNotEdit9a1a.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201902070555437_addUserPhoto.resx">
-      <DependentUpon>201902070555437_addUserPhoto.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201902070615106_addImagePath.resx">
-      <DependentUpon>201902070615106_addImagePath.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201903101403415_attachFixModel.resx">
-      <DependentUpon>201903101403415_attachFixModel.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201903240100486_fixAttachModel.resx">
+      <DependentUpon>201903240100486_fixAttachModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

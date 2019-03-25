@@ -21,47 +21,47 @@
                 <div class="messages-inbox">
                     <div class="messages-headline">
                         <div class="input-with-icon">
-                           <input class="clearable" id="autocomplete-input" name="dName" type="text" placeholder="Поиск собеседника">
-                           <i class="icon-material-outline-search"></i>
+                            <input class="clearable" id="autocomplete-input" name="dName" type="text" placeholder="Поиск собеседника">
+                            <i class="icon-material-outline-search"></i>
                         </div>
                     </div>
 
-                    <ul id="chatusers">
+                    <ul style="overflow-y: scroll;max-height: 430px;" id="chatusers">
                         @foreach (HelpMe.Models.ChatDialog d in ViewBag.Dialogs)
                         {
-                                <li id="@d.UserTo.UserName-conid" class="@(ViewBag.UserToName != null && ViewBag.UserToName == d.UserTo.UserName  ? "active-message" : " ")" onclick="setValue(this.id)">
-                                    <a id="@d.UserTo.UserName" href="#" onclick="loadHistory(this.id)">
-                                        <div id="@d.UserToId" class="message-avatar"><i id="@d.UserTo.UserName-status" class="status-icon status-offline"></i><img src="~/Content/Custom/images/user-avatar-small-03.jpg" alt="" /></div>
-                                        <div class="message-by">
-                                            <div class="message-by-headline">
-                                                <h5>@d.UserTo.UserName </h5>
-                                                <span class="notificationNew" id="notification-@d.UserTo.ConnectionId">
-                                                  
-                                                       @d.Messages.OrderByDescending(o => o.Id).FirstOrDefault().DateSend.ToShortTimeString()
-                                                    
-                                                </span>
-                                            </div>
-                                            @if (d.Messages.Any(m => m.Status == HelpMe.Models.MessageStatus.Undreading))
-                                            {
-                                                <p id="@d.UserTo.UserName-lastmess">
-                                                    Новых сообщений<span style="color:white" id="@d.UserTo.UserName-notif" class="nav-tag-mess">
-                                                        @d.Messages.Where(m => m.Status == HelpMe.Models.MessageStatus.Undreading).Count()
-                                                    </span>
-                                                </p>
-                                            }
-                                            else
-                                            {
-                                                <p id="@d.UserTo.UserName-lastmess">
-                                                    @d.Messages.OrderByDescending(o => o.Id).FirstOrDefault().Description
-                                                </p>
-                                            }
+                            <li id="@d.UserTo.UserName-conid" class="@(ViewBag.UserToName != null && ViewBag.UserToName == d.UserTo.UserName  ? "active-message" : " ")" onclick="setValue(this.id)">
+                                <a id="@d.UserTo.UserName" href="#" onclick="loadHistory(this.id)">
+                                    <div id="@d.UserToId" class="message-avatar"><i id="@d.UserTo.UserName-status" class="status-icon status-offline"></i><img src="~/Content/Custom/images/user-avatar-small-03.jpg" alt="" /></div>
+                                    <div class="message-by">
+                                        <div class="message-by-headline">
+                                            <h5>@d.UserTo.UserName </h5>
+                                            <span class="notificationNew" id="notification-@d.UserTo.ConnectionId">
 
+                                                @d.Messages.OrderByDescending(o => o.Id).FirstOrDefault().DateSend.ToShortTimeString()
+
+                                            </span>
                                         </div>
-                                    </a>
-                                </li>
-                            }
+                                        @if (d.Messages.Any(m => m.Status == HelpMe.Models.MessageStatus.Undreading))
+                                        {
+                                            <p id="@d.UserTo.UserName-lastmess">
+                                                Новых сообщений<span style="color:white" id="@d.UserTo.UserName-notif" class="nav-tag-mess">
+                                                    @d.Messages.Where(m => m.Status == HelpMe.Models.MessageStatus.Undreading).Count()
+                                                </span>
+                                            </p>
+                                        }
+                                        else
+                                        {
+                                            <p id="@d.UserTo.UserName-lastmess">
+                                                @d.Messages.OrderByDescending(o => o.Id).FirstOrDefault().Description
+                                            </p>
+                                        }
 
-                        </ul>
+                                    </div>
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
                 </div>
                 <!-- Messages <span style="color:white" id="UserTo.UserName-notif" class="nav-tag-mess">1</span> / End -->
                 <!-- Message Content -->
@@ -83,7 +83,8 @@
                                 </span>
                             </h4>
                         }
-                        <a href="#" class="message-action"><i class="icon-feather-trash-2"></i> Удалить переписку </a>
+
+                        <a id="" href="#" class="message-action"><i class="icon-feather-trash-2"></i> Удалить переписку </a>
                     </div>
 
                     <!-- Message Content Inner -->
@@ -122,9 +123,12 @@
                                             </div>
                                             <div class="message-text">
                                                 <p> @item.Description </p>
-                                                @if (item.AttachUrl != null)
+                                                @if (item.MessageAttaches != null)
                                                 {
-                                                    <a href="@Url.Action("GetChatFile", "Chat",new { path = item.AttachUrl })" style="border:1px dashed white; background-color:#28b661; margin-top:5px;" class="attachment-box ripple-effect "><span style="color:white">Файл исполнителя</span><i style="color:white">Скачать</i></a>
+                                                    foreach (var i in item.MessageAttaches)
+                                                    {
+                                                        <a href="@Url.Action("GetChatFile", "Chat", new { path = i.AttachUrl })" style="border:1px dashed white; background-color:#28b661; margin-top:5px;" class="attachment-box ripple-effect "><span style="color:white">Файл исполнителя</span><i style="color:white">Скачать</i></a>
+                                                    }
                                                 }
                                             </div>
                                         </div>
@@ -140,9 +144,12 @@
                                             </div>
                                             <div class="message-text">
                                                 <p> @item.Description </p>
-                                                @if (item.AttachUrl != null)
+                                                @if (item.MessageAttaches != null)
                                                 {
-                                                    <a href="@Url.Action("GetChatFile", "Chat",new { path = item.AttachUrl })" style="border:1px dashed #666; background-color:#f4f4f4;margin-top:5px;" class="attachment-box ripple-effect "><span>Файлa исполнителя</span><i style="color:#666">Скачать</i></a>
+                                                    foreach (var i in item.MessageAttaches)
+                                                    {
+                                                        <a href="@Url.Action("GetChatFile", "Chat", new { path = i.AttachUrl })" style="border:1px dashed #666; background-color:#f4f4f4;margin-top:5px;" class="attachment-box ripple-effect "><span>Файлa исполнителя</span><i style="color:#666">Скачать</i></a>
+                                                    }
                                                 }
                                             </div>
                                         </div>
@@ -164,14 +171,20 @@
                         }
 
                     </div>
+                    
 
-                    <div id="fileUp" style="display:none; margin:0px" class="task-tags">
-                        <span id="fileUpSpan"></span>
+                    <span style="display:none" id="field2_area"><input style="display:none" multiple="multiple" type="file" id="field2" /></span>
+                  
+                    <div class="keywords-container" style="margin-bottom:0px;">
+                        <div id="fileUp" style="display:none; margin:0px" class="">
+                        </div>
                     </div>
+
                     <div class="progress"></div>
                     <div class="message-reply">
                         <input type="hidden" id="partnerId" />
-                        <input style="display:none" id="uploadAttache" type="file" name="upload" />
+                        <input multiple="multiple" style="display:none" id="uploadAttache" type="file" name="upload" />
+                        
                         <a id="upload_link" href="#" class="button gray ripple-effect ico" title="Добавить вложение" data-tippy-placement="top"><i class="icon-feather-paperclip"></i></a>
                         <textarea id="message" cols="1" rows="1" placeholder="Ваше сообщение..." data-autoresize></textarea>
                         <button id="sendmessage" class="button ripple-effect">Отправить</button>
@@ -185,20 +198,38 @@
 
             </div>
         </div>
-      
-       
+
+
 
     </div>
 </div>
+@section Scripts {
+    <script>
+        $(function () {
 
-<script>
+          
+        $('.message-action').on('click', function (e) {
+            var UserName = $('.message-action').attr('id');
+            $.ajax({
+                cache: false,
+                url: '@Url.Action("DeleteDialog", "Chat")',
+                type: 'POST',
+                data: { userName: UserName },
+                success: function (result) {
+                    $('#chatusers').load('@Url.Action("LoadDialogs", "Chat")')
+                },
+                error: function (result) {
+                    alert('Вложение не удалено');
+                }
+            });
 
+        });
+    });
 
- 
     //disableScroll();
     var objDiv = document.getElementById("chatroom");
     objDiv.scrollTop = objDiv.scrollHeight;
-  
+
     function loadAttachChat(fileUrl) {
         $.ajax({
             url: '/Chat/GetChatFile',
@@ -213,6 +244,7 @@
 
     function loadHistory(name) {
         document.getElementById('toUserName').value = name;
+        $('.message-action').attr('id', name);
         $('#dName').text('Диалог с ' + name);
         var divVote = $("#" + htmlEncode(name) + "-lastmess");
         $.ajax({
@@ -237,4 +269,5 @@
         });
     }
 
-</script>
+    </script>
+}

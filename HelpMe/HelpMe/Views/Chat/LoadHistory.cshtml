@@ -5,62 +5,68 @@
 
 </div>
 
-@{ 
+@{
     var sad = Model.FirstOrDefault();
-foreach (var item in Model)
-{
-  
-    if (item == Model.FirstOrDefault())
+    foreach (var item in Model)
     {
-        <div class="message-time-sign">
-            <span>@item.DateSend.ToShortDateString()</span>
-        </div>
-    }
 
-    if (item.DateSend.Date.Day > sad.DateSend.Day)
-    {
-        sad = item;
-        <div class="message-time-sign">
-            <span>@item.DateSend.ToShortDateString()</span>
-        </div>
-    }
+        if (item == Model.FirstOrDefault())
+        {
+            <div class="message-time-sign">
+                <span>@item.DateSend.ToShortDateString()</span>
+            </div>
+        }
 
-    if (item.UserFromId == User.Identity.GetUserId())
-    {
-        <div class="message-bubble me">
-            <div class="message-bubble-inner">
-                <div class="message-avatar">
-                    <span style="font-size:14px"> @item.DateSend.ToShortTimeString() </span>
-                </div>
-                <div class="message-text">
-                    <p> @item.Description </p>
-                    @if (item.AttachUrl != null)
-                    {
-                        <a href="@Url.Action("GetChatFile", "Chat", new { path = item.AttachUrl })" style="border:1px dashed white; background-color:#28b661; margin-top:5px;" class="attachment-box ripple-effect "><span style="color:white">Файл исполнителя</span><i style="color:white">Скачать</i></a>
-                    }
-                </div>
+        if (item.DateSend.Date.Day > sad.DateSend.Day)
+        {
+            sad = item;
+            <div class="message-time-sign">
+                <span>@item.DateSend.ToShortDateString()</span>
             </div>
-            <div class="clearfix"> </div>
-        </div>
-    }
-    else
-    {
-        <div class="message-bubble">
-            <div class="message-bubble-inner">
-                <div class="message-avatar">
-                    <span style="font-size:14px"> @item.DateSend.ToShortTimeString() </span>
+        }
+
+        if (item.UserFromId == User.Identity.GetUserId())
+        {
+            <div class="message-bubble me">
+                <div class="message-bubble-inner">
+                    <div class="message-avatar">
+                        <span style="font-size:14px"> @item.DateSend.ToShortTimeString() </span>
+                    </div>
+                    <div class="message-text">
+                        <p> @item.Description </p>
+                        @if (item.MessageAttaches != null)
+                        {
+                            foreach (var i in item.MessageAttaches)
+                            {
+                                <a href="@Url.Action("GetChatFile", "Chat", new { path = i.AttachUrl })" style="border:1px dashed white; background-color:#28b661; margin-top:5px;" class="attachment-box ripple-effect "><span style="color:white">Файл исполнителя</span><i style="color:white">Скачать</i></a>
+                            }
+                        }
+                    </div>
                 </div>
-                <div class="message-text">
-                    <p> @item.Description </p>
-                    @if (item.AttachUrl != null)
-                    {
-                        <a href="@Url.Action("GetChatFile", "Chat", new { path = item.AttachUrl })" style="border:1px dashed #666; background-color:#f4f4f4;margin-top:5px;" class="attachment-box ripple-effect "><span>Файлa исполнителя</span><i style="color:#666">Скачать</i></a>
-                    }
-                </div>
+                <div class="clearfix"> </div>
             </div>
-            <div class="clearfix"> </div>
-        </div>
+        }
+        else
+        {
+            <div class="message-bubble">
+                <div class="message-bubble-inner">
+                    <div class="message-avatar">
+                        <span style="font-size:14px"> @item.DateSend.ToShortTimeString() </span>
+                    </div>
+                    <div class="message-text">
+                        <p> @item.Description </p>
+                        @if (item.MessageAttaches != null)
+                        {
+                            foreach (var i in item.MessageAttaches)
+                            {
+                                <a href="@Url.Action("GetChatFile", "Chat", new { path = i.AttachUrl })" style="border:1px dashed #666; background-color:#f4f4f4;margin-top:5px;" class="attachment-box ripple-effect "><span>Файлa исполнителя</span><i style="color:#666">Скачать</i></a>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+        }
     }
 }
-    }
 

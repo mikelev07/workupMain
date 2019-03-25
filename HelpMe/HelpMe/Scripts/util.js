@@ -1,4 +1,6 @@
-﻿$(function () {
+﻿var finalFileBuffer = [];
+var lastIndexFile = 0;
+$(function () {
  
 
     $('#chatroom').scrollTop($('#chatroom').prop('scrollHeight'));
@@ -102,11 +104,35 @@
 
 
     $('#uploadAttache').change(function () {
-        var file = $('#uploadAttache')[0].files[0].name;
-        $('#fileUpSpan').text(file);
+        var file;
+        var fileName;
+        var filesArray = $('#uploadAttache')[0].files;
+        var fileBuffer = [];
+        Array.prototype.push.apply(fileBuffer, filesArray);
+
+        if (finalFileBuffer.length <= 0) {
+            for (var i = 0; i < filesArray.length; i++) {
+                file = $('#uploadAttache')[0].files[i].name;
+                if (file.length > 3)
+                    fileName = file.substring(0, 3) + '.' + file.substring(file.lastIndexOf('.') + 1)
+                $('#fileUp').append('<span id="' + i + '" class="keyword"><span class="keyword-remove"></span><span class="keyword-text">' + fileName + '</span></span>');
+            }
+            finalFileBuffer = fileBuffer;
+            lastIndexFile = fileBuffer.length //2
+        } else {
+            finalFileBuffer = finalFileBuffer.concat(fileBuffer);
+            for (var i = lastIndexFile; i < finalFileBuffer.length; i++) {
+                file = finalFileBuffer[i].name;
+                if (file.length > 3)
+                    fileName = file.substring(0, 3) + '.' + file.substring(file.lastIndexOf('.') + 1)
+                $('#fileUp').append('<span id="' + i + '" class="keyword"><span class="keyword-remove"></span><span class="keyword-text">' + fileName + '</span></span>');
+            }
+            lastIndexFile = finalFileBuffer.length; //4
+        }
+
+   
         $('#fileUp').show();
         $('.message-reply').css('margin-top', "5px");
-       
     });
 
 
@@ -177,21 +203,34 @@
 
 
         // Объявление функции, которая хаб вызывает при получении сообщений
-    chat.client.addMessage = function (name, message, dateSend, fileUrl) {
-        var index = fileUrl.lastIndexOf('\\')
-        var fileName = fileUrl.slice(index + 1)
-      
+    chat.client.addMessage = function (name, message, dateSend, fileUrls) {
+
+        var attaches = '';
+        var style = 'style = "border:1px dashed white; background-color:#28b661; margin-top:5px;"';
+        var spanStyle = 'style = "color:white"';
+        var iStyle = 'style = "color:white"';
+
+        var otherStyle = 'style = "border:1px dashed #666; background-color:#f4f4f4;margin-top:5px;"';
+        var otherSpanStyle = '';
+        var otherIStyle = 'style = "color:#666"';
+
         if (htmlEncode(name) == $('#username').val()) {
           
-            if (fileUrl != null)
-                var messageHtml = '<div class="message-bubble me"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p><a id="' + htmlEncode(fileUrl) + '" onclick="loadAttachChat(this.id)"  style="border:1px dashed ;background-color:#28b661; margin-top:5px;" class="attachment-box ripple-effect "><span style="color:white">' + fileName +'</span><i style="color:white">Скачать</i></a> </div></div><div class="clearfix"></div></div>';
-            else
+            if (fileUrls != null) {
+                attaches = initAttaches(fileUrls, attaches, style, spanStyle, iStyle);
+                var messageHtml = '<div class="message-bubble me"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p>' + attaches + ' </div></div><div class="clearfix"></div></div>';
+            }
+            else {
                 var messageHtml = '<div class="message-bubble me"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p></div></div><div class="clearfix"></div></div>';
-        } else {
-            if (fileUrl != null)
-                var messageHtml = '<div class="message-bubble"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p><a  id="' + htmlEncode(fileUrl) + '" onclick="loadAttachChat(this.id)"  style="border:1px dashed #666; background-color:#f4f4f4;margin-top:5px;" class="attachment-box ripple-effect "><span style="color:#666">' + fileName +'</span><i style="color:#666">Скачать</i></a>  </div></div><div class="clearfix"></div></div>';
-            else
+            }
+            } else {
+            if (fileUrls != null) {
+                attaches = initAttaches(fileUrls, attaches, otherStyle, otherSpanStyle, otherIStyle);
+                var messageHtml = '<div class="message-bubble"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p>' + attaches + '</div></div><div class="clearfix"></div></div>';
+            }
+            else {
                 var messageHtml = '<div class="message-bubble"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p></div></div><div class="clearfix"></div></div>';
+            }
             }
 
         if ($('#username').val() != htmlEncode(name)) {
@@ -262,7 +301,7 @@
 
 
  
-        
+    
         // Открываем соединение
         $.connection.hub.start().done(function () {
             chat.server.connect();
@@ -273,8 +312,14 @@
                 if (files.length > 0) {
                     if (window.FormData !== undefined) {
                         var data = new FormData();
-                        for (var x = 0; x < files.length; x++) {
-                            data.append("file" + x, files[x]);
+                        if (finalFileBuffer.length > 0) {
+                            for (var x = 0; x < finalFileBuffer.length; x++) {
+                                data.append("file" + x, finalFileBuffer[x]);
+                            }
+                        } else {
+                            for (var x = 0; x < files.length; x++) {
+                                data.append("file" + x, files[x]);
+                            }
                         }
                       
                         $.ajax({
@@ -309,7 +354,7 @@
                             processData: false,
                             data: data,
                             success: function (result) {
-                                chat.server.send($('#username').val(), $('textarea#message').val(), $('#partnerId').val(), $('#toUserName').val(), String(result));
+                                chat.server.send($('#username').val(), $('textarea#message').val(), $('#partnerId').val(), $('#toUserName').val(), result);
                                 $('textarea#message').val('');
                                 $('#fileUp').hide();
                                 $('.message-reply').css('margin-top', "15px");
@@ -359,8 +404,14 @@
                     if (files.length > 0) {
                         if (window.FormData !== undefined) {
                             var data = new FormData();
-                            for (var x = 0; x < files.length; x++) {
-                                data.append("file" + x, files[x]);
+                            if (finalFileBuffer.length > 0) {
+                                for (var x = 0; x < finalFileBuffer.length; x++) {
+                                    data.append("file" + x, finalFileBuffer[x]);
+                                }
+                            } else {
+                                for (var x = 0; x < files.length; x++) {
+                                    data.append("file" + x, files[x]);
+                                }
                             }
                             $.ajax({
                                 xhr: function () {
@@ -417,6 +468,20 @@
             });
         });
 });
+
+function initAttaches(fileUrls, attaches, style, spanStyle, iStyle) {
+    for (var i = 0; i < fileUrls.length; i++) {
+        var fileUrl = fileUrls[i];
+        if (fileUrl != null) {
+            var index = fileUrl.lastIndexOf('\\');
+            var fileName = fileUrl.slice(index + 1);
+            if (fileName.length > 16)
+                fileName = fileName.substring(0, 16) + '.' + fileName.substring(fileName.lastIndexOf('.') + 1);
+        }
+        attaches += '<a id="' + htmlEncode(fileUrl) + '" onclick="loadAttachChat(this.id)"  '+ style +' class="attachment-box ripple-effect "><span '+ spanStyle +'>' + fileName + '</span><i '+ iStyle +'>Скачать</i></a>';
+    }
+    return attaches;
+}
 
 function setValue(id) {
     document.getElementById('partnerId').value = id;

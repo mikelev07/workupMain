@@ -32,8 +32,9 @@ namespace HelpMe.Hubs
         static List<User> userList = new List<User>();
         // Отправка сообщений
         
-        public void Send(string name, string message, string partnerId, string toUserName, string fileUrl)
+        public void Send(string name, string message, string partnerId, string toUserName, List<string> fileUrls)
         {
+
             MessageStoreViewModel messageStoreViewModel = new MessageStoreViewModel();
             MessageStoreViewModel messageStoreViewModelPartner = new MessageStoreViewModel();
             string reqId = Context.User.Identity.GetUserId();
@@ -43,7 +44,19 @@ namespace HelpMe.Hubs
             //Clients.Client(partnerId).addMessage(name, message, partnerId);
             //Clients.Client(Context.ConnectionId).addMessage(name, message);
             int myDialogId = db.ChatDialogs.Where(i => i.UserFromId == reqId && i.UserToId == uId).FirstOrDefault().Id;
-            int partnerDialogId = db.ChatDialogs.Where(i => i.UserFromId == uId && i.UserToId == reqId).FirstOrDefault().Id;
+            var partnerDialog = db.ChatDialogs.Where(i => i.UserFromId == uId && i.UserToId == reqId).FirstOrDefault();
+           
+            if (partnerDialog == null)
+            {
+                partnerDialog = new ChatDialog();
+                partnerDialog.Id = 3;
+                partnerDialog.UserFromId = db.Users.Where(x => x.UserName == toUserName).FirstOrDefault().Id;
+                partnerDialog.UserToId =  db.Users.Where(x => x.Id == reqId).FirstOrDefault().Id;
+                partnerDialog.Status = DialogStatus.Close;
+                db.ChatDialogs.Add(partnerDialog);
+                db.SaveChanges();
+            }
+            int partnerDialogId = partnerDialog.Id;
 
             messageStoreViewModel.UserFromId = db.Users.Where(x => x.Id == reqId).FirstOrDefault().Id;
             messageStoreViewModel.UserToId = db.Users.Where(x => x.UserName == toUserName).FirstOrDefault().Id;
@@ -51,14 +64,17 @@ namespace HelpMe.Hubs
             messageStoreViewModel.DateSend = DateTime.Now;
             messageStoreViewModel.Status = MessageStatus.Reading;
             messageStoreViewModel.ChatDialogId = myDialogId;
-            messageStoreViewModel.AttachUrl = fileUrl;
-
+            
+            
             messageStoreViewModelPartner.UserFromId = messageStoreViewModel.UserFromId;
             messageStoreViewModelPartner.UserToId = messageStoreViewModel.UserToId;
             messageStoreViewModelPartner.Description = message;
             messageStoreViewModelPartner.DateSend = DateTime.Now;
-            messageStoreViewModelPartner.AttachUrl = messageStoreViewModel.AttachUrl;
+            messageStoreViewModelPartner.MessageAttaches = messageStoreViewModel.MessageAttaches;
 
+           
+
+            
             var openDialog = db.ChatDialogs.Where(i => i.Id == partnerDialogId).FirstOrDefault();
             if (openDialog.Status == DialogStatus.Open)
                 messageStoreViewModelPartner.Status = MessageStatus.Reading;
@@ -69,12 +85,35 @@ namespace HelpMe.Hubs
             messageStoreViewModelPartner.ChatDialogId = partnerDialogId;
 
             var dateSend = messageStoreViewModel.DateSend.ToShortTimeString();
-            Clients.User(uId).addMessage(name, message, dateSend, fileUrl);
-            Clients.User(reqId).addMessage(name, message, dateSend, fileUrl);
+            Clients.User(uId).addMessage(name, message, dateSend, fileUrls);
+            Clients.User(reqId).addMessage(name, message, dateSend, fileUrls);
 
             db.Messages.Add(messageStoreViewModel);
             db.Messages.Add(messageStoreViewModelPartner);
             db.SaveChanges();
+
+            if (fileUrls != null)
+            {
+                for (var i = 0; i < fileUrls.Count; i++)
+                {
+                    string url = fileUrls[0];
+                    var attach = new MessageAttach() { AttachUrl = url, MessageStoreViewModelId = messageStoreViewModel.Id };
+                    db.MessageAttaches.Add(attach);
+
+                }
+
+                db.SaveChanges();
+
+                for (var i = 0; i < fileUrls.Count; i++)
+                {
+                    string url = fileUrls[0];
+                    var attach = new MessageAttach() { AttachUrl = url, MessageStoreViewModelId = messageStoreViewModelPartner.Id };
+                    db.MessageAttaches.Add(attach);
+                }
+
+                db.SaveChanges();
+            }
+
             if (partnerId == null)
             {
                 SendMessage("Новое сообщение...", partnerId);

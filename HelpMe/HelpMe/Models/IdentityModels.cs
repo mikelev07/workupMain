@@ -40,6 +40,7 @@ namespace HelpMe.Models
         public string ConnectionId { get; set; } // для SignalR
         //public UserProfile Profile { get; set; }
         public ICollection<CustomViewModel> Customs { get; set; }
+      
         public ICollection<Notification> Notifications { get; set; }
         public ICollection<CommentViewModel> Comments { get; set; }
         public ICollection<MessageStoreViewModel> Messages { get; set; }
@@ -87,6 +88,7 @@ namespace HelpMe.Models
             modelBuilder.Entity<User>().HasMany(m => m.Reviews).WithRequired(m => m.Owner);
         }
 
+        public DbSet<MessageAttach> MessageAttaches { get; set; }
         public DbSet<CustomViewModel> Customs { get; set; }
         public DbSet<AttachModel> Attachments { get; set; }
         public DbSet<CommentViewModel> Comments { get; set; }

@@ -14530,16 +14530,21 @@ ul.dashboard-box-list > li:hover {
 	height: 50px;
 }
 
-.message-bubble .message-text {
-	margin-left: 46px;
-	background-color: #f4f4f4;
-	border-radius: 4px;
-	padding: 12px 18px;
-	position: relative;
-	display: inline-block;
-	float: left;
-	line-height: 25px;
-}
+    .message-bubble .message-text {
+        margin-left: 46px;
+        background-color: #f4f4f4;
+        border-radius: 4px;
+        padding: 12px 18px;
+        position: relative;
+        display: inline-block;
+        float: left;
+        line-height: 25px;
+        width: 220px;
+        word-wrap: break-word;
+        -moz-hyphens: auto;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+    }
 
 .message-bubble.me .message-text {
 	float: right;
