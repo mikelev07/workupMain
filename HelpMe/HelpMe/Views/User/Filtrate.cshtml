@@ -1,0 +1,54 @@
+﻿@model IEnumerable<HelpMe.Models.UserViewModel>
+
+@foreach (var i in Model)
+{
+    <!--Freelancer -->
+    <div class="freelancer">
+
+        <!-- Overview -->
+        <div class="freelancer-overview">
+            <div class="freelancer-overview-inner">
+
+                <!-- Bookmark Icon -->
+                <span class="bookmark-icon"></span>
+
+                <!-- Avatar -->
+                <div class="freelancer-avatar">
+                    <div class="verified-badge"></div>
+                    <a href="single-freelancer-profile.html"><img src="@Url.Content(i?.ImagePath)" alt=""></a>
+                </div>
+
+                <!-- Name -->
+                <div class="freelancer-name">
+                    <h4><a href="single-freelancer-profile.html">@i.Username <span style="font-size:13px; color:green">в сети</span></a></h4>
+                    <span>Занят до 15 мая</span>
+                    <div style="margin: 5px 0 3px 0;" class="task-tags">
+                        @foreach (var tag in i.TaskCategories.Take(2))
+                        {
+                            <span>@tag.Name</span>
+                        }
+                    </div>
+
+                </div>
+
+                <!-- Skills-->
+                <!-- Rating -->
+                <div style="margin-left:25px;" class="freelancer-rating">
+
+                    <span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Details -->
+        <div class="freelancer-details">
+            <div class="freelancer-details-list">
+                <ul>
+                    <li>Рейтинг<strong><i style="color:green" class="icon-material-outline-thumb-up"></i> @i.PositiveThumbs <i style="color:red" class="icon-material-outline-thumb-down"></i> @i.NegativeThumbs</strong></li>
+                    <li>Выполнено работ <strong>@(i.PositiveThumbs + i.NegativeThumbs)</strong></li>
+                </ul>
+            </div>
+            <a href=@Url.Action("Details", new { userName = i.Username }) class="button button-sliding-icon ripple-effect">Посмотреть профиль <i class="icon-material-outline-arrow-right-alt"></i></a>
+        </div>
+    </div>
+}

@@ -27,7 +27,7 @@ namespace HelpMe.Controllers
         public UserController(ApplicationUserManager userManager)
         {
             UserManager = userManager;
-        
+
         }
 
         public ApplicationUserManager UserManager
@@ -54,7 +54,8 @@ namespace HelpMe.Controllers
         public async Task<ActionResult> Index()
         {
             var roles = RoleManager.Roles.ToList();
-            List<User> Users = await db.Users.ToListAsync();
+            List<User> Users = await db.Users.Include(m => m.TaskCategories).OrderByDescending(m => (double)(m.PositiveThumbs - m.NegativeThumbs) / (m.PositiveThumbs + m.NegativeThumbs)).
+                        OrderByDescending(m => (m.PositiveThumbs + m.NegativeThumbs)).ToListAsync();
 
             var usersWithRoles = (from user in Users
                                   select new
@@ -63,6 +64,9 @@ namespace HelpMe.Controllers
                                       Username = user.UserName,
                                       ImagePath = user.ImagePath,
                                       user.Email,
+                                      user.TaskCategories,
+                                      user.PositiveThumbs,
+                                      user.NegativeThumbs,
                                       RoleNames = (from userRole in user.Roles
                                                    join role in roles on userRole.RoleId equals role.Id
                                                    select role.Name).ToList()
@@ -72,13 +76,88 @@ namespace HelpMe.Controllers
                                       Username = p.Username,
                                       Email = p.Email,
                                       ImagePath = p.ImagePath ?? "~/Content/Custom/images/user-avatar-big-01.jpg",
-                                      Role = string.Join(",", p.RoleNames)
+                                      Role = string.Join(",", p.RoleNames),
+                                      TaskCategories = p.TaskCategories,
+                                      PositiveThumbs = p.PositiveThumbs,
+                                      NegativeThumbs = p.NegativeThumbs
                                   });
 
+            ViewBag.Tasks = new SelectList(db.TaskCategories, "Id", "Name");
+            //ViewBag.Skills = new SelectList(db.Skills,"Id","Name");
             return View(usersWithRoles);
         }
 
-        
+        public ActionResult Filtrate(string name, int? taskId, int? skillId, int? worksCount, int? sortId)
+        {
+            //var roles = RoleManager.Roles.ToList();
+            IQueryable<User> users = null;
+            int worksUsersCount = 0;
+            if (worksCount!=null)
+            {
+                users = db.Users.Where(m => (m.PositiveThumbs + m.NegativeThumbs) >= worksCount);
+                worksUsersCount = users.Count();
+            }
+            if (name != "")
+            {
+                users = users ?? db.Users;
+                users = users.Where(b => b.UserName.StartsWith(name));
+                worksUsersCount = users.Count();
+            }
+            if (taskId!=0 && taskId!=null)
+            {
+                users = users ?? db.Users;
+                users = users.Where(m => m.TaskCategories.Any(b => b.Id == taskId));
+                worksUsersCount = users.Count();
+
+                if (skillId!=0 && skillId!=null)
+                {
+                    users = users.Where(m => m.Skills.Any(b => b.Id == skillId));
+                    worksUsersCount = users.Count();
+                }
+            }
+
+            if (sortId != null)
+            {
+                users = users ?? db.Users;
+                if (sortId == 1)
+                {
+                    users = users.OrderByDescending(m => (double)(m.PositiveThumbs - m.NegativeThumbs) / (m.PositiveThumbs + m.NegativeThumbs)).
+                        OrderByDescending(m => (m.PositiveThumbs + m.NegativeThumbs));
+                }
+                worksUsersCount = users.Count();
+            }
+
+            var usersWithRoles = (from user in users
+                                  select new
+                                  {
+                                      user.Id,
+                                      Username = user.UserName,
+                                      ImagePath = user.ImagePath,
+                                      user.Email,
+                                      user.TaskCategories,
+                                      user.PositiveThumbs,
+                                      user.NegativeThumbs
+                                  }).ToList().Select(p => new UserViewModel()
+                                  {
+                                      Id = p.Id,
+                                      Username = p.Username,
+                                      Email = p.Email,
+                                      ImagePath = p.ImagePath ?? "~/Content/Custom/images/user-avatar-big-01.jpg",
+                                      TaskCategories = p.TaskCategories,
+                                      PositiveThumbs = p.PositiveThumbs,
+                                      NegativeThumbs = p.NegativeThumbs
+                                  });
+
+            return PartialView(usersWithRoles);
+        }
+
+        public JsonResult GetSkills(int id)
+        {
+            var skills = db.Skills.Where(m => m.TaskCategoryId == id).ToList();
+            return Json(skills, JsonRequestBehavior.AllowGet);
+        }
+
+
         // GET: User/Details/5
         public async Task<ActionResult> Details(string userName)
         {
@@ -94,51 +173,51 @@ namespace HelpMe.Controllers
                 return HttpNotFound();
             }
             return View(user);
-        } 
-
-     /*
-        // POST: ApplicationUser/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Age,Description,Email,EmailConfirmed,PasswordHash,SecurityStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEndDateUtc,LockoutEnabled,AccessFailedCount,UserName")] ApplicationUser applicationUser)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(applicationUser).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            return View(applicationUser);
         }
 
-        // GET: ApplicationUser/Delete/5
         /*
-        public async Task<ActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-           // ApplicationUser applicationUser = await db.Users.FindAsync(id);
-          //  if (applicationUser == null)
-            {
-                return HttpNotFound();
-            }
-           // return View(applicationUser);
-        }
+           // POST: ApplicationUser/Edit/5
+           // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+           // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+           [HttpPost]
+           [ValidateAntiForgeryToken]
+           public async Task<ActionResult> Edit([Bind(Include = "Id,Age,Description,Email,EmailConfirmed,PasswordHash,SecurityStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEndDateUtc,LockoutEnabled,AccessFailedCount,UserName")] ApplicationUser applicationUser)
+           {
+               if (ModelState.IsValid)
+               {
+                   db.Entry(applicationUser).State = EntityState.Modified;
+                   await db.SaveChangesAsync();
+                   return RedirectToAction("Index");
+               }
+               return View(applicationUser);
+           }
 
-        // POST: ApplicationUser/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(string id)
-        {
-           // ApplicationUser applicationUser = await db.Users.FindAsync(id);
-          //  db.Users.Remove(applicationUser);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        } */
+           // GET: ApplicationUser/Delete/5
+           /*
+           public async Task<ActionResult> Delete(string id)
+           {
+               if (id == null)
+               {
+                   return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+               }
+              // ApplicationUser applicationUser = await db.Users.FindAsync(id);
+             //  if (applicationUser == null)
+               {
+                   return HttpNotFound();
+               }
+              // return View(applicationUser);
+           }
+
+           // POST: ApplicationUser/Delete/5
+           [HttpPost, ActionName("Delete")]
+           [ValidateAntiForgeryToken]
+           public async Task<ActionResult> DeleteConfirmed(string id)
+           {
+              // ApplicationUser applicationUser = await db.Users.FindAsync(id);
+             //  db.Users.Remove(applicationUser);
+               await db.SaveChangesAsync();
+               return RedirectToAction("Index");
+           } */
 
         protected override void Dispose(bool disposing)
         {

@@ -19,6 +19,10 @@ namespace HelpMe.Models
         public string ImagePath { get; set; } = "~/Content/Custom/images/user-avatar-big-01.jpg";
         public string Email { get; set; }
         public string Role { get; set; }
+        public int PositiveThumbs { get; set; }
+        public int NegativeThumbs { get; set; }
+        public ICollection<TaskCategory> TaskCategories { get; set; }
+        public ICollection<Skill> Skills { get; set; }
     }
 
     //public class UserProfile
@@ -38,9 +42,12 @@ namespace HelpMe.Models
         public int Age { get; set; } // добавляем свойство Age
         public string Description { get; set; }
         public string ConnectionId { get; set; } // для SignalR
+        public int PositiveThumbs { get; set; }
+        public int NegativeThumbs { get; set; }
         //public UserProfile Profile { get; set; }
         public ICollection<CustomViewModel> Customs { get; set; }
-      
+        public ICollection<TaskCategory> TaskCategories { get; set; }
+        public ICollection<Skill> Skills { get; set; }
         public ICollection<Notification> Notifications { get; set; }
         public ICollection<CommentViewModel> Comments { get; set; }
         public ICollection<MessageStoreViewModel> Messages { get; set; }
@@ -55,6 +62,8 @@ namespace HelpMe.Models
             Notifications = new List<Notification>();
             Comments = new List<CommentViewModel>();
             Customs = new List<CustomViewModel>();
+            TaskCategories = new List<TaskCategory>();
+            Skills = new List<Skill>();
             Messages = new List<MessageStoreViewModel>();
             Reviews = new List<Review>();
             ChatDialogs = new List<ChatDialog>();
@@ -62,7 +71,7 @@ namespace HelpMe.Models
             Attachments = new List<AttachModel>();
             Wallets = new List<Wallet>(); // добавляем список кошельков
         }
-      
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager)
         {
             // Обратите внимание, что authenticationType должен совпадать с типом, определенным в CookieAuthenticationOptions.AuthenticationType
@@ -75,7 +84,7 @@ namespace HelpMe.Models
     public class ApplicationDbContext : IdentityDbContext<User>
     {
         public ApplicationDbContext()
-            : base("DbConnection")
+            : base("DBConnection")
         {
         }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -86,6 +95,15 @@ namespace HelpMe.Models
             modelBuilder.Entity<User>().HasMany(m => m.Messages).WithRequired(m => m.UserTo);
             modelBuilder.Entity<User>().HasMany(m => m.ChatDialogs).WithRequired(m => m.UserTo);
             modelBuilder.Entity<User>().HasMany(m => m.Reviews).WithRequired(m => m.Owner);
+            modelBuilder.Entity<User>().HasMany(m => m.TaskCategories).WithMany(m => m.Users)
+                .Map(m => m.MapLeftKey("UserId")
+                .MapRightKey("TaskCategoryId")
+                .ToTable("UseCateg"));
+            modelBuilder.Entity<User>().HasMany(m => m.Skills).WithMany(m => m.Users)
+                .Map(m => m.MapLeftKey("UserId")
+                .MapRightKey("SkillId")
+                .ToTable("UserSkill"));
+
         }
 
         public DbSet<MessageAttach> MessageAttaches { get; set; }
@@ -95,12 +113,13 @@ namespace HelpMe.Models
         public DbSet<MessageStoreViewModel> Messages { get; set; }
         public DbSet<TypeCustomViewModel> CustomTypes { get; set; }
         public DbSet<TaskCategory> TaskCategories { get; set; }
+        public DbSet<Skill> Skills { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<ChatDialog> ChatDialogs { get; set; }
         public DbSet<Wallet> Wallets { get; set; } // коллекция сущностей типа Wallet
-      
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
@@ -108,7 +127,6 @@ namespace HelpMe.Models
 
         public System.Data.Entity.DbSet<HelpMe.Models.RoleViewModel> IdentityRoles { get; set; }
 
-        
-       
+        public System.Data.Entity.DbSet<HelpMe.Models.UserViewModel> UserViewModels { get; set; }
     }
 }

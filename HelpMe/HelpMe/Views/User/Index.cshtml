@@ -8,95 +8,69 @@
         <div class="full-page-sidebar-inner" data-simplebar>
             <div class="sidebar-container">
 
-                <!-- Location -->
+                <!-- User name -->
                 <div class="sidebar-widget">
-                    <h3>Имя</h3>
+                    <h3>Имя исполнителя</h3>
                     <div class="input-with-icon">
                         <div id="autocomplete-container">
-                            <input id="autocomplete-input" type="text" placeholder="введите имя">
+                            <input id="autocomplete-input" type="text" placeholder="Введите имя">
                         </div>
-                        <i class="icon-material-outline-location-on"></i>
+                        <i class="icon-material-outline-folder-shared"></i>
                     </div>
                 </div>
 
                 <!-- Category -->
                 <div class="sidebar-widget">
-                    <h3>Навыки</h3>
-                    <select class="selectpicker default" multiple data-selected-text-format="count" data-size="7" title="Все категории">
-                        <option>Математик</option>
-                        <option>Физик</option>
-                        <option>Физрук</option>
-                    </select>
+                    <h3>Дисциплина</h3>
+                    @Html.DropDownList("Все дисциплины",  ViewBag.Tasks as SelectList,
+                   "Все дисциплины", new { @class = "selectpicker-filterdropdown", id ="TaskList"})
+                    <br>
+                    @*@Html.DropDownList("Все предметы", ViewBag.Skills as SelectList,
+                        new { @class = "selectpicker", id="SkillList" })*@
+                    @Html.DropDownList("All subjects", Enumerable.Empty<SelectListItem>(),
+                   "Все предметы", new { @class = "selectpicker-filterdropdown", id = "SkillList", @disabled="disabled" })
+                    @*<select class="selectpicker" data-live-search="true" title="Все предметы">
+                            <option>Математик</option>
+                            <option>Физик</option>
+                            <option>Физрук</option>
+                        </select>*@
                 </div>
-
-                <!-- Keywords -->
-                <div class="sidebar-widget">
-                    <h3>Инфа</h3>
-                    <div class="keywords-container">
-                        <div class="keyword-input-container">
-                            <input type="text" class="keyword-input" placeholder="добавьте сюда" />
-                            <button class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
-                        </div>
-                        <div class="keywords-list"><!-- keywords go here --></div>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
-
 
                 <!-- Hourly Rate -->
                 <div class="sidebar-widget">
-                    <h3>Берет за час</h3>
+                    <h3>Количество работ</h3>
                     <div class="margin-top-55"></div>
 
                     <!-- Range Slider -->
-                    <input class="range-slider" type="text" value="" data-slider-currency="$" data-slider-min="10" data-slider-max="250" data-slider-step="5" data-slider-value="[10,250]" />
+                    <input class="range-slider-single" type="text" id="work-range"
+                           data-slider-min="0" data-slider-max="250" data-slider-step="5" data-slider-value="0" />
                 </div>
 
                 <!-- Tags -->
                 <div class="sidebar-widget">
-                    <h3>Скиллы</h3>
-
+                    <h3>Дополнительно</h3>
                     <div class="tags-container">
                         <div class="tag">
                             <input type="checkbox" id="tag1" />
-                            <label for="tag1">front-end dev</label>
+                            <label for="tag1">Сейчас онлайн</label>
                         </div>
                         <div class="tag">
                             <input type="checkbox" id="tag2" />
-                            <label for="tag2">angular</label>
+                            <label for="tag2">Не занят</label>
                         </div>
                         <div class="tag">
                             <input type="checkbox" id="tag3" />
-                            <label for="tag3">react</label>
+                            <label for="tag3">Помощь онлайн</label>
                         </div>
                         <div class="tag">
                             <input type="checkbox" id="tag4" />
-                            <label for="tag4">vue js</label>
+                            <label for="tag4">Танкист</label>
                         </div>
-                        <div class="tag">
-                            <input type="checkbox" id="tag5" />
-                            <label for="tag5">web apps</label>
-                        </div>
-                        <div class="tag">
-                            <input type="checkbox" id="tag6" />
-                            <label for="tag6">design</label>
-                        </div>
-                        <div class="tag">
-                            <input type="checkbox" id="tag7" />
-                            <label for="tag7">wordpress</label>
-                        </div>
+
                     </div>
                     <div class="clearfix"></div>
 
-                    <!-- More Skills -->
-                    <div class="keywords-container margin-top-20">
-                        <div class="keyword-input-container">
-                            <input type="text" class="keyword-input" placeholder="добавь сюда" />
-                            <button class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
-                        </div>
-                        <div class="keywords-list"><!-- keywords go here --></div>
-                        <div class="clearfix"></div>
-                    </div>
+
                 </div>
                 <div class="clearfix"></div>
 
@@ -106,7 +80,7 @@
             <!-- Sidebar Container / End -->
             <!-- Search Button -->
             <div class="sidebar-search-button-container">
-                <button class="button ripple-effect">Поиск</button>
+                <button class="button ripple-effect" id="reset-filter-button">Сбросить всё</button>
             </div>
             <!-- Search Button / End-->
 
@@ -117,7 +91,12 @@
     <div class="full-page-content-container" data-simplebar>
         <div class="full-page-content-inner">
 
-            <h3 class="page-title">Результаты поиска</h3>
+            <h3 class="page-title">
+                Результаты поиска<img width="32" height="32" class="loading-animation"
+                                      src="~/Content/Custom/images/ajax-loader.gif">
+            </h3>
+            <!-- Loading animation -->
+
 
             <div class="notify-box margin-top-15">
                 <div class="switch-container">
@@ -126,60 +105,67 @@
 
                 <div class="sort-by">
                     <span>Сортировать по:</span>
-                    <select class="selectpicker hide-tick">
-                        <option>Рейтингу</option>
-                        <option>Новизне</option>
-                        <option>Рандомно</option>
-                        <option>Старости</option>
+                    <select class="selectpicker hide-tick" id="sortField">
+                        <option value="1" selected>Рейтингу</option>
+                        <option value="2">Дате</option>
                     </select>
                 </div>
             </div>
 
+
             <!-- Freelancers List Container -->
-            <div class="freelancers-container freelancers-list-layout compact-list margin-top-35">
+            <div class="freelancers-container freelancers-list-layout compact-list margin-top-35" id="freelancers-container">
                 @foreach (var i in Model)
                 {
                     <!--Freelancer -->
-                <div class="freelancer">
+                    <div class="freelancer">
 
-                    <!-- Overview -->
-                    <div class="freelancer-overview">
-                        <div class="freelancer-overview-inner">
+                        <!-- Overview -->
+                        <div class="freelancer-overview">
+                            <div class="freelancer-overview-inner">
 
-                            <!-- Bookmark Icon -->
-                            <span class="bookmark-icon"></span>
+                                <!-- Bookmark Icon -->
+                                <span class="bookmark-icon"></span>
 
-                            <!-- Avatar -->
-                            <div class="freelancer-avatar">
-                                <div class="verified-badge"></div>
-                                <a href="single-freelancer-profile.html"><img src="@Url.Content(i?.ImagePath)" alt=""></a>
-                            </div>
+                                <!-- Avatar -->
+                                <div class="freelancer-avatar">
+                                    <div class="verified-badge"></div>
+                                    <a href="single-freelancer-profile.html"><img src="@Url.Content(i?.ImagePath)" alt=""></a>
+                                </div>
 
-                            <!-- Name -->
-                            <div class="freelancer-name">
-                                <h4><a href="single-freelancer-profile.html">@i.Username <img class="flag" src="images/flags/gb.svg" alt="" title="United Kingdom" data-tippy-placement="top"></a></h4>
-                                <span>Дисциплина</span>
-                            </div>
+                                <!-- Name -->
+                                <div class="freelancer-name">
+                                    <h4><a href="single-freelancer-profile.html">@i.Username <span style="font-size:13px; color:green">в сети</span></a></h4>
+                                    <span>Занят до 15 мая</span>
+                                    <div style="margin: 5px 0 3px 0;" class="task-tags">
+                                        @foreach (var tag in i.TaskCategories.Take(2))
+                                        {
+                                            <span>@tag.Name</span>
+                                        }
+                                    </div>
 
-                            <!-- Rating -->
-                            <div style="margin-left:25px;" class="freelancer-rating">
-                                <div class="star-rating" data-rating="4.9"></div>
+                                </div>
+
+                                <!-- Skills-->
+                                <!-- Rating -->
+                                <div style="margin-left:25px;" class="freelancer-rating">
+
+                                    <span></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Details -->
-                    <div class="freelancer-details">
-                        <div class="freelancer-details-list">
-                            <ul>
-                              
-                                <li>Рейтинг <strong>$60 / hr</strong></li>
-                                <li>Выполнено работ <strong>95</strong></li>
-                            </ul>
+                        <!-- Details -->
+                        <div class="freelancer-details">
+                            <div class="freelancer-details-list">
+                                <ul>
+                                    <li>Рейтинг<strong><i style="color:green" class="icon-material-outline-thumb-up"></i> @i.PositiveThumbs <i style="color:red" class="icon-material-outline-thumb-down"></i> @i.NegativeThumbs</strong></li>
+                                    <li>Выполнено работ <strong>@(i.PositiveThumbs + i.NegativeThumbs)</strong></li>
+                                </ul>
+                            </div>
+                            <a href=@Url.Action("Details", new { userName = i.Username }) class="button button-sliding-icon ripple-effect">Посмотреть профиль <i class="icon-material-outline-arrow-right-alt"></i></a>
                         </div>
-                        <a href=@Url.Action("Details", new { userName = i.Username }) class="button button-sliding-icon ripple-effect">Посмотреть профиль <i class="icon-material-outline-arrow-right-alt"></i></a>
                     </div>
-                </div>
                 }
                 <!-- Freelancer / End -->
 
@@ -202,3 +188,227 @@
         </div>
     </div>
 </div>
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.selectpicker-filterdropdown').selectpicker({
+                liveSearch: true
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).on({
+            ajaxStart: function () { $(".loading-animation").addClass("loading"); },
+            ajaxStop: function () { $(".loading-animation").removeClass("loading"); }
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#autocomplete-input").keyup(function () {
+                var taskListId = $("#TaskList").val();
+                if (!taskListId) {
+                    taskListId = 0;
+                }
+                var skillListId = $("#SkillList").val();
+                if (!skillListId) {
+                    skillListId = 0;
+                }
+                var sortingId = $("#sortField").val();
+                var count = $("#work-range").val();
+                $.ajax({
+                    type: "GET",
+                    url: "/User/Filtrate",
+                    data: {
+                        'name': $(this).val(),
+                        'taskId': taskListId,
+                        'skillId': skillListId,
+                        'worksCount': count,
+                        'sortId': sortingId
+                    },
+                    success: function (data) {
+                        $('#freelancers-container').empty();
+                        $('#freelancers-container').html(data);
+                    },
+                    error: function (data) { alert(data.responseText); }
+                });
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+            $(function () {
+                $('#TaskList').change(function () {
+                    var id = $(this).val();
+                    if (!id) {
+                        id = 0;
+                    }
+                    var nickName = $("#autocomplete-input").val();
+                    var sortingId = $("#sortField").val();
+                    var count = $("#work-range").val();
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("GetSkills", "User")/' + id,
+                        dataType: 'JSON',
+                        success: function (data) {
+                            $('#SkillList').empty();
+                            if (id != 0) {
+                                $('#SkillList').attr('disabled',false);
+                                $('#SkillList').append("<option value=''>Все предметы</option>");
+                                $.each(data, function (i, item) {
+                                    $('#SkillList').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                                });
+                            }
+                            else {
+                                $('#SkillList').append("<option value=''></option>");
+                                $('#SkillList').attr("disabled", true);
+                            }
+                            $('#SkillList').selectpicker("refresh");
+                        },
+                        error: function (data) { alert(data.responseText); }
+                    });
+                    $.ajax({
+                        type: 'GET',
+                        url: '/User/Filtrate',
+                        data: {
+                            'name': nickName,
+                            'taskId': id,
+                            'skillId': null,
+                            'worksCount': count,
+                            'sortId': sortingId
+                        },
+                        success: function (data) {
+                            $('#freelancers-container').empty();
+                            $('#freelancers-container').html(data);
+                        },
+                        error: function (data) { alert(data.responseText); }
+                    });
+                });
+            });
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#SkillList').change(function () {
+                var id = $(this).val();
+                if (!id) {
+                    id = 0;
+                }
+                var nickName = $("#autocomplete-input").val();
+                var taskListId = $("#TaskList").val();
+                var sortingId = $('#sortField').val();
+                var count = $("#work-range").val();
+                $.ajax({
+                    type: 'GET',
+                    url: '/User/Filtrate',
+                    data: {
+                        'name': nickName,
+                        'taskId': taskListId,
+                        'skillId': id,
+                        'worksCount': count,
+                        'sortId': sortingId
+                    },
+                    success: function (data) {
+                        $('#freelancers-container').empty();
+                        $('#freelancers-container').html(data);
+                        $('#SkillList').selectpicker("refresh");
+                    },
+                    error: function (data) { alert(data.responseText); }
+                });
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#sortField').change(function () {
+                var id = $(this).val();
+                var nickName = $("#autocomplete-input").val();
+                var taskListId = $("#TaskList").val();
+                var skillListId = $("#SkillList").val();
+                var count = $("#work-range").val();
+                $.ajax({
+                    type: 'GET',
+                    url: '/User/Filtrate',
+                    data: {
+                        'name': nickName,
+                        'taskId': taskListId,
+                        'skillId': skillListId,
+                        'worksCount': count,
+                        'sortId': id
+                        
+                    },
+                    success: function (data) {
+                        $('#freelancers-container').empty();
+                        $('#freelancers-container').html(data);
+                    },
+                    error: function (data) { alert(data.responseText); }
+                });
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#work-range").change(function () {
+                var count = $(this).val();
+                var nickName = $("#autocomplete-input").val();
+                var taskListId = $("#TaskList").val();
+                if (!taskListId) taskListId = 0;
+                var skillListId = $("#SkillList").val();
+                if (!skillListId) skillListId = 0;
+                var sortingId = $("#sortField").val();
+                $.ajax({
+                    type: 'GET',
+                    url: '/User/Filtrate',
+                    data: {
+                        'name': nickName,
+                        'taskId': taskListId,
+                        'skillId': skillListId,
+                        'sortId': sortingId,
+                        'worksCount': count
+                        
+                    },
+                    success: function (data) {
+                        $('#freelancers-container').empty();
+                        $('#freelancers-container').html(data);
+                    },
+                    error: function (data) { alert(data.responseText); }
+                });
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+
+        $(function () {
+            $("#reset-filter-button").click(function () {
+                var sortingId = $("#sortField").val();
+                $("#work-range").slider('refresh');
+                $("#autocomplete-input").val("");
+                $("#TaskList").val('').selectpicker("render");
+                $("#SkillList").val('').selectpicker("render");
+                var count = $("#work-range").val();
+                $.ajax({
+                    type: 'GET',
+                    url: '/User/Filtrate',
+                    data: {
+                        'name': "",
+                        'taskId': 0,
+                        'skillId': 0,
+                        'worksCount': count,
+                        'sortId': sortingId
+                    },
+                    success: function (data) {
+                        $("#SkillList").attr("disabled", true);
+                        $('#freelancers-container').empty();
+                        $('#freelancers-container').html(data);
+                    },
+                    error: function (data) { alert(data.responseText); }
+                });
+            });
+        });
+    </script>
+}
