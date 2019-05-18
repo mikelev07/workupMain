@@ -53,9 +53,9 @@ namespace HelpMe.Controllers
         }
 
         // GET: ApplicationUser
-        public async Task<ActionResult> Index(int? pageId)
+        public async Task<ActionResult> Index(int? id)
         {
-            int page = pageId ?? 0;
+            int page = id ?? 0;
             if (Request.IsAjaxRequest())
             {
                 return PartialView("_UsersPage", GetUsersPage(page));
@@ -126,8 +126,7 @@ namespace HelpMe.Controllers
                                       PositiveThumbs = p.PositiveThumbs,
                                       NegativeThumbs = p.NegativeThumbs
                                   });
-            return usersWithRoles.OrderByDescending(m => (double)(m.PositiveThumbs - m.NegativeThumbs) / (m.PositiveThumbs + m.NegativeThumbs)).
-                    OrderByDescending(m => (m.PositiveThumbs + m.NegativeThumbs)).Skip(usersToSkip).Take(pageSize);
+            return usersWithRoles.OrderBy(t => t.Id).Skip(usersToSkip).Take(pageSize).ToList();
         }
 
         public ActionResult Filtrate(string name, int? taskId, int? skillId, int? worksCount, int? sortId)

@@ -7,13 +7,13 @@ namespace HelpMe.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class Manymigra : IMigrationMetadata
+    public sealed partial class newMigra : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Manymigra));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(newMigra));
         
         string IMigrationMetadata.Id
         {
-            get { return "201905091601390_Manymigra"; }
+            get { return "201905181121513_newMigra"; }
         }
         
         string IMigrationMetadata.Source

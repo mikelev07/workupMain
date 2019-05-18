@@ -3,7 +3,7 @@ namespace HelpMe.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class newmigra : DbMigration
+    public partial class newMigra : DbMigration
     {
         public override void Up()
         {

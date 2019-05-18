@@ -239,33 +239,9 @@
     </Compile>
     <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Hubs\NotificationHub.cs" />
-    <Compile Include="Migrations\201905091550506_Initial.cs" />
-    <Compile Include="Migrations\201905091550506_Initial.Designer.cs">
-      <DependentUpon>201905091550506_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905091601390_Manymigra.cs" />
-    <Compile Include="Migrations\201905091601390_Manymigra.Designer.cs">
-      <DependentUpon>201905091601390_Manymigra.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905091603164_Manymigraaa.cs" />
-    <Compile Include="Migrations\201905091603164_Manymigraaa.Designer.cs">
-      <DependentUpon>201905091603164_Manymigraaa.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905100837411_Skillmigra.cs" />
-    <Compile Include="Migrations\201905100837411_Skillmigra.Designer.cs">
-      <DependentUpon>201905100837411_Skillmigra.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905101140018_newmigra.cs" />
-    <Compile Include="Migrations\201905101140018_newmigra.Designer.cs">
-      <DependentUpon>201905101140018_newmigra.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905101157188_DbContekst.cs" />
-    <Compile Include="Migrations\201905101157188_DbContekst.Designer.cs">
-      <DependentUpon>201905101157188_DbContekst.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905131216396_nothing.cs" />
-    <Compile Include="Migrations\201905131216396_nothing.Designer.cs">
-      <DependentUpon>201905131216396_nothing.cs</DependentUpon>
+    <Compile Include="Migrations\201905181121513_newMigra.cs" />
+    <Compile Include="Migrations\201905181121513_newMigra.Designer.cs">
+      <DependentUpon>201905181121513_newMigra.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -535,26 +511,8 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201905091550506_Initial.resx">
-      <DependentUpon>201905091550506_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905091601390_Manymigra.resx">
-      <DependentUpon>201905091601390_Manymigra.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905091603164_Manymigraaa.resx">
-      <DependentUpon>201905091603164_Manymigraaa.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905100837411_Skillmigra.resx">
-      <DependentUpon>201905100837411_Skillmigra.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905101140018_newmigra.resx">
-      <DependentUpon>201905101140018_newmigra.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905101157188_DbContekst.resx">
-      <DependentUpon>201905101157188_DbContekst.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905131216396_nothing.resx">
-      <DependentUpon>201905131216396_nothing.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201905181121513_newMigra.resx">
+      <DependentUpon>201905181121513_newMigra.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

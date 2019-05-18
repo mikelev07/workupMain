@@ -88,7 +88,7 @@
     </div>
     <!-- Full Page Sidebar / End -->
     <!-- Full Page Content -->
-    <div class="full-page-content-container" data-simplebar>
+    <div id="fpcc" class="full-page-content-container" data-simplebar>
         <div class="full-page-content-inner">
 
             <h3 class="page-title">
@@ -225,15 +225,18 @@
                     });
                 }
             }
-            // обработка события скроллинга
-            $(window).scroll(function () {
-                //alert('scroll event');
-                if ($(window).scrollTop() >= $(document).height() - $(window).height()) {
-                //if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
 
-                    loadItems();
-                }
-            });
+         
+                const simpleBar = new SimpleBar(document.getElementById('fpcc'));
+                simpleBar.getScrollElement().addEventListener('scroll', function () {
+                    if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+                        loadItems();
+
+                    }
+                });
+          
+
+          
         })
     </script>
     <script type="text/javascript">
