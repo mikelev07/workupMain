@@ -92,10 +92,11 @@
         <div class="full-page-content-inner">
 
             <h3 class="page-title">
+                <!-- Loading animation -->
                 Результаты поиска<img width="32" height="32" class="loading-animation"
                                       src="~/Content/Custom/images/ajax-loader.gif">
             </h3>
-            <!-- Loading animation -->
+
 
 
             <div class="notify-box margin-top-15">
@@ -115,60 +116,65 @@
 
             <!-- Freelancers List Container -->
             <div class="freelancers-container freelancers-list-layout compact-list margin-top-35" id="freelancers-container">
-                @foreach (var i in Model)
-                {
-                    <!--Freelancer -->
-                    <div class="freelancer">
+                @Html.Partial("_UsersPage")
+                @*@foreach (var i in Model)
+                    {
+                        <!--Freelancer -->
+                        <div class="freelancer">
 
-                        <!-- Overview -->
-                        <div class="freelancer-overview">
-                            <div class="freelancer-overview-inner">
+                            <!-- Overview -->
+                            <div class="freelancer-overview">
+                                <div class="freelancer-overview-inner">
 
-                                <!-- Bookmark Icon -->
-                                <span class="bookmark-icon"></span>
+                                    <!-- Bookmark Icon -->
+                                    <span class="bookmark-icon"></span>
 
-                                <!-- Avatar -->
-                                <div class="freelancer-avatar">
-                                    <div class="verified-badge"></div>
-                                    <a href="single-freelancer-profile.html"><img src="@Url.Content(i?.ImagePath)" alt=""></a>
-                                </div>
-
-                                <!-- Name -->
-                                <div class="freelancer-name">
-                                    <h4><a href="single-freelancer-profile.html">@i.Username <span style="font-size:13px; color:green">в сети</span></a></h4>
-                                    <span>Занят до 15 мая</span>
-                                    <div style="margin: 5px 0 3px 0;" class="task-tags">
-                                        @foreach (var tag in i.TaskCategories.Take(2))
-                                        {
-                                            <span>@tag.Name</span>
-                                        }
+                                    <!-- Avatar -->
+                                    <div class="freelancer-avatar">
+                                        <div class="verified-badge"></div>
+                                        <a href="single-freelancer-profile.html"><img src="@Url.Content(i?.ImagePath)" alt=""></a>
                                     </div>
 
-                                </div>
+                                    <!-- Name -->
+                                    <div class="freelancer-name">
+                                        <h4><a href="single-freelancer-profile.html">@i.Username <span style="font-size:13px; color:green">в сети</span></a></h4>
+                                        <span>Занят до 15 мая</span>
+                                        <div style="margin: 5px 0 3px 0;" class="task-tags">
+                                            @foreach (var tag in i.TaskCategories.Take(2))
+                                            {
+                                                <span>@tag.Name</span>
+                                            }
+                                        </div>
 
-                                <!-- Skills-->
-                                <!-- Rating -->
-                                <div style="margin-left:25px;" class="freelancer-rating">
+                                    </div>
 
-                                    <span></span>
+                                    <!-- Skills-->
+                                    <!-- Rating -->
+                                    <div style="margin-left:25px;" class="freelancer-rating">
+
+                                        <span></span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Details -->
-                        <div class="freelancer-details">
-                            <div class="freelancer-details-list">
-                                <ul>
-                                    <li>Рейтинг<strong><i style="color:green" class="icon-material-outline-thumb-up"></i> @i.PositiveThumbs <i style="color:red" class="icon-material-outline-thumb-down"></i> @i.NegativeThumbs</strong></li>
-                                    <li>Выполнено работ <strong>@(i.PositiveThumbs + i.NegativeThumbs)</strong></li>
-                                </ul>
+                            <!-- Details -->
+                            <div class="freelancer-details">
+                                <div class="freelancer-details-list">
+                                    <ul>
+                                        <li>Рейтинг<strong><i style="color:green" class="icon-material-outline-thumb-up"></i> @i.PositiveThumbs <i style="color:red" class="icon-material-outline-thumb-down"></i> @i.NegativeThumbs</strong></li>
+                                        <li>Выполнено работ <strong>@(i.PositiveThumbs + i.NegativeThumbs)</strong></li>
+                                    </ul>
+                                </div>
+                                <a href=@Url.Action("Details", new { userName = i.Username }) class="button button-sliding-icon ripple-effect">Посмотреть профиль <i class="icon-material-outline-arrow-right-alt"></i></a>
                             </div>
-                            <a href=@Url.Action("Details", new { userName = i.Username }) class="button button-sliding-icon ripple-effect">Посмотреть профиль <i class="icon-material-outline-arrow-right-alt"></i></a>
                         </div>
-                    </div>
-                }
+                    }*@
                 <!-- Freelancer / End -->
 
+            </div>
+            <div class="loading-animation">
+                <img width="32" height="32" class="loading-animation"
+                     src="~/Content/Custom/images/ajax-loader.gif">
             </div>
             <!-- Freelancers Container / End -->
             <!-- Pagination -->
@@ -190,6 +196,46 @@
 </div>
 @section scripts
 {
+    <script type="text/javascript">
+        $(function () {
+            $('div.loading-animation').hide();
+
+            var page = 0;
+            var _inCallback = false;
+            function loadItems() {
+                if (page > -1 && !_inCallback) {
+                    _inCallback = true;
+                    page++;
+                    $('div.loading-animation').show();
+                    //alert('page='+ page);
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/User/Index/' + page,
+                        success: function (data, textstatus) {
+                            if (data != '') {
+                                $("#freelancers-container").append(data);
+                            }
+                            else {
+                                page = -1;
+                            }
+                            _inCallback = false;
+                            $("div.loading-animation").hide();
+                        }
+                    });
+                }
+            }
+            // обработка события скроллинга
+            $(window).scroll(function () {
+                //alert('scroll event');
+                if ($(window).scrollTop() >= $(document).height() - $(window).height()) {
+                //if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+
+                    loadItems();
+                }
+            });
+        })
+    </script>
     <script type="text/javascript">
         $(document).ready(function () {
             $('.selectpicker-filterdropdown').selectpicker({
@@ -338,7 +384,7 @@
                         'skillId': skillListId,
                         'worksCount': count,
                         'sortId': id
-                        
+
                     },
                     success: function (data) {
                         $('#freelancers-container').empty();
@@ -369,7 +415,7 @@
                         'skillId': skillListId,
                         'sortId': sortingId,
                         'worksCount': count
-                        
+
                     },
                     success: function (data) {
                         $('#freelancers-container').empty();

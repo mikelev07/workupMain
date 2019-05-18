@@ -515,6 +515,7 @@
     <Content Include="Views\Chat\CustomSearch.cshtml" />
     <Content Include="Views\Chat\LoadDialogs.cshtml" />
     <Content Include="Views\User\Filtrate.cshtml" />
+    <Content Include="Views\User\_UsersPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

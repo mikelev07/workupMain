@@ -20,6 +20,8 @@ namespace HelpMe.Controllers
 
         private ApplicationUserManager _userManager;
 
+        private int pageSize = 3;
+
         public UserController()
         {
         }
@@ -51,13 +53,19 @@ namespace HelpMe.Controllers
         }
 
         // GET: ApplicationUser
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? pageId)
         {
-            var roles = RoleManager.Roles.ToList();
-            List<User> Users = await db.Users.Include(m => m.TaskCategories).OrderByDescending(m => (double)(m.PositiveThumbs - m.NegativeThumbs) / (m.PositiveThumbs + m.NegativeThumbs)).
-                        OrderByDescending(m => (m.PositiveThumbs + m.NegativeThumbs)).ToListAsync();
+            int page = pageId ?? 0;
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_UsersPage", GetUsersPage(page));
+            }
 
-            var usersWithRoles = (from user in Users
+            var roles = RoleManager.Roles.ToList();
+            var Users = await db.Users.Include(m => m.TaskCategories).OrderByDescending(m => (double)(m.PositiveThumbs - m.NegativeThumbs) / (m.PositiveThumbs + m.NegativeThumbs)).
+                    OrderByDescending(m => (m.PositiveThumbs + m.NegativeThumbs)).ToListAsync();
+
+            var usersWithRoles = (from user in Users.ToList()
                                   select new
                                   {
                                       user.Id,
@@ -84,47 +92,77 @@ namespace HelpMe.Controllers
 
             ViewBag.Tasks = new SelectList(db.TaskCategories, "Id", "Name");
             //ViewBag.Skills = new SelectList(db.Skills,"Id","Name");
-            return View(usersWithRoles);
+
+            return View(GetUsersPage(page));
+        }
+
+        public IEnumerable<UserViewModel> GetUsersPage(int page = 1, int sortId = 1)
+        {
+            var usersToSkip = page * pageSize;
+            var users = db.Users.OrderByDescending(m => (double)(m.PositiveThumbs - m.NegativeThumbs) / (m.PositiveThumbs + m.NegativeThumbs)).
+                    OrderByDescending(m => (m.PositiveThumbs + m.NegativeThumbs));
+            var roles = RoleManager.Roles.ToList();
+            var usersWithRoles = (from user in users.ToList()
+                                  select new
+                                  {
+                                      user.Id,
+                                      Username = user.UserName,
+                                      ImagePath = user.ImagePath,
+                                      user.Email,
+                                      user.TaskCategories,
+                                      user.PositiveThumbs,
+                                      user.NegativeThumbs,
+                                      RoleNames = (from userRole in user.Roles
+                                                   join role in roles on userRole.RoleId equals role.Id
+                                                   select role.Name).ToList()
+                                  }).ToList().Select(p => new UserViewModel()
+                                  {
+                                      Id = p.Id,
+                                      Username = p.Username,
+                                      Email = p.Email,
+                                      ImagePath = p.ImagePath ?? "~/Content/Custom/images/user-avatar-big-01.jpg",
+                                      Role = string.Join(",", p.RoleNames),
+                                      TaskCategories = p.TaskCategories,
+                                      PositiveThumbs = p.PositiveThumbs,
+                                      NegativeThumbs = p.NegativeThumbs
+                                  });
+            return usersWithRoles.OrderByDescending(m => (double)(m.PositiveThumbs - m.NegativeThumbs) / (m.PositiveThumbs + m.NegativeThumbs)).
+                    OrderByDescending(m => (m.PositiveThumbs + m.NegativeThumbs)).Skip(usersToSkip).Take(pageSize);
         }
 
         public ActionResult Filtrate(string name, int? taskId, int? skillId, int? worksCount, int? sortId)
         {
             //var roles = RoleManager.Roles.ToList();
             IQueryable<User> users = null;
-            int worksUsersCount = 0;
-            if (worksCount!=null)
+            //int worksUsersCount = 0;
+            if (worksCount != null)
             {
                 users = db.Users.Where(m => (m.PositiveThumbs + m.NegativeThumbs) >= worksCount);
-                worksUsersCount = users.Count();
+                //worksUsersCount = users.Count();
             }
             if (name != "")
             {
                 users = users ?? db.Users;
                 users = users.Where(b => b.UserName.StartsWith(name));
-                worksUsersCount = users.Count();
+                //worksUsersCount = users.Count();
             }
-            if (taskId!=0 && taskId!=null)
+            if (taskId != 0 && taskId != null)
             {
                 users = users ?? db.Users;
                 users = users.Where(m => m.TaskCategories.Any(b => b.Id == taskId));
-                worksUsersCount = users.Count();
+                //worksUsersCount = users.Count();
 
-                if (skillId!=0 && skillId!=null)
+                if (skillId != 0 && skillId != null)
                 {
                     users = users.Where(m => m.Skills.Any(b => b.Id == skillId));
-                    worksUsersCount = users.Count();
+                    //worksUsersCount = users.Count();
                 }
             }
-
             if (sortId != null)
             {
                 users = users ?? db.Users;
-                if (sortId == 1)
-                {
-                    users = users.OrderByDescending(m => (double)(m.PositiveThumbs - m.NegativeThumbs) / (m.PositiveThumbs + m.NegativeThumbs)).
-                        OrderByDescending(m => (m.PositiveThumbs + m.NegativeThumbs));
-                }
-                worksUsersCount = users.Count();
+                users = SortUsers(users);
+                //worksUsersCount = users.Count();
             }
 
             var usersWithRoles = (from user in users
@@ -147,8 +185,28 @@ namespace HelpMe.Controllers
                                       PositiveThumbs = p.PositiveThumbs,
                                       NegativeThumbs = p.NegativeThumbs
                                   });
-
             return PartialView(usersWithRoles);
+        }
+
+        private IQueryable<User> SortUsers(IQueryable<User> users, int sortId = 1)
+        {
+            //by rating 
+            if (sortId == 1)
+            {
+                users = users.OrderByDescending(m => (double)(m.PositiveThumbs - m.NegativeThumbs) / (m.PositiveThumbs + m.NegativeThumbs)).
+                    OrderByDescending(m => (m.PositiveThumbs + m.NegativeThumbs));
+            }
+            return users;
+        }
+        private List<User> SortUsers(List<User> users, int sortId = 1)
+        {
+            //by rating 
+            if (sortId == 1)
+            {
+                users = users.OrderByDescending(m => (double)(m.PositiveThumbs - m.NegativeThumbs) / (m.PositiveThumbs + m.NegativeThumbs)).
+                    OrderByDescending(m => (m.PositiveThumbs + m.NegativeThumbs)).ToList();
+            }
+            return users;
         }
 
         public JsonResult GetSkills(int id)
