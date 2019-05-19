@@ -137,8 +137,7 @@
 @section scripts
 {
 
-
-<script type="text/javascript">
+    <script type="text/javascript">
         $(function () {
             var page = 0;
             var _inCallback = false;
@@ -165,14 +164,15 @@
                         },
                         success: function (data, textstatus) {
                             //alert("in load function");
-                            if (@TempData["UsersCount"]<= 3) {
-                                    $("#load-more-button").hide();
-                                }
+                            @*if (@TempData["UsersCount"]<= 3) {
+                                  $("#load-more-button").hide();
+                                }*@
                             if (data != '') {
                                 $("#freelancers-container").append(data);
                             }
                             else {
                                 //alert("in da else branch");
+                                $("#load-more-button").hide();
                                 page = -1;
                             }
                             _inCallback = false;
@@ -394,5 +394,5 @@
                 ajaxStop: function () { $(".loading-animation").removeClass("loading"); }
             });
         });
-</script>
+    </script>
 }
