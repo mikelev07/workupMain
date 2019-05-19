@@ -492,6 +492,8 @@
     <Content Include="Views\Chat\LoadDialogs.cshtml" />
     <Content Include="Views\User\Filtrate.cshtml" />
     <Content Include="Views\User\_UsersPage.cshtml" />
+    <Content Include="Views\Manage\Reviews.cshtml" />
+    <Content Include="Views\Manage\Likeit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -200,8 +200,8 @@ namespace HelpMe.Controllers
                     // получаем имя файла
                     string fileName = System.IO.Path.GetFileName(upload.FileName);
                     // сохраняем файл в папку Files в проекте
-                    upload.SaveAs(Server.MapPath("~/Files/" + fileName));
-                    pathFile = Server.MapPath("~/Files/" + fileName);
+                    upload.SaveAs(Server.MapPath("../Files/" + fileName));
+                    pathFile = Server.MapPath("../Files/" + fileName);
                     pathList.Add(pathFile);
                 }
             }

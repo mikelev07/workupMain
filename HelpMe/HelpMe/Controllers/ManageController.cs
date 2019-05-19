@@ -317,6 +317,19 @@ namespace HelpMe.Controllers
             return View(model);
         }
 
+        public ActionResult Reviews()
+        {
+           // var customViewModels = db.Customs.Include(c => c.Comments).Include(c => c.User).OrderBy(x => x.Id);
+            return View();
+        }
+
+        public ActionResult Likeit()
+        {
+            // var customViewModels = db.Customs.Include(c => c.Comments).Include(c => c.User).OrderBy(x => x.Id);
+            return View();
+        }
+
+
         //
         // GET: /Manage/ManageLogins
         public async Task<ActionResult> ManageLogins(ManageMessageId? message)
