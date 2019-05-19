@@ -64,7 +64,7 @@
                         </div>
                         <div class="tag">
                             <input type="checkbox" id="tag4" />
-                            <label for="tag4">Танкист</label>
+                            <label for="tag4">Скрывает боль</label>
                         </div>
 
                     </div>
@@ -88,13 +88,15 @@
     </div>
     <!-- Full Page Sidebar / End -->
     <!-- Full Page Content -->
-    <div id="fpcc" class="full-page-content-container"  data-simplebar>
+    <div id="fpcc" class="full-page-content-container" data-simplebar>
         <div class="full-page-content-inner">
 
             <h3 class="page-title">
                 <!-- Loading animation -->
-                Результаты поиска<img width="32" height="32" class="loading-animation"
-                                      src="~/Content/Custom/images/ajax-loader.gif">
+                <span id="found-users-count">Найдено исполнителей: @TempData["UsersCount"]</span>
+                <img width="32" height="32" class="loading-animation"
+                     src="~/Content/Custom/images/ajax-loader.gif">
+
             </h3>
 
 
@@ -117,71 +119,15 @@
             <!-- Freelancers List Container -->
             <div class="freelancers-container freelancers-list-layout compact-list margin-top-35" id="freelancers-container">
                 @Html.Partial("_UsersPage")
-                @*@foreach (var i in Model)
-                    {
-                        <!--Freelancer -->
-                        <div class="freelancer">
-
-                            <!-- Overview -->
-                            <div class="freelancer-overview">
-                                <div class="freelancer-overview-inner">
-
-                                    <!-- Bookmark Icon -->
-                                    <span class="bookmark-icon"></span>
-
-                                    <!-- Avatar -->
-                                    <div class="freelancer-avatar">
-                                        <div class="verified-badge"></div>
-                                        <a href="single-freelancer-profile.html"><img src="@Url.Content(i?.ImagePath)" alt=""></a>
-                                    </div>
-
-                                    <!-- Name -->
-                                    <div class="freelancer-name">
-                                        <h4><a href="single-freelancer-profile.html">@i.Username <span style="font-size:13px; color:green">в сети</span></a></h4>
-                                        <span>Занят до 15 мая</span>
-                                        <div style="margin: 5px 0 3px 0;" class="task-tags">
-                                            @foreach (var tag in i.TaskCategories.Take(2))
-                                            {
-                                                <span>@tag.Name</span>
-                                            }
-                                        </div>
-
-                                    </div>
-
-                                    <!-- Skills-->
-                                    <!-- Rating -->
-                                    <div style="margin-left:25px;" class="freelancer-rating">
-
-                                        <span></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Details -->
-                            <div class="freelancer-details">
-                                <div class="freelancer-details-list">
-                                    <ul>
-                                        <li>Рейтинг<strong><i style="color:green" class="icon-material-outline-thumb-up"></i> @i.PositiveThumbs <i style="color:red" class="icon-material-outline-thumb-down"></i> @i.NegativeThumbs</strong></li>
-                                        <li>Выполнено работ <strong>@(i.PositiveThumbs + i.NegativeThumbs)</strong></li>
-                                    </ul>
-                                </div>
-                                <a href=@Url.Action("Details", new { userName = i.Username }) class="button button-sliding-icon ripple-effect">Посмотреть профиль <i class="icon-material-outline-arrow-right-alt"></i></a>
-                            </div>
-                        </div>
-                    }*@
-                <!-- Freelancer / End -->
-
-            </div>
-            <div class="loading-animation">
-                <img width="32" height="32" class="loading-animation"
-                     src="~/Content/Custom/images/ajax-loader.gif">
             </div>
             <!-- Freelancers Container / End -->
             <!-- Pagination -->
             <div class="clearfix"></div>
             <div class="pagination-container margin-top-20 margin-bottom-20">
                 <nav class="pagination">
-                    <a href="#" class="button ripple-effect">Загрузить еще исполнителей</a>
+                    <div class="social-login-buttons">
+                        <button class="facebook-login ripple-effect" id="load-more-button">Еще исполнители</button>
+                    </div>
                 </nav>
             </div>
         </div>
@@ -190,66 +136,54 @@
 
 @section scripts
 {
-    <script type="text/javascript">
-        $(function () {
-            $('div.loading-animation').hide();
 
+
+<script type="text/javascript">
+        $(function () {
             var page = 0;
             var _inCallback = false;
             function loadItems() {
                 if (page > -1 && !_inCallback) {
                     _inCallback = true;
                     page++;
-                    $('div.loading-animation').show();
-                    //alert('page='+ page);
+                    var nickName = $("#autocomplete-input").val();
+                    var taskListId = $("#TaskList").val();
+                    var skillListId = $("#SkillList").val();
+                    var sortingId = $('#sortField').val();
+                    var count = $("#work-range").val();
 
                     $.ajax({
                         type: 'GET',
-                        url: '/User/Index/' + page,
+                        url: '/User/Index/',
+                        data: {
+                            'id': page,
+                            'name': nickName,
+                            'taskId': taskListId,
+                            'skillId': skillListId,
+                            'worksCount': count,
+                            'sortId': sortingId
+                        },
                         success: function (data, textstatus) {
+                            //alert("in load function");
+                            if (@TempData["UsersCount"]<= 3) {
+                                    $("#load-more-button").hide();
+                                }
                             if (data != '') {
                                 $("#freelancers-container").append(data);
                             }
                             else {
+                                //alert("in da else branch");
                                 page = -1;
                             }
                             _inCallback = false;
-                            $("div.loading-animation").hide();
                         }
                     });
                 }
             }
-
-         
-                const simpleBar = new SimpleBar(document.getElementById('fpcc'));
-                simpleBar.getScrollElement().addEventListener('scroll', function () {
-                    if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-                        loadItems();
-
-                    }
-                });
-          
-
-          
-        })
-    </script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('.selectpicker-filterdropdown').selectpicker({
-                liveSearch: true
+            $("#load-more-button").click(function () {
+                loadItems();
             });
-        });
-    </script>
 
-    <script type="text/javascript">
-        $(document).on({
-            ajaxStart: function () { $(".loading-animation").addClass("loading"); },
-            ajaxStop: function () { $(".loading-animation").removeClass("loading"); }
-        });
-    </script>
-
-    <script type="text/javascript">
-        $(function () {
             $("#autocomplete-input").keyup(function () {
                 var taskListId = $("#TaskList").val();
                 if (!taskListId) {
@@ -263,8 +197,9 @@
                 var count = $("#work-range").val();
                 $.ajax({
                     type: "GET",
-                    url: "/User/Filtrate",
+                    url: "/User/Index",
                     data: {
+                        'id': page,
                         'name': $(this).val(),
                         'taskId': taskListId,
                         'skillId': skillListId,
@@ -274,15 +209,12 @@
                     success: function (data) {
                         $('#freelancers-container').empty();
                         $('#freelancers-container').html(data);
+                        $("#found-users-count").html("Найдено исполнителей: @TempData["UsersCount"]");
                     },
                     error: function (data) { alert(data.responseText); }
                 });
             });
-        });
-    </script>
 
-    <script type="text/javascript">
-            $(function () {
                 $('#TaskList').change(function () {
                     var id = $(this).val();
                     if (!id) {
@@ -314,8 +246,9 @@
                     });
                     $.ajax({
                         type: 'GET',
-                        url: '/User/Filtrate',
+                        url: '/User/Index',
                         data: {
+                            'id': page,
                             'name': nickName,
                             'taskId': id,
                             'skillId': null,
@@ -325,15 +258,12 @@
                         success: function (data) {
                             $('#freelancers-container').empty();
                             $('#freelancers-container').html(data);
+                            $("#found-users-count").html("Найдено исполнителей: @TempData["UsersCount"]");
                         },
                         error: function (data) { alert(data.responseText); }
                     });
                 });
-            });
-    </script>
 
-    <script type="text/javascript">
-        $(function () {
             $('#SkillList').change(function () {
                 var id = $(this).val();
                 if (!id) {
@@ -345,8 +275,9 @@
                 var count = $("#work-range").val();
                 $.ajax({
                     type: 'GET',
-                    url: '/User/Filtrate',
+                    url: '/User/Index',
                     data: {
+                        'id': page,
                         'name': nickName,
                         'taskId': taskListId,
                         'skillId': id,
@@ -356,16 +287,13 @@
                     success: function (data) {
                         $('#freelancers-container').empty();
                         $('#freelancers-container').html(data);
+                        $("#found-users-count").html("Найдено исполнителей: @TempData["UsersCount"]");
                         $('#SkillList').selectpicker("refresh");
                     },
                     error: function (data) { alert(data.responseText); }
                 });
             });
-        });
-    </script>
 
-    <script type="text/javascript">
-        $(function () {
             $('#sortField').change(function () {
                 var id = $(this).val();
                 var nickName = $("#autocomplete-input").val();
@@ -374,27 +302,24 @@
                 var count = $("#work-range").val();
                 $.ajax({
                     type: 'GET',
-                    url: '/User/Filtrate',
+                    url: '/User/Index',
                     data: {
+                        'id': page,
                         'name': nickName,
                         'taskId': taskListId,
                         'skillId': skillListId,
                         'worksCount': count,
                         'sortId': id
-
                     },
                     success: function (data) {
                         $('#freelancers-container').empty();
                         $('#freelancers-container').html(data);
+                        $("#found-users-count").html("Найдено исполнителей: @TempData["UsersCount"]");
                     },
                     error: function (data) { alert(data.responseText); }
                 });
             });
-        });
-    </script>
 
-    <script type="text/javascript">
-        $(function () {
             $("#work-range").change(function () {
                 var count = $(this).val();
                 var nickName = $("#autocomplete-input").val();
@@ -405,53 +330,69 @@
                 var sortingId = $("#sortField").val();
                 $.ajax({
                     type: 'GET',
-                    url: '/User/Filtrate',
+                    url: '/User/Index',
                     data: {
+                        'id': page,
                         'name': nickName,
                         'taskId': taskListId,
                         'skillId': skillListId,
-                        'sortId': sortingId,
-                        'worksCount': count
-
-                    },
-                    success: function (data) {
-                        $('#freelancers-container').empty();
-                        $('#freelancers-container').html(data);
-                    },
-                    error: function (data) { alert(data.responseText); }
-                });
-            });
-        });
-    </script>
-
-    <script type="text/javascript">
-
-        $(function () {
-            $("#reset-filter-button").click(function () {
-                var sortingId = $("#sortField").val();
-                $("#work-range").slider('refresh');
-                $("#autocomplete-input").val("");
-                $("#TaskList").val('').selectpicker("render");
-                $("#SkillList").val('').selectpicker("render");
-                var count = $("#work-range").val();
-                $.ajax({
-                    type: 'GET',
-                    url: '/User/Filtrate',
-                    data: {
-                        'name': "",
-                        'taskId': 0,
-                        'skillId': 0,
                         'worksCount': count,
                         'sortId': sortingId
                     },
                     success: function (data) {
-                        $("#SkillList").attr("disabled", true);
                         $('#freelancers-container').empty();
                         $('#freelancers-container').html(data);
+                        $("#found-users-count").html("Найдено исполнителей: @TempData["UsersCount"]");
                     },
                     error: function (data) { alert(data.responseText); }
                 });
             });
+
+            $("#reset-filter-button").click(function () {
+                page = 0;
+                var nickName = $("#autocomplete-input").val();
+                var taskListId = $("#TaskList").val();
+                var skillListId = $("#SkillList").val();
+                var count = $("#work-range").val();
+                var sortingId = $("#sortField").val();
+                /*alert("nick = " + nickName + " | task= " + taskListId +
+                    " | skill =" + skillListId + " | count =" + count);*/
+                if (nickName || taskListId || skillListId || count!=0) {
+                    $("#work-range").slider('refresh');
+                    $("#autocomplete-input").val("");
+                    $("#TaskList").val('').selectpicker("render");
+                    $("#SkillList").val('').selectpicker("render");
+                    $.ajax({
+                        type: 'GET',
+                        url: '/User/Index',
+                        data: {
+                            'id': page,
+                            'name': "",
+                            'taskId': 0,
+                            'skillId': 0,
+                            'worksCount': 0,
+                            'sortId': sortingId
+                        },
+                        success: function (data) {
+                            $("#SkillList").attr("disabled", true);
+                            $('#freelancers-container').empty();
+                            $('#freelancers-container').html(data);
+                            $("#found-users-count").html("Найдено исполнителей: @TempData["UsersCount"]");
+                        },
+                        error: function (data) { alert(data.responseText); }
+                    });
+                }
+            });
+            $(document).ready(function () {
+                $('.selectpicker-filterdropdown').selectpicker({
+                    liveSearch: true
+                });
+            });
+
+            $(document).on({
+                ajaxStart: function () { $(".loading-animation").addClass("loading"); },
+                ajaxStop: function () { $(".loading-animation").removeClass("loading"); }
+            });
         });
-    </script>
+</script>
 }
