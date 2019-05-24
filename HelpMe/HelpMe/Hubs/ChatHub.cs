@@ -150,6 +150,7 @@ namespace HelpMe.Hubs
             {
                 db.Entry(user).State = EntityState.Modified;
                 user.ConnectionId = id;
+                user.IsOnline = true;
                 db.SaveChanges();
                 userList.Add(user);
 
@@ -177,6 +178,9 @@ namespace HelpMe.Hubs
             var item = userList.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
             if (item != null)
             {
+                db.Entry(user).State = EntityState.Modified;
+                user.IsOnline = false;
+                db.SaveChanges();
                 userList.Remove(item);
                 var id = Context.ConnectionId;
                 Clients.All.onUserDisconnected(id, user.UserName);

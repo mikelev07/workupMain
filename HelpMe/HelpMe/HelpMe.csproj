@@ -243,6 +243,22 @@
     <Compile Include="Migrations\201905181121513_newMigra.Designer.cs">
       <DependentUpon>201905181121513_newMigra.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905221549424_propsToUserMigra.cs" />
+    <Compile Include="Migrations\201905221549424_propsToUserMigra.Designer.cs">
+      <DependentUpon>201905221549424_propsToUserMigra.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905230853572_UserViewModelMigra.cs" />
+    <Compile Include="Migrations\201905230853572_UserViewModelMigra.Designer.cs">
+      <DependentUpon>201905230853572_UserViewModelMigra.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905240857352_NotBusyUserViewModel.cs" />
+    <Compile Include="Migrations\201905240857352_NotBusyUserViewModel.Designer.cs">
+      <DependentUpon>201905240857352_NotBusyUserViewModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905241337450_RegDateUserMigration.cs" />
+    <Compile Include="Migrations\201905241337450_RegDateUserMigration.Designer.cs">
+      <DependentUpon>201905241337450_RegDateUserMigration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationRoleManager.cs" />
@@ -515,6 +531,18 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201905181121513_newMigra.resx">
       <DependentUpon>201905181121513_newMigra.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905221549424_propsToUserMigra.resx">
+      <DependentUpon>201905221549424_propsToUserMigra.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905230853572_UserViewModelMigra.resx">
+      <DependentUpon>201905230853572_UserViewModelMigra.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905240857352_NotBusyUserViewModel.resx">
+      <DependentUpon>201905240857352_NotBusyUserViewModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905241337450_RegDateUserMigration.resx">
+      <DependentUpon>201905241337450_RegDateUserMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<HelpMe.Models.UserViewModel>
 
+@{ 
+    
+}
+
 @foreach (var i in Model)
 {
     <!--Freelancer -->
@@ -14,13 +18,30 @@
 
                 <!-- Avatar -->
                 <div class="freelancer-avatar">
-                    <div class="verified-badge"></div>
-                    <a href="single-freelancer-profile.html"><img src="@Url.Content(i?.ImagePath)" alt=""></a>
+                    @{ 
+                        string divClass = "verified-badge not-busy";
+                        if (i.IsNotBusy == false)
+                        {
+                            divClass = "verified-badge busy";
+                        }
+                    }
+                    <div class="@divClass"></div>
+                    <a href="single-freelancer-profile.html"><img src="@Url.Content(i?.ImagePath)" alt="profile picture" ></a>
                 </div>
 
                 <!-- Name -->
+                @{ 
+                    string styleText = "font-size:13px; color:red";
+                    string spanText = "не в сети";
+
+                    if (i.IsOnline)
+                    {
+                        styleText = "font-size:13px; color:green";
+                        spanText = "в сети";
+                    }
+                }
                 <div class="freelancer-name">
-                    <h4><a href="single-freelancer-profile.html">@i.Username <span style="font-size:13px; color:green">в сети</span></a></h4>
+                    <h4><a href="single-freelancer-profile.html">@i.Username <span id="@i.Username-st" style="@styleText">@spanText</span></a></h4>
                     <span>Занят до 15 мая</span>
                     <div style="margin: 5px 0 3px 0;" class="task-tags">
                         @foreach (var tag in i.TaskCategories.Take(2))

@@ -53,36 +53,42 @@ namespace HelpMe.Controllers
         }
 
         // GET: ApplicationUser
-        public ActionResult Index(int? id, string name, int? taskId, int? skillId, int worksCount=0, int sortId=1)
+        public ActionResult Index(int? id, string name, int? taskId, int? skillId, bool? isOnline, bool? isNotBusy, int worksCount=0, int sortId=1)
         {
             IQueryable<User> users = null;
-            
-            users = db.Users.Where(m => (m.PositiveThumbs + m.NegativeThumbs) >= worksCount);
 
-            int worksUsersCount = 0;
-            worksUsersCount = users.Count();
+            //int worksUsersCount = 0;
+            //worksUsersCount = users.Count();
 
             if (!String.IsNullOrEmpty(name))
             {
-                users = users ?? db.Users;
-                users = users.Where(b => b.UserName.StartsWith(name));
-                worksUsersCount = users.Count();
+                users = (users ?? db.Users).Where(b => b.UserName.StartsWith(name));
+                //worksUsersCount = users.Count();
             }
             if (taskId != 0 && taskId != null)
             {
-                users = users ?? db.Users;
-                users = users.Where(m => m.TaskCategories.Any(b => b.Id == taskId));
-                worksUsersCount = users.Count();
+                users = (users ?? db.Users).Where(m => m.TaskCategories.Any(b => b.Id == taskId));
+                //worksUsersCount = users.Count();
 
                 if (skillId != 0 && skillId != null)
                 {
                     users = users.Where(m => m.Skills.Any(b => b.Id == skillId));
-                    worksUsersCount = users.Count();
+                    //worksUsersCount = users.Count();
                 }
             }
 
-            users = SortUsers(users);
-            worksUsersCount = users.Count();
+            if(isOnline==true)
+            {
+                users = (users ?? db.Users).Where(m => m.IsOnline == isOnline);
+            }
+
+            if (isNotBusy == true)
+            {
+                users = (users ?? db.Users).Where(m => m.IsNotBusy == isNotBusy);
+            }
+
+            users = (users ?? db.Users).Where(m=>(m.PositiveThumbs+m.NegativeThumbs)>=worksCount);
+            //worksUsersCount = users.Count();
 
             var roles = RoleManager.Roles.ToList();
             var usersWithRoles = (from user in users
@@ -91,6 +97,9 @@ namespace HelpMe.Controllers
                                       user.Id,
                                       Username = user.UserName,
                                       ImagePath = user.ImagePath,
+                                      user.RegistrationDate,
+                                      user.IsOnline,
+                                      user.IsNotBusy,
                                       user.Email,
                                       user.TaskCategories,
                                       user.PositiveThumbs,
@@ -101,15 +110,20 @@ namespace HelpMe.Controllers
                                       Username = p.Username,
                                       Email = p.Email,
                                       ImagePath = p.ImagePath ?? "~/Content/Custom/images/user-avatar-big-01.jpg",
+                                      RegistrationDate = p.RegistrationDate,
+                                      IsOnline = p.IsOnline,
+                                      IsNotBusy = p.IsNotBusy,
                                       TaskCategories = p.TaskCategories,
                                       PositiveThumbs = p.PositiveThumbs,
                                       NegativeThumbs = p.NegativeThumbs
                                   });
 
-            worksUsersCount = usersWithRoles.Count();
+            usersWithRoles = SortUsers(usersWithRoles, sortId);
+
+            //worksUsersCount = usersWithRoles.Count();
             ViewBag.Tasks = new SelectList(db.TaskCategories, "Id", "Name");
             //ViewBag.Skills = new SelectList(db.Skills,"Id","Name");
-            TempData["UsersCount"] = usersWithRoles.Count();
+            TempData["UsersFound"] = usersWithRoles.Count();
 
             int page = id ?? 0;
             if (Request.IsAjaxRequest())
@@ -120,21 +134,33 @@ namespace HelpMe.Controllers
             return View(GetUsersPage(usersWithRoles, page));
         }
 
-        private IEnumerable<UserViewModel> GetUsersPage(IEnumerable<UserViewModel> users,int page = 1, int sortId = 1)
+        private IEnumerable<UserViewModel> GetUsersPage(IEnumerable<UserViewModel> usersWithRoles, int page, int sortId = 1)
         {
+
             var usersToSkip = page * pageSize;
-            return users.OrderBy(t => t.Id).Skip(usersToSkip).Take(pageSize).ToList();
+            var users = usersWithRoles.Skip(usersToSkip).Take(pageSize);
+            return users.ToList();
         }
 
-        private IQueryable<User> SortUsers(IQueryable<User> users, int sortId = 1)
+        private IEnumerable<UserViewModel> SortUsers(IEnumerable<UserViewModel> usersWithRoles, int sortId)
         {
             //by rating 
             if (sortId == 1)
             {
-                users = users.OrderByDescending(m => (double)(m.PositiveThumbs - m.NegativeThumbs) / (m.PositiveThumbs + m.NegativeThumbs)).
+                usersWithRoles = usersWithRoles.OrderByDescending(m => (double)(m.PositiveThumbs - m.NegativeThumbs) / (m.PositiveThumbs + m.NegativeThumbs)).
                     OrderByDescending(m => (m.PositiveThumbs + m.NegativeThumbs));
             }
-            return users;
+            //by registration date
+            if(sortId==2)
+            {
+                usersWithRoles = usersWithRoles.OrderBy(m => m.RegistrationDate);
+            }
+            return usersWithRoles;
+        }
+
+        public int GetUsersCount()
+        {
+            return (int)TempData["UsersFound"];
         }
 
         public JsonResult GetSkills(int id)

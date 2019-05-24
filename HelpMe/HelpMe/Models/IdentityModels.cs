@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
@@ -16,6 +17,9 @@ namespace HelpMe.Models
         public string Username { get; set; }
         [NotMapped]
         public HttpPostedFileBase ImageFile { get; set; }
+        public DateTime RegistrationDate { get; set; }
+        public bool IsOnline { get; set; }
+        public bool IsNotBusy { get; set; }
         public string ImagePath { get; set; } = "~/Content/Custom/images/user-avatar-big-01.jpg";
         public string Email { get; set; }
         public string Role { get; set; }
@@ -39,6 +43,10 @@ namespace HelpMe.Models
         public string ImagePath { get; set; }
         [NotMapped]
         public HttpPostedFileBase ImageFile { get; set; }
+        public DateTime RegistrationDate { get; set; }
+        public bool IsOnline { get; set; }
+        public bool IsNotBusy { get; set; }
+        public string Status { get; set; }
         public int Age { get; set; } // добавляем свойство Age
         public string Description { get; set; }
         public string ConnectionId { get; set; } // для SignalR

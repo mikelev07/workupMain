@@ -2883,6 +2883,7 @@ em.mm-counter {
 	}
 
 
+
 /* ---------------------------------- */
 /* Notify Box
 ------------------------------------- */
@@ -4487,8 +4488,8 @@ span.blog-item-tag {
 	max-width: 360px;
 }
 
-#load-more-button{
-	margin:0 auto;
+#load-more-button {
+	margin: 0 auto;
 }
 
 /* Enable Filter Button */
@@ -5748,6 +5749,7 @@ span.blog-item-tag {
 
 	.freelancer-overview .freelancer-avatar img {
 		width: 100%;
+        min-width:100px;
 		border-radius: 50%;
 		cursor: pointer;
 	}
@@ -7368,7 +7370,12 @@ table.basic-table {
 	font-weight: 500;
 }
 
-	.verified-badge:before {
+    .verified-badge.busy {
+        background-color: red;
+    }
+
+
+	.verified-badge.not-busy:before {
 		content: "\e92b";
 		font-family: "Feather-Icons";
 		font-size: 16px;
@@ -7377,6 +7384,18 @@ table.basic-table {
 		top: 0px;
 		line-height: 27px;
 	}
+
+    .verified-badge.busy:before {
+        content: "\f191";
+        font-family: Line-Awesome;
+        font-size: 16px;
+        color: #fff;
+        position: relative;
+        top: 0px;
+        line-height: 27px;
+    }
+
+
 
 .job-listing .job-listing-company-logo .verified-badge {
 	position: absolute;

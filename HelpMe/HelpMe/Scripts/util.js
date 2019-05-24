@@ -297,6 +297,10 @@ $(function () {
             $('.' + id).remove();
             $('#' + id).attr('id', conidName);
           //  $('#partnerId').val() = id;
+
+            var htmlUserName = '#' + name + '-st';
+            $(htmlUserName).text('не в сети');
+            $(htmlUserName).css('color', 'red');
     }
 
 
@@ -528,6 +532,11 @@ function AddUser(id, name) {
         $(conidName).attr('id', id);
        // $(conidName).on('click',setValue(name,id));
        // "javascript:@(Html.Raw(String.Format("setValue({0},{1})","'" + d.UserTo.UserName + "'","'" + d.UserTo.ConnectionId + "'")))"
+
+        var htmlUserName = '#' + name + '-st';
+        //alert("1");
+        $(htmlUserName).text('в сети');
+        $(htmlUserName).css('color', 'green');
     }
 
         // $('#chatroom').load('@Url.Action("LoadHistory", "Chat")?id=' + id + '?myId='      
