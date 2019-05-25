@@ -150,10 +150,17 @@ namespace HelpMe.Controllers
                 usersWithRoles = usersWithRoles.OrderByDescending(m => (double)(m.PositiveThumbs - m.NegativeThumbs) / (m.PositiveThumbs + m.NegativeThumbs)).
                     OrderByDescending(m => (m.PositiveThumbs + m.NegativeThumbs));
             }
-            //by registration date
+
+            //by registration date ascending order
             if(sortId==2)
             {
                 usersWithRoles = usersWithRoles.OrderBy(m => m.RegistrationDate);
+            }
+
+            //by registration date descending order
+            if (sortId == 3)
+            {
+                usersWithRoles = usersWithRoles.OrderByDescending(m => m.RegistrationDate);
             }
             return usersWithRoles;
         }

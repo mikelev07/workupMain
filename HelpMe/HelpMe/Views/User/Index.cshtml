@@ -112,7 +112,8 @@
                     <span>Сортировать по:</span>
                     <select class="selectpicker hide-tick" id="sortField">
                         <option value="1" selected>Рейтингу</option>
-                        <option value="2">Дате</option>
+                        <option value="2">Возрастанию даты</option>
+                        <option value="3">Убыванию даты</option>
                     </select>
                 </div>
             </div>
@@ -145,20 +146,20 @@
 
     <script type="text/javascript">
 
-            $(document).ready(function () {
-                $('.selectpicker-filterdropdown').selectpicker({
-                    liveSearch: true
-                });
+        $(document).ready(function () {
+            $('.selectpicker-filterdropdown').selectpicker({
+                liveSearch: true
             });
+        });
 
-            $(document).on({
-                ajaxStart: function () {
-                    $(".loading-animation").addClass("loading");
-                },
-                ajaxStop: function () {
-                    $(".loading-animation").removeClass("loading");
-                }
-            });
+        $(document).on({
+            ajaxStart: function () {
+                $(".loading-animation").addClass("loading");
+            },
+            ajaxStop: function () {
+                $(".loading-animation").removeClass("loading");
+            }
+        });
 
         $(function () {
             var page = 0;
@@ -166,6 +167,92 @@
             var _inCallback = false;
             var sliderOriginalVal;
 
+            //load more executors button event
+            $("#load-more-button").click(function () {
+                loadItems();
+            }).hover(function () {
+                $(".loading-animation.load-more").prop('src', '/Content/Custom/images/ajax-loader-reverse.gif');
+            }, function () {
+                $(".loading-animation.load-more").prop('src', '/Content/Custom/images/ajax-loader.gif');
+            });
+
+            //filtration event handlers
+            $("#autocomplete-input").keyup(CallIndex);
+            $('#TaskList').change(function () {
+                GetSkills();
+                CallIndex();
+            });
+            $('#SkillList').change(CallIndex).selectpicker("refresh");
+            $("#tag1").click(CallIndex);
+            $("#tag2").click(CallIndex);
+            $('#sortField').change(CallIndex);
+            
+
+            $('#work-range').slider().on('slideStart', function (ev) {
+                sliderOriginalVal = $('#work-range').data('slider').getValue();
+            });
+
+            $("#work-range").slider().on('slideStop', function (ev) {
+                var sliderNewVal = $(this).data('slider').getValue();
+                if (sliderOriginalVal != sliderNewVal) {
+                    CallIndex();
+                }
+            });
+
+            //reset filtration event handler
+            $("#reset-filter-button").click(function () {
+                page = 0;
+                var nickName = $("#autocomplete-input").val();
+                var taskListId = $("#TaskList").val();
+                var skillListId = $("#SkillList").val();
+                var sortingId = $("#sortField").val();
+                var count = $("#work-range").val();
+                var isOnline = $("#tag1").is(':checked');
+                var isNotBusy = $("#tag2").is(':checked');
+                if (nickName || taskListId || skillListId || count != 0 || isOnline || isNotBusy) {
+                    $("#work-range").slider('refresh');
+                    $("#autocomplete-input").val("");
+                    $("#TaskList").val('').selectpicker("render");
+                    $("#SkillList").val('').selectpicker("render");
+                    $("#tag1").prop('checked', false);
+                    $("#tag2").prop('checked', false);
+                    $.ajax({
+                        type: 'GET',
+                        url: '/User/Index',
+                        data: {
+                            'id': page,
+                            'name': "",
+                            'taskId': 0,
+                            'skillId': 0,
+                            'worksCount': 0,
+                            'isOnline': false,
+                            'isNotBusy': false,
+                            'sortId': sortingId
+                        },
+                        success: function (data) {
+                            $("#SkillList").attr("disabled", true);
+                            $('#freelancers-container').empty();
+                            $('#freelancers-container').html(data);
+                            $.ajax({
+                                type: 'GET',
+                                url: "/User/GetUsersCount",
+                                success: function (data) {
+                                    if (data > pageSize) {
+                                        $("#load-more-button").show();
+                                    }
+                                    else {
+                                        $("#load-more-button").hide();
+                                    }
+                                    $("#found-users-count").html("Найдено исполнителей: " + data);
+                                }
+                            });
+                        },
+                        error: function (data) { alert(data.responseText); }
+                    });
+                }
+            });
+
+            //common functions
             function loadItems() {
                 $("#more-executors-text").hide();
                 if (page > -1 && !_inCallback) {
@@ -192,18 +279,13 @@
                             'sortId': sortingId
                         },
                         success: function (data, textstatus) {
-                            //$("#more-executors-text").hide();
-                            //$("#load-more-button").prop('src', "~/Content/Custom/images/ajax-loader.gif");
                             var usersOnPage = $("div.freelancer").length;
                             if (data != '') {
                                 $.ajax({
                                     type: 'GET',
                                     url: "/User/GetUsersCount",
                                     success: function (data) {
-                                        //alert("usersOnPage = " + usersOnPage);
-                                        //if (usersOnPage < pageSize || (totalUsers == pageSize * (page + 1))) {
                                         if (data - usersOnPage <= pageSize) {
-                                            //alert("usersOnPage = " + usersOnPage + " | totalUsers = " + totalUsers);
                                             $("#load-more-button").hide();
                                         }
                                     }
@@ -215,439 +297,88 @@
                             }
                             _inCallback = false;
                             $("#more-executors-text").show();
-                            //$("#load-more-button").removeProp('src');
                         }
                     });
                 }
-
             }
 
-
-            $("#load-more-button").click(function () {
-                
-                loadItems();
-            }).hover(function () {
-                //$(".loading-animation.load-more").show();
-                $(".loading-animation.load-more").prop('src', '/Content/Custom/images/ajax-loader-reverse.gif');
-            }, function () {
-                //$(".loading-animation.load-more").show();
-                $(".loading-animation.load-more").prop('src', '/Content/Custom/images/ajax-loader.gif');
-            });
-
-
-                $("#autocomplete-input").keyup(function () {
-                    page = 0;
-                    var taskListId = $("#TaskList").val();
-                    if (!taskListId) {
-                        taskListId = 0;
-                    }
-                    var skillListId = $("#SkillList").val();
-                    if (!skillListId) {
-                        skillListId = 0;
-                    }
-                    var isOnline = $("#tag1").is(':checked');
-                    var isNotBusy = $("#tag2").is(':checked');
-                    var count = $("#work-range").val();
-                    var sortingId = $("#sortField").val();
-                    $.ajax({
-                        type: "GET",
-                        url: "/User/Index",
-                        data: {
-                            'id': page,
-                            'name': $(this).val(),
-                            'taskId': taskListId,
-                            'skillId': skillListId,
-                            'worksCount': count,
-                            'isOnline': isOnline,
-                            'isNotBusy': isNotBusy,
-                            'sortId': sortingId
-                        },
-                        success: function (data) {
-                            //alert(data);
-                            $('#freelancers-container').empty();
-                            $('#freelancers-container').html(data);
-                            $.ajax({
-                                type: 'GET',
-                                url: "/User/GetUsersCount",
-                                success: function (data) {
-                                    if (data > pageSize) {
-                                        $("#load-more-button").show();
-                                    }
-                                    else {
-                                        $("#load-more-button").hide();
-                                    }
-                                    $("#found-users-count").html("Найдено исполнителей: " + data);
-                                }
-                            });
-                        },
-                        error: function (data) { alert(data.responseText); }
-                    });
-                });
-
-                $('#TaskList').change(function () {
-                        page = 0;
-                        var id = $(this).val();
-                        if (!id) {
-                            id = 0;
-                        }
-                        var nickName = $("#autocomplete-input").val();
-                        var count = $("#work-range").val();
-                        var isOnline = $("#tag1").is(':checked');
-                        var isNotBusy = $("#tag2").is(':checked');
-                        var sortingId = $("#sortField").val();
-
+            function CallIndex() {
+                page = 0;
+                var nickName = $("#autocomplete-input").val();
+                var taskListId = $("#TaskList").val();
+                if (!taskListId) {
+                    taskListId = 0;
+                }
+                var skillListId = $("#SkillList").val();
+                if (!skillListId) {
+                    skillListId = 0;
+                }
+                var worksCount = $("#work-range").val();
+                var isOnline = $("#tag1").is(':checked');
+                var isNotBusy = $("#tag2").is(':checked');
+                var sortingId = $("#sortField").val();
+                $.ajax({
+                    type: "GET",
+                    url: "/User/Index",
+                    data: {
+                        'id': page,
+                        'name': nickName,
+                        'taskId': taskListId,
+                        'skillId': skillListId,
+                        'worksCount': worksCount,
+                        'isOnline': isOnline,
+                        'isNotBusy': isNotBusy,
+                        'sortId': sortingId
+                    },
+                    success: function (data) {
+                        $('#freelancers-container').empty();
+                        $('#freelancers-container').html(data);
                         $.ajax({
                             type: 'GET',
-                            url: '@Url.Action("GetSkills", "User")/' + id,
-                            dataType: 'JSON',
+                            url: "/User/GetUsersCount",
                             success: function (data) {
-                                $('#SkillList').empty();
-                                if (id != 0) {
-                                    $('#SkillList').attr('disabled',false);
-                                    $('#SkillList').append("<option value=''>Все предметы</option>");
-                                    $.each(data, function (i, item) {
-                                        $('#SkillList').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
-                                    });
+                                if (data > pageSize) {
+                                    $("#load-more-button").show();
                                 }
                                 else {
-                                    $('#SkillList').append("<option value=''>Все предметы</option>");
-                                    //$('#SkillList').prop('selectedIndex', 0);
-                                    $('#SkillList').attr("disabled", true);
+                                    $("#load-more-button").hide();
                                 }
-                                $('#SkillList').selectpicker("refresh");
-                            },
-                            error: function (data) { alert(data.responseText); }
+                                $("#found-users-count").html("Найдено исполнителей: " + data);
+                            }
                         });
-                        $.ajax({
-                            type: 'GET',
-                            url: '/User/Index',
-                            data: {
-                                'id': page,
-                                'name': nickName,
-                                'taskId': id,
-                                'skillId': null,
-                                'worksCount': count,
-                                'isOnline': isOnline,
-                                'isNotBusy': isNotBusy,
-                                'sortId': sortingId
-                            },
-                            success: function (data) {
-                                $('#freelancers-container').empty();
-                                $('#freelancers-container').html(data);
-                                $.ajax({
-                                    type: 'GET',
-                                    url: "/User/GetUsersCount",
-                                    success: function (data) {
-                                        if (data > pageSize) {
-                                            $("#load-more-button").show();
-                                        }
-                                        else {
-                                            $("#load-more-button").hide();
-                                        }
-                                        $("#found-users-count").html("Найдено исполнителей: " + data);
-                                    }
-                                });
-                            },
-                            error: function (data) { alert(data.responseText); }
-                        });
-                    });
+                    },
+                    error: function (data) { alert(data.responseText); }
+                });
+            }
 
-                $('#SkillList').change(function () {
-                    page = 0;
-                    var id = $(this).val();
-                    if (!id) {
-                        id = 0;
-                    }
-                    var nickName = $("#autocomplete-input").val();
-                    var taskListId = $("#TaskList").val();
-                    var count = $("#work-range").val();
-                    var isOnline = $("#tag1").is(':checked');
-                    var isNotBusy = $("#tag2").is(':checked');
-                    var sortingId = $('#sortField').val();
-                    $.ajax({
-                        type: 'GET',
-                        url: '/User/Index',
-                        data: {
-                            'id': page,
-                            'name': nickName,
-                            'taskId': taskListId,
-                            'skillId': id,
-                            'worksCount': count,
-                            'isOnline': isOnline,
-                            'isNotBusy': isNotBusy,
-                            'sortId': sortingId
-                        },
-                        success: function (data) {
-                            $('#freelancers-container').empty();
-                            $('#freelancers-container').html(data);
-                            $.ajax({
-                                type: 'GET',
-                                url: "/User/GetUsersCount",
-                                success: function (data) {
-                                    if (data > pageSize) {
-                                        $("#load-more-button").show();
-                                    }
-                                    else {
-                                        $("#load-more-button").hide();
-                                    }
-                                    $("#found-users-count").html("Найдено исполнителей: " + data);
-                                }
+            function GetSkills() {
+                var id = $('#TaskList').val();
+                if (!id) {
+                    id = 0;
+                }
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetSkills", "User")/' + id,
+                    dataType: 'JSON',
+                    success: function (data) {
+                        $('#SkillList').empty();
+                        if (id != 0) {
+                            $('#SkillList').attr('disabled',false);
+                            $('#SkillList').append("<option value=''>Все предметы</option>");
+                            $.each(data, function (i, item) {
+                                $('#SkillList').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                             });
-                            $('#SkillList').selectpicker("refresh");
-                        },
-                        error: function (data) { alert(data.responseText); }
-                    });
+                        }
+                        else {
+                            $('#SkillList').append("<option value=''>Все предметы</option>");
+                            $('#SkillList').attr("disabled", true);
+                        }
+                        $('#SkillList').selectpicker("refresh");
+                    },
+                    error: function (data) { alert(data.responseText); }
                 });
-
-                $('#sortField').change(function () {
-                    page = 0;
-                    var id = $(this).val();
-                    var nickName = $("#autocomplete-input").val();
-                    var taskListId = $("#TaskList").val();
-                    var skillListId = $("#SkillList").val();
-                    var isOnline = $("#tag1").is(':checked');
-                    var isNotBusy = $("#tag2").is(':checked');
-                    var count = $("#work-range").val();
-                    $.ajax({
-                        type: 'GET',
-                        url: '/User/Index',
-                        data: {
-                            'id': page,
-                            'name': nickName,
-                            'taskId': taskListId,
-                            'skillId': skillListId,
-                            'worksCount': count,
-                            'isOnline': isOnline,
-                            'isNotBusy': isNotBusy,
-                            'sortId': id
-                        },
-                        success: function (data) {
-                            $('#freelancers-container').empty();
-                            $('#freelancers-container').html(data);
-                            $.ajax({
-                                type: 'GET',
-                                url: "/User/GetUsersCount",
-                                success: function (data) {
-                                    if (data > pageSize) {
-                                        $("#load-more-button").show();
-                                    }
-                                    else {
-                                        $("#load-more-button").hide();
-                                    }
-                                    $("#found-users-count").html("Найдено исполнителей: " + data);
-                                }
-                            });
-                        },
-                        error: function (data) { alert(data.responseText); }
-                    });
-                });
-
-                $('#work-range').slider().on('slideStart', function (ev) {
-                    sliderOriginalVal = $('#work-range').data('slider').getValue();
-                });
-
-                $("#work-range").slider().on('slideStop', function (ev) {
-                        //alert("gg");
-                    var sliderNewVal = $('#work-range').data('slider').getValue();
-                    if (sliderOriginalVal != sliderNewVal) {
-                        page = 0;
-                        var nickName = $("#autocomplete-input").val();
-                        var taskListId = $("#TaskList").val();
-                        if (!taskListId) taskListId = 0;
-                        var skillListId = $("#SkillList").val();
-                        if (!skillListId) skillListId = 0;
-                        var isOnline = $("#tag1").is(':checked');
-                        var isNotBusy = $("#tag2").is(':checked');
-                        var sortingId = $("#sortField").val();
-                        //setTimeout(function (){
-                        $.ajax({
-                            type: 'GET',
-                            url: '/User/Index',
-                            data: {
-                                'id': page,
-                                'name': nickName,
-                                'taskId': taskListId,
-                                'skillId': skillListId,
-                                'worksCount': sliderNewVal,
-                                'isOnline': isOnline,
-                                'isNotBusy': isNotBusy,
-                                'sortId': sortingId
-                            },
-                            success: function (data) {
-                                //alert("range = " + sliderNewVal);
-                                $('#freelancers-container').empty();
-                                $('#freelancers-container').html(data);
-                                $.ajax({
-                                    type: 'GET',
-                                    url: "/User/GetUsersCount",
-                                    success: function (data) {
-                                        if (data > pageSize) {
-                                            $("#load-more-button").show();
-                                        }
-                                        else {
-                                            $("#load-more-button").hide();
-                                        }
-                                        $("#found-users-count").html("Найдено исполнителей: " + data);
-                                    }
-                                });
-                            },
-                            error: function (data) { alert(data.responseText); }
-                        });
-                    }
-                });
-
-                $("#tag1").click(function () {
-                    page = 0;
-                    var nickName = $("#autocomplete-input").val();
-                    var taskListId = $("#TaskList").val();
-                    if (!taskListId) {
-                        taskListId = 0;
-                    }
-                    var skillListId = $("#SkillList").val();
-                    if (!skillListId) {
-                        skillListId = 0;
-                    }
-                    var isOnline = $(this).is(':checked');
-                    var isNotBusy = $("#tag2").is(':checked');
-                    var sortingId = $("#sortField").val();
-                    $.ajax({
-                        type: "GET",
-                        url: "/User/Index",
-                        data: {
-                            'id': page,
-                            'name': nickName,
-                            'taskId': taskListId,
-                            'skillId': skillListId,
-                            'worksCount': count,
-                            'isOnline': isOnline,
-                            'isNotBusy': isNotBusy,
-                            'sortId': sortingId
-                        },
-                        success: function (data) {
-                            //alert(data);
-                            $('#freelancers-container').empty();
-                            $('#freelancers-container').html(data);
-                            $.ajax({
-                                type: 'GET',
-                                url: "/User/GetUsersCount",
-                                success: function (data) {
-                                    if (data > pageSize) {
-                                        $("#load-more-button").show();
-                                    }
-                                    else {
-                                        $("#load-more-button").hide();
-                                    }
-                                    $("#found-users-count").html("Найдено исполнителей: " + data);
-                                }
-                            });
-                        },
-                        error: function (data) { alert(data.responseText); }
-                    });
-                });
-
-                $("#tag2").click(function () {
-                    page = 0;
-                    var nickName = $("#autocomplete-input").val();
-                    var taskListId = $("#TaskList").val();
-                    if (!taskListId) {
-                        taskListId = 0;
-                    }
-                    var skillListId = $("#SkillList").val();
-                    if (!skillListId) {
-                        skillListId = 0;
-                    }
-                    var isOnline = $("#tag1").is(':checked');
-                    var isNotBusy = $(this).is(':checked');
-                    var sortingId = $("#sortField").val();
-                    $.ajax({
-                        type: "GET",
-                        url: "/User/Index",
-                        data: {
-                            'id': page,
-                            'name': nickName,
-                            'taskId': taskListId,
-                            'skillId': skillListId,
-                            'worksCount': count,
-                            'isOnline': isOnline,
-                            'isNotBusy': isNotBusy,
-                            'sortId': sortingId
-                        },
-                        success: function (data) {
-                            //alert(data);
-                            $('#freelancers-container').empty();
-                            $('#freelancers-container').html(data);
-                            $.ajax({
-                                type: 'GET',
-                                url: "/User/GetUsersCount",
-                                success: function (data) {
-                                    if (data > pageSize) {
-                                        $("#load-more-button").show();
-                                    }
-                                    else {
-                                        $("#load-more-button").hide();
-                                    }
-                                    $("#found-users-count").html("Найдено исполнителей: " + data);
-                                }
-                            });
-                        },
-                        error: function (data) { alert(data.responseText); }
-                    });
-                });
-
-                $("#reset-filter-button").click(function () {
-                    //alert("reset-event");
-                    page = 0;
-                    var nickName = $("#autocomplete-input").val();
-                    var taskListId = $("#TaskList").val();
-                    var skillListId = $("#SkillList").val();
-                    var sortingId = $("#sortField").val();
-                    var count = $("#work-range").val();
-                    var isOnline = $("#tag1").is(':checked');
-                    var isNotBusy = $("#tag2").is(':checked');
-                    /*alert("nick = " + nickName + " | task= " + taskListId +
-                        " | skill =" + skillListId + " | count =" + count + " | isOnline =" + isOnline + " | isNotBusy = " + isNotBusy);*/
-                    if (nickName || taskListId || skillListId || count != 0 || isOnline || isNotBusy) {
-                        $("#work-range").slider('refresh');
-                        $("#autocomplete-input").val("");
-                        $("#TaskList").val('').selectpicker("render");
-                        $("#SkillList").val('').selectpicker("render");
-                        $("#tag1").prop('checked', false);
-                        $("#tag2").prop('checked', false);
-                        $.ajax({
-                            type: 'GET',
-                            url: '/User/Index',
-                            data: {
-                                'id': page,
-                                'name': "",
-                                'taskId': 0,
-                                'skillId': 0,
-                                'worksCount': 0,
-                                'isOnline': false,
-                                'isNotBusy': false,
-                                'sortId': sortingId
-                            },
-                            success: function (data) {
-                                $("#SkillList").attr("disabled", true);
-                                $('#freelancers-container').empty();
-                                $('#freelancers-container').html(data);
-                                $.ajax({
-                                    type: 'GET',
-                                    url: "/User/GetUsersCount",
-                                    success: function (data) {
-                                        if (data > pageSize) {
-                                            $("#load-more-button").show();
-                                        }
-                                        else {
-                                            $("#load-more-button").hide();
-                                        }
-                                        $("#found-users-count").html("Найдено исполнителей: " + data);
-                                    }
-                                });
-                            },
-                            error: function (data) { alert(data.responseText); }
-                        });
-                    }
-                    });
-            });
+            }
+        });
     </script>
 }
