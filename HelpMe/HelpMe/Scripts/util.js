@@ -298,7 +298,7 @@ $(function () {
             $('#' + id).attr('id', conidName);
           //  $('#partnerId').val() = id;
 
-            var htmlUserName = '#' + name + '-st';
+            var htmlUserName = '#' + userName + '-st';
             $(htmlUserName).text('не в сети');
             $(htmlUserName).css('color', 'red');
     }

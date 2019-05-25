@@ -155,7 +155,7 @@ namespace HelpMe.Controllers
                 int index = userName.IndexOf("@");
                 if (index > 0)
                     userName = userName.Substring(0, index);
-                var user = new User { UserName = userName, Email = model.Email };
+                var user = new User { UserName = userName, Email = model.Email, RegistrationDate = DateTime.Now };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
