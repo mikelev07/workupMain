@@ -4,59 +4,89 @@
     ViewBag.Title = "Выполнить вход";
 }
 
-<h2>@ViewBag.Title.</h2>
-<div class="row">
-    <div class="col-md-8">
-        <section id="loginForm">
-            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
-                @Html.AntiForgeryToken()
-                <h4>Используйте локальную учетную запись для входа.</h4>
-                <hr />
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <div class="checkbox">
-                            @Html.CheckBoxFor(m => m.RememberMe)
-                            @Html.LabelFor(m => m.RememberMe)
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Выполнить вход" class="btn btn-default" />
-                    </div>
-                </div>
-                <p>
-                    @Html.ActionLink("Регистрация нового пользователя", "Register")
-                </p>
-                @* Включите, когда будет включено подтверждение учетной записи для функции сброса пароля
-                    <p>
-                        @Html.ActionLink("Забыли пароль?", "ForgotPassword")
-                    </p>*@
-            }
-        </section>
-    </div>
-    <div class="col-md-4">
-        <section id="socialLoginForm">
-            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-        </section>
+
+<div id="titlebar" class="gradient">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+
+                <h2>Авторизация</h2>
+
+                <!-- Breadcrumbs -->
+                <nav id="breadcrumbs" class="dark">
+                    <ul>
+                        <li><a href="/account/register">Регистрация</a>
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- Container -->
+<div class="container">
+    <div class="row">
+
+        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+        
+            <!-- Form -->
+            
+                <div class="input-with-icon-left">
+                    <i class="icon-material-baseline-mail-outline"></i>
+                    @Html.TextBox("Email", "", new { @class = "input-text with-border", @placeholder = "Ваша почта" })
+                </div>
+                <div class="input-with-icon-left">
+                    <i class="icon-material-outline-lock"></i>
+                    @Html.Password("Password", "", new { @class = "input-text with-border", @placeholder = "Пароль" })
+                </div>
+                <a href="#" class="forgot-password">Забыл пароль?</a>
+                <!-- Button -->
+                <input value="Войти" class="button full-width button-sliding-icon ripple-effect" type="submit">
+       
+            <!-- Social Login -->
+            <div class="social-login-separator"><span>или</span></div>
+            <div class="social-login-buttons">
+                <button class="facebook-login ripple-effect"><i class="icon-brand-facebook-f"></i> Войти с Facebook</button>
+                <button class="google-login ripple-effect"><i class="icon-brand-google-plus-g"></i> Войти via Google+</button>
+            </div>
+        }
+
+    </div>
+    <div class="dashboard-footer-spacer"></div>
+    <div class="small-footer margin-top-15">
+        <div class="small-footer-copyrights">
+            © 2018 <strong>ВоркАп</strong>. С правами все в порядке.
+        </div>
+        <ul class="footer-social-links">
+            <li>
+                <a href="#" title="Facebook" data-tippy-placement="top">
+                    <i class="icon-brand-facebook-f"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#" title="Twitter" data-tippy-placement="top">
+                    <i class="icon-brand-twitter"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#" title="Google Plus" data-tippy-placement="top">
+                    <i class="icon-brand-google-plus-g"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#" title="LinkedIn" data-tippy-placement="top">
+                    <i class="icon-brand-linkedin-in"></i>
+                </a>
+            </li>
+        </ul>
+        <div class="clearfix"></div>
+    </div>
+    <!-- Footer / End -->
+</div>
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
