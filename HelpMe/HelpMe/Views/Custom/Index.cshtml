@@ -25,83 +25,35 @@
                             <div id="autocomplete-container">
                                 <input id="name" name="name" type="text" placeholder="Название">
                             </div>
-                            <i class="icon-material-outline-location-on"></i>
+                            <i class="icon-material-outline-folder-shared"></i>
                         </div>
                     </div>
 
                     <!-- Category -->
                     <div class="sidebar-widget">
-                        <h3>Тип работы</h3>
-                        <select class="selectpicker default" multiple data-selected-text-format="count" data-size="7" title="Все категории">
-                            <option>Математика</option>
-                            <option>Английский язык</option>
-                            <option>Физика</option>
-                         
+                        <h3>Дисциплина</h3>
+                        <select class="selectpicker" data-live-search="true" title="Все дисциплины">
+                            <option>Математик</option>
+                            <option>Физик</option>
+                            <option>Физрук</option>
                         </select>
-                    </div>
-
-                    <!-- Keywords -->
-                    <div class="sidebar-widget">
-                        <h3>Ключевые слова</h3>
-                        <div class="keywords-container">
-                            <div class="keyword-input-container">
-                                <input type="text" class="keyword-input" placeholder="введите тут" />
-                                <button class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
-                            </div>
-                            <div class="keywords-list"><!-- keywords go here --></div>
-                            <div class="clearfix"></div>
-                        </div>
+                        <br />
+                        <select class="selectpicker" data-live-search="true" title="Все предметы">
+                            <option>Математик</option>
+                            <option>Физик</option>
+                            <option>Физрук</option>
+                        </select>
                     </div>
 
                     <!-- Budget -->
                     <div class="sidebar-widget">
-                        <h3>Стоимость заказа</h3>
+                        <h3>Бюджет заказа</h3>
                         <div class="margin-top-55"></div>
 
                         <!-- Range Slider -->
-                        <input class="range-slider" type="text" value="" data-slider-currency="$" data-slider-min="10" data-slider-max="2500" data-slider-step="25" data-slider-value="[50,2500]" />
+                        <input class="range-slider" type="text" value="" data-slider-currency="" data-slider-min="10" data-slider-max="2500" data-slider-step="25" data-slider-value="[50,2500]" />
                     </div>
 
-                    <!-- Hourly Rate -->
-                    <div class="sidebar-widget">
-                        <h3>Рейтинг</h3>
-                        <div class="margin-top-55"></div>
-
-                        <!-- Range Slider -->
-                        <input class="range-slider" type="text" value="" data-slider-currency="$" data-slider-min="10" data-slider-max="150" data-slider-step="5" data-slider-value="[10,200]" />
-                    </div>
-
-                    <!-- Tags -->
-                    <div class="sidebar-widget">
-                        <h3>Навыки</h3>
-
-                        <div class="tags-container">
-                            <div class="tag">
-                                <input type="checkbox" id="tag1" />
-                                <label for="tag1">front-end dev</label>
-                            </div>
-                            <div class="tag">
-                                <input type="checkbox" id="tag2" />
-                                <label for="tag2">angular</label>
-                            </div>
-                            <div class="tag">
-                                <input type="checkbox" id="tag3" />
-                                <label for="tag3">react</label>
-                            </div>
-                            
-                        </div>
-                        <div class="clearfix"></div>
-
-                        <!-- More Skills -->
-                        <div class="keywords-container margin-top-20">
-                            <div class="keyword-input-container">
-                                <input type="text" class="keyword-input" placeholder="добавь скиллов" />
-                                <button class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
-                            </div>
-                            <div class="keywords-list"><!-- keywords go here --></div>
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>
                     <div class="clearfix"></div>
 
                     <div class="margin-bottom-40"></div>
@@ -126,13 +78,12 @@
 
             <div class="notify-box margin-top-15">
                 <div class="switch-container">
-                    <label class="switch"><input type="checkbox"><span class="switch-button"></span><span class="switch-text">Включить уведомление по почте для новых задач</span></label>
+                    <label class="switch"><input type="checkbox"><span class="switch-button"></span><span class="switch-text">Заказы без предложений</span></label>
                 </div>
 
                 <div class="sort-by">
                     <span>Сортировать по:</span>
                     <select class="selectpicker hide-tick">
-                        <option>Актуальности</option>
                         <option>Новинкам</option>
                         <option>Старым</option>
                         <option>Любой</option>
@@ -141,38 +92,38 @@
             </div>
 
             <!-- Tasks Container -->
-            <div id="results" class="tasks-list-container tasks-grid-layout margin-top-35">
+            <div id="results" class="listings-container grid-layout margin-top-35">
 
                 @foreach (var item in Model.Customs)
                 {
-                    <!-- Task -->
-                    <a href=@Url.Action("Details", new { id = item.Id }) class="task-listing">
+                    <!-- Job Listing -->
+                    <a href="@Url.Action("Details", new { id = item.Id })" class="job-listing">
 
                         <!-- Job Listing Details -->
-                        <div class="task-listing-details">
-
-                            <!-- Details -->
-                            <div class="task-listing-description">
-                                <h3 class="task-listing-title"> @Html.DisplayFor(modelItem => item.Name)</h3>
-                                <ul class="task-icons">
-                                    <li><i class="icon-material-outline-location-on"></i> Москва</li>
-                                    <li><i class="icon-material-outline-access-time"></i> 2 минуты назад</li>
-                                </ul>
+                        <div class="job-listing-details">
+                            <!-- Logo -->
+                            <div class="job-listing-company-logo">
+                                <img src="~/Content/Custom/images/company-logo-05.png" title="Курсовая" alt="">
                             </div>
-
+                            
+                            <!-- Details -->
+                            <div class="job-listing-description">
+                                <h3 class="job-listing-title">@Html.DisplayFor(modelItem => item.Name)</h3>
+                                <h4 class="job-listing-company"><i class="icon-material-outline-account-circle"></i> 4 предложения </h4>
+                            </div>
                         </div>
 
-                        <div class="task-listing-bid">
-                            <div class="task-listing-bid-inner">
-                                <div class="task-offers">
-                                    <strong>$1,000 - $2,500</strong>
-                                    <span>Цена фиксирована</span>
-                                </div>
-
-                            </div>
+                        <!-- Job Listing Footer -->
+                        <div class="job-listing-footer">
+                            <span title="В избранное" class="bookmark-icon"></span>
+                            <ul>
+                                <li><i class="icon-material-outline-school"></i> Естественные науки - Биология</li>
+                                <li><i class="icon-material-outline-date-range"></i>До 31.05.19</li>
+                                <li><i class="icon-material-outline-account-balance-wallet"></i> 2000 руб.</li>
+                                <li title="Дата публикации"><i class="icon-material-outline-access-time"></i>26.05.19 </li>
+                            </ul>
                         </div>
                     </a>
-
                 }
             </div>
 
@@ -200,7 +151,7 @@
             <!-- Footer -->
             <div class="small-footer margin-top-15">
                 <div class="small-footer-copyrights">
-                    © 2018 <strong>Hireo</strong>. По правам все ок начальник.
+                    © 2018 <strong>Воркап</strong>. По правам все ок начальник.
                 </div>
                 <ul class="footer-social-links">
                     <li>
