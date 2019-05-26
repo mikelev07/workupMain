@@ -272,14 +272,17 @@
                             <!-- Form -->
                             <form method="post" id="login-form">
                                 <div class="input-with-icon-left">
+                                    
                                     <i class="icon-material-baseline-mail-outline"></i>
                                     @Html.TextBox("Email", "", new { @class = "input-text with-border", @placeholder = "Ваша почта" })
+
                                 </div>
                                 <div class="input-with-icon-left">
                                     <i class="icon-material-outline-lock"></i>
                                     @Html.Password("Password", "", new { @class = "input-text with-border", @placeholder = "Пароль" })
                                 </div>
-                                <a href="#" class="forgot-password">Забыл пароль?</a>
+                                @Html.ValidationMessage("Email", "", new { @class = "text-danger" })
+                                <a href="#" style="margin-top:5px" class="forgot-password">Забыл пароль?</a>
                                 <!-- Button -->
                                 <input value="Войти" class="button full-width button-sliding-icon ripple-effect" type="submit">
                             </form>

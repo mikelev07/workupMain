@@ -25,7 +25,7 @@
 <!-- Container -->
 <div class="container">
     <div class="row">
-
+        <div class="col-sm-6 offset-sm-3 text-center">
             @using (Html.BeginForm("Register", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "", role = "form" }))
             {
                 @Html.AntiForgeryToken()
@@ -66,7 +66,8 @@
                     <button class="google-login ripple-effect"><i class="icon-brand-google-plus-g"></i> Регаться via Google+</button>
                 </div>
             }
-      
+
+        </div>
         </div>
         <div class="dashboard-footer-spacer"></div>
         <div class="small-footer margin-top-15">
