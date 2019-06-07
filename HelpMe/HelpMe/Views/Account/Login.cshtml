@@ -27,36 +27,37 @@
 <!-- Container -->
 <div class="container">
     <div class="row">
-        <div class="col-sm-6 offset-sm-3 text-center"> 
-        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
+        <div class="col-sm-6 offset-sm-3 text-center">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
 
-            <!-- Form -->
+                <!-- Form -->
+                @Html.ValidationSummary(true) <br />
+                <div class="input-with-icon-left">
+                    <i class="icon-material-baseline-mail-outline"></i>
+                    @Html.TextBox("Email", "", new { @class = "input-text with-border", @placeholder = "Ваша почта" })
 
-            <div class="input-with-icon-left">
-                <i class="icon-material-baseline-mail-outline"></i>
-                @Html.TextBox("Email", "", new { @class = "input-text with-border", @placeholder = "Ваша почта" })
+                </div>
+                <div class="input-with-icon-left">
+                    <i class="icon-material-outline-lock"></i>
+                    @Html.Password("Password", "", new { @class = "input-text with-border", @placeholder = "Пароль" })
+                </div>
+                <a href="/account/forgotpassword" class="forgot-password">Забыл пароль?</a>
+                <!-- Button --> <br />
+                @Html.ValidationMessage("Email", "", new { @class = "text-danger" }) <br />
+                @Html.ValidationMessage("Password", "", new { @class = "text-danger" })
 
-            </div>
-            <div class="input-with-icon-left">
-                <i class="icon-material-outline-lock"></i>
-                @Html.Password("Password", "", new { @class = "input-text with-border", @placeholder = "Пароль" })
-            </div>
-            <a href="/account/forgotpassword" class="forgot-password">Забыл пароль?</a>
-            <!-- Button --> <br />
-            @Html.ValidationMessage("Password", "", new { @class = "text-danger" })
-            
-            <input style="margin-top:20px" value="Войти" class="button full-width button-sliding-icon ripple-effect" type="submit">
+                <input style="margin-top:20px" value="Войти" class="button full-width button-sliding-icon ripple-effect" type="submit">
 
-            <!-- Social Login -->
-            <div class="social-login-separator"><span>или</span></div>
-            <div class="social-login-buttons">
-                <button class="facebook-login ripple-effect"><i class="icon-brand-facebook-f"></i> Войти с Facebook</button>
-                <button class="google-login ripple-effect"><i class="icon-brand-google-plus-g"></i> Войти via Google+</button>
-            </div>
-        }
-</div>
+                <!-- Social Login -->
+                <div class="social-login-separator"><span>или</span></div>
+                <div class="social-login-buttons">
+                    <button class="facebook-login ripple-effect"><i class="icon-brand-facebook-f"></i> Войти с Facebook</button>
+                    <button class="google-login ripple-effect"><i class="icon-brand-google-plus-g"></i> Войти via Google+</button>
+                </div>
+            }
+        </div>
     </div>
     <div class="dashboard-footer-spacer"></div>
     <div class="small-footer margin-top-15">

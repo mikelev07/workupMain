@@ -68,6 +68,7 @@ namespace HelpMe.Controllers
 
             var userId = User.Identity.GetUserId();
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            ViewBag.Image = user.ImagePath;
             var model = new IndexViewModel
             {
                 Name = User.Identity.Name,
@@ -89,8 +90,7 @@ namespace HelpMe.Controllers
         public async Task<ActionResult> Index(IndexViewModel model)
         {
            
-            if (ModelState.IsValid)
-            {
+           
                 string fileName = Path.GetFileName(model.ImageFile.FileName);
                 string path = Server.MapPath("~/Files/" + fileName);
                 // сохраняем файл в папку Files в проекте
@@ -103,9 +103,7 @@ namespace HelpMe.Controllers
                 await db.SaveChangesAsync();
 
                 return RedirectToAction("Index");
-            }
-            
-            return View(model);
+          
         }
 
         public async Task<ActionResult> Dashboard()

@@ -270,22 +270,25 @@
                             </div>
 
                             <!-- Form -->
-                            <form method="post" id="login-form">
-                                <div class="input-with-icon-left">
-                                    
-                                    <i class="icon-material-baseline-mail-outline"></i>
-                                    @Html.TextBox("Email", "", new { @class = "input-text with-border", @placeholder = "Ваша почта" })
 
-                                </div>
-                                <div class="input-with-icon-left">
-                                    <i class="icon-material-outline-lock"></i>
-                                    @Html.Password("Password", "", new { @class = "input-text with-border", @placeholder = "Пароль" })
-                                </div>
-                                @Html.ValidationMessage("Email", "", new { @class = "text-danger" })
-                                <a href="#" style="margin-top:5px" class="forgot-password">Забыл пароль?</a>
-                                <!-- Button -->
-                                <input value="Войти" class="button full-width button-sliding-icon ripple-effect" type="submit">
-                            </form>
+                            <div class="input-with-icon-left">
+
+                                <i class="icon-material-baseline-mail-outline"></i>
+                                @Html.TextBox("Email", "", new { @class = "input-text with-border", @placeholder = "Ваша почта", @id = "emailField" })
+
+                            </div>
+                            <div class="input-with-icon-left">
+                                <i class="icon-material-outline-lock"></i>
+                                @Html.Password("Password", "", new { @class = "input-text with-border", @placeholder = "Пароль", @id = "passwordField" })
+                            </div>
+                            <div id="valid">
+                                @Html.ValidationMessage("Email", "")
+
+                            </div>
+                            <a href="#" style="margin-top:5px" class="forgot-password">Забыл пароль?</a>
+                            <!-- Button -->
+                            <input id="loginButton" value="Войти" class="button full-width button-sliding-icon ripple-effect" type="submit">
+
                             <!-- Social Login -->
                             <div class="social-login-separator"><span>или</span></div>
                             <div class="social-login-buttons">
@@ -380,7 +383,34 @@
 
     <!-- Google Autocomplete -->
     <script>
+      /*  $('#loginButton').click(function () {
         
+            var dataForm = {
+                "userid": $("#emailField").val(),
+                "password": $("#passwordField").val(),
+            };
+            $.ajax({
+                url: "/Account/ValidateUser",
+                type: "POST",
+                data: JSON.stringify(dataForm),
+                dataType: "json",
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.Success) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/Account/Login",
+                            data: dataForm,
+                            success: function (response) { }
+                        });
+                    } else {
+                        $('#valid').text('Неверный логин');
+                    }
+                },
+            });
+        });
+
+*/
         $.ajax({
             type: 'GET',
             url: '/Home/GetUnreadingCount',
@@ -400,7 +430,7 @@
         })
         var isSucess = false;
         $("#not-trigger").on('click', '#notCl', function () {
-            
+
             $.ajax({
                 type: 'GET',
                 url: '/Home/GetAllNotifications',
@@ -421,7 +451,7 @@
                             })
                     }
                     isSucess = true;
-                        
+
                 },
                 error: function (error) {
                     console.log(error);
@@ -429,7 +459,7 @@
             })
         });
 
-       
+
             $('#notCl').click(function (e) {
                 $.ajax({
                     type: 'GET',
@@ -442,7 +472,7 @@
                         if (response.length == 0) {
                             $('#notifContent').append($('<li>Нет данных</li>'));
                         }
-                      
+
                         $.each(response, function (index, value) {
                             if (value.UserName != "@User.Identity.Name") {
                                 $('#notifContent').prepend($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text"> Пользователь <strong> ' + value.UserName + ' </strong> ' + value.Description + ' <span class="color"> к заказу</span></span></a></li>'));
@@ -455,9 +485,9 @@
                     error: function (error) {
                         console.log(error);
                     }
-                }) 
+                })
             });
-            
+
             var notificationhub = $.connection.notificationHub;
 
             notificationhub.client.displayMessage = function (message) {
@@ -468,7 +498,7 @@
                 if (num == '') num = num1 = 0;
                 $('.ncount').text(parseInt(num) + 1);
 
-              
+
 
                 Snackbar.show({
                     text: 'Новое уведомление!',
@@ -479,7 +509,7 @@
                     duration: 4000,
                     textColor: '#5f9025',
                     backgroundColor: '#EBF6E0',
-                   
+
                 });
                // $('#notifContent').prepend($('<li class="notifications-not-read"><a href="dashboard-manage-candidates.html"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text"> <strong>Магамед</strong> предлагает вам <span class="color">оценить работу</span></span></a></li>'));
                 var audio = new Audio('../Content/intuition.mp3');
@@ -488,8 +518,8 @@
 
             $.connection.hub.start();
 
-      
-   
+
+
         function initAutocomplete() {
             var options = {
                 types: ['(cities)'],

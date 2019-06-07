@@ -5750,6 +5750,7 @@ span.blog-item-tag {
 	.freelancer-overview .freelancer-avatar img {
 		width: 100%;
         min-width:100px;
+        height:100px;
 		border-radius: 50%;
 		cursor: pointer;
 	}
