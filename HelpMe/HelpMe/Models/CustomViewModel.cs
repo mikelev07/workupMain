@@ -20,13 +20,17 @@ namespace HelpMe.Models
         public string FilePath { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime StartDate { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime EndingDate { get; set; }
         public int? TypeTaskId { get; set; }
         public TypeCustomViewModel TypeTask { get; set; }
         public int? CategoryTaskId { get; set; }
         public TaskCategory CategoryTask { get; set; }
-        public int MinPrice { get; set; }
-        public int MaxPrice { get; set; }
+        public int? SkillId { get; set; }
+        public Skill Skill { get; set; }
+        public int Price { get; set; }
         public string AttachFilePath { get; set; }
 
         [NotMapped]

@@ -134,7 +134,7 @@ namespace HelpMe.Controllers
             return View(GetUsersPage(usersWithRoles, page));
         }
 
-        private IEnumerable<UserViewModel> GetUsersPage(IEnumerable<UserViewModel> usersWithRoles, int page, int sortId = 1)
+        private IEnumerable<UserViewModel> GetUsersPage(IEnumerable<UserViewModel> usersWithRoles, int page)
         {
 
             var usersToSkip = page * pageSize;
