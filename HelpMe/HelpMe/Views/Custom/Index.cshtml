@@ -1,7 +1,8 @@
 ﻿@using HelpMe.Models
 @using PagedList.Mvc;
 @using HelpMe.Helpers
-@model HelpMe.Models.CustomIndexViewModel
+@model IEnumerable<HelpMe.Models.CustomViewModel>
+@*@model HelpMe.Models.CustomIndexViewModel*@
 
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @{
@@ -15,7 +16,7 @@
 
         <div class="full-page-sidebar-inner" data-simplebar>
             @*@using (Ajax.BeginForm("CustomSearch", new AjaxOptions { UpdateTargetId = "results" }))
-        {*@
+                {*@
             <div class="sidebar-container">
 
                 <!-- Location -->
@@ -95,23 +96,35 @@
 
             <!-- Tasks Container / End -->
             <!-- Pagination -->
+            @*<div class="clearfix"></div>
+        <div class="pagination-container margin-top-20 margin-bottom-20">
+            <nav class="pagination">
+                <ul>
+                    @if (Model.PageInfo.HasPreviousPage)
+                    {
+                        <li class="pagination-arrow"><a href=@Url.Action("Index", new { page = Model.PageInfo.PreviousPageIndex }) class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-left"></i></a></li>
+                    }
+                    @Html.PageLinks(Model.PageInfo, x => Url.Action("Index", new { page = x }))
+                    @if (Model.PageInfo.HasNextPage)
+                    {
+                        <li class="pagination-arrow"><a href=@Url.Action("Index", new { page = Model.PageInfo.NextPageIndex }) class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-right"></i></a></li>
+                    }
+                </ul>
+            </nav>
+        </div>*@
+
             <div class="clearfix"></div>
             <div class="pagination-container margin-top-20 margin-bottom-20">
                 <nav class="pagination">
-                    <ul>
-                        @if (Model.PageInfo.HasPreviousPage)
-                        {
-                            <li class="pagination-arrow"><a href=@Url.Action("Index", new { page = Model.PageInfo.PreviousPageIndex }) class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-left"></i></a></li>
-                        }
-                        @Html.PageLinks(Model.PageInfo, x => Url.Action("Index", new { page = x }))
-                        @if (Model.PageInfo.HasNextPage)
-                        {
-                            <li class="pagination-arrow"><a href=@Url.Action("Index", new { page = Model.PageInfo.NextPageIndex }) class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-right"></i></a></li>
-                        }
-                    </ul>
+                    <div class="social-login-buttons">
+                        <button class="facebook-login ripple-effect" id="more-customs-button">
+                            <span id="more-customs-text">Еще заказы</span>
+                            <img width="32" height="32" class="loading-animation load-more"
+                                 src="~/Content/Custom/images/ajax-loader.gif">
+                        </button>
+                    </div>
                 </nav>
             </div>
-            <div class="clearfix"></div>
             <!-- Pagination / End -->
             <!-- Footer -->
             <div class="small-footer margin-top-15">
@@ -156,12 +169,33 @@
                 liveSearch: true
             });
         });
-        
+
+        $(document).on({
+            ajaxStart: function () {
+                $(".loading-animation").addClass("loading");
+            },
+            ajaxStop: function () {
+                $(".loading-animation").removeClass("loading");
+            }
+        });
+
 
         $(function () {
-            var sliderMinValue;
-            var sliderMaxValue;
+            var page = 0;
+            var pageSize = 3;
+            var sliderMinValue = $('#budget-range-slider').attr('data-slider-min');
+            var sliderMaxValue = $('#budget-range-slider').attr('data-slider-max');
 
+            //load more executors button event
+            $("#more-customs-button").click(function () {
+                loadItems();
+            }).hover(function () {
+                $(".loading-animation.load-more").prop('src', '/Content/Custom/images/ajax-loader-reverse.gif');
+            }, function () {
+                $(".loading-animation.load-more").prop('src', '/Content/Custom/images/ajax-loader.gif');
+            });
+
+            //filtration event handlers
             $("#name").keyup(CallIndex);
 
             $('#TaskList').change(function () {
@@ -173,72 +207,85 @@
 
 
             $('#budget-range-slider').slider().on('slideStart', function (ev) {
-                sliderMinValue = $('#budget-range-slider').data('slider').getValue();
-                //sliderMaxValue = $('#budget-range-slider').data('slider').attr('data-slider-max');
+                sliderMinValue = ev.value[0];
+                sliderMaxValue = ev.value[1];
             });
 
-            $("#budget-range-slider").slider().on('slideStop', function (ev) {
-                var newMinValue = $('#budget-range-slider').data('slider').attr('data-slider-min').val();
-                var newMaxValue = $('#budget-range-slider').data('slider').attr('data-slider-max').val();
-                alert('newMin = ' + newMinValue + " | newMax = " + newMaxValue
-                    + " | oldMin = " + sliderMinValue + " | oldMax = " + sliderMaxValue);
-                if (newMinValue != sliderMinValue || newMaxValue != sliderMaxValue) {
-                    //CallIndex();
-                    alert('gg');
+            $('#budget-range-slider').slider().on('slideStop', function (ev) {
+                if ((ev.value[0] != sliderMinValue) || (ev.value[1] != sliderMaxValue)) {
+                    sliderMinValue = ev.value[0];
+                    sliderMaxValue = ev.value[1];
+                    CallIndex();
                 }
             });
+
+            $('#budget-range-slider').slider().on('change', function (ev) {
+                if ((this.value[0] != sliderMinValue) || (this.value[1] != sliderMaxValue)) {
+                    sliderMinValue = this.value[0];
+                    sliderMaxValue = this.value[1];
+                    CallIndex();
+                }
+            });
+
 
             $('#sort-customs-field').change(CallIndex);
-            
+
             $("#reset-customs").click(function () {
-                page = 0;
-                var orderName = $("#name").val();
-                var taskListId = $("#TaskList").val();
-                var skillListId = $("#SkillList").val();
-                var sortingId = $("#sort-customs-field").val();
-                //var count = $("#budget-range-slider").val();/
-                if (orderName || taskListId || skillListId ) {
-                    $("#name").val("");
-                    $("#TaskList").val('').selectpicker("render");
-                    $("#SkillList").val('').selectpicker("render");
-                    $("#budget-range-slider").slider('refresh');
-                    $.ajax({
-                        type: 'GET',
-                        url: '/Custom/Index',
-                        data: {
-                            //'id': page,
-                            'name': "",
-                            'taskCategoryId': 0,
-                            'skillId': 0,
-                            //'worksCount': 0,
-                            'sortId': sortingId
-                        },
-                        success: function (data) {
-                            $("#SkillList").attr("disabled", true);
-                            $('#results').empty();
-                            $('#results').html(data);
-                            /*$.ajax({
-                                type: 'GET',
-                                url: "/User/GetUsersCount",
-                                success: function (data) {
-                                    if (data > pageSize) {
-                                        $("#load-more-button").show();
-                                    }
-                                    else {
-                                        $("#load-more-button").hide();
-                                    }
-                                    $("#found-users-count").html("Найдено исполнителей: " + data);
-                                }
-                            });*/
-                        },
-                        error: function (data) { alert(data.responseText); }
-                    });
-                }
+                ResetCustoms();
             });
 
-            //common functions
+
+
+//****************************common functions**********************
+            function loadItems() {
+                $("#more-customs-text").hide();
+                if (page > -1 && !_inCallback) {
+                    _inCallback = true;
+                    page++;
+                    var orderName = $("#name").val();
+                    var taskListId = $("#TaskList").val();
+                    var skillListId = $("#SkillList").val();
+                    var minPrice = sliderMinValue;
+                    var maxPrice = sliderMaxValue;
+                    var sortingId = $('#sort-customs-field').val();
+                    $.ajax({
+                        type: 'GET',
+                        url: '/Custom/Index/',
+                        data: {
+                            'id': page,
+                            'name': orderName,
+                            'taskId': taskListId,
+                            'skillId': skillListId,
+                            'minPrice': minPrice,
+                            'maxPrice': maxPrice,
+                            'sortId': sortingId
+                        },
+                        success: function (data, textstatus) {
+                            var customsOnPage = $("#results").length;
+                            if (data != '') {
+                                /*$.ajax({
+                                    type: 'GET',
+                                    url: "/Custom/GetCustomsCount",
+                                    success: function (data) {
+                                        if (data - usersOnPage <= pageSize) {
+                                            $("#more-customs-button").hide();
+                                        }
+                                    }
+                                });
+                                $("#results").append(data);*/
+                            }
+                            else {
+                                page = -1;
+                            }
+                            _inCallback = false;
+                            $("#more-customs-text").show();
+                        }
+                    });
+                }
+            }
+
             function CallIndex() {
-                //page = 0;
+                page = 0;
                 var orderName = $("#name").val();
                 var taskListId = $("#TaskList").val();
                 if (!taskListId) {
@@ -248,17 +295,19 @@
                 if (!skillListId) {
                     skillListId = 0;
                 }
-                //var worksCount = $("#work-range").val();
+                var minPrice = sliderMinValue;
+                var maxPrice = sliderMaxValue;
                 var sortingId = $("#sort-customs-field").val();
                 $.ajax({
                     type: "GET",
                     url: "/Custom/Index",
                     data: {
-                        /*'id': page,*/
+                        'id': page,
                         'name': orderName,
                         'taskCategoryId': taskListId,
                         'skillId': skillListId,
-                        //'worksCount': worksCount,
+                        'minPrice': minPrice,
+                        'maxPrice': maxPrice,
                         'sortId': sortingId
                     },
                     success: function (data) {
@@ -282,7 +331,7 @@
                 });
             }
 
-            
+
             function GetSkills() {
                 var id = $('#TaskList').val();
                 if (!id) {
@@ -310,7 +359,66 @@
                     error: function (data) { alert(data.responseText); }
                 });
             }
-            
+
+            function ResetCustoms() {
+                page = 0;
+                var orderName = $("#name").val();
+                var taskListId = $("#TaskList").val();
+                var skillListId = $("#SkillList").val();
+                var sortingId = $("#sort-customs-field").val();
+                var minPrice = sliderMinValue;
+                var maxPrice = sliderMaxValue;
+                /*alert('dataMin = ' + minPrice + '| dataMax = ' + maxPrice + ' | dataMin = ' + $('#budget-range-slider').attr('data-slider-min')
+                    + '| dataMax = ' + $('#budget-range-slider').attr('data-slider-max'));*/
+                if (
+                    orderName
+                    || taskListId
+                    || skillListId
+                    || minPrice != $('#budget-range-slider').attr('data-slider-min')
+                    || maxPrice != $('#budget-range-slider').attr('data-slider-max')
+                ) {
+                    $("#name").val("");
+                    $("#TaskList").val('').selectpicker("render");
+                    $("#SkillList").val('').selectpicker("render");
+                    $("#budget-range-slider").slider('refresh');
+                    sliderMinValue = $('#budget-range-slider').attr('data-slider-min');
+                    sliderMaxValue = $('#budget-range-slider').attr('data-slider-max');
+                    $.ajax({
+                        type: 'GET',
+                        url: '/Custom/Index',
+                        data: {
+                            'id': page,
+                            'name': "",
+                            'taskCategoryId': 0,
+                            'skillId': 0,
+                            'minPrice': null,
+                            'maxPrice': null,
+                            //'worksCount': 0,
+                            'sortId': sortingId
+                        },
+                        success: function (data) {
+                            $("#SkillList").attr("disabled", true);
+                            $('#results').empty();
+                            $('#results').html(data);
+                            /*$.ajax({
+                                type: 'GET',
+                                url: "/User/GetUsersCount",
+                                success: function (data) {
+                                    if (data > pageSize) {
+                                        $("#load-more-button").show();
+                                    }
+                                    else {
+                                        $("#load-more-button").hide();
+                                    }
+                                    $("#found-users-count").html("Найдено исполнителей: " + data);
+                                }
+                            });*/
+                        },
+                        error: function (data) { alert(data.responseText); }
+                    });
+                }
+            }
+
         });
     </script>
 }

@@ -22,10 +22,11 @@ namespace HelpMe.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        int pageSize = 8; // количество объектов на страницу
+        int pageSize = 4; // количество объектов на страницу
 
         // GET: Custom
-        public ActionResult Index(string name, int? typeTaskId, int? taskCategoryId, int? skillId, int sortId=1, int page = 1)
+        public ActionResult Index(int? id, string name, int? typeTaskId, int? taskCategoryId, int? skillId,
+            int? minPrice, int? maxPrice, int sortId=1)
         {
             var customViewModels = db.Customs.Include(c => c.Comments).Include(c => c.User)
                 .Include(c => c.TypeTask).Include(c => c.CategoryTask).Include(c => c.Skill);
@@ -45,12 +46,26 @@ namespace HelpMe.Controllers
                     customViewModels = customViewModels.Where(m => m.SkillId == skillId);
                 }
             }
+
+            if(minPrice!=null)
+            {
+                customViewModels = customViewModels.Where(m => m.Price >= minPrice);
+            }
+
+            if (maxPrice != null)
+            {
+                customViewModels = customViewModels.Where(m => m.Price <= maxPrice);
+            }
             //count = customViewModels.Count();
 
             customViewModels = SortCustoms(customViewModels, sortId);
-            IEnumerable<CustomViewModel> customPerPages = customViewModels.Skip((page - 1) * pageSize).Take(pageSize);
-            PageInfo pageInfo = new PageInfo { PageNumber = page, PageSize = pageSize, TotalItems = customViewModels.Count() };
-            CustomIndexViewModel ivm = new CustomIndexViewModel { PageInfo = pageInfo, Customs = customPerPages };
+
+            int page = id ?? 0;
+            //IEnumerable<CustomViewModel> customPerPages = customViewModels.Skip((page - 1) * pageSize).Take(pageSize);
+            //PageInfo pageInfo = new PageInfo { PageNumber = page, PageSize = pageSize, TotalItems = customViewModels.Count() };
+
+
+            //CustomIndexViewModel ivm = new CustomIndexViewModel { PageInfo = pageInfo, Customs = customPerPages };
 
             //count = customViewModels.Count();
 
@@ -58,10 +73,18 @@ namespace HelpMe.Controllers
 
             if (Request.IsAjaxRequest())
             {
-                return PartialView("_CustomsPage", ivm);
+                return PartialView("_CustomsPage", GetCustomsPage(customViewModels, page));
             }
 
-            return View(ivm);
+            return View(GetCustomsPage(customViewModels, page));
+        }
+
+        private IEnumerable<CustomViewModel> GetCustomsPage(IQueryable<CustomViewModel> customs, int page)
+        {
+
+            var customsToSkip = page * pageSize;
+            var customsToPage = customs.Skip(customsToSkip).Take(pageSize);
+            return customsToPage.ToList();
         }
 
         public IQueryable<CustomViewModel> SortCustoms(IQueryable<CustomViewModel> customs, int sortId)
@@ -436,7 +459,7 @@ namespace HelpMe.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,AttachFilePath,AttachFile,UserId,TypeTaskId,CategoryTaskId,EndingDate,MinPrice,MaxPrice")] CustomViewModel customViewModel)
+        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,AttachFilePath,AttachFile,UserId,TypeTaskId,CategoryTaskId,EndingDate,Price")] CustomViewModel customViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -447,6 +470,7 @@ namespace HelpMe.Controllers
                 customViewModel.AttachFilePath = "~/Files/" + fileName;
                 customViewModel.Status = CustomStatus.Open; // открытая заявка
                 customViewModel.UserId = User.Identity.GetUserId();
+                customViewModel.StartDate = DateTime.Now;
                 db.Customs.Add(customViewModel);
                 await db.SaveChangesAsync();
                 string uName = db.Users.Where(c => c.Id == customViewModel.UserId).FirstOrDefault().UserName;
@@ -485,7 +509,7 @@ namespace HelpMe.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,AttachFilePath,AttachFile,UserId,TypeTaskId,CategoryTaskId,EndingDate,MinPrice,MaxPrice")] CustomViewModel customViewModel)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,AttachFilePath,AttachFile,UserId,TypeTaskId,CategoryTaskId,EndingDate,Price")] CustomViewModel customViewModel)
         {
             if (ModelState.IsValid)
             {
