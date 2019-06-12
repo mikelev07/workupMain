@@ -68,11 +68,12 @@ namespace HelpMe.Controllers
 
             var userId = User.Identity.GetUserId();
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            ViewBag.Image = user.ImagePath;
+            ViewBag.Image = user.ImagePath ?? "~/Content/Custom/images/user-avatar-placeholder.png";
             var model = new IndexViewModel
             {
                 Name = User.Identity.Name,
                 Age = user.Age,
+                Email = user.Email,
                 ImagePath = user.ImagePath,
                 ImageFile = user.ImageFile,
                 HasPassword = HasPassword(),
@@ -89,16 +90,22 @@ namespace HelpMe.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Index(IndexViewModel model)
         {
-           
-           
-                string fileName = Path.GetFileName(model.ImageFile.FileName);
-                string path = Server.MapPath("~/Files/" + fileName);
-                // сохраняем файл в папку Files в проекте
-           
+                string fileName = Path.GetFileName(model.ImageFile?.FileName);
+                if (fileName != null)
+                {
+                    string path = Server.MapPath("~/Files/" + fileName);
+                    // сохраняем файл в папку Files в проекте
+                    model.ImageFile.SaveAs(path);
+                }
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-                model.ImageFile.SaveAs(path);
-                user.ImagePath = "~/Files/" + fileName;
+
+                if (fileName != null)
+                    user.ImagePath = "../Files/" + fileName;
+
+           
                 user.Age = model.Age;
+                user.Email = model.Email;
+
                 var updateResult = await UserManager.UpdateAsync(user);
                 await db.SaveChangesAsync();
 

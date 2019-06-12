@@ -63,7 +63,7 @@
 
                                 <div class="col-xl-6">
                                     <div class="submit-field">
-                                        <h5>Имя</h5>
+                                        <h5>Статус</h5>
                                         @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Name } })
                                     </div>
                                 </div>
@@ -96,7 +96,7 @@
                                 <div class="col-xl-6">
                                     <div class="submit-field">
                                         <h5>Почта</h5>
-                                        <input type="text" class="with-border" value="tom@example.com">
+                                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Email } })
                                     </div>
                                 </div>
 
@@ -123,20 +123,8 @@
                     <ul class="fields-ul">
                         <li>
                             <div class="row">
-                                <div class="col-xl-4">
-                                    <div class="submit-field">
-                                        <div class="bidding-widget">
-                                            <!-- Headline -->
-                                            <span class="bidding-detail">Установите ваш <strong>минимальный руб в час</strong></span>
-
-                                            <!-- Slider -->
-                                            <div class="bidding-value margin-bottom-10">$<span id="biddingVal"></span></div>
-                                            <input class="bidding-slider" type="text" value="" data-slider-handle="custom" data-slider-currency="$" data-slider-min="5" data-slider-max="150" data-slider-value="35" data-slider-step="1" data-slider-tooltip="hide" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-xl-4">
+                              
+                                <div class="col-xl-6">
                                     <div class="submit-field">
                                         <h5>Навыки <i class="help-icon" data-tippy-placement="right" title="Добавьте 10 скиллов"></i></h5>
 
@@ -158,7 +146,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-xl-4">
+                                <div class="col-xl-6">
                                     <div class="submit-field">
                                         <h5>Приложения</h5>
 
@@ -190,108 +178,7 @@
                         </li>
                         <li>
                             <div class="row">
-                                <div class="col-xl-6">
-                                    <div class="submit-field">
-                                        <h5>Тэги</h5>
-                                        <input type="text" class="with-border" value="iOS Expert + Node Dev">
-                                    </div>
-                                </div>
-
-                                <div class="col-xl-6">
-                                    <div class="submit-field">
-                                        <h5>Национальность</h5>
-                                        <select class="selectpicker with-border" data-size="7" title="Выберите тип" data-live-search="true">
-                                            <option value="AR">Argentina</option>
-                                            <option value="AM">Armenia</option>
-                                            <option value="AW">Aruba</option>
-                                            <option value="AU">Australia</option>
-                                            <option value="AT">Austria</option>
-                                            <option value="AZ">Azerbaijan</option>
-                                            <option value="BS">Bahamas</option>
-                                            <option value="BH">Bahrain</option>
-                                            <option value="BD">Bangladesh</option>
-                                            <option value="BB">Barbados</option>
-                                            <option value="BY">Belarus</option>
-                                            <option value="BE">Belgium</option>
-                                            <option value="BZ">Belize</option>
-                                            <option value="BJ">Benin</option>
-                                            <option value="BM">Bermuda</option>
-                                            <option value="BT">Bhutan</option>
-                                            <option value="BG">Bulgaria</option>
-                                            <option value="BF">Burkina Faso</option>
-                                            <option value="BI">Burundi</option>
-                                            <option value="KH">Cambodia</option>
-                                            <option value="CM">Cameroon</option>
-                                            <option value="CA">Canada</option>
-                                            <option value="CV">Cape Verde</option>
-                                            <option value="KY">Cayman Islands</option>
-                                            <option value="CO">Colombia</option>
-                                            <option value="KM">Comoros</option>
-                                            <option value="CG">Congo</option>
-                                            <option value="CK">Cook Islands</option>
-                                            <option value="CR">Costa Rica</option>
-                                            <option value="CI">Côte d'Ivoire</option>
-                                            <option value="HR">Croatia</option>
-                                            <option value="CU">Cuba</option>
-                                            <option value="CW">Curaçao</option>
-                                            <option value="CY">Cyprus</option>
-                                            <option value="CZ">Czech Republic</option>
-                                            <option value="DK">Denmark</option>
-                                            <option value="DJ">Djibouti</option>
-                                            <option value="DM">Dominica</option>
-                                            <option value="DO">Dominican Republic</option>
-                                            <option value="EC">Ecuador</option>
-                                            <option value="EG">Egypt</option>
-                                            <option value="GP">Guadeloupe</option>
-                                            <option value="GU">Guam</option>
-                                            <option value="GT">Guatemala</option>
-                                            <option value="GG">Guernsey</option>
-                                            <option value="GN">Guinea</option>
-                                            <option value="GW">Guinea-Bissau</option>
-                                            <option value="GY">Guyana</option>
-                                            <option value="HT">Haiti</option>
-                                            <option value="HN">Honduras</option>
-                                            <option value="HK">Hong Kong</option>
-                                            <option value="HU">Hungary</option>
-                                            <option value="IS">Iceland</option>
-                                            <option value="IN">India</option>
-                                            <option value="ID">Indonesia</option>
-                                            <option value="NO">Norway</option>
-                                            <option value="OM">Oman</option>
-                                            <option value="PK">Pakistan</option>
-                                            <option value="PW">Palau</option>
-                                            <option value="PA">Panama</option>
-                                            <option value="PG">Papua New Guinea</option>
-                                            <option value="PY">Paraguay</option>
-                                            <option value="PE">Peru</option>
-                                            <option value="PH">Philippines</option>
-                                            <option value="PN">Pitcairn</option>
-                                            <option value="PL">Poland</option>
-                                            <option value="PT">Portugal</option>
-                                            <option value="PR">Puerto Rico</option>
-                                            <option value="QA">Qatar</option>
-                                            <option value="RE">Réunion</option>
-                                            <option value="RO">Romania</option>
-                                            <option value="RU">Russian Federation</option>
-                                            <option value="RW">Rwanda</option>
-                                            <option value="SZ">Swaziland</option>
-                                            <option value="SE">Sweden</option>
-                                            <option value="CH">Switzerland</option>
-                                            <option value="TR">Turkey</option>
-                                            <option value="TM">Turkmenistan</option>
-                                            <option value="TV">Tuvalu</option>
-                                            <option value="UG">Uganda</option>
-                                            <option value="UA">Ukraine</option>
-                                            <option value="GB">United Kingdom</option>
-                                            <option value="US" selected>United States</option>
-                                            <option value="UY">Uruguay</option>
-                                            <option value="UZ">Uzbekistan</option>
-                                            <option value="YE">Yemen</option>
-                                            <option value="ZM">Zambia</option>
-                                            <option value="ZW">Zimbabwe</option>
-                                        </select>
-                                    </div>
-                                </div>
+                                
 
                                 <div class="col-xl-12">
                                     <div class="submit-field">
