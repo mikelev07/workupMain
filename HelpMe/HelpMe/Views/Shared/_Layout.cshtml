@@ -69,10 +69,10 @@
                         <nav id="navigation">
                             <ul id="responsive">
                                 <li>
-                                    <a href="/Custom/Index" class="current">Лента заказов</a>
+                                    <a href="/Custom/Index" class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Custom" ? "current" : "")">Лента заказов</a>
                                 </li>
                                 <li>
-                                    <a href="/User/">Исполнители</a>
+                                    <a href="/User/" class="@(ViewContext.RouteData.Values["Controller"].ToString() == "User" ? "current" : "")">Исполнители</a>
                                 </li>
                                 <li>
                                     <a href="#">Готовые работы</a>
