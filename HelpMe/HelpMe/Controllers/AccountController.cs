@@ -151,10 +151,10 @@ namespace HelpMe.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userName = model.Email;
-                int index = userName.IndexOf("@");
+                var userName = model.UserName;
+              /*  int index = userName.IndexOf("@");
                 if (index > 0)
-                    userName = userName.Substring(0, index);
+                    userName = userName.Substring(0, index); */
                 var user = new User { UserName = userName, Email = model.Email, RegistrationDate = DateTime.Now };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)

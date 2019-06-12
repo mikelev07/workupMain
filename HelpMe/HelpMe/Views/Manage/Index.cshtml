@@ -123,59 +123,64 @@
                     <ul class="fields-ul">
                         <li>
                             <div class="row">
-                              
+                               
                                 <div class="col-xl-6">
                                     <div class="submit-field">
-                                        <h5>Навыки <i class="help-icon" data-tippy-placement="right" title="Добавьте 10 скиллов"></i></h5>
+                                        <h5>Дисциплины</h5>
+                                        
+                                        <select id="dicp" class="selectpicker" data-live-search="true" multiple>
+                                            <optgroup label="Гуманитарные науки">
+                                                <option>Догестонский</option>
+                                                <option>Уебонский</option>
+                                                <option>Вавилонский</option>
+                                                <option>Шумерский</option>
+                                                <option>Стопальский</option>
+                                            </optgroup>
+                                            <optgroup label="Пиздатые науки">
+                                                <option>Нариковский</option>
+                                                <option>Шульский</option>
+                                                <option>Пердонски</option>
+                                                <option>Батиковски</option>
+                                                <option>Череповец</option>
+                                            </optgroup>
+                                        </select>
+                                        <br />
+                                        <div class="keywords-list">
 
-                                        <!-- Skills List -->
-                                        <div class="keywords-container">
-                                            <div class="keyword-input-container">
-                                                <input type="text" class="keyword-input with-border" placeholder="e.g. Angular, Laravel" />
-                                                <button class="keyword-input-button ripple-effect"><i class="icon-material-outline-add"></i></button>
-                                            </div>
-                                            <div class="keywords-list">
-                                                <span class="keyword"><span class="keyword-remove"></span><span class="keyword-text">Angular</span></span>
-                                                <span class="keyword"><span class="keyword-remove"></span><span class="keyword-text">Vue JS</span></span>
-                                                <span class="keyword"><span class="keyword-remove"></span><span class="keyword-text">iOS</span></span>
-                                                <span class="keyword"><span class="keyword-remove"></span><span class="keyword-text">Android</span></span>
-                                                <span class="keyword"><span class="keyword-remove"></span><span class="keyword-text">Laravel</span></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                    <div class="col-xl-6">
+                                        <div class="submit-field">
+                                            <h5>Приложения</h5>
+
+                                            <!-- Attachments -->
+                                            <div class="attachments-container margin-top-0 margin-bottom-0">
+                                                <div class="attachment-box ripple-effect">
+                                                    <span>Cover Letter</span>
+                                                    <i>PDF</i>
+                                                    <button class="remove-attachment" data-tippy-placement="top" title="Remove"></button>
+                                                </div>
+                                                <div class="attachment-box ripple-effect">
+                                                    <span>Contract</span>
+                                                    <i>DOCX</i>
+                                                    <button class="remove-attachment" data-tippy-placement="top" title="Remove"></button>
+                                                </div>
                                             </div>
                                             <div class="clearfix"></div>
+
+                                            <!-- Upload Button -->
+                                            <div class="uploadButton margin-top-0">
+                                                <input class="uploadButton-input" type="file" accept="image/*, application/pdf" id="upload" multiple />
+                                                <label class="uploadButton-button ripple-effect" for="upload">Загрузить фото</label>
+                                                <span class="uploadButton-file-name">Максимальный размер: 10 MB</span>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="col-xl-6">
-                                    <div class="submit-field">
-                                        <h5>Приложения</h5>
-
-                                        <!-- Attachments -->
-                                        <div class="attachments-container margin-top-0 margin-bottom-0">
-                                            <div class="attachment-box ripple-effect">
-                                                <span>Cover Letter</span>
-                                                <i>PDF</i>
-                                                <button class="remove-attachment" data-tippy-placement="top" title="Remove"></button>
-                                            </div>
-                                            <div class="attachment-box ripple-effect">
-                                                <span>Contract</span>
-                                                <i>DOCX</i>
-                                                <button class="remove-attachment" data-tippy-placement="top" title="Remove"></button>
-                                            </div>
-                                        </div>
-                                        <div class="clearfix"></div>
-
-                                        <!-- Upload Button -->
-                                        <div class="uploadButton margin-top-0">
-                                            <input class="uploadButton-input" type="file" accept="image/*, application/pdf" id="upload" multiple />
-                                            <label class="uploadButton-button ripple-effect" for="upload">Загрузить фото</label>
-                                            <span class="uploadButton-file-name">Максимальный размер: 10 MB</span>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+</li>
                         <li>
                             <div class="row">
                                 
@@ -281,3 +286,57 @@
     </div>
 </div>
 <!-- Dashboard Content / End -->
+@section Scripts {
+    <script>
+      
+        var keywordsList = $(".keywords-list");
+        function addKeywordSub(str) {
+			var $newKeyword = $("<span class='keyword'><span class='keyword-remove'></span><span class='keyword-text'>"+ str +"</span></span>");
+			keywordsList.append($newKeyword).trigger('resizeContainer');
+            }
+
+        $('.selectpicker').change(function () {
+            
+            var selectedItem = $(this).find("option:selected").val();
+            addKeywordSub(selectedItem);
+          
+               
+        });
+
+        // animating container height
+		keywordsList.on('resizeContainer', function(){
+		    var heightnow = $(this).height();
+		    var heightfull = $(this).css({'max-height':'auto', 'height':'auto'}).height();
+
+			$(this).css({ 'height' : heightnow }).animate({ 'height': heightfull }, 200);
+		});
+
+		$(window).on('resize', function() {
+			keywordsList.css({'height':'auto'}).height();
+		});
+
+		// Auto Height for keywords that are pre-added
+		$(window).on('load', function() {
+			var keywordCount = $('.keywords-list').children("span").length;
+
+			// Enables scrollbar if more than 3 items
+			if (keywordCount > 0) {
+				keywordsList.css({'height':'auto'}).height();
+		
+			} 
+		});
+
+            /*
+        	$('#dicp').on('click', function(){ 
+			
+                addKeywordSub();
+                alert($('#dicp').val())
+			
+		});*/
+        	
+
+        
+
+    </script>
+    
+    }

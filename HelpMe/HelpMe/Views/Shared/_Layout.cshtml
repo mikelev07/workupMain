@@ -318,20 +318,23 @@
                                 </div>
                             </div>
                             <!-- Form -->
-                            
-                                <div class="input-with-icon-left">
-                                    <i class="icon-material-baseline-mail-outline"></i>
-                                    @Html.TextBox("Email", "", new { @class = "input-text with-border", @placeholder = "Ваша почта" })
-                                </div>
-                                <div class="input-with-icon-left" title="Пароль должен быть не менее 6 символов" data-tippy-placement="bottom">
-                                    <i class="icon-material-outline-lock"></i>
-                                    @Html.Password("Password", "", new { @class = "input-text with-border", @placeholder = "Пароль" })
-                                </div>
-                                <div class="input-with-icon-left">
-                                    <i class="icon-material-outline-lock"></i>
-                                    @Html.Password("ConfirmPassword", "", new { @class = "input-text with-border", @placeholder = "Повторите пароль" })
-                                </div>
-                          
+                            <div class="input-with-icon-left">
+                                <i class="icon-material-baseline-mail-outline"></i>
+                                @Html.TextBox("UserName", "", new { @class = "input-text with-border", @placeholder = "Ваш логин" })
+                            </div>
+                            <div class="input-with-icon-left">
+                                <i class="icon-material-baseline-mail-outline"></i>
+                                @Html.TextBox("Email", "", new { @class = "input-text with-border", @placeholder = "Ваша почта" })
+                            </div>
+                            <div class="input-with-icon-left" title="Пароль должен быть не менее 6 символов" data-tippy-placement="bottom">
+                                <i class="icon-material-outline-lock"></i>
+                                @Html.Password("Password", "", new { @class = "input-text with-border", @placeholder = "Пароль" })
+                            </div>
+                            <div class="input-with-icon-left">
+                                <i class="icon-material-outline-lock"></i>
+                                @Html.Password("ConfirmPassword", "", new { @class = "input-text with-border", @placeholder = "Повторите пароль" })
+                            </div>
+
                             <!-- Button -->
                             <input value="Создать" class="button full-width button-sliding-icon ripple-effect" type="submit">
                             <!-- Social Login -->
