@@ -70,11 +70,15 @@
     <div class="full-page-content-container" data-simplebar>
         <div class="full-page-content-inner">
 
-            <h3 class="page-title">Результаты поиска</h3>
+            <h3 class="page-title">
+                <span id="found-customs-count">Найдено заказов: @TempData["CustomsFound"]</span>
+                <img width="32" height="32" class="loading-animation"
+                     src="~/Content/Custom/images/ajax-loader.gif">
+            </h3>
 
             <div class="notify-box margin-top-15">
                 <div class="switch-container">
-                    <label class="switch"><input type="checkbox"><span class="switch-button"></span><span class="switch-text">Заказы без предложений</span></label>
+                    <label class="switch"><input type="checkbox" id="customs-without-offers"><span class="switch-button"></span><span class="switch-text">Заказы без предложений</span></label>
                 </div>
 
                 <div class="sort-by">
@@ -82,8 +86,8 @@
                     <select id="sort-customs-field" class="selectpicker hide-tick">
                         <option value="1">Новинкам</option>
                         <option value="2">Старым</option>
-                        <option value="3">Убыванию цены</option>
-                        <option value="4">Возрастанию цены</option>
+                        <option value="3">Дорогим</option>
+                        <option value="4">Дешевым</option>
                     </select>
                 </div>
             </div>
@@ -92,9 +96,9 @@
             <div id="results" class="listings-container grid-layout margin-top-35">
                 @Html.Partial("_CustomsPage")
             </div>
-
-
             <!-- Tasks Container / End -->
+
+
             <!-- Pagination -->
             @*<div class="clearfix"></div>
         <div class="pagination-container margin-top-20 margin-bottom-20">
@@ -112,7 +116,6 @@
                 </ul>
             </nav>
         </div>*@
-
             <div class="clearfix"></div>
             <div class="pagination-container margin-top-20 margin-bottom-20">
                 <nav class="pagination">
@@ -126,6 +129,8 @@
                 </nav>
             </div>
             <!-- Pagination / End -->
+
+
             <!-- Footer -->
             <div class="small-footer margin-top-15">
                 <div class="small-footer-copyrights">
@@ -182,7 +187,8 @@
 
         $(function () {
             var page = 0;
-            var pageSize = 3;
+            var pageSize = 4;
+            var _inCallback = false;
             var sliderMinValue = $('#budget-range-slider').attr('data-slider-min');
             var sliderMaxValue = $('#budget-range-slider').attr('data-slider-max');
 
@@ -227,6 +233,8 @@
                 }
             });
 
+            $("#customs-without-offers").change(CallIndex);
+
 
             $('#sort-customs-field').change(CallIndex);
 
@@ -247,6 +255,7 @@
                     var skillListId = $("#SkillList").val();
                     var minPrice = sliderMinValue;
                     var maxPrice = sliderMaxValue;
+                    var customsWithoutOffers = $("#customs-without-offers").is(':checked');
                     var sortingId = $('#sort-customs-field').val();
                     $.ajax({
                         type: 'GET',
@@ -258,21 +267,23 @@
                             'skillId': skillListId,
                             'minPrice': minPrice,
                             'maxPrice': maxPrice,
+                            'customsWithoutOffers': customsWithoutOffers,
                             'sortId': sortingId
                         },
                         success: function (data, textstatus) {
-                            var customsOnPage = $("#results").length;
+                            var customsOnPage = $(".job-listing").length;
                             if (data != '') {
-                                /*$.ajax({
+                                $.ajax({
                                     type: 'GET',
                                     url: "/Custom/GetCustomsCount",
                                     success: function (data) {
-                                        if (data - usersOnPage <= pageSize) {
+                                        //alert('total = ' + data+' | customsOnPage = ' + customsOnPage);
+                                        if (data - customsOnPage <= pageSize) {
                                             $("#more-customs-button").hide();
                                         }
                                     }
                                 });
-                                $("#results").append(data);*/
+                                $("#results").append(data);
                             }
                             else {
                                 page = -1;
@@ -297,6 +308,7 @@
                 }
                 var minPrice = sliderMinValue;
                 var maxPrice = sliderMaxValue;
+                var customsWithoutOffers = $("#customs-without-offers").is(':checked');
                 var sortingId = $("#sort-customs-field").val();
                 $.ajax({
                     type: "GET",
@@ -308,24 +320,25 @@
                         'skillId': skillListId,
                         'minPrice': minPrice,
                         'maxPrice': maxPrice,
+                        'customsWithoutOffers': customsWithoutOffers,
                         'sortId': sortingId
                     },
                     success: function (data) {
                         $('#results').empty();
                         $('#results').html(data);
-                        /*$.ajax({
+                        $.ajax({
                             type: 'GET',
-                            url: "/User/GetUsersCount",
+                            url: "/Custom/GetCustomsCount",
                             success: function (data) {
                                 if (data > pageSize) {
-                                    $("#load-more-button").show();
+                                    $("#more-customs-button").show();
                                 }
                                 else {
-                                    $("#load-more-button").hide();
+                                    $("#more-customs-button").hide();
                                 }
-                                $("#found-users-count").html("Найдено исполнителей: " + data);
+                                $("#found-customs-count").html("Найдено заказов: " + data);
                             }
-                        });*/
+                        });
                     },
                     error: function (data) { alert(data.responseText); }
                 });
@@ -365,11 +378,10 @@
                 var orderName = $("#name").val();
                 var taskListId = $("#TaskList").val();
                 var skillListId = $("#SkillList").val();
-                var sortingId = $("#sort-customs-field").val();
                 var minPrice = sliderMinValue;
                 var maxPrice = sliderMaxValue;
-                /*alert('dataMin = ' + minPrice + '| dataMax = ' + maxPrice + ' | dataMin = ' + $('#budget-range-slider').attr('data-slider-min')
-                    + '| dataMax = ' + $('#budget-range-slider').attr('data-slider-max'));*/
+                var customsWithoutOffers = $("#customs-without-offers").is(':checked');
+                var sortingId = $("#sort-customs-field").val();
                 if (
                     orderName
                     || taskListId
@@ -383,6 +395,7 @@
                     $("#budget-range-slider").slider('refresh');
                     sliderMinValue = $('#budget-range-slider').attr('data-slider-min');
                     sliderMaxValue = $('#budget-range-slider').attr('data-slider-max');
+                    $("#customs-without-offers").prop('checked', false);
                     $.ajax({
                         type: 'GET',
                         url: '/Custom/Index',
@@ -393,26 +406,26 @@
                             'skillId': 0,
                             'minPrice': null,
                             'maxPrice': null,
-                            //'worksCount': 0,
+                            'customsWithoutOffers': customsWithoutOffers,
                             'sortId': sortingId
                         },
                         success: function (data) {
                             $("#SkillList").attr("disabled", true);
                             $('#results').empty();
                             $('#results').html(data);
-                            /*$.ajax({
+                            $.ajax({
                                 type: 'GET',
-                                url: "/User/GetUsersCount",
+                                url: "/Custom/GetCustomsCount",
                                 success: function (data) {
                                     if (data > pageSize) {
-                                        $("#load-more-button").show();
+                                        $("#more-customs-button").show();
                                     }
                                     else {
-                                        $("#load-more-button").hide();
+                                        $("#more-customs-button").hide();
                                     }
-                                    $("#found-users-count").html("Найдено исполнителей: " + data);
+                                    $("#found-customs-count").html("Найдено заказов: " + data);
                                 }
-                            });*/
+                            });
                         },
                         error: function (data) { alert(data.responseText); }
                     });

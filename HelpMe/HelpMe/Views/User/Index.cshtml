@@ -112,8 +112,8 @@
                     <span>Сортировать по:</span>
                     <select class="selectpicker hide-tick" id="sortField">
                         <option value="1" selected>Рейтингу</option>
-                        <option value="2">Возрастанию даты</option>
-                        <option value="3">Убыванию даты</option>
+                        <option value="2">Давним</option>
+                        <option value="3">Новым</option>
                     </select>
                 </div>
             </div>
@@ -285,6 +285,7 @@
                                     type: 'GET',
                                     url: "/User/GetUsersCount",
                                     success: function (data) {
+                                        //alert('usersOnPage = ' + usersOnPage);
                                         if (data - usersOnPage <= pageSize) {
                                             $("#load-more-button").hide();
                                         }
