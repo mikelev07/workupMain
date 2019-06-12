@@ -15,8 +15,15 @@
 
             <!-- Details -->
             <div class="job-listing-description">
-                <h3 class="job-listing-title">@Html.DisplayFor(modelItem => item.Name)</h3>
-                <h4 class="job-listing-company"><i class="icon-material-outline-account-circle"></i> 4 предложения </h4>
+                @{ 
+                    string customName = item.Name;
+                    if (customName.Length >= 50)
+                    {
+                        customName = customName.Substring(0,47)+"...";
+                    }
+                }
+                <h3 class="job-listing-title">@customName</h3>
+                <h4 class="job-listing-company"><i class="icon-material-outline-account-circle"></i> Предложений: @Html.DisplayFor(modelItem=>item.Comments.Count) </h4>
             </div>
         </div>
 

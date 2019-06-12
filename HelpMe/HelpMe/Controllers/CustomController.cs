@@ -26,7 +26,7 @@ namespace HelpMe.Controllers
 
         // GET: Custom
         public ActionResult Index(int? id, string name, int? typeTaskId, int? taskCategoryId, int? skillId,
-            int? minPrice, int? maxPrice, int sortId=1)
+            int? minPrice, int? maxPrice, bool? customsWithoutOffers, int sortId=1)
         {
             var customViewModels = db.Customs.Include(c => c.Comments).Include(c => c.User)
                 .Include(c => c.TypeTask).Include(c => c.CategoryTask).Include(c => c.Skill);
@@ -47,7 +47,7 @@ namespace HelpMe.Controllers
                 }
             }
 
-            if(minPrice!=null)
+            if(minPrice!=null && minPrice!=0)
             {
                 customViewModels = customViewModels.Where(m => m.Price >= minPrice);
             }
@@ -55,6 +55,11 @@ namespace HelpMe.Controllers
             if (maxPrice != null)
             {
                 customViewModels = customViewModels.Where(m => m.Price <= maxPrice);
+            }
+
+            if(customsWithoutOffers==true)
+            {
+                customViewModels = customViewModels.Where(m => m.Comments.Count == 0);
             }
             //count = customViewModels.Count();
 
@@ -70,6 +75,7 @@ namespace HelpMe.Controllers
             //count = customViewModels.Count();
 
             ViewBag.Tasks = new SelectList(db.TaskCategories, "Id", "Name");
+            TempData["CustomsFound"] = customViewModels.Count();
 
             if (Request.IsAjaxRequest())
             {
@@ -111,6 +117,11 @@ namespace HelpMe.Controllers
             }
             
             return customs;
+        }
+
+        public int GetCustomsCount()
+        {
+            return (int)TempData["CustomsFound"];
         }
 
         public ActionResult Tasks()
