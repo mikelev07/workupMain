@@ -259,6 +259,22 @@
     <Compile Include="Migrations\201905241337450_RegDateUserMigration.Designer.cs">
       <DependentUpon>201905241337450_RegDateUserMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905271421529_CustomViewModelMigra.cs" />
+    <Compile Include="Migrations\201905271421529_CustomViewModelMigra.Designer.cs">
+      <DependentUpon>201905271421529_CustomViewModelMigra.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906110907343_newMigra1.cs" />
+    <Compile Include="Migrations\201906110907343_newMigra1.Designer.cs">
+      <DependentUpon>201906110907343_newMigra1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906111419045_StartDateNullable.cs" />
+    <Compile Include="Migrations\201906111419045_StartDateNullable.Designer.cs">
+      <DependentUpon>201906111419045_StartDateNullable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906111427316_StartDateBackUp.cs" />
+    <Compile Include="Migrations\201906111427316_StartDateBackUp.Designer.cs">
+      <DependentUpon>201906111427316_StartDateBackUp.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationRoleManager.cs" />
@@ -510,6 +526,7 @@
     <Content Include="Views\User\_UsersPage.cshtml" />
     <Content Include="Views\Manage\Reviews.cshtml" />
     <Content Include="Views\Manage\Likeit.cshtml" />
+    <Content Include="Views\Custom\_CustomsPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -543,6 +560,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905241337450_RegDateUserMigration.resx">
       <DependentUpon>201905241337450_RegDateUserMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905271421529_CustomViewModelMigra.resx">
+      <DependentUpon>201905271421529_CustomViewModelMigra.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906110907343_newMigra1.resx">
+      <DependentUpon>201906110907343_newMigra1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906111419045_StartDateNullable.resx">
+      <DependentUpon>201906111419045_StartDateNullable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906111427316_StartDateBackUp.resx">
+      <DependentUpon>201906111427316_StartDateBackUp.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,7 +1,8 @@
 ﻿@using HelpMe.Models
 @using PagedList.Mvc;
 @using HelpMe.Helpers
-@model HelpMe.Models.CustomIndexViewModel
+@model IEnumerable<HelpMe.Models.CustomViewModel>
+@*@model HelpMe.Models.CustomIndexViewModel*@
 
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @{
@@ -14,58 +15,53 @@
     <div class="full-page-sidebar">
 
         <div class="full-page-sidebar-inner" data-simplebar>
-            @using (Ajax.BeginForm("CustomSearch", new AjaxOptions { UpdateTargetId = "results" }))
-            {
-                <div class="sidebar-container">
+            @*@using (Ajax.BeginForm("CustomSearch", new AjaxOptions { UpdateTargetId = "results" }))
+                {*@
+            <div class="sidebar-container">
 
-                    <!-- Location -->
-                    <div class="sidebar-widget">
-                        <h3>По названию</h3>
-                        <div class="input-with-icon">
-                            <div id="autocomplete-container">
-                                <input id="name" name="name" type="text" placeholder="Название">
-                            </div>
-                            <i class="icon-material-outline-folder-shared"></i>
+                <!-- Location -->
+                <div class="sidebar-widget">
+                    <h3>По названию</h3>
+                    <div class="input-with-icon">
+                        <div id="autocomplete-container">
+                            <input id="name" name="name" type="text" placeholder="Название">
                         </div>
+                        <i class="icon-material-outline-folder-shared"></i>
                     </div>
-
-                    <!-- Category -->
-                    <div class="sidebar-widget">
-                        <h3>Дисциплина</h3>
-                        <select class="selectpicker" data-live-search="true" title="Все дисциплины">
-                            <option>Математик</option>
-                            <option>Физик</option>
-                            <option>Физрук</option>
-                        </select>
-                        <br />
-                        <select class="selectpicker" data-live-search="true" title="Все предметы">
-                            <option>Математик</option>
-                            <option>Физик</option>
-                            <option>Физрук</option>
-                        </select>
-                    </div>
-
-                    <!-- Budget -->
-                    <div class="sidebar-widget">
-                        <h3>Бюджет заказа</h3>
-                        <div class="margin-top-55"></div>
-
-                        <!-- Range Slider -->
-                        <input class="range-slider" type="text" value="" data-slider-currency="" data-slider-min="10" data-slider-max="2500" data-slider-step="25" data-slider-value="[50,2500]" />
-                    </div>
-
-                    <div class="clearfix"></div>
-
-                    <div class="margin-bottom-40"></div>
-
                 </div>
-                <!-- Sidebar Container / End -->
-                <!-- Search Button -->
-                <div class="sidebar-search-button-container">
-                    <button type="submit" class="button ripple-effect">Поиск</button>
+
+                <!-- Category -->
+                <div class="sidebar-widget">
+                    <h3>Дисциплина</h3>
+                    @Html.DropDownList("Все дисциплины",  ViewBag.Tasks as SelectList,
+               "Все дисциплины", new { @class = "selectpicker-filterdropdown", id ="TaskList", autocomplete = "off"})
+                    <br />
+                    @Html.DropDownList("Все предметы", Enumerable.Empty<SelectListItem>(),
+               "Все предметы", new { @class = "selectpicker-filterdropdown", id ="SkillList", autocomplete = "off"})
                 </div>
-                <!-- Search Button / End-->
-            }
+
+                <!-- Budget -->
+                <div class="sidebar-widget">
+                    <h3>Бюджет заказа</h3>
+                    <div class="margin-top-55"></div>
+
+                    <!-- Range Slider -->
+                    <input id="budget-range-slider" class="range-slider" type="text" value="" data-slider-currency="" data-slider-min="0"
+                           data-slider-max="5000" data-slider-step="50" data-slider-value="[0,5000]" autocomplete="off" />
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div class="margin-bottom-40"></div>
+
+            </div>
+            <!-- Sidebar Container / End -->
+            <!-- Search Button -->
+            <div class="sidebar-search-button-container">
+                <button id="reset-customs" class="button ripple-effect">Сбросить</button>
+            </div>
+            <!-- Search Button / End-->
+            @*}*@
         </div>
 
     </div>
@@ -83,75 +79,57 @@
 
                 <div class="sort-by">
                     <span>Сортировать по:</span>
-                    <select class="selectpicker hide-tick">
-                        <option>Новинкам</option>
-                        <option>Старым</option>
-                        <option>Любой</option>
+                    <select id="sort-customs-field" class="selectpicker hide-tick">
+                        <option value="1">Новинкам</option>
+                        <option value="2">Старым</option>
+                        <option value="3">Убыванию цены</option>
+                        <option value="4">Возрастанию цены</option>
                     </select>
                 </div>
             </div>
 
             <!-- Tasks Container -->
             <div id="results" class="listings-container grid-layout margin-top-35">
-
-                @foreach (var item in Model.Customs)
-                {
-                    <!-- Job Listing -->
-                    <a href="@Url.Action("Details", new { id = item.Id })" class="job-listing">
-
-                        <!-- Job Listing Details -->
-                        <div class="job-listing-details">
-                            <!-- Logo -->
-                            <div class="job-listing-company-logo">
-                                <img src="~/Content/Custom/images/company-logo-05.png" title="Курсовая" alt="">
-                            </div>
-                            
-                            <!-- Details -->
-                            <div class="job-listing-description">
-                                <h3 class="job-listing-title">@Html.DisplayFor(modelItem => item.Name)</h3>
-                                <h4 class="job-listing-company"><i class="icon-material-outline-account-circle"></i> 4 предложения </h4>
-                            </div>
-                        </div>
-
-                        <!-- Job Listing Footer -->
-                        <div class="job-listing-footer">
-                            <span title="В избранное" class="bookmark-icon"></span>
-                            <ul>
-                                <li><i class="icon-material-outline-school"></i> Естественные науки - Биология</li>
-                                <li><i class="icon-material-outline-date-range"></i>До 31.05.19</li>
-                                <li><i class="icon-material-outline-account-balance-wallet"></i> 2000 руб.</li>
-                                <li title="Дата публикации"><i class="icon-material-outline-access-time"></i>26.05.19 </li>
-                            </ul>
-                        </div>
-                    </a>
-                }
+                @Html.Partial("_CustomsPage")
             </div>
 
 
             <!-- Tasks Container / End -->
             <!-- Pagination -->
+            @*<div class="clearfix"></div>
+        <div class="pagination-container margin-top-20 margin-bottom-20">
+            <nav class="pagination">
+                <ul>
+                    @if (Model.PageInfo.HasPreviousPage)
+                    {
+                        <li class="pagination-arrow"><a href=@Url.Action("Index", new { page = Model.PageInfo.PreviousPageIndex }) class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-left"></i></a></li>
+                    }
+                    @Html.PageLinks(Model.PageInfo, x => Url.Action("Index", new { page = x }))
+                    @if (Model.PageInfo.HasNextPage)
+                    {
+                        <li class="pagination-arrow"><a href=@Url.Action("Index", new { page = Model.PageInfo.NextPageIndex }) class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-right"></i></a></li>
+                    }
+                </ul>
+            </nav>
+        </div>*@
+
             <div class="clearfix"></div>
             <div class="pagination-container margin-top-20 margin-bottom-20">
                 <nav class="pagination">
-                    <ul>
-                        @if (Model.PageInfo.HasPreviousPage)
-                        {
-                            <li class="pagination-arrow"><a href=@Url.Action("Index", new { page = Model.PageInfo.PreviousPageIndex }) class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-left"></i></a></li> 
-                        }
-                        @Html.PageLinks(Model.PageInfo, x => Url.Action("Index", new { page = x }))
-                        @if (Model.PageInfo.HasNextPage)
-                        {
-                            <li class="pagination-arrow"><a href=@Url.Action("Index", new { page = Model.PageInfo.NextPageIndex }) class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-right"></i></a></li>
-                        }
-                    </ul>
+                    <div class="social-login-buttons">
+                        <button class="facebook-login ripple-effect" id="more-customs-button">
+                            <span id="more-customs-text">Еще заказы</span>
+                            <img width="32" height="32" class="loading-animation load-more"
+                                 src="~/Content/Custom/images/ajax-loader.gif">
+                        </button>
+                    </div>
                 </nav>
             </div>
-            <div class="clearfix"></div>
             <!-- Pagination / End -->
             <!-- Footer -->
             <div class="small-footer margin-top-15">
                 <div class="small-footer-copyrights">
-                    © 2018 <strong>Воркап</strong>. По правам все ок начальник.
+                    © 2018 <strong>Воркап</strong>. По правам все ок начальнике.
                 </div>
                 <ul class="footer-social-links">
                     <li>
@@ -181,3 +159,266 @@
     </div>
 </div>
 <!-- Full Page Content / End -->
+
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.selectpicker-filterdropdown').selectpicker({
+                liveSearch: true
+            });
+        });
+
+        $(document).on({
+            ajaxStart: function () {
+                $(".loading-animation").addClass("loading");
+            },
+            ajaxStop: function () {
+                $(".loading-animation").removeClass("loading");
+            }
+        });
+
+
+        $(function () {
+            var page = 0;
+            var pageSize = 3;
+            var sliderMinValue = $('#budget-range-slider').attr('data-slider-min');
+            var sliderMaxValue = $('#budget-range-slider').attr('data-slider-max');
+
+            //load more executors button event
+            $("#more-customs-button").click(function () {
+                loadItems();
+            }).hover(function () {
+                $(".loading-animation.load-more").prop('src', '/Content/Custom/images/ajax-loader-reverse.gif');
+            }, function () {
+                $(".loading-animation.load-more").prop('src', '/Content/Custom/images/ajax-loader.gif');
+            });
+
+            //filtration event handlers
+            $("#name").keyup(CallIndex);
+
+            $('#TaskList').change(function () {
+                GetSkills();
+                CallIndex();
+            });
+
+            $('#SkillList').change(CallIndex).selectpicker("refresh");
+
+
+            $('#budget-range-slider').slider().on('slideStart', function (ev) {
+                sliderMinValue = ev.value[0];
+                sliderMaxValue = ev.value[1];
+            });
+
+            $('#budget-range-slider').slider().on('slideStop', function (ev) {
+                if ((ev.value[0] != sliderMinValue) || (ev.value[1] != sliderMaxValue)) {
+                    sliderMinValue = ev.value[0];
+                    sliderMaxValue = ev.value[1];
+                    CallIndex();
+                }
+            });
+
+            $('#budget-range-slider').slider().on('change', function (ev) {
+                if ((this.value[0] != sliderMinValue) || (this.value[1] != sliderMaxValue)) {
+                    sliderMinValue = this.value[0];
+                    sliderMaxValue = this.value[1];
+                    CallIndex();
+                }
+            });
+
+
+            $('#sort-customs-field').change(CallIndex);
+
+            $("#reset-customs").click(function () {
+                ResetCustoms();
+            });
+
+
+
+//****************************common functions**********************
+            function loadItems() {
+                $("#more-customs-text").hide();
+                if (page > -1 && !_inCallback) {
+                    _inCallback = true;
+                    page++;
+                    var orderName = $("#name").val();
+                    var taskListId = $("#TaskList").val();
+                    var skillListId = $("#SkillList").val();
+                    var minPrice = sliderMinValue;
+                    var maxPrice = sliderMaxValue;
+                    var sortingId = $('#sort-customs-field').val();
+                    $.ajax({
+                        type: 'GET',
+                        url: '/Custom/Index/',
+                        data: {
+                            'id': page,
+                            'name': orderName,
+                            'taskId': taskListId,
+                            'skillId': skillListId,
+                            'minPrice': minPrice,
+                            'maxPrice': maxPrice,
+                            'sortId': sortingId
+                        },
+                        success: function (data, textstatus) {
+                            var customsOnPage = $("#results").length;
+                            if (data != '') {
+                                /*$.ajax({
+                                    type: 'GET',
+                                    url: "/Custom/GetCustomsCount",
+                                    success: function (data) {
+                                        if (data - usersOnPage <= pageSize) {
+                                            $("#more-customs-button").hide();
+                                        }
+                                    }
+                                });
+                                $("#results").append(data);*/
+                            }
+                            else {
+                                page = -1;
+                            }
+                            _inCallback = false;
+                            $("#more-customs-text").show();
+                        }
+                    });
+                }
+            }
+
+            function CallIndex() {
+                page = 0;
+                var orderName = $("#name").val();
+                var taskListId = $("#TaskList").val();
+                if (!taskListId) {
+                    taskListId = 0;
+                }
+                var skillListId = $("#SkillList").val();
+                if (!skillListId) {
+                    skillListId = 0;
+                }
+                var minPrice = sliderMinValue;
+                var maxPrice = sliderMaxValue;
+                var sortingId = $("#sort-customs-field").val();
+                $.ajax({
+                    type: "GET",
+                    url: "/Custom/Index",
+                    data: {
+                        'id': page,
+                        'name': orderName,
+                        'taskCategoryId': taskListId,
+                        'skillId': skillListId,
+                        'minPrice': minPrice,
+                        'maxPrice': maxPrice,
+                        'sortId': sortingId
+                    },
+                    success: function (data) {
+                        $('#results').empty();
+                        $('#results').html(data);
+                        /*$.ajax({
+                            type: 'GET',
+                            url: "/User/GetUsersCount",
+                            success: function (data) {
+                                if (data > pageSize) {
+                                    $("#load-more-button").show();
+                                }
+                                else {
+                                    $("#load-more-button").hide();
+                                }
+                                $("#found-users-count").html("Найдено исполнителей: " + data);
+                            }
+                        });*/
+                    },
+                    error: function (data) { alert(data.responseText); }
+                });
+            }
+
+
+            function GetSkills() {
+                var id = $('#TaskList').val();
+                if (!id) {
+                    id = 0;
+                }
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetSkills", "User")/' + id,
+                    dataType: 'JSON',
+                    success: function (data) {
+                        $('#SkillList').empty();
+                        if (id != 0) {
+                            $('#SkillList').attr('disabled',false);
+                            $('#SkillList').append("<option value=''>Все предметы</option>");
+                            $.each(data, function (i, item) {
+                                $('#SkillList').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                            });
+                        }
+                        else {
+                            $('#SkillList').append("<option value=''>Все предметы</option>");
+                            $('#SkillList').attr("disabled", true);
+                        }
+                        $('#SkillList').selectpicker("refresh");
+                    },
+                    error: function (data) { alert(data.responseText); }
+                });
+            }
+
+            function ResetCustoms() {
+                page = 0;
+                var orderName = $("#name").val();
+                var taskListId = $("#TaskList").val();
+                var skillListId = $("#SkillList").val();
+                var sortingId = $("#sort-customs-field").val();
+                var minPrice = sliderMinValue;
+                var maxPrice = sliderMaxValue;
+                /*alert('dataMin = ' + minPrice + '| dataMax = ' + maxPrice + ' | dataMin = ' + $('#budget-range-slider').attr('data-slider-min')
+                    + '| dataMax = ' + $('#budget-range-slider').attr('data-slider-max'));*/
+                if (
+                    orderName
+                    || taskListId
+                    || skillListId
+                    || minPrice != $('#budget-range-slider').attr('data-slider-min')
+                    || maxPrice != $('#budget-range-slider').attr('data-slider-max')
+                ) {
+                    $("#name").val("");
+                    $("#TaskList").val('').selectpicker("render");
+                    $("#SkillList").val('').selectpicker("render");
+                    $("#budget-range-slider").slider('refresh');
+                    sliderMinValue = $('#budget-range-slider').attr('data-slider-min');
+                    sliderMaxValue = $('#budget-range-slider').attr('data-slider-max');
+                    $.ajax({
+                        type: 'GET',
+                        url: '/Custom/Index',
+                        data: {
+                            'id': page,
+                            'name': "",
+                            'taskCategoryId': 0,
+                            'skillId': 0,
+                            'minPrice': null,
+                            'maxPrice': null,
+                            //'worksCount': 0,
+                            'sortId': sortingId
+                        },
+                        success: function (data) {
+                            $("#SkillList").attr("disabled", true);
+                            $('#results').empty();
+                            $('#results').html(data);
+                            /*$.ajax({
+                                type: 'GET',
+                                url: "/User/GetUsersCount",
+                                success: function (data) {
+                                    if (data > pageSize) {
+                                        $("#load-more-button").show();
+                                    }
+                                    else {
+                                        $("#load-more-button").hide();
+                                    }
+                                    $("#found-users-count").html("Найдено исполнителей: " + data);
+                                }
+                            });*/
+                        },
+                        error: function (data) { alert(data.responseText); }
+                    });
+                }
+            }
+
+        });
+    </script>
+}

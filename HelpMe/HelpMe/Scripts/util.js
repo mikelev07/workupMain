@@ -299,8 +299,9 @@ $(function () {
           //  $('#partnerId').val() = id;
 
             var htmlUserName = '#' + userName + '-st';
-            $(htmlUserName).text('не в сети');
-            $(htmlUserName).css('color', 'red');
+            $(htmlUserName).text('');
+            //$(htmlUserName).css('font-size', '13px');
+            //$(htmlUserName).css('color', 'red');
     }
 
 
@@ -536,6 +537,7 @@ function AddUser(id, name) {
         var htmlUserName = '#' + name + '-st';
         //alert("1");
         $(htmlUserName).text('в сети');
+        $(htmlUserName).css('font-size', '13px');
         $(htmlUserName).css('color', 'green');
     }
 

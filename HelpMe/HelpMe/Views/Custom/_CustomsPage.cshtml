@@ -1,0 +1,40 @@
+﻿@model IEnumerable<HelpMe.Models.CustomViewModel>
+@*@model HelpMe.Models.CustomIndexViewModel*@
+
+@foreach (var item in Model)
+{
+    <!-- Job Listing -->
+    <a href="@Url.Action("Details", new { id = item.Id })" class="job-listing">
+
+        <!-- Job Listing Details -->
+        <div class="job-listing-details">
+            <!-- Logo -->
+            <div class="job-listing-company-logo">
+                <img src="~/Content/Custom/images/company-logo-05.png" title=@item.TypeTask.Name alt="Task type">
+            </div>
+
+            <!-- Details -->
+            <div class="job-listing-description">
+                <h3 class="job-listing-title">@Html.DisplayFor(modelItem => item.Name)</h3>
+                <h4 class="job-listing-company"><i class="icon-material-outline-account-circle"></i> 4 предложения </h4>
+            </div>
+        </div>
+
+        <!-- Job Listing Footer -->
+        <div class="job-listing-footer">
+            <span title="В избранное" class="bookmark-icon"></span>
+            <ul>
+                <li>
+                    <i class="icon-material-outline-school"></i> @item.CategoryTask.Name @{
+                        var skillName = "";
+                        if (item.SkillId != null) { skillName = "- " + item.Skill.Name; }
+                    }
+                    @skillName
+                </li>
+                <li><i class="icon-material-outline-date-range"></i>Сдать до: @item.EndingDate.ToShortDateString()</li>
+                <li><i class="icon-material-outline-account-balance-wallet"></i> Бюджет: @item.Price руб.</li>
+                <li title="Дата публикации"><i class="icon-material-outline-access-time"></i>@item.StartDate.ToShortDateString() </li>
+            </ul>
+        </div>
+    </a>
+}

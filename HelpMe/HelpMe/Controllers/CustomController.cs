@@ -21,16 +21,96 @@ namespace HelpMe.Controllers
     public class CustomController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-      
+
+        int pageSize = 4; // количество объектов на страницу
+
         // GET: Custom
-        public ActionResult Index(int page = 1)
-        {  
-            var customViewModels = db.Customs.Include(c => c.Comments).Include(c => c.User).OrderBy(x => x.Id);
-            int pageSize = 8; // количество объектов на страницу
-            IEnumerable<CustomViewModel> customPerPages = customViewModels.Skip((page - 1) * pageSize).Take(pageSize);
-            PageInfo pageInfo = new PageInfo { PageNumber = page, PageSize = pageSize, TotalItems = customViewModels.Count() };
-            CustomIndexViewModel ivm = new CustomIndexViewModel { PageInfo = pageInfo, Customs = customPerPages };
-            return View(ivm);
+        public ActionResult Index(int? id, string name, int? typeTaskId, int? taskCategoryId, int? skillId,
+            int? minPrice, int? maxPrice, int sortId=1)
+        {
+            var customViewModels = db.Customs.Include(c => c.Comments).Include(c => c.User)
+                .Include(c => c.TypeTask).Include(c => c.CategoryTask).Include(c => c.Skill);
+            //var count = customViewModels.Count();
+
+            if (!String.IsNullOrEmpty(name))
+            {
+                customViewModels = customViewModels.Where(m => m.Name.Contains(name));
+            }
+
+            if (taskCategoryId != null && taskCategoryId != 0)
+            {
+                customViewModels = customViewModels.Where(m => m.CategoryTaskId == taskCategoryId);
+
+                if (skillId != null && skillId != 0)
+                {
+                    customViewModels = customViewModels.Where(m => m.SkillId == skillId);
+                }
+            }
+
+            if(minPrice!=null)
+            {
+                customViewModels = customViewModels.Where(m => m.Price >= minPrice);
+            }
+
+            if (maxPrice != null)
+            {
+                customViewModels = customViewModels.Where(m => m.Price <= maxPrice);
+            }
+            //count = customViewModels.Count();
+
+            customViewModels = SortCustoms(customViewModels, sortId);
+
+            int page = id ?? 0;
+            //IEnumerable<CustomViewModel> customPerPages = customViewModels.Skip((page - 1) * pageSize).Take(pageSize);
+            //PageInfo pageInfo = new PageInfo { PageNumber = page, PageSize = pageSize, TotalItems = customViewModels.Count() };
+
+
+            //CustomIndexViewModel ivm = new CustomIndexViewModel { PageInfo = pageInfo, Customs = customPerPages };
+
+            //count = customViewModels.Count();
+
+            ViewBag.Tasks = new SelectList(db.TaskCategories, "Id", "Name");
+
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_CustomsPage", GetCustomsPage(customViewModels, page));
+            }
+
+            return View(GetCustomsPage(customViewModels, page));
+        }
+
+        private IEnumerable<CustomViewModel> GetCustomsPage(IQueryable<CustomViewModel> customs, int page)
+        {
+
+            var customsToSkip = page * pageSize;
+            var customsToPage = customs.Skip(customsToSkip).Take(pageSize);
+            return customsToPage.ToList();
+        }
+
+        public IQueryable<CustomViewModel> SortCustoms(IQueryable<CustomViewModel> customs, int sortId)
+        {
+            //by new customs
+            if(sortId==1)
+            {
+                customs =  customs.OrderByDescending(m => m.StartDate);
+            }
+            //by old customs
+            if(sortId==2)
+            {
+                customs = customs.OrderBy(m => m.StartDate);
+            }
+            //by price descending
+            if (sortId == 3)
+            {
+                customs = customs.OrderByDescending(m => m.Price);
+            }
+            //by price ascending
+            if(sortId==4)
+            {
+                customs = customs.OrderBy(m => m.Price);
+            }
+            
+            return customs;
         }
 
         public ActionResult Tasks()
@@ -51,10 +131,10 @@ namespace HelpMe.Controllers
             return PartialView(allAttaches);
         }
 
-      
+
         public async Task<JsonResult> DeleteAttach(int? id)
         {
-           
+
             AttachModel attach = await db.Attachments.FindAsync(id);
             var customId = attach.CustomViewModelId;
             db.Attachments.Remove(attach);
@@ -133,7 +213,9 @@ namespace HelpMe.Controllers
 
                 return Content("<div class='task-tags'><span>Работа куплена </span></div>", "text/html");
                 // return RedirectToAction("Details", "Custom", new { id = attachViewModel.CustomViewModel.Id });
-            } else { 
+            }
+            else
+            {
                 ViewBag.DangerText = "Решение куплено!";
             }
             return RedirectToAction("Details", "Custom", new { id = attachViewModel.CustomViewModel.Id });
@@ -155,7 +237,7 @@ namespace HelpMe.Controllers
             }
 
             CustomViewModel customViewModel = await db.Customs.Include(c => c.Comments).Include(c => c.User).FirstOrDefaultAsync(c => c.Id == id);
-           
+
 
             if (customViewModel.UserId != customViewModel.ExecutorId)
             {
@@ -167,7 +249,7 @@ namespace HelpMe.Controllers
             }
             string uName = db.Users.Where(c => c.Id == customViewModel.UserId).FirstOrDefault().UserName;
             string exName = db.Users.Where(c => c.Id == customViewModel.ExecutorId).FirstOrDefault().UserName;
-            SendMessage("Вы выбрали исполнителем " + exName, customViewModel.Id, uName,exName,"выбрал вас исполнителем");
+            SendMessage("Вы выбрали исполнителем " + exName, customViewModel.Id, uName, exName, "выбрал вас исполнителем");
             await db.SaveChangesAsync();
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
         }
@@ -221,7 +303,7 @@ namespace HelpMe.Controllers
                     db.Entry(customViewModel).State = EntityState.Modified;
                     customViewModel.FilePath = path;
                     customViewModel.Status = CustomStatus.NeedBuy; // вложения требует покупки
-                  //  customViewModel.AttachStatus = AttachStatus.NotPurchased; // решение не куплено
+                                                                   //  customViewModel.AttachStatus = AttachStatus.NotPurchased; // решение не куплено
                     await db.SaveChangesAsync();
                 }
             }
@@ -229,7 +311,7 @@ namespace HelpMe.Controllers
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id }); ;
         }
 
-    
+
         [AcceptVerbs(HttpVerbs.Get)]
         public JsonResult GetComment(int id)
         {
@@ -254,7 +336,7 @@ namespace HelpMe.Controllers
         [HttpPost]
         public JsonResult People(string Description, int CustomViewModelId, int OfferPrice, int Days)
         {
-            var comment = new CommentViewModel { Description = Description, OfferPrice = OfferPrice, Days= Days, UserId = User.Identity.GetUserId(), CustomViewModelId = CustomViewModelId };
+            var comment = new CommentViewModel { Description = Description, OfferPrice = OfferPrice, Days = Days, UserId = User.Identity.GetUserId(), CustomViewModelId = CustomViewModelId };
             CustomViewModel customViewModel = db.Customs.Include(c => c.Comments).FirstOrDefault(c => c.Id == CustomViewModelId);
             if (customViewModel.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() >= 1)
             {
@@ -288,7 +370,8 @@ namespace HelpMe.Controllers
                 string file_name = Path.GetFileName(path);
 
                 return File(path, file_type, file_name);
-            } else
+            }
+            else
             {
                 return null;
             }
@@ -297,10 +380,10 @@ namespace HelpMe.Controllers
 
         public FileResult GetFile(string path)
         {
-                string file_type = "application/" + Path.GetExtension(path);
-                string file_name = Path.GetFileName(path);
+            string file_type = "application/" + Path.GetExtension(path);
+            string file_name = Path.GetFileName(path);
 
-                return File(path, file_type, file_name);
+            return File(path, file_type, file_name);
         }
 
         // GET: Custom/Details/5
@@ -376,7 +459,7 @@ namespace HelpMe.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,AttachFilePath,AttachFile,UserId,TypeTaskId,CategoryTaskId,EndingDate,MinPrice,MaxPrice")] CustomViewModel customViewModel)
+        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,AttachFilePath,AttachFile,UserId,TypeTaskId,CategoryTaskId,EndingDate,Price")] CustomViewModel customViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -387,13 +470,14 @@ namespace HelpMe.Controllers
                 customViewModel.AttachFilePath = "~/Files/" + fileName;
                 customViewModel.Status = CustomStatus.Open; // открытая заявка
                 customViewModel.UserId = User.Identity.GetUserId();
+                customViewModel.StartDate = DateTime.Now;
                 db.Customs.Add(customViewModel);
                 await db.SaveChangesAsync();
                 string uName = db.Users.Where(c => c.Id == customViewModel.UserId).FirstOrDefault().UserName;
-               // SendMessage("Добавлен новый заказ", customViewModel.Id, uName);
+                // SendMessage("Добавлен новый заказ", customViewModel.Id, uName);
                 return RedirectToAction("Index");
             }
-        
+
             return View(customViewModel);
         }
 
@@ -425,16 +509,16 @@ namespace HelpMe.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,AttachFilePath,AttachFile,UserId,TypeTaskId,CategoryTaskId,EndingDate,MinPrice,MaxPrice")] CustomViewModel customViewModel)
-        { 
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,AttachFilePath,AttachFile,UserId,TypeTaskId,CategoryTaskId,EndingDate,Price")] CustomViewModel customViewModel)
+        {
             if (ModelState.IsValid)
             {
                 db.Entry(customViewModel).State = EntityState.Modified;
                 await db.SaveChangesAsync();
 
-                return RedirectToAction("Details", "Custom", new { id = customViewModel.Id }); 
+                return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
             }
-           
+
             return View(customViewModel);
         }
 
