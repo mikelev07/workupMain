@@ -128,20 +128,20 @@
                                     <div class="submit-field">
                                         <h5>Дисциплины</h5>
                                         
-                                        <select id="dicp" class="selectpicker" data-live-search="true" multiple>
+                                        <select id="dicp" title="Выберите специализацию" class="selectpicker" data-live-search="true" multiple>
                                             <optgroup label="Гуманитарные науки">
-                                                <option>Догестонский</option>
-                                                <option>Уебонский</option>
-                                                <option>Вавилонский</option>
-                                                <option>Шумерский</option>
-                                                <option>Стопальский</option>
+                                                <option value="1">Догестонский</option>
+                                                <option value="2" >Уебонский</option>
+                                                <option value="3">Вавилонский</option>
+                                                <option value="4">Шумерский</option>
+                                                <option value="5">Стопальский</option>
                                             </optgroup>
                                             <optgroup label="Пиздатые науки">
-                                                <option>Нариковский</option>
-                                                <option>Шульский</option>
-                                                <option>Пердонски</option>
-                                                <option>Батиковски</option>
-                                                <option>Череповец</option>
+                                                <option value="6">Нариковский</option>
+                                                <option value="7">Шульский</option>
+                                                <option value="8">Пердонски</option>
+                                                <option value="9">Батиковски</option>
+                                                <option value="10">Череповец</option>
                                             </optgroup>
                                         </select>
                                         <br />
@@ -290,18 +290,89 @@
     <script>
       
         var keywordsList = $(".keywords-list");
-        function addKeywordSub(str) {
-			var $newKeyword = $("<span class='keyword'><span class='keyword-remove'></span><span class='keyword-text'>"+ str +"</span></span>");
+        function addKeywordSub(str, i) {
+			var $newKeyword = $("<span id='"+ i +"' class='keyword'><span class='keyword-remove'></span><span class='keyword-text'>"+ str +"</span></span>");
 			keywordsList.append($newKeyword).trigger('resizeContainer');
-            }
+        }
 
+       // $('select').val(1);
+       
+        var arr = new Array();
+        var lastIndex = 0;
+            $('.selectpicker').on('change', function(){
+                 $(this).find("option").each(function()
+                 {
+                     if($(this).is(":selected"))
+                     {             
+                        id = $(this).attr("value");
+                        if(arr.indexOf(id) == -1)
+                        {
+                            arr.push(id);
+                            lastIndex = id;
+                            addKeywordSub(select_option(arr[arr.length-1]),arr[arr.length-1]);
+                        }
+                     }
+                     else
+                     {
+                         id = $(this).attr("value"); 
+                        // keywordsList.find('#' + id).children(":first").trigger('click')
+                         keywordsList.find('#' + id).addClass('keyword-removed');
+                        function removeFromMarkup(){
+			              $(".keyword-removed").remove();
+			            }
+			            setTimeout(removeFromMarkup, 500);
+			            keywordsList.css({'height':'auto'}).height();
+                         arr = jQuery.grep(arr, function(value) {
+                          return value != id;
+                         }); 
+
+                        
+                     }
+                 });
+                
+              
+
+            });
+
+        function select_option(i) {
+          return $('select option[value="' + i + '"]').html();
+        }
+
+        /*
         $('.selectpicker').change(function () {
             
             var selectedItem = $(this).find("option:selected").val();
             addKeywordSub(selectedItem);
           
                
-        });
+        }); */
+
+        	// removing keyword
+		$(document).on("click",".keyword-remove", function(){
+            $(this).parent().addClass('keyword-removed');
+           /* var clone = $('#uploadAttache').clone();
+            clone.attr('id', 'field2');
+            $('#field2_area').html(clone);
+            alert($('#field2')[0].files[0].name)
+            alert($('#field2')[0].files[1].name) */
+           
+            $('#dicp').find('[value='+  $(this).parent().attr('id') +']').prop('selected', false);
+             $('.selectpicker').selectpicker('refresh')
+
+           // var idAttach = $(this).parent().attr('id');
+          //  var filesArray = $('#uploadAttache')[0].files;
+          //  var fileBuffer = [];
+           // Array.prototype.push.apply(fileBuffer, filesArray);
+          //  finalFileBuffer.splice(idAttach, 1);
+            //alert(fileBuffer)
+            //finalFileBuffer = fileBuffer;
+
+			function removeFromMarkup(){
+			  $(".keyword-removed").remove();
+			}
+			setTimeout(removeFromMarkup, 500);
+			keywordsList.css({'height':'auto'}).height();
+		});
 
         // animating container height
 		keywordsList.on('resizeContainer', function(){
