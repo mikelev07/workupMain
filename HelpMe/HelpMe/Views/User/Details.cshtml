@@ -34,7 +34,14 @@
                                     spanText = "в сети";
                                 }
                             }
-                            <span><strong>@Model.UserName </strong><span id="@Model.UserName-st" style="@styleText">@spanText</span></span>
+                            @{
+                                string busyText = "Не занят";
+                                if (Model.IsNotBusy == false)
+                                {
+                                    busyText = "Занят";
+                                }
+                            }
+                            <h3>@Model.UserName <span id="@Model.UserName-st" style="@styleText">@spanText</span><span>Статус</span></h3>
                             <ul>
                                 <li>
                                     @{
@@ -44,18 +51,9 @@
                                 </li>
                                 <!--<li><img class="flag" src="images/flags/de.svg" alt=""> Москва</li>-->
                                 <li>
-                                    <!--<div class="verified-badge-with-title">Проверенный исполнитель</div>-->
+                                    <div class="verified-badge-with-title">Готов к работе</div>
                                 </li>
                             </ul>
-
-                            @{
-                                string busyText = "Не занят";
-                                if (Model.IsNotBusy == false)
-                                {
-                                    busyText = "Занят";
-                                }
-                            }
-                            <h4>@busyText</h4>
 
                         </div>
                     </div>
@@ -64,11 +62,7 @@
             <div class="col-md-4">
                 <div class="sidebar-container">
                     <!-- Button -->
-                    <a href="#small-dialog-2" class="apply-now-button popup-with-zoom-anim margin-bottom-20">Привлечь к заданию <i class="icon-material-outline-arrow-right-alt"></i></a>
-
-                    <a href="#small-dialog-3" class="apply-now-button popup-with-zoom-anim margin-bottom-20">Написать сообщение <i class="icon-material-outline-arrow-right-alt"></i></a>
-
-                    <a href="#small-dialog" class="apply-now-button popup-with-zoom-anim">Оставить отзыв <i class="icon-material-outline-arrow-right-alt"></i></a>
+              
                 </div>
             </div>
         </div>
@@ -171,7 +165,7 @@
                     <!-- Accordion Body / End -->
                 </div>
             </div>
-
+            <br />
             <div class="accordion js-accordion">
                 <!-- Accordion Item -->
                 <div class="accordion__item js-accordion-item">
@@ -278,11 +272,11 @@
                 </div>
 
                 <!-- Button -->
-                @*<a href="#small-dialog-2" class="apply-now-button popup-with-zoom-anim margin-bottom-20">Привлечь к заданию <i class="icon-material-outline-arrow-right-alt"></i></a>
+                <a href="#small-dialog-2" class="apply-now-button popup-with-zoom-anim margin-bottom-20">Привлечь к заданию <i class="icon-material-outline-arrow-right-alt"></i></a>
 
                 <a href="#small-dialog-3" class="apply-now-button popup-with-zoom-anim margin-bottom-20">Написать сообщение <i class="icon-material-outline-arrow-right-alt"></i></a>
 
-                <a href="#small-dialog" class="apply-now-button popup-with-zoom-anim margin-bottom-40">Оставить отзыв <i class="icon-material-outline-arrow-right-alt"></i></a>*@
+                <a href="#small-dialog" class="apply-now-button popup-with-zoom-anim margin-bottom-40">Оставить отзыв <i class="icon-material-outline-arrow-right-alt"></i></a>
                 <!-- Freelancer Indicators -->
                 <div class="sidebar-widget">
                     <div class="freelancer-indicators">
