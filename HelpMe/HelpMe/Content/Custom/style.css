@@ -7424,8 +7424,8 @@ table.basic-table {
 	}
 
     .verified-badge.busy:before {
-        content: "\f191";
-        font-family: Line-Awesome;
+        content: "\e904";
+        font-family: "Material-Icons";
         font-size: 16px;
         color: #fff;
         position: relative;
