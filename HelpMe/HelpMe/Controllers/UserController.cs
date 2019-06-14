@@ -185,7 +185,7 @@ namespace HelpMe.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var user = await db.Users.Include(u => u.Reviews).SingleAsync(u => u.UserName == userName);
+            var user = await db.Users.Include(u => u.Reviews).Include(u=>u.TaskCategories).Include(u=>u.Skills).SingleAsync(u => u.UserName == userName);
 
             if (user == null)
             {
