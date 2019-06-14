@@ -7438,6 +7438,42 @@ table.basic-table {
 	}
 
 
+.not-verified-badge-with-title {
+    position: relative;
+    height: 26px;
+    display: flex;
+    top: -1px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 14px;
+    background-color: #fa0000;
+    text-align: center;
+    z-index: 10;
+    font-weight: 500;
+    border-radius: 4px;
+    padding: 0 8px 0 0;
+    margin: 0;
+    overflow: hidden;
+    padding-left: 34px;
+    line-height: 27px;
+}
+
+    .not-verified-badge-with-title:before {
+        content: "\e902";
+        font-family: "Feather-Icons";
+        font-size: 16px;
+        color: #fff;
+        position: absolute;
+        top: 0;
+        left: 0;
+        line-height: 26px;
+        height: 26px;
+        width: 26px;
+        display: inline-block;
+        background-color: #d70303;
+    }
+
+
 /* ---------------------------------- */
 /* Star Rating
 ------------------------------------- */
