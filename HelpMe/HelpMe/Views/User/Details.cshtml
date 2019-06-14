@@ -88,6 +88,17 @@
                 <p style="-moz-hyphens: auto;-webkit-hyphens: auto;-ms-hyphens: auto;"><em> @Model.Description </em></p>
             </div>
 
+            <div class="single-page-section">
+                <h3>Дисциплины</h3>
+                <div class="task-tags">
+                    <span>iOS</span>
+                    <span>Android</span>
+                    <span>mobile apps</span>
+                    <span>design</span>
+                </div>
+            </div>
+
+
             <div class="accordion js-accordion">
                 <!-- Accordion Item -->
                 <div class="accordion__item js-accordion-item">
@@ -133,17 +144,17 @@
                                         </div>
                                     </li>
                                     @*<li>
-                                            <div class="boxed-list-item">
-                                                 Content
-                                                <div class="item-content">
-                                                    <h4>WordPress Theme Installation <span>Оценено исполнителем</span></h4>
-                                                    <div class="item-details margin-top-10">
-                                                        <div class="star-rating" data-rating="5.0"></div>
-                                                        <div class="detail-item"><i class="icon-material-outline-date-range"></i> Июнь 2019</div>
-                                                    </div>
-                                                </div>
+                                    <div class="boxed-list-item">
+                                         Content
+                                        <div class="item-content">
+                                            <h4>WordPress Theme Installation <span>Оценено исполнителем</span></h4>
+                                            <div class="item-details margin-top-10">
+                                                <div class="star-rating" data-rating="5.0"></div>
+                                                <div class="detail-item"><i class="icon-material-outline-date-range"></i> Июнь 2019</div>
                                             </div>
-                                        </li>*@
+                                        </div>
+                                    </div>
+                                </li>*@
 
                                 </ul>
 
@@ -228,37 +239,37 @@
 
             <!-- Old Boxed List -->
             @*
-                <div class="boxed-list margin-bottom-60">
-                    <div class="boxed-list-headline">
-                        <h3><i style=" color: #333; font-size: 18px;" class="icon-material-outline-thumb-up"></i>Отзывы</h3>
-                    </div>
-                    <ul class="boxed-list-ul">
-                        @foreach (var r in Model.Reviews)
-                        {
-                            <li>
-                                <div class="boxed-list-item">
-                                    <!-- Content -->
-                                    <div class="item-content">
-                                        <h4>Отзыв <span>@r.Owner.UserName</span></h4>
-                                        <div class="item-details margin-top-10">
-                                            <div class="star-rating" data-rating="5.0"></div>
-                                            <div class="detail-item"><i class="icon-material-outline-date-range"></i> Август 2018</div>
-                                        </div>
-                                        <div class="item-description">
-                                            <p> @r.Description </p>
-                                        </div>
-                                    </div>
+        <div class="boxed-list margin-bottom-60">
+            <div class="boxed-list-headline">
+                <h3><i style=" color: #333; font-size: 18px;" class="icon-material-outline-thumb-up"></i>Отзывы</h3>
+            </div>
+            <ul class="boxed-list-ul">
+                @foreach (var r in Model.Reviews)
+                {
+                    <li>
+                        <div class="boxed-list-item">
+                            <!-- Content -->
+                            <div class="item-content">
+                                <h4>Отзыв <span>@r.Owner.UserName</span></h4>
+                                <div class="item-details margin-top-10">
+                                    <div class="star-rating" data-rating="5.0"></div>
+                                    <div class="detail-item"><i class="icon-material-outline-date-range"></i> Август 2018</div>
                                 </div>
-                            </li>
-                        }
-                    </ul>
+                                <div class="item-description">
+                                    <p> @r.Description </p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
 
-                    <div class="centered-button margin-top-35">
-                        <a href="#small-dialog" class="popup-with-zoom-anim button button-sliding-icon">Оставить отзыв <i class="icon-material-outline-arrow-right-alt"></i></a>
-                    </div>
+            <div class="centered-button margin-top-35">
+                <a href="#small-dialog" class="popup-with-zoom-anim button button-sliding-icon">Оставить отзыв <i class="icon-material-outline-arrow-right-alt"></i></a>
+            </div>
 
-                </div>
-                <!-- Boxed List / End -->
+        </div>
+        <!-- Boxed List / End -->
             *@
         </div>
 
