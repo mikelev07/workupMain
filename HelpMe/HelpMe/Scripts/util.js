@@ -107,6 +107,7 @@ $(function () {
         var file;
         var fileName;
         var filesArray = $('#uploadAttache')[0].files;
+        //alert(filesArray.length)
         var fileBuffer = [];
         Array.prototype.push.apply(fileBuffer, filesArray);
 
@@ -121,6 +122,7 @@ $(function () {
             lastIndexFile = fileBuffer.length //2
         } else {
             finalFileBuffer = finalFileBuffer.concat(fileBuffer);
+           
             for (var i = lastIndexFile; i < finalFileBuffer.length; i++) {
                 file = finalFileBuffer[i].name;
                 if (file.length > 3)

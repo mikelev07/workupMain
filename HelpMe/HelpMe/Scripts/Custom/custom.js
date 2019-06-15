@@ -786,6 +786,8 @@ $(document).ready(function(){
             var fileBuffer = [];
             Array.prototype.push.apply(fileBuffer, filesArray);
             finalFileBuffer.splice(idAttach, 1);
+            
+            lastIndexFile = finalFileBuffer.length;
             //alert(fileBuffer)
             //finalFileBuffer = fileBuffer;
 
