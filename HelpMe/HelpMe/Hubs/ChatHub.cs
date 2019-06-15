@@ -96,7 +96,7 @@ namespace HelpMe.Hubs
             {
                 for (var i = 0; i < fileUrls.Count; i++)
                 {
-                    string url = fileUrls[0];
+                    string url = fileUrls[i];
                     var attach = new MessageAttach() { AttachUrl = url, MessageStoreViewModelId = messageStoreViewModel.Id };
                     db.MessageAttaches.Add(attach);
 
@@ -104,9 +104,9 @@ namespace HelpMe.Hubs
 
                 db.SaveChanges();
 
-                for (var i = 0; i < fileUrls.Count; i++)
+                for (var i = fileUrls.Count - 1; i >= 0; i--)
                 {
-                    string url = fileUrls[0];
+                    string url = fileUrls[i];
                     var attach = new MessageAttach() { AttachUrl = url, MessageStoreViewModelId = messageStoreViewModelPartner.Id };
                     db.MessageAttaches.Add(attach);
                 }
