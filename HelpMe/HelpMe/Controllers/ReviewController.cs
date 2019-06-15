@@ -51,10 +51,11 @@ namespace HelpMe.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Description,UserId,OwnerId")] Review review)
+        public async Task<ActionResult> Create([Bind(Include = "Id,Rating,Description,Date,UserId,OwnerId")] Review review)
         {
             if (ModelState.IsValid)
-            {   
+            {
+                review.Date = DateTime.Now;
                 review.UserId = User.Identity.GetUserId();
                 db.Reviews.Add(review);
                 await db.SaveChangesAsync();

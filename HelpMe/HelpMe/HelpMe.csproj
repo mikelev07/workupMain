@@ -275,6 +275,10 @@
     <Compile Include="Migrations\201906111427316_StartDateBackUp.Designer.cs">
       <DependentUpon>201906111427316_StartDateBackUp.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201906151345415_ReviewCustomChanges.cs" />
+    <Compile Include="Migrations\201906151345415_ReviewCustomChanges.Designer.cs">
+      <DependentUpon>201906151345415_ReviewCustomChanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationRoleManager.cs" />
@@ -572,6 +576,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906111427316_StartDateBackUp.resx">
       <DependentUpon>201906111427316_StartDateBackUp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906151345415_ReviewCustomChanges.resx">
+      <DependentUpon>201906151345415_ReviewCustomChanges.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

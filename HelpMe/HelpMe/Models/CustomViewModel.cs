@@ -17,6 +17,7 @@ namespace HelpMe.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public CustomStatus Status { get; set; }
+        public bool? DoneInTime { get; set; }
         public string FilePath { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]

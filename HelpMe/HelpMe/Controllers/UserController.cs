@@ -21,6 +21,8 @@ namespace HelpMe.Controllers
         private ApplicationUserManager _userManager;
 
         private const int pageSize = 3;
+        private const int worksPageSize = 3;    //for Details.cshtml in Works History tab
+        private const int reviewsPageSize = 3;    //for Details.cshtml in Reviews tab
 
         public UserController()
         {
@@ -178,7 +180,7 @@ namespace HelpMe.Controllers
 
 
         // GET: User/Details/5
-        public async Task<ActionResult> Details(string userName)
+        public async Task<ActionResult> Details(string userName, int worksPage=1, int reviewsPage=1)
         {
             if (userName == null)
             {
@@ -191,8 +193,24 @@ namespace HelpMe.Controllers
             {
                 return HttpNotFound();
             }
+
+            IEnumerable<Review> reviewsPerPages = user.Reviews.Skip((reviewsPage - 1) * reviewsPageSize).Take(reviewsPageSize);
+            var pageInfo = new PageInfo { PageNumber = reviewsPage, PageSize = reviewsPageSize, TotalItems = user.Reviews.Count };
+            var rivm = new ReviewIndexViewModel { PageInfo = pageInfo, Reviews = reviewsPerPages };
+            ViewData["ReviewsPageInfo"] = rivm.PageInfo;
+            ViewData["ReviewsPerPages"] = rivm;
+
             return View(user);
+
         }
+
+        //private IEnumerable<UserViewModel> GetReviewsPage(IEnumerable<UserViewModel> usersWithRoles, int page)
+        //{
+
+        //    var usersToSkip = page * pageSize;
+        //    var users = usersWithRoles.Skip(usersToSkip).Take(pageSize);
+        //    return users.ToList();
+        //}
 
         /*
            // POST: ApplicationUser/Edit/5
