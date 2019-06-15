@@ -224,6 +224,8 @@
             }
         });
 
+        $(".lds-ring").children().hide();
+
         $(function () {
             var page = 0;
             var pageSize = 3;
@@ -232,11 +234,11 @@
 
             //load more executors button event
             $("#load-more-button").click(function () {
+                $(".lds-ring").children().show();
                 loadItems();
+
             }).hover(function () {
-                $(".loading-animation.load-more").prop('src', '/Content/Custom/images/ajax-loader-reverse.gif');
-            }, function () {
-                $(".loading-animation.load-more").prop('src', '/Content/Custom/images/ajax-loader.gif');
+             //  $(".lds-ring").children().css("border-color", "#fff transparent transparent transparent");
             });
 
             //filtration event handlers
@@ -318,6 +320,8 @@
             //common functions
             function loadItems() {
                 $("#more-executors-text").hide();
+               // $(".lds-ring").children().show();
+                //$(".lds-ring").children().css("border-color", "#fff transparent transparent transparent");
                 if (page > -1 && !_inCallback) {
                     _inCallback = true;
                     page++;
@@ -361,6 +365,7 @@
                             }
                             _inCallback = false;
                             $("#more-executors-text").show();
+                            $(".lds-ring").children().hide();
                         }
                     });
                 }
