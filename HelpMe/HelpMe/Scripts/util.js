@@ -362,8 +362,11 @@ $(function () {
                                 chat.server.send($('#username').val(), $('textarea#message').val(), $('#partnerId').val(), $('#toUserName').val(), result);
                                 $('textarea#message').val('');
                                 $('#fileUp').hide();
+                                $('#fileUp').empty();
                                 $('.message-reply').css('margin-top', "15px");
                                 document.getElementById("uploadAttache").value = "";
+                                finalFileBuffer = [];
+                                fileBuffer = [];
                             },
                             error: function (xhr, status, p3) {
                                 alert(xhr.responseText);
@@ -450,12 +453,15 @@ $(function () {
                                 processData: false,
                                 data: data,
                                 success: function (result) {
-                                    alert(result)
-                                    chat.server.send($('#username').val(), $('textarea#message').val(), $('#partnerId').val(), $('#toUserName').val(), String(result));
+                                   
+                                    chat.server.send($('#username').val(), $('textarea#message').val(), $('#partnerId').val(), $('#toUserName').val(), result);
                                     $('textarea#message').val('');
                                     $('#fileUp').hide();
+                                    $('#fileUp').empty();
                                     $('.message-reply').css('margin-top', "15px");
                                     document.getElementById("uploadAttache").value = "";
+                                    finalFileBuffer = [];
+                                    fileBuffer = [];
                                 },
                                 error: function (xhr, status, p3) {
                                     alert(xhr.responseText);
