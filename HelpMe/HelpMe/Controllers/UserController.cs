@@ -22,7 +22,7 @@ namespace HelpMe.Controllers
         private ApplicationUserManager _userManager;
 
         private const int pageSize = 3;
-        private const int worksPageSize = 3;    //for Details.cshtml in Works History tab
+        private const int customsPageSize = 3;    //for Details.cshtml in Works History tab
         private const int reviewsPageSize = 3;    //for Details.cshtml in Reviews tab
 
         public UserController()
@@ -181,7 +181,7 @@ namespace HelpMe.Controllers
 
 
         // GET: User/Details/5
-        public async Task<ActionResult> Details(string userName, int worksPage=1, int reviewsPage=1)
+        public async Task<ActionResult> Details(string userName, bool? customsPaginated, int? customsPage, bool? reviewsPaginated, int? reviewsPage)
         {
             if (userName == null)
             {
@@ -199,13 +199,28 @@ namespace HelpMe.Controllers
             //var pageInfo = new PageInfo { PageNumber = reviewsPage, PageSize = reviewsPageSize, TotalItems = user.Reviews.Count };
             //var rivm = new ReviewIndexViewModel { PageInfo = pageInfo, Reviews = reviewsPerPages };
             //ViewData["ReviewsPageInfo"] = rivm.PageInfo;
+            ViewData["UserName"] = user.UserName;
+
             ViewData["Reviews"] = user.Reviews;
             ViewData["ReviewsPage"] = reviewsPage;
             ViewData["ReviewsPageSize"] = reviewsPageSize;
 
+            ViewData["Customs"] = user.Customs;
+            ViewData["CustomsPage"] = customsPage;
+            ViewData["CustomsPageSize"] = customsPageSize;
+
             if (Request.IsAjaxRequest())
             {
-                return PartialView("_DetailsReviewsPage", user.Reviews.ToPagedList(reviewsPage,reviewsPageSize));
+                if (customsPaginated==true)
+                {
+                    int page = customsPage ?? 1;
+                    return PartialView("_DetailsCustomsPage", user.Reviews.ToPagedList(page, customsPageSize));
+                }
+                if (reviewsPaginated==true)
+                {
+                    int page = reviewsPage ?? 1;
+                    return PartialView("_DetailsReviewsPage", user.Reviews.ToPagedList(page, reviewsPageSize));
+                }
             }
 
             return View(user);

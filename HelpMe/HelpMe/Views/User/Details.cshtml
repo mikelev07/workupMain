@@ -117,7 +117,7 @@
             </div>
 
 
-            <div class="accordion js-accordion">
+            <div class="accordion js-accordion" id="customs-history">
                 <!-- Accordion Item -->
                 <div class="accordion__item js-accordion-item">
                     <div style="color:#333; font-size: 18px;  background-color: #f2f2f2; border-radius: 4px; padding: 20px 35px" class="accordion-header js-accordion-header">
@@ -132,63 +132,55 @@
                             <!-- Boxed List -->
                             <div class="boxed-list margin-bottom-60">
 
-                                <ul class="boxed-list-ul">
-                                    <li>
-                                        <div class="boxed-list-item">
-                                            <!-- Content -->
-                                            <div class="item-content">
-                                                <h4>Порешать уравнения</h4>
-                                                <div class="item-details margin-top-10">
-                                                    <div class="detail-item"><i class="icon-material-outline-date-range"></i> Август 2018</div>
-                                                </div>
-                                                <div class="item-description">
-                                                    <p>Сделано в срок </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="boxed-list-item">
-                                            <!-- Content -->
-                                            <div class="item-content">
-                                                <h4>Порешать одного челика</h4>
-                                                <div class="item-details margin-top-10">
-                                                    <div class="detail-item"><i class="icon-material-outline-date-range"></i> Август 2018</div>
-                                                </div>
-                                                <div class="item-description">
-                                                    <p>Сделано никуя не в срок, тот типчик уже сам откинулся </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
+                                <ul id="cust" class="boxed-list-ul">
+                                    @if (ViewData["Customs"] != null)
+                                    {
+                                        Html.Partial("_DetailsCustomsPage", (ViewData["Customs"] as IEnumerable<HelpMe.Models.CustomViewModel> ?? Enumerable.Empty<HelpMe.Models.CustomViewModel>())
+                                       .ToPagedList((int)ViewData["CustomsPage"], (int)ViewData["CustomsPageSize"]));
+                                                            }
+
                                     @*<li>
                                             <div class="boxed-list-item">
-                                                 Content
+                                                <!-- Content -->
                                                 <div class="item-content">
-                                                    <h4>WordPress Theme Installation <span>Оценено исполнителем</span></h4>
+                                                    <h4>Порешать уравнения</h4>
                                                     <div class="item-details margin-top-10">
-                                                        <div class="star-rating" data-rating="5.0"></div>
-                                                        <div class="detail-item"><i class="icon-material-outline-date-range"></i> Июнь 2019</div>
+                                                        <div class="detail-item"><i class="icon-material-outline-date-range"></i> Август 2018</div>
+                                                    </div>
+                                                    <div class="item-description">
+                                                        <p>Сделано в срок </p>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </li>*@
+                                        </li>
+                                        <li>
+                                            <div class="boxed-list-item">
+                                                <!-- Content -->
+                                                <div class="item-content">
+                                                    <h4>Порешать одного челика</h4>
+                                                    <div class="item-details margin-top-10">
+                                                        <div class="detail-item"><i class="icon-material-outline-date-range"></i> Август 2018</div>
+                                                    </div>
+                                                    <div class="item-description">
+                                                        <p>Сделано никуя не в срок, тот типчик уже сам откинулся </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                                <div class="boxed-list-item">
+                                                     Content
+                                                    <div class="item-content">
+                                                        <h4>WordPress Theme Installation <span>Оценено исполнителем</span></h4>
+                                                        <div class="item-details margin-top-10">
+                                                            <div class="star-rating" data-rating="5.0"></div>
+                                                            <div class="detail-item"><i class="icon-material-outline-date-range"></i> Июнь 2019</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>*@
 
                                 </ul>
-
-                                <!-- Pagination -->
-                                <div class="clearfix"></div>
-                                <div class="pagination-container margin-top-40 margin-bottom-10">
-                                    <nav class="pagination">
-                                        <ul>
-                                            <li><a href="#" class="ripple-effect current-page">1</a></li>
-                                            <li><a href="#" class="ripple-effect">2</a></li>
-                                            <li class="pagination-arrow"><a href="#" class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-right"></i></a></li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                                <div class="clearfix"></div>
-                                <!-- Pagination / End -->
 
                             </div>
                         </div>
@@ -198,7 +190,7 @@
                 </div>
             </div>
             <br />
-            <div class="accordion js-accordion">
+            <div class="accordion js-accordion" id="reviews-history">
                 <!-- Accordion Item -->
                 <div class="accordion__item js-accordion-item">
                     <div style="color:#333; font-size: 18px;  background-color: #f2f2f2; border-radius: 4px; padding: 20px 35px" class="accordion-header js-accordion-header">
@@ -214,10 +206,14 @@
                             <div class="boxed-list margin-bottom-60">
 
                                 <ul id="rew" class="boxed-list-ul">
-                                    @Html.Partial("_DetailsReviewsPage", (ViewData["Reviews"] as IEnumerable<HelpMe.Models.Review>)
-                                   .ToPagedList((int)ViewData["ReviewsPage"], (int)ViewData["ReviewsPageSize"]))
+                                    @if (ViewData["Reviews"] != null)
+                                    {
+                                        @Html.Partial("_DetailsReviewsPage", (ViewData["Reviews"] as IEnumerable<HelpMe.Models.Review>)
+.ToPagedList((int)ViewData["ReviewsPage"], (int)ViewData["ReviewsPageSize"]));
+                                    }
+
                                 </ul>
-                                
+
 
                             </div>
                         </div>
@@ -595,14 +591,35 @@
             }
         }
 
-        $('body').on('click', '.pagination a', function (event) {
+        $('body').on('click', '#customs-history .pagination a', function (event) {
             event.preventDefault();
             //console.log('page');
-          
+
             var url = $(this).attr('href');
             //console.log(url);
             $.ajax({
                 url: url,
+                data: {
+
+                },
+                success: function (result) {
+                    ChangeUrl('index', url);
+                    $('#cust').html(result);
+                    //starRating('#cust .star-rating');
+                }
+            });
+        });
+
+        $('body').on('click', '#reviews-history .pagination a', function (event) {
+            event.preventDefault();
+            //console.log('page');
+            var url = $(this).attr('href');
+            //console.log(url);
+            $.ajax({
+                url: url,
+                data: {
+
+                },
                 success: function (result) {
                     ChangeUrl('index', url);
                     $('#rew').html(result);
