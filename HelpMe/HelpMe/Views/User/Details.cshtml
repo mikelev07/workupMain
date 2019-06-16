@@ -213,7 +213,7 @@
                             <!-- Boxed List -->
                             <div class="boxed-list margin-bottom-60">
 
-                                <ul class="boxed-list-ul">
+                                <ul id="rew" class="boxed-list-ul">
                                     @Html.Partial("_DetailsReviewsPage", (ViewData["Reviews"] as IEnumerable<HelpMe.Models.Review>)
                                    .ToPagedList((int)ViewData["ReviewsPage"], (int)ViewData["ReviewsPageSize"]))
                                 </ul>
@@ -584,6 +584,35 @@
 
 @section scripts{
     <script type="text/javascript">
+
+
+        function ChangeUrl(page, url) {
+            if (typeof (history.pushState) != "undefined") {
+                var obj = { Page: page, Url: url };
+                history.pushState(null, obj.Page, obj.Url);
+            } else {
+                alert("Browser does not support HTML5.");
+            }
+        }
+
+        $('body').on('click', '.pagination a', function (event) {
+            event.preventDefault();
+            console.log('page');
+          
+            var url = $(this).attr('href');
+            console.log(url);
+            $.ajax({
+                url: url,
+                success: function (result) {
+                    ChangeUrl('index', url);
+                    $('#rew').html(result);
+                }
+            });
+        });
+
+
+
+
         function CallIndex() {
             page = 0;
             var nickName = $("#autocomplete-input").val();
