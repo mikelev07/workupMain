@@ -597,10 +597,10 @@
 
         $('body').on('click', '.pagination a', function (event) {
             event.preventDefault();
-            //console.log('page');
+            console.log('page');
           
             var url = $(this).attr('href');
-            //console.log(url);
+            console.log(url);
             $.ajax({
                 url: url,
                 success: function (result) {
@@ -610,5 +610,57 @@
                 }
             });
         });
+
+
+
+
+        function CallIndex() {
+            page = 0;
+            var nickName = $("#autocomplete-input").val();
+            var taskListId = $("#TaskList").val();
+            if (!taskListId) {
+                taskListId = 0;
+            }
+            var skillListId = $("#SkillList").val();
+            if (!skillListId) {
+                skillListId = 0;
+            }
+            var worksCount = $("#work-range").val();
+            var isOnline = $("#tag1").is(':checked');
+            var isNotBusy = $("#tag2").is(':checked');
+            var sortingId = $("#sortField").val();
+            $.ajax({
+                type: "GET",
+                url: "/User/Index",
+                data: {
+                    'id': page,
+                    'name': nickName,
+                    'taskId': taskListId,
+                    'skillId': skillListId,
+                    'worksCount': worksCount,
+                    'isOnline': isOnline,
+                    'isNotBusy': isNotBusy,
+                    'sortId': sortingId
+                },
+                success: function (data) {
+                    $('#freelancers-container').empty();
+                    $('#freelancers-container').html(data);
+                    $.ajax({
+                        type: 'GET',
+                        url: "/User/GetUsersCount",
+                        success: function (data) {
+                            if (data > pageSize) {
+                                $("#load-more-button").show();
+                            }
+                            else {
+                                $("#load-more-button").hide();
+                            }
+                            $("#found-users-count").html("Найдено исполнителей: " + data);
+                        }
+                    });
+                },
+                error: function (data) { alert(data.responseText); }
+            });
+        }
     </script>
 }

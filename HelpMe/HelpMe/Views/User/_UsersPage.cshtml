@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<HelpMe.Models.UserViewModel>
 
-@{
-
+@{ 
+    
 }
 
 @foreach (var i in Model)
@@ -39,41 +39,26 @@
                         styleText = "font-size:13px; color:green";
                         spanText = "в сети";
                     }
-
-                    string rate = "0.0";
-                    int likes = i.PositiveThumbs;
-                    int dislikes = i.NegativeThumbs;
-                    if (likes + dislikes > 0)
-                    {
-                        rate = Math.Round((double)likes / (likes + dislikes) * 5, 1).ToString().Replace(',', '.');
-                    }
-                    if (rate.Length == 1)
-                    {
-                        rate = rate + ".0";
-                    }
                 }
                 <div class="freelancer-name">
                     <h4><a href="single-freelancer-profile.html">@i.Username <span id="@i.Username-st" style="@styleText">@spanText</span></a></h4>
                     <span>Занят до 15 мая</span>
                     <div class="freelancer-rating">
-                        <div class="star-rating" data-rating="@rate"></div>
+                        <div class="star-rating" data-rating="4.9"></div>
                     </div>
-                </div>
 
+                </div>
+              
                 <!-- Skills-->
                 <!-- Rating -->
-
-                <div class="task-tags" style="margin-left:40px">
-                    <span>@i.TaskCategories.Take(1).FirstOrDefault().Name</span>
-                    <div class="input-with-icon-left" title="Ваш никнейм" data-tippy-placement="bottom">
-
+                
+                    <div class="task-tags" style="margin-left:40px" >
+                        @foreach (var tag in i.TaskCategories.Take(1))
+                        {
+                            <span title="+ 7 дисциплин">@tag.Name</span>
+                        }
                     </div>
-                    @foreach (var tag in i.TaskCategories.Take(1))
-                    {
-                        <span title="+ 7 дисциплин">@tag.Name</span>
-                    }
-                </div>
-
+              
             </div>
         </div>
 
@@ -82,7 +67,7 @@
             <div class="freelancer-details-list">
                 <ul>
                     <li>Рейтинг<strong><i style="color:green" class="icon-material-outline-thumb-up"></i> @i.PositiveThumbs <i style="color:red" class="icon-material-outline-thumb-down"></i> @i.NegativeThumbs</strong></li>
-                    <li>Отзывов <strong>777</strong></li>
+                    <li>Отзывов <strong> 7</strong></li>
                     <li>Выполнено<strong>@(i.PositiveThumbs + i.NegativeThumbs) задач</strong></li>
 
                 </ul>

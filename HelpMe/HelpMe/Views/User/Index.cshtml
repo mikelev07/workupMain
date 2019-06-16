@@ -298,11 +298,6 @@
                             $("#SkillList").attr("disabled", true);
                             $('#freelancers-container').empty();
                             $('#freelancers-container').html(data);
-                            $("#freelancers-container .star-rating").each(function (index, element) {
-                                if (element.childElementCount == 0) {
-                                    starRating(element);
-                                }
-                            });
                             $.ajax({
                                 type: 'GET',
                                 url: "/User/GetUsersCount",
@@ -364,12 +359,6 @@
                                     }
                                 });
                                 $("#freelancers-container").append(data);
-                                $("#freelancers-container .star-rating").each(function (index, element) {
-                                    if (element.childElementCount==0) {
-                                        starRating(element);
-                                    }
-                                });
-                                //starRating('#freelancers-container .star-rating');
                             }
                             else {
                                 page = -1;
@@ -377,7 +366,6 @@
                             _inCallback = false;
                             $("#more-executors-text").show();
                             $(".lds-ring").children().hide();
-                            starRating('.freelancer-name.star-rating');
                         }
                     });
                 }
@@ -414,11 +402,6 @@
                     success: function (data) {
                         $('#freelancers-container').empty();
                         $('#freelancers-container').html(data);
-                        $("#freelancers-container .star-rating").each(function (index, element) {
-                            if (element.childElementCount == 0) {
-                                starRating(element);
-                            }
-                        });
                         $.ajax({
                             type: 'GET',
                             url: "/User/GetUsersCount",
