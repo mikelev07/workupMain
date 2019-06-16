@@ -606,6 +606,7 @@
                 success: function (result) {
                     ChangeUrl('index', url);
                     $('#rew').html(result);
+                    starRating('#rew .star-rating');
                 }
             });
         });
