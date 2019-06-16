@@ -11,6 +11,7 @@ using HelpMe.Models;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using PagedList;
 
 namespace HelpMe.Controllers
 {
@@ -194,15 +195,17 @@ namespace HelpMe.Controllers
                 return HttpNotFound();
             }
 
-            IEnumerable<Review> reviewsPerPages = user.Reviews.Skip((reviewsPage - 1) * reviewsPageSize).Take(reviewsPageSize);
-            var pageInfo = new PageInfo { PageNumber = reviewsPage, PageSize = reviewsPageSize, TotalItems = user.Reviews.Count };
-            var rivm = new ReviewIndexViewModel { PageInfo = pageInfo, Reviews = reviewsPerPages };
-            ViewData["ReviewsPageInfo"] = rivm.PageInfo;
-            ViewData["Reviews"] = rivm.Reviews;
+            //IEnumerable<Review> reviewsPerPages = user.Reviews.Skip((reviewsPage - 1) * reviewsPageSize).Take(reviewsPageSize);
+            //var pageInfo = new PageInfo { PageNumber = reviewsPage, PageSize = reviewsPageSize, TotalItems = user.Reviews.Count };
+            //var rivm = new ReviewIndexViewModel { PageInfo = pageInfo, Reviews = reviewsPerPages };
+            //ViewData["ReviewsPageInfo"] = rivm.PageInfo;
+            ViewData["Reviews"] = user.Reviews;
+            ViewData["ReviewsPage"] = reviewsPage;
+            ViewData["ReviewsPageSize"] = reviewsPageSize;
 
             if (Request.IsAjaxRequest())
             {
-                return PartialView("_DetailsReviewsPage", rivm.Reviews);
+                return PartialView("_DetailsReviewsPage", user.Reviews.ToPagedList(reviewsPage,reviewsPageSize));
             }
 
             return View(user);

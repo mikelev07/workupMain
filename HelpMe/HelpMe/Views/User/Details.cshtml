@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNet.Identity
 @using HelpMe.Helpers
+@using PagedList
 @model HelpMe.Models.User
 
 @{
@@ -213,24 +214,10 @@
                             <div class="boxed-list margin-bottom-60">
 
                                 <ul class="boxed-list-ul">
-                                    @Html.Partial("_DetailsReviewsPage")
+                                    @Html.Partial("_DetailsReviewsPage", (ViewData["Reviews"] as IEnumerable<HelpMe.Models.Review>)
+                                   .ToPagedList((int)ViewData["ReviewsPage"], (int)ViewData["ReviewsPageSize"]))
                                 </ul>
-                                <!-- Pagination -->
-                                <div class="clearfix"></div>
-                                <div class="pagination-container margin-top-40 margin-bottom-10">
-                                    <nav class="pagination">
-                                        <ul>
-                                            @Html.PageLinks(ViewData["ReviewsPageInfo"] as HelpMe.Models.PageInfo, x => Url.Action("Details", new { userName = Model.UserName, reviewsPage = x }))
-                                        </ul>
-                                        @*<ul>
-                                                <li><a href="#" class="ripple-effect current-page">1</a></li>
-                                                <li><a href="#" class="ripple-effect">2</a></li>
-                                                <li class="pagination-arrow"><a href="#" class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-right"></i></a></li>
-                                            </ul>*@
-                                    </nav>
-                                </div>
-                                <div class="clearfix"></div>
-                                <!-- Pagination / End -->
+                                
 
                             </div>
                         </div>
@@ -299,7 +286,7 @@
                     <div class="freelancer-indicators">
 
                         <!-- Indicator -->
-                        @{ 
+                        @{
                             var total = Model.Customs.Count();
                             int procent = 0;
                             if (total > 0)
@@ -646,4 +633,4 @@
             });
         }
     </script>
-    }
+}
