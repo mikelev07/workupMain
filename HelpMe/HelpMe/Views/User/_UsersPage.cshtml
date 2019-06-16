@@ -64,10 +64,10 @@
                 <!-- Rating -->
 
                 <div class="task-tags" style="margin-left:40px">
-                    <span>@i.TaskCategories.Take(1).FirstOrDefault().Name</span>
+                    @*<span>@i.TaskCategories.Take(1).FirstOrDefault().Name</span>
                     <div class="input-with-icon-left" title="Ваш никнейм" data-tippy-placement="bottom">
 
-                    </div>
+                    </div>*@
                     @foreach (var tag in i.TaskCategories.Take(1))
                     {
                         <span title="+ 7 дисциплин">@tag.Name</span>
