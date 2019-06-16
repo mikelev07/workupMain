@@ -69,7 +69,8 @@ namespace HelpMe.Helpers
                 // например, добавляя класс
                 if (i == pageInfo.PageNumber)
                 {
-                    tag.AddCssClass("ripple-effect current-page");
+                    //tag.AddCssClass("ripple-effect current-page");
+                    tag.AddCssClass("current-page");
                 }
                 tag.AddCssClass("ripple-effect");
                 tagLi.InnerHtml = tag.ToString();

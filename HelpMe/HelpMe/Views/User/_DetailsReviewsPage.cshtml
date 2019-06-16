@@ -1,0 +1,19 @@
+﻿@model  IEnumerable<HelpMe.Models.Review>
+@foreach (var rew in Model)
+{
+    <li>
+        <div class="boxed-list-item">
+            <!-- Content -->
+            <div class="item-content">
+                <h4>Отзыв <span>@rew.User.UserName</span></h4>
+                <div class="item-details margin-top-10">
+                    <div class="star-rating" data-rating="@rew.Rating.0 "></div>
+                    <div class="detail-item"><i class="icon-material-outline-date-range"></i> @rew.Date.ToShortDateString()</div>
+                </div>
+                <div class="item-description">
+                    <p> @rew.Description </p>
+                </div>
+            </div>
+        </div>
+    </li>
+}

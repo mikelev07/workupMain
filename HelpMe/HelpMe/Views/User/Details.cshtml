@@ -213,30 +213,15 @@
                             <div class="boxed-list margin-bottom-60">
 
                                 <ul class="boxed-list-ul">
-                                    @foreach (var r in Model.Reviews)
-                                    {
-                                        <li>
-                                            <div class="boxed-list-item">
-                                                <!-- Content -->
-                                                <div class="item-content">
-                                                    <h4>Отзыв <span>@r.User.UserName</span></h4>
-                                                    <div class="item-details margin-top-10">
-                                                        <div class="star-rating" data-rating="@r.Rating.0 "></div>
-                                                        <div class="detail-item"><i class="icon-material-outline-date-range"></i> @r.Date.ToShortDateString()</div>
-                                                    </div>
-                                                    <div class="item-description">
-                                                        <p> @r.Description </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    }
+                                    @Html.Partial("_DetailsReviewsPage")
                                 </ul>
                                 <!-- Pagination -->
                                 <div class="clearfix"></div>
                                 <div class="pagination-container margin-top-40 margin-bottom-10">
                                     <nav class="pagination">
-                                        @Html.PageLinks(ViewData["ReviewsPageInfo"] as HelpMe.Models.PageInfo, x => Url.Action("Details", new { page = x }))
+                                        <ul>
+                                            @Html.PageLinks(ViewData["ReviewsPageInfo"] as HelpMe.Models.PageInfo, x => Url.Action("Details", new { userName = Model.UserName, reviewsPage = x }))
+                                        </ul>
                                         @*<ul>
                                                 <li><a href="#" class="ripple-effect current-page">1</a></li>
                                                 <li><a href="#" class="ripple-effect">2</a></li>
@@ -609,3 +594,56 @@
         </div>
     </div>
 </div>
+
+@section scripts{
+    <script type="text/javascript">
+        function CallIndex() {
+            page = 0;
+            var nickName = $("#autocomplete-input").val();
+            var taskListId = $("#TaskList").val();
+            if (!taskListId) {
+                taskListId = 0;
+            }
+            var skillListId = $("#SkillList").val();
+            if (!skillListId) {
+                skillListId = 0;
+            }
+            var worksCount = $("#work-range").val();
+            var isOnline = $("#tag1").is(':checked');
+            var isNotBusy = $("#tag2").is(':checked');
+            var sortingId = $("#sortField").val();
+            $.ajax({
+                type: "GET",
+                url: "/User/Index",
+                data: {
+                    'id': page,
+                    'name': nickName,
+                    'taskId': taskListId,
+                    'skillId': skillListId,
+                    'worksCount': worksCount,
+                    'isOnline': isOnline,
+                    'isNotBusy': isNotBusy,
+                    'sortId': sortingId
+                },
+                success: function (data) {
+                    $('#freelancers-container').empty();
+                    $('#freelancers-container').html(data);
+                    $.ajax({
+                        type: 'GET',
+                        url: "/User/GetUsersCount",
+                        success: function (data) {
+                            if (data > pageSize) {
+                                $("#load-more-button").show();
+                            }
+                            else {
+                                $("#load-more-button").hide();
+                            }
+                            $("#found-users-count").html("Найдено исполнителей: " + data);
+                        }
+                    });
+                },
+                error: function (data) { alert(data.responseText); }
+            });
+        }
+    </script>
+    }
