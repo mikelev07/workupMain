@@ -188,38 +188,50 @@ namespace HelpMe.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var user = await db.Users.Include(u=>u.Customs).Include(u => u.Reviews)
-                .Include(u => u.TaskCategories).Include(u => u.Skills).SingleAsync(u => u.UserName == userName);
+            var user = await db.Users
+                .Include(u => u.Customs)
+                .Include(u => u.Reviews)
+                .Include(u => u.TaskCategories)
+                .Include(u => u.Skills)
+                .SingleAsync(u => u.UserName == userName);
 
             if (user == null)
             {
                 return HttpNotFound();
             }
-            
-            ViewData["UserName"] = user.UserName;
 
             ViewData["ReviewsPage"] = reviewsPage ?? ViewData["ReviewsPage"] ?? 1;
-            ViewData["ReviewsPageSize"] = reviewsPageSize;
-            
             ViewData["CustomsPage"] = customsPage ?? ViewData["CustomsPage"] ?? 1;
-            ViewData["CustomsPageSize"] = customsPageSize;
-
-            var customs = user.Customs?.OrderByDescending(c => c.EndingDate);
-            var reviews = user.Reviews?.OrderByDescending(r=>r.Date);
 
             if (Request.IsAjaxRequest())
             {
-                if (customsPaginated==true)
+                if (customsPaginated == true)
                 {
-                    int page = customsPage ?? 1;
-                    return PartialView("_DetailsCustomsPage", customs.ToPagedList(page, customsPageSize));
+                    return PartialView("_DetailsCustomsPage",
+                        user.Customs?.OrderByDescending(c => c.EndingDate)
+                        .ToPagedList((int)ViewData["CustomsPage"], customsPageSize));
                 }
-                if (reviewsPaginated==true)
+                if (reviewsPaginated == true)
                 {
-                    int page = reviewsPage ?? 1;
-                    return PartialView("_DetailsReviewsPage", reviews.ToPagedList(page, reviewsPageSize));
+                    return PartialView("_DetailsReviewsPage",
+                        user.Reviews?.OrderByDescending(r => r.Date)
+                        .ToPagedList((int)ViewData["ReviewsPage"], reviewsPageSize));
                 }
             }
+
+            customsPaginated = null;
+            customsPage = null;
+            reviewsPaginated = null;
+            reviewsPage = null;
+            
+
+            ViewData["UserName"] = user.UserName;
+
+            ViewData["CustomsPage"] = 1;
+            ViewData["CustomsPageSize"] = customsPageSize;
+
+            ViewData["ReviewsPage"] = 1;
+            ViewData["ReviewsPageSize"] = reviewsPageSize;
 
             return View(user);
 
