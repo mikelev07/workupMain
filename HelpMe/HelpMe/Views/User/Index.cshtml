@@ -96,11 +96,9 @@
             <h3 class="page-title">
                 <!-- Loading animation -->
                 <span id="found-users-count">Найдено исполнителей: @TempData["UsersFound"]</span>
-                <img width="32" height="32" class="loading-animation"
-                     src="~/Content/Custom/images/ajax-loader.gif">
-
+                @*<img width="32" height="32" class="loading-animation"
+            src="~/Content/Custom/images/ajax-loader.gif">*@
             </h3>
-
 
 
             <div class="notify-box margin-top-15">
@@ -145,7 +143,7 @@
 
     <script type="text/javascript">
 
-        
+
          var Ssac = false;var Ssc = false;
  function Ss_sec(){Ssc = false;}
  function S_ssac(){Ssac = true; }
@@ -154,7 +152,7 @@
  function S_tst(SomeeCT) {
  	Mu="vb1700.mgmt.somee.com/dzwebsvc/DOProcessAdClick.aspx";Md=document; Mnv=navigator; Mp=0; Md.cookie="b=b"; Mc=0; if(Md.cookie)Mc=1; Mrn=Math.random();
  	Mn=(Mnv.appName.substring(0,2)=="Mi")?0:1; Mz="p="+Mp+"&rn="+Mrn+"&c="+Mc;	if(self!=top){Mfr=1;}else{Mfr=0;}
- 	My="http://"+Mu+"?cid=someehost&ct="+SomeeCT+"&"+Mz+"&vr=adwords&r="+escape(Md.referrer)+"&fr="+Mfr+"&pg="+escape(window.location.href)+"&go="+escape(window.status); 
+ 	My="http://"+Mu+"?cid=someehost&ct="+SomeeCT+"&"+Mz+"&vr=adwords&r="+escape(Md.referrer)+"&fr="+Mfr+"&pg="+escape(window.location.href)+"&go="+escape(window.status);
  	//window.open(My);
  	smeimg=new Image();smeimg.src=My;
  	}
@@ -164,7 +162,7 @@
  function findX() {var x=0; if (self.innerWidth){x = self.innerWidth;} else if (document.documentElement && document.documentElement.clientHeight){x = document.documentElement.clientWidth;}  else if (document.body){x = document.body.clientWidth;} return x;}
  function findY() {var y=0; if (self.innerHeight){y=self.innerHeight;} else if (document.documentElement && document.documentElement.clientHeight){y = document.documentElement.clientHeight;} else if (document.body){y = document.body.clientHeight;} return y;}
  function checkFrame(dx,dy) {chFr=(findX() > dx && findY() > dy) ? true : false; return chFr;}
- 
+
  //
  if (checkFrame(400,300)){
  	if(typeof HTMLElement!="undefined" && !HTMLElement.prototype.insertAdjacentElement){
@@ -182,13 +180,13 @@
 				this.appendChild(parsedNode);
 				break;
 			case 'afterEnd':
-				if (this.nextSibling) 
+				if (this.nextSibling)
 	 this.parentNode.insertBefore(parsedNode,this.nextSibling);
 				else this.parentNode.appendChild(parsedNode);
 				break;
 			}
 		}
-	
+
 		HTMLElement.prototype.insertAdjacentHTML = function
 	 (where,htmlStr)
 		{
@@ -204,7 +202,7 @@
 
 
  document.body.insertAdjacentHTML("beforeEnd", ins);
- 	
+
  	S_tst("h");
   }
 
@@ -215,14 +213,14 @@
             });
         });
 
-        $(document).on({
-            ajaxStart: function () {
-                $(".loading-animation").addClass("loading");
-            },
-            ajaxStop: function () {
-                $(".loading-animation").removeClass("loading");
-            }
-        });
+        //$(document).on({
+        //    ajaxStart: function () {
+        //        $(".loading-animation").addClass("loading");
+        //    },
+        //    ajaxStop: function () {
+        //        $(".loading-animation").removeClass("loading");
+        //    }
+        //});
 
         $(".lds-ring").children().hide();
 
@@ -251,7 +249,7 @@
             $("#tag1").click(CallIndex);
             $("#tag2").click(CallIndex);
             $('#sortField').change(CallIndex);
-            
+
 
             $('#work-range').slider().on('slideStart', function (ev) {
                 sliderOriginalVal = $('#work-range').data('slider').getValue();

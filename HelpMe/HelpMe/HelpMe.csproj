@@ -532,6 +532,7 @@
     <Content Include="Views\Manage\Likeit.cshtml" />
     <Content Include="Views\Custom\_CustomsPage.cshtml" />
     <Content Include="Views\User\_DetailsReviewsPage.cshtml" />
+    <Content Include="Views\User\_DetailsCustomsPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

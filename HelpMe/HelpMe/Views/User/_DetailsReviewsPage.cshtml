@@ -24,7 +24,7 @@
 <div class="pagination-container margin-top-40 margin-bottom-10">
     <nav class="pagination">
         <ul>
-            @Html.PagedListPager(Model, x => Url.Action("Details", new { userName = ViewData["UserName"], reviewsPaginated = true, reviewsPage = x}))
+            @Html.PagedListPager(Model, x => Url.Action("Details", new { userName = Model.FirstOrDefault().Owner.UserName, reviewsPaginated = true, reviewsPage = x}))
         </ul>
     </nav>
 </div>
