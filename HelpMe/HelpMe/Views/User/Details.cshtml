@@ -133,11 +133,11 @@
                             <div class="boxed-list margin-bottom-60">
 
                                 <ul id="cust" class="boxed-list-ul">
-                                    @if (ViewData["Customs"] != null)
+                                    @if (Model.Customs.Count()>0)
                                     {
-                                        Html.Partial("_DetailsCustomsPage", (ViewData["Customs"] as IEnumerable<HelpMe.Models.CustomViewModel> ?? Enumerable.Empty<HelpMe.Models.CustomViewModel>())
-                                       .ToPagedList((int)ViewData["CustomsPage"], (int)ViewData["CustomsPageSize"]));
-                                                            }
+                                        Html.Partial("_DetailsCustomsPage", Model.Customs.OrderByDescending(c => c.EndingDate).ToPagedList(
+                                            (int)ViewData["CustomsPage"], (int)ViewData["CustomsPageSize"]));
+                                    }
 
                                     @*<li>
                                             <div class="boxed-list-item">
@@ -206,10 +206,10 @@
                             <div class="boxed-list margin-bottom-60">
 
                                 <ul id="rew" class="boxed-list-ul">
-                                    @if (ViewData["Reviews"] != null)
+                                    @if (Model.Reviews.Count()>0)
                                     {
-                                        @Html.Partial("_DetailsReviewsPage", (ViewData["Reviews"] as IEnumerable<HelpMe.Models.Review>)
-.ToPagedList((int)ViewData["ReviewsPage"], (int)ViewData["ReviewsPageSize"]));
+                                        @Html.Partial("_DetailsReviewsPage", Model.Reviews.OrderByDescending(r => r.Date).ToPagedList(
+                                       (int)ViewData["ReviewsPage"], (int)ViewData["ReviewsPageSize"]));
                                     }
 
                                 </ul>
