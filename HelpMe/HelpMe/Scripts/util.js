@@ -1,4 +1,6 @@
-﻿function starRating(ratingElem) {
+﻿var countAttaches = 0;
+
+function starRating(ratingElem) {
 
     $(ratingElem).each(function () {
 
@@ -163,39 +165,55 @@ $(function () {
         });
     });
 
-
-    $('#uploadAttache').change(function () {
-        var file;
-        var fileName;
-        var filesArray = $('#uploadAttache')[0].files;
-        //alert(filesArray.length)
-        var fileBuffer = [];
-        Array.prototype.push.apply(fileBuffer, filesArray);
-
-        if (finalFileBuffer.length <= 0) {
-            for (var i = 0; i < filesArray.length; i++) {
-                file = $('#uploadAttache')[0].files[i].name;
-                if (file.length > 3)
-                    fileName = file.substring(0, 3) + '.' + file.substring(file.lastIndexOf('.') + 1)
-                $('#fileUp').append('<span id="' + i + '" class="keyword"><span class="keyword-remove"></span><span class="keyword-text">' + fileName + '</span></span>');
-            }
-            finalFileBuffer = fileBuffer;
-            lastIndexFile = fileBuffer.length //2
-        } else {
-            finalFileBuffer = finalFileBuffer.concat(fileBuffer);
-           
-            for (var i = lastIndexFile; i < finalFileBuffer.length; i++) {
-                file = finalFileBuffer[i].name;
-                if (file.length > 3)
-                    fileName = file.substring(0, 3) + '.' + file.substring(file.lastIndexOf('.') + 1)
-                $('#fileUp').append('<span id="' + i + '" class="keyword"><span class="keyword-remove"></span><span class="keyword-text">' + fileName + '</span></span>');
-            }
-            lastIndexFile = finalFileBuffer.length; //4
-        }
-
    
-        $('#fileUp').show();
-        $('.message-reply').css('margin-top', "5px");
+    $('#uploadAttache').change(function () {
+        if (countAttaches < 5) {
+            var file;
+            var fileName;
+            var filesArray = $('#uploadAttache')[0].files;
+            //alert(filesArray.length)
+            var arra = Array.prototype.slice.call(filesArray)
+            var cuttext = arra.slice(0, 5);
+           // var newArr = filesArray.slice(0, 5)
+            var fileBuffer = [];
+            Array.prototype.push.apply(fileBuffer, cuttext);
+            if (finalFileBuffer.length <= 0) {
+                for (var i = 0; i < filesArray.length && i < 5; i++) {
+
+                   // if (i == 5) break;
+
+                    file = $('#uploadAttache')[0].files[i].name;
+                    if (file.length > 3)
+                        fileName = file.substring(0, 3) + '.' + file.substring(file.lastIndexOf('.') + 1)
+                    $('#fileUp').append('<span id="' + i + '" class="keyword"><span class="keyword-remove"></span><span class="keyword-text">' + fileName + '</span></span>');
+                    countAttaches++;
+                }
+              //  alert(countAttaches)
+                finalFileBuffer = fileBuffer;
+                lastIndexFile = fileBuffer.length //2
+            } else {
+                finalFileBuffer = finalFileBuffer.concat(fileBuffer);
+
+                for (var i = lastIndexFile; i < finalFileBuffer.length && i < 5; i++) {
+                   // if (i == 5) break;
+                    file = finalFileBuffer[i].name;
+                    if (file.length > 3)
+                        fileName = file.substring(0, 3) + '.' + file.substring(file.lastIndexOf('.') + 1)
+                    $('#fileUp').append('<span id="' + i + '" class="keyword"><span class="keyword-remove"></span><span class="keyword-text">' + fileName + '</span></span>');
+                    countAttaches++;
+                }
+                lastIndexFile = finalFileBuffer.length; //4
+            }
+
+
+            $('#fileUp').show();
+            $('.message-reply').css('margin-top', "5px");
+
+        } else {
+            Snackbar.show({
+                text: 'Вы не можете добавлять более 5 вложений!'
+            });
+        }
     });
 
 
@@ -380,16 +398,16 @@ $(function () {
                 if (files.length > 0) {
                     if (window.FormData !== undefined) {
                         var data = new FormData();
-                        if (finalFileBuffer.length > 0) {
-                            for (var x = 0; x < finalFileBuffer.length; x++) {
+                        if (finalFileBuffer.length > 0 && finalFileBuffer.length < 5) {
+                            for (var x = 0; x < finalFileBuffer.length && x < 5; x++) {
                                 data.append("file" + x, finalFileBuffer[x]);
                             }
                         } else {
-                            for (var x = 0; x < files.length; x++) {
+                            for (var x = 0; x < files.length && x < 5; x++) {
                                 data.append("file" + x, files[x]);
                             }
                         }
-                      
+                       
                         $.ajax({
                             xhr: function () {
                                 var xhr = new window.XMLHttpRequest();
@@ -430,6 +448,7 @@ $(function () {
                                 document.getElementById("uploadAttache").value = "";
                                 finalFileBuffer = [];
                                 fileBuffer = [];
+                                countAttaches = 0;
                             },
                             error: function (xhr, status, p3) {
                                 alert(xhr.responseText);
@@ -476,11 +495,11 @@ $(function () {
                         if (window.FormData !== undefined) {
                             var data = new FormData();
                             if (finalFileBuffer.length > 0) {
-                                for (var x = 0; x < finalFileBuffer.length; x++) {
+                                for (var x = 0; x < finalFileBuffer.length && x < 5; x++) {
                                     data.append("file" + x, finalFileBuffer[x]);
                                 }
                             } else {
-                                for (var x = 0; x < files.length; x++) {
+                                for (var x = 0; x < files.length && x < 5; x++) {
                                     data.append("file" + x, files[x]);
                                 }
                             }
@@ -525,6 +544,7 @@ $(function () {
                                     document.getElementById("uploadAttache").value = "";
                                     finalFileBuffer = [];
                                     fileBuffer = [];
+                                    countAttaches = 0;
                                 },
                                 error: function (xhr, status, p3) {
                                     alert(xhr.responseText);
