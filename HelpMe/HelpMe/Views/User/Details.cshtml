@@ -135,7 +135,7 @@
                                 <ul id="cust" class="boxed-list-ul">
                                     @if (Model.Customs.Count()>0)
                                     {
-                                        Html.Partial("_DetailsCustomsPage", Model.Customs.OrderByDescending(c => c.EndingDate).ToPagedList(
+                                        Html.Partial("_DetailsCustomsPage", Model.Customs.Where(c=>c.Status==HelpMe.Models.CustomStatus.Close).OrderByDescending(c => c.EndingDate).ToPagedList(
                                             (int)ViewData["CustomsPage"], (int)ViewData["CustomsPageSize"]));
                                     }
 

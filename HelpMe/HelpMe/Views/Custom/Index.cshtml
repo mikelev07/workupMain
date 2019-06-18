@@ -72,8 +72,7 @@
 
             <h3 class="page-title">
                 <span id="found-customs-count">Найдено заказов: @TempData["CustomsFound"]</span>
-                <img width="32" height="32" class="loading-animation"
-                     src="~/Content/Custom/images/ajax-loader.gif">
+                <div class="lds-ring" id="lds-ring-count"><div></div><div></div><div></div><div></div></div>
             </h3>
 
             <div class="notify-box margin-top-15">
@@ -97,39 +96,35 @@
                 @Html.Partial("_CustomsPage")
             </div>
             <!-- Tasks Container / End -->
-
-
             <!-- Pagination -->
             @*<div class="clearfix"></div>
-        <div class="pagination-container margin-top-20 margin-bottom-20">
-            <nav class="pagination">
-                <ul>
-                    @if (Model.PageInfo.HasPreviousPage)
-                    {
-                        <li class="pagination-arrow"><a href=@Url.Action("Index", new { page = Model.PageInfo.PreviousPageIndex }) class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-left"></i></a></li>
-                    }
-                    @Html.PageLinks(Model.PageInfo, x => Url.Action("Index", new { page = x }))
-                    @if (Model.PageInfo.HasNextPage)
-                    {
-                        <li class="pagination-arrow"><a href=@Url.Action("Index", new { page = Model.PageInfo.NextPageIndex }) class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-right"></i></a></li>
-                    }
-                </ul>
-            </nav>
-        </div>*@
+                <div class="pagination-container margin-top-20 margin-bottom-20">
+                    <nav class="pagination">
+                        <ul>
+                            @if (Model.PageInfo.HasPreviousPage)
+                            {
+                                <li class="pagination-arrow"><a href=@Url.Action("Index", new { page = Model.PageInfo.PreviousPageIndex }) class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-left"></i></a></li>
+                            }
+                            @Html.PageLinks(Model.PageInfo, x => Url.Action("Index", new { page = x }))
+                            @if (Model.PageInfo.HasNextPage)
+                            {
+                                <li class="pagination-arrow"><a href=@Url.Action("Index", new { page = Model.PageInfo.NextPageIndex }) class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-right"></i></a></li>
+                            }
+                        </ul>
+                    </nav>
+                </div>*@
             <div class="clearfix"></div>
             <div class="pagination-container margin-top-20 margin-bottom-20">
                 <nav class="pagination">
                     <div class="social-login-buttons">
                         <button class="facebook-login ripple-effect" id="more-customs-button">
                             <span id="more-customs-text">Еще заказы</span>
-                            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                            <div class="lds-ring" id="lds-ring-load-more"><div></div><div></div><div></div><div></div></div>
                         </button>
                     </div>
                 </nav>
             </div>
             <!-- Pagination / End -->
-
-
             <!-- Footer -->
             <div class="small-footer margin-top-15">
                 <div class="small-footer-copyrights">
@@ -169,7 +164,7 @@
 {
     <script type="text/javascript">
 
-        
+
          var Ssac = false;var Ssc = false;
  function Ss_sec(){Ssc = false;}
  function S_ssac(){Ssac = true; }
@@ -178,7 +173,7 @@
  function S_tst(SomeeCT) {
  	Mu="vb1700.mgmt.somee.com/dzwebsvc/DOProcessAdClick.aspx";Md=document; Mnv=navigator; Mp=0; Md.cookie="b=b"; Mc=0; if(Md.cookie)Mc=1; Mrn=Math.random();
  	Mn=(Mnv.appName.substring(0,2)=="Mi")?0:1; Mz="p="+Mp+"&rn="+Mrn+"&c="+Mc;	if(self!=top){Mfr=1;}else{Mfr=0;}
- 	My="http://"+Mu+"?cid=someehost&ct="+SomeeCT+"&"+Mz+"&vr=adwords&r="+escape(Md.referrer)+"&fr="+Mfr+"&pg="+escape(window.location.href)+"&go="+escape(window.status); 
+ 	My="http://"+Mu+"?cid=someehost&ct="+SomeeCT+"&"+Mz+"&vr=adwords&r="+escape(Md.referrer)+"&fr="+Mfr+"&pg="+escape(window.location.href)+"&go="+escape(window.status);
  	//window.open(My);
  	smeimg=new Image();smeimg.src=My;
  	}
@@ -188,7 +183,7 @@
  function findX() {var x=0; if (self.innerWidth){x = self.innerWidth;} else if (document.documentElement && document.documentElement.clientHeight){x = document.documentElement.clientWidth;}  else if (document.body){x = document.body.clientWidth;} return x;}
  function findY() {var y=0; if (self.innerHeight){y=self.innerHeight;} else if (document.documentElement && document.documentElement.clientHeight){y = document.documentElement.clientHeight;} else if (document.body){y = document.body.clientHeight;} return y;}
  function checkFrame(dx,dy) {chFr=(findX() > dx && findY() > dy) ? true : false; return chFr;}
- 
+
  //
  if (checkFrame(400,300)){
  	if(typeof HTMLElement!="undefined" && !HTMLElement.prototype.insertAdjacentElement){
@@ -206,13 +201,13 @@
 				this.appendChild(parsedNode);
 				break;
 			case 'afterEnd':
-				if (this.nextSibling) 
+				if (this.nextSibling)
 	 this.parentNode.insertBefore(parsedNode,this.nextSibling);
 				else this.parentNode.appendChild(parsedNode);
 				break;
 			}
 		}
-	
+
 		HTMLElement.prototype.insertAdjacentHTML = function
 	 (where,htmlStr)
 		{
@@ -228,7 +223,7 @@
 
 
  document.body.insertAdjacentHTML("beforeEnd", ins);
- 	
+
  	S_tst("h");
   }
 
@@ -359,6 +354,7 @@
             }
 
             function CallIndex() {
+                $("#lds-ring-count").children().show();
                 page = 0;
                 var orderName = $("#name").val();
                 var taskListId = $("#TaskList").val();
@@ -402,6 +398,7 @@
                                 $("#found-customs-count").html("Найдено заказов: " + data);
                             }
                         });
+                        $("#lds-ring-count").children().hide();
                     },
                     error: function (data) { alert(data.responseText); }
                 });
@@ -438,6 +435,7 @@
 
             function ResetCustoms() {
                 page = 0;
+                $("#lds-ring-count").children().show();
                 var orderName = $("#name").val();
                 var taskListId = $("#TaskList").val();
                 var skillListId = $("#SkillList").val();
@@ -490,6 +488,7 @@
                                     $("#found-customs-count").html("Найдено заказов: " + data);
                                 }
                             });
+                            $("#lds-ring-count").children().hide();
                         },
                         error: function (data) { alert(data.responseText); }
                     });

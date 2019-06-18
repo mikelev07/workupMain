@@ -300,54 +300,62 @@ img {
 	max-width: 100%;
 }
 
-#load-more-button {
-    cursor: pointer;
+#more-customs-button {
+	cursor: pointer;
 }
 
-    #load-more-button:hover .lds-ring div {
-        border-color: #fff transparent transparent transparent;
-    }
+	#more-customs-button:hover .lds-ring div {
+		border-color: #fff transparent transparent transparent;
+	}
+
+#load-more-button {
+	cursor: pointer;
+}
+
+	#load-more-button:hover .lds-ring div {
+		border-color: #fff transparent transparent transparent;
+	}
 
 .lds-ring {
-    display: inline-block;
-    position: relative;
-    width: 18px;
-    height: 18px;
+	display: inline-block;
+	position: relative;
+	width: 18px;
+	height: 18px;
 }
 
-    .lds-ring div {
-        box-sizing: border-box;
-        display: block;
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        margin: 2px;
-        border: 2px solid #28b661;
-        border-radius: 50%;
-        animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-        border-color: #28b661 transparent transparent transparent;
-    }
+	.lds-ring div {
+		box-sizing: border-box;
+		display: block;
+		position: absolute;
+		width: 20px;
+		height: 20px;
+		margin: 2px;
+		border: 2px solid #28b661;
+		border-radius: 50%;
+		animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+		border-color: #28b661 transparent transparent transparent;
+	}
 
-        .lds-ring div:nth-child(1) {
-            animation-delay: -0.45s;
-        }
+		.lds-ring div:nth-child(1) {
+			animation-delay: -0.45s;
+		}
 
-        .lds-ring div:nth-child(2) {
-            animation-delay: -0.3s;
-        }
+		.lds-ring div:nth-child(2) {
+			animation-delay: -0.3s;
+		}
 
-        .lds-ring div:nth-child(3) {
-            animation-delay: -0.15s;
-        }
+		.lds-ring div:nth-child(3) {
+			animation-delay: -0.15s;
+		}
 
 @keyframes lds-ring {
-    0% {
-        transform: rotate(0deg);
-    }
+	0% {
+		transform: rotate(0deg);
+	}
 
-    100% {
-        transform: rotate(360deg);
-    }
+	100% {
+		transform: rotate(360deg);
+	}
 }
 
 /* ---------------------------------- */
@@ -4539,20 +4547,20 @@ span.blog-item-tag {
 
 /* Enable Filter Button */
 .enable-filters-button {
-    position: relative;
-    left: 48px;
-    top: 0px;
-    z-index: 100;
-    background-color: #fff;
-    color: #333;
-    border-radius: 0 4px 4px 0;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    height: 48px;
-    line-height: 48px;
-    padding: 0;
-    transition: 0.3s;
-    min-width: 126px;
-    text-align: center;
+	position: relative;
+	left: 48px;
+	top: 0px;
+	z-index: 100;
+	background-color: #fff;
+	color: #333;
+	border-radius: 0 4px 4px 0;
+	box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+	height: 48px;
+	line-height: 48px;
+	padding: 0;
+	transition: 0.3s;
+	min-width: 126px;
+	text-align: center;
 }
 
 	.enable-filters-button span {
@@ -5794,8 +5802,8 @@ span.blog-item-tag {
 
 	.freelancer-overview .freelancer-avatar img {
 		width: 100%;
-        min-width:100px;
-        height:100px;
+		min-width: 100px;
+		height: 100px;
 		border-radius: 50%;
 		cursor: pointer;
 	}
@@ -7416,9 +7424,9 @@ table.basic-table {
 	font-weight: 500;
 }
 
-    .verified-badge.busy {
-        background-color: red;
-    }
+	.verified-badge.busy {
+		background-color: red;
+	}
 
 
 	.verified-badge.not-busy:before {
@@ -7431,15 +7439,15 @@ table.basic-table {
 		line-height: 27px;
 	}
 
-    .verified-badge.busy:before {
-        content: "\e904";
-        font-family: "Material-Icons";
-        font-size: 16px;
-        color: #fff;
-        position: relative;
-        top: 0px;
-        line-height: 27px;
-    }
+	.verified-badge.busy:before {
+		content: "\e904";
+		font-family: "Material-Icons";
+		font-size: 16px;
+		color: #fff;
+		position: relative;
+		top: 0px;
+		line-height: 27px;
+	}
 
 
 
@@ -7488,39 +7496,39 @@ table.basic-table {
 
 
 .not-verified-badge-with-title {
-    position: relative;
-    height: 26px;
-    display: flex;
-    top: -1px;
-    color: #fff;
-    font-weight: 500;
-    font-size: 14px;
-    background-color: #fa0000;
-    text-align: center;
-    z-index: 10;
-    font-weight: 500;
-    border-radius: 4px;
-    padding: 0 8px 0 0;
-    margin: 0;
-    overflow: hidden;
-    padding-left: 34px;
-    line-height: 27px;
+	position: relative;
+	height: 26px;
+	display: flex;
+	top: -1px;
+	color: #fff;
+	font-weight: 500;
+	font-size: 14px;
+	background-color: #fa0000;
+	text-align: center;
+	z-index: 10;
+	font-weight: 500;
+	border-radius: 4px;
+	padding: 0 8px 0 0;
+	margin: 0;
+	overflow: hidden;
+	padding-left: 34px;
+	line-height: 27px;
 }
 
-    .not-verified-badge-with-title:before {
-        content: "\e902";
-        font-family: "Feather-Icons";
-        font-size: 16px;
-        color: #fff;
-        position: absolute;
-        top: 0;
-        left: 0;
-        line-height: 26px;
-        height: 26px;
-        width: 26px;
-        display: inline-block;
-        background-color: #d70303;
-    }
+	.not-verified-badge-with-title:before {
+		content: "\e902";
+		font-family: "Feather-Icons";
+		font-size: 16px;
+		color: #fff;
+		position: absolute;
+		top: 0;
+		left: 0;
+		line-height: 26px;
+		height: 26px;
+		width: 26px;
+		display: inline-block;
+		background-color: #d70303;
+	}
 
 
 /* ---------------------------------- */
@@ -11949,56 +11957,57 @@ img.mfp-img {
 	display: flex;
 	width: calc(100% + 20px);
 }
-.pagination-container>nav.pagination {
-    width: 100%;
+
+.pagination-container > nav.pagination {
+	width: 100%;
 }
 
-	.social-login-buttons button {
-		flex: 1;
-		text-align: center;
-		border: 1px solid #333;
-		color: #333;
-		border-radius: 4px;
-		margin-top: 10px;
-		margin-right: 20px;
-		font-size: 14px;
-		padding: 9px 5px;
-		max-width: 50%;
-		transition: 0.3s;
-        margin: 0 auto;
+.social-login-buttons button {
+	flex: 1;
+	text-align: center;
+	border: 1px solid #333;
+	color: #333;
+	border-radius: 4px;
+	margin-top: 10px;
+	margin-right: 20px;
+	font-size: 14px;
+	padding: 9px 5px;
+	max-width: 50%;
+	transition: 0.3s;
+	margin: 0 auto;
+}
+
+	.social-login-buttons button:hover {
+		background-color: #333;
+		color: #fff;
 	}
 
-		.social-login-buttons button:hover {
-			background-color: #333;
-			color: #fff;
-		}
-
-		.social-login-buttons button i {
-			position: relative;
-			top: 1px;
-			margin-right: 7px;
-			font-size: 15px;
-		}
-
-	.social-login-buttons .facebook-login {
-		border-color: #28b661;
-		color: #28b661;
+	.social-login-buttons button i {
+		position: relative;
+		top: 1px;
+		margin-right: 7px;
+		font-size: 15px;
 	}
 
-		.social-login-buttons .facebook-login:hover {
-			background-color: #28b661;
-			color: #fff;
-		}
+.social-login-buttons .facebook-login {
+	border-color: #28b661;
+	color: #28b661;
+}
 
-	.social-login-buttons .google-login {
-		border-color: #dd4b39;
-		color: #dd4b39;
+	.social-login-buttons .facebook-login:hover {
+		background-color: #28b661;
+		color: #fff;
 	}
 
-		.social-login-buttons .google-login:hover {
-			background-color: #dd4b39;
-			color: #fff;
-		}
+.social-login-buttons .google-login {
+	border-color: #dd4b39;
+	color: #dd4b39;
+}
+
+	.social-login-buttons .google-login:hover {
+		background-color: #dd4b39;
+		color: #fff;
+	}
 
 @media (max-width: 768px) {
 	.social-login-separator {

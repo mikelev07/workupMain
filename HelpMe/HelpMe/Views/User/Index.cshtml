@@ -48,32 +48,32 @@
 
                 <!-- Tags -->
                 @*<div class="sidebar-widget">
-                    <h3>Дополнительно</h3>
-                    <div class="tags-container">
-                        <div class="tag">
-                            <input type="checkbox" id="tag1" autocomplete="off" />
-                            <label for="tag1">Сейчас онлайн</label>
-                        </div>
-                        <div class="tag">
-                            <input type="checkbox" id="tag2" autocomplete="off" />
-                            <label for="tag2">Не занят</label>
-                        </div>
-                        
-                        <div class="tag">
-                            <input type="checkbox" id="tag3" />
-                            <label for="tag3">Помощь онлайн</label>
-                        </div>
-                        <div class="tag">
-                            <input type="checkbox" id="tag4" />
-                            <label for="tag4">Скрывает боль</label>
-                        </div>
-                        
+                        <h3>Дополнительно</h3>
+                        <div class="tags-container">
+                            <div class="tag">
+                                <input type="checkbox" id="tag1" autocomplete="off" />
+                                <label for="tag1">Сейчас онлайн</label>
+                            </div>
+                            <div class="tag">
+                                <input type="checkbox" id="tag2" autocomplete="off" />
+                                <label for="tag2">Не занят</label>
+                            </div>
 
-                    </div>
-                    <div class="clearfix"></div>
+                            <div class="tag">
+                                <input type="checkbox" id="tag3" />
+                                <label for="tag3">Помощь онлайн</label>
+                            </div>
+                            <div class="tag">
+                                <input type="checkbox" id="tag4" />
+                                <label for="tag4">Скрывает боль</label>
+                            </div>
 
 
-                </div>*@
+                        </div>
+                        <div class="clearfix"></div>
+
+
+                    </div>*@
                 <div class="clearfix"></div>
 
                 <div class="margin-bottom-40"></div>
@@ -97,14 +97,15 @@
                 <!-- Loading animation -->
                 <span id="found-users-count">Найдено исполнителей: @TempData["UsersFound"]</span>
                 @*<img width="32" height="32" class="loading-animation"
-            src="~/Content/Custom/images/ajax-loader.gif">*@
+                    src="~/Content/Custom/images/ajax-loader.gif">*@
+                <div class="lds-ring" id="lds-ring-count"><div></div><div></div><div></div><div></div></div>
             </h3>
 
 
             <div class="notify-box margin-top-15">
                 @*<div class="switch-container">
-            <label class="switch"><input type="checkbox"><span class="switch-button"></span><span class="switch-text">Включить уведомление по почте для новых задач</span></label>
-        </div>*@
+                        <label class="switch"><input type="checkbox"><span class="switch-button"></span><span class="switch-text">Включить уведомление по почте для новых задач</span></label>
+                    </div>*@
 
                 <div class="switch-container">
                     <label class="switch"><input type="checkbox" id="executors-online"><span class="switch-button"></span><span class="switch-text">Сейчас онлайн</span></label>
@@ -137,7 +138,7 @@
                     <div class="social-login-buttons">
                         <button class="facebook-login ripple-effect" id="load-more-button">
                             <span id="more-executors-text">Еще исполнители</span>
-                            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                            <div class="lds-ring" id="lds-ring-load-more"><div></div><div></div><div></div><div></div></div>
                         </button>
                     </div>
                 </nav>
@@ -273,6 +274,7 @@
             //reset filtration event handler
             $("#reset-filter-button").click(function () {
                 page = 0;
+                $("#lds-ring-count").children().show();
                 var nickName = $("#autocomplete-input").val();
                 var taskListId = $("#TaskList").val();
                 var skillListId = $("#SkillList").val();
@@ -326,6 +328,8 @@
                                     $("#found-users-count").html("Найдено исполнителей: " + data);
                                 }
                             });
+                            $("#lds-ring-count").children().hide();
+
                         },
                         error: function (data) { alert(data.responseText); }
                     });
@@ -397,6 +401,7 @@
 
             function CallIndex() {
                 page = 0;
+                $("#lds-ring-count").children().show();
                 var nickName = $("#autocomplete-input").val();
                 var taskListId = $("#TaskList").val();
                 if (!taskListId) {
@@ -446,6 +451,7 @@
                                 $("#found-users-count").html("Найдено исполнителей: " + data);
                             }
                         });
+                        $("#lds-ring-count").children().hide();
                     },
                     error: function (data) { alert(data.responseText); }
                 });
