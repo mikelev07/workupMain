@@ -105,6 +105,8 @@ namespace HelpMe.Controllers
                                       user.IsNotBusy,
                                       user.Email,
                                       user.TaskCategories,
+                                      user.Reviews,
+                                      user.Customs,
                                       user.PositiveThumbs,
                                       user.NegativeThumbs
                                   }).ToList().Select(p => new UserViewModel()
@@ -117,6 +119,8 @@ namespace HelpMe.Controllers
                                       IsOnline = p.IsOnline,
                                       IsNotBusy = p.IsNotBusy,
                                       TaskCategories = p.TaskCategories,
+                                      Reviews = p.Reviews,
+                                      Customs = p.Customs,
                                       PositiveThumbs = p.PositiveThumbs,
                                       NegativeThumbs = p.NegativeThumbs
                                   });

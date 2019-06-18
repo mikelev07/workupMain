@@ -122,8 +122,7 @@
                     <div class="social-login-buttons">
                         <button class="facebook-login ripple-effect" id="more-customs-button">
                             <span id="more-customs-text">Еще заказы</span>
-                            <img width="32" height="32" class="loading-animation load-more"
-                                 src="~/Content/Custom/images/ajax-loader.gif">
+                            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
                         </button>
                     </div>
                 </nav>
@@ -239,14 +238,16 @@
             });
         });
 
-        $(document).on({
-            ajaxStart: function () {
-                $(".loading-animation").addClass("loading");
-            },
-            ajaxStop: function () {
-                $(".loading-animation").removeClass("loading");
-            }
-        });
+        $(".lds-ring").children().hide();
+
+        //$(document).on({
+        //    ajaxStart: function () {
+        //        $(".loading-animation").addClass("loading");
+        //    },
+        //    ajaxStop: function () {
+        //        $(".loading-animation").removeClass("loading");
+        //    }
+        //});
 
 
         $(function () {
@@ -258,11 +259,8 @@
 
             //load more executors button event
             $("#more-customs-button").click(function () {
+                $(".lds-ring").children().show();
                 loadItems();
-            }).hover(function () {
-                $(".loading-animation.load-more").prop('src', '/Content/Custom/images/ajax-loader-reverse.gif');
-            }, function () {
-                $(".loading-animation.load-more").prop('src', '/Content/Custom/images/ajax-loader.gif');
             });
 
             //filtration event handlers
@@ -354,6 +352,7 @@
                             }
                             _inCallback = false;
                             $("#more-customs-text").show();
+                            $(".lds-ring").children().hide();
                         }
                     });
                 }
@@ -452,6 +451,7 @@
                     || skillListId
                     || minPrice != $('#budget-range-slider').attr('data-slider-min')
                     || maxPrice != $('#budget-range-slider').attr('data-slider-max')
+                    || customsWithoutOffers
                 ) {
                     $("#name").val("");
                     $("#TaskList").val('').selectpicker("render");
@@ -470,7 +470,7 @@
                             'skillId': 0,
                             'minPrice': null,
                             'maxPrice': null,
-                            'customsWithoutOffers': customsWithoutOffers,
+                            'customsWithoutOffers': false,
                             'sortId': sortingId
                         },
                         success: function (data) {

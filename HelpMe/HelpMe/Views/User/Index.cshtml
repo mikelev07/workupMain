@@ -47,7 +47,7 @@
                 </div>
 
                 <!-- Tags -->
-                <div class="sidebar-widget">
+                @*<div class="sidebar-widget">
                     <h3>Дополнительно</h3>
                     <div class="tags-container">
                         <div class="tag">
@@ -58,7 +58,7 @@
                             <input type="checkbox" id="tag2" autocomplete="off" />
                             <label for="tag2">Не занят</label>
                         </div>
-                        <!--
+                        
                         <div class="tag">
                             <input type="checkbox" id="tag3" />
                             <label for="tag3">Помощь онлайн</label>
@@ -67,13 +67,13 @@
                             <input type="checkbox" id="tag4" />
                             <label for="tag4">Скрывает боль</label>
                         </div>
-                        -->
+                        
 
                     </div>
                     <div class="clearfix"></div>
 
 
-                </div>
+                </div>*@
                 <div class="clearfix"></div>
 
                 <div class="margin-bottom-40"></div>
@@ -102,8 +102,16 @@
 
 
             <div class="notify-box margin-top-15">
+                @*<div class="switch-container">
+            <label class="switch"><input type="checkbox"><span class="switch-button"></span><span class="switch-text">Включить уведомление по почте для новых задач</span></label>
+        </div>*@
+
                 <div class="switch-container">
-                    <label class="switch"><input type="checkbox"><span class="switch-button"></span><span class="switch-text">Включить уведомление по почте для новых задач</span></label>
+                    <label class="switch"><input type="checkbox" id="executors-online"><span class="switch-button"></span><span class="switch-text">Сейчас онлайн</span></label>
+                </div>
+
+                <div class="switch-container">
+                    <label class="switch"><input type="checkbox" id="executors-ready"><span class="switch-button"></span><span class="switch-text">Не занят</span></label>
                 </div>
 
                 <div class="sort-by">
@@ -235,8 +243,6 @@
                 $(".lds-ring").children().show();
                 loadItems();
 
-            }).hover(function () {
-             //  $(".lds-ring").children().css("border-color", "#fff transparent transparent transparent");
             });
 
             //filtration event handlers
@@ -246,8 +252,10 @@
                 CallIndex();
             });
             $('#SkillList').change(CallIndex).selectpicker("refresh");
-            $("#tag1").click(CallIndex);
-            $("#tag2").click(CallIndex);
+            //$("#tag1").click(CallIndex);
+            //$("#tag2").click(CallIndex);
+            $("#executors-online").change(CallIndex);
+            $("#executors-ready").change(CallIndex);
             $('#sortField').change(CallIndex);
 
 
@@ -270,15 +278,19 @@
                 var skillListId = $("#SkillList").val();
                 var sortingId = $("#sortField").val();
                 var count = $("#work-range").val();
-                var isOnline = $("#tag1").is(':checked');
-                var isNotBusy = $("#tag2").is(':checked');
-                if (nickName || taskListId || skillListId || count != 0 || isOnline || isNotBusy) {
+                var executorsOnline = $("#executors-online").is(':checked');
+                var executorsReady = $("#executors-ready").is(':checked');
+                //var isOnline = $("#tag1").is(':checked');
+                //var isNotBusy = $("#tag2").is(':checked');
+                if (nickName || taskListId || skillListId || count != 0 || executorsOnline || executorsReady) {
                     $("#work-range").slider('refresh');
                     $("#autocomplete-input").val("");
                     $("#TaskList").val('').selectpicker("render");
                     $("#SkillList").val('').selectpicker("render");
-                    $("#tag1").prop('checked', false);
-                    $("#tag2").prop('checked', false);
+                    $("#executors-online").prop('checked', false);
+                    $("#executors-ready").prop('checked', false);
+                    //$("#tag1").prop('checked', false);
+                    //$("#tag2").prop('checked', false);
                     $.ajax({
                         type: 'GET',
                         url: '/User/Index',
@@ -332,8 +344,10 @@
                     var taskListId = $("#TaskList").val();
                     var skillListId = $("#SkillList").val();
                     var count = $("#work-range").val();
-                    var isOnline = $("#tag1").is(':checked');
-                    var isNotBusy = $("#tag2").is(':checked');
+                    var executorsOnline = $("#executors-online").is(':checked');
+                    var executorsReady = $("#executors-ready").is(':checked');
+                    //var isOnline = $("#tag1").is(':checked');
+                    //var isNotBusy = $("#tag2").is(':checked');
                     var sortingId = $('#sortField').val();
                     $.ajax({
                         type: 'GET',
@@ -344,8 +358,8 @@
                             'taskId': taskListId,
                             'skillId': skillListId,
                             'worksCount': count,
-                            'isOnline': isOnline,
-                            'isNotBusy': isNotBusy,
+                            'isOnline': executorsOnline,
+                            'isNotBusy': executorsReady,
                             'sortId': sortingId
                         },
                         success: function (data, textstatus) {
@@ -393,8 +407,10 @@
                     skillListId = 0;
                 }
                 var worksCount = $("#work-range").val();
-                var isOnline = $("#tag1").is(':checked');
-                var isNotBusy = $("#tag2").is(':checked');
+                var executorsOnline = $("#executors-online").is(':checked');
+                var executorsReady = $("#executors-ready").is(':checked');
+                //var isOnline = $("#tag1").is(':checked');
+                //var isNotBusy = $("#tag2").is(':checked');
                 var sortingId = $("#sortField").val();
                 $.ajax({
                     type: "GET",
@@ -405,8 +421,8 @@
                         'taskId': taskListId,
                         'skillId': skillListId,
                         'worksCount': worksCount,
-                        'isOnline': isOnline,
-                        'isNotBusy': isNotBusy,
+                        'isOnline': executorsOnline,
+                        'isNotBusy': executorsReady,
                         'sortId': sortingId
                     },
                     success: function (data) {
