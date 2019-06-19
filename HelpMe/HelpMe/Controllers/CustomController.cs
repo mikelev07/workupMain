@@ -337,6 +337,22 @@ namespace HelpMe.Controllers
             return new JsonResult() { Data = results, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
+        private string FindExecutorRating(User user)
+        {
+            var likes = user.PositiveThumbs;
+            var dislikes = user.NegativeThumbs;
+            var rate = "0.0";
+            if (likes + dislikes > 0)
+            {
+                rate = Math.Round((double)likes / (likes + dislikes) * 5, 1).ToString().Replace(',', '.');
+            }
+            if (rate.Length == 1)
+            {
+                rate = rate + ".0";
+            }
+            return rate;
+        }
+
         /// <summary>
         /// Разместить предложение
         /// </summary>
@@ -344,12 +360,17 @@ namespace HelpMe.Controllers
         /// <param name="CustomViewModelId"></param>
         /// <param name="OfferPrice"></param>
         /// <param name="Days"></param>
+        /// <param name="Hours"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult People(string Description, int CustomViewModelId, int OfferPrice, int Days)
+        public JsonResult People(string Description, int CustomViewModelId, int OfferPrice, int Days, int Hours)
         {
-            var comment = new CommentViewModel { Description = Description, OfferPrice = OfferPrice, Days = Days, UserId = User.Identity.GetUserId(), CustomViewModelId = CustomViewModelId };
+            var comment = new CommentViewModel { Description = Description, OfferPrice = OfferPrice, Days = Days, Hours = Hours, UserId = User.Identity.GetUserId(), CustomViewModelId = CustomViewModelId };
             CustomViewModel customViewModel = db.Customs.Include(c => c.Comments).FirstOrDefault(c => c.Id == CustomViewModelId);
+
+            var user = comment.User;
+            var imagePath = user.ImagePath ?? Url.Content("~/Content/Custom/images/user-avatar-big-01.jpg");
+
             if (customViewModel.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() >= 1)
             {
                 return null;
@@ -364,7 +385,9 @@ namespace HelpMe.Controllers
                     Description = comment.Description,
                     OfferPrice = comment.OfferPrice,
                     CustomViewModelId = comment.CustomViewModelId,
-                    UserId = comment.UserId
+                    UserId = comment.UserId,
+                    ExecutorRating = FindExecutorRating(user),//for js method 
+                    ExecutorImagePath = imagePath,//for js method 
                 }, JsonRequestBehavior.AllowGet);
                 // return new JsonResult() { Data = comment, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }

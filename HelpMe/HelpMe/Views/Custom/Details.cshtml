@@ -32,7 +32,7 @@
                     <div class="right-side">
                         <div class="salary-box">
                             <div class="salary-type">Бюджет задания</div>
-                            <div class="salary-amount">100 руб.</div>
+                            <div class="salary-amount">@Model.Price руб.</div>
                         </div>
 
                     </div>
@@ -170,14 +170,14 @@
                 </div>
             }
             @*<div class="single-page-section">
-                <h3>Необходимые навыки</h3>
-                <div class="task-tags">
-                    <span>iOS</span>
-                    <span>Android</span>
-                    <span>mobile apps</span>
-                    <span>design</span>
-                </div>
-            </div>*@
+                    <h3>Необходимые навыки</h3>
+                    <div class="task-tags">
+                        <span>iOS</span>
+                        <span>Android</span>
+                        <span>mobile apps</span>
+                        <span>design</span>
+                    </div>
+                </div>*@
             <div class="clearfix"></div>
 
             <div class="boxed-list margin-bottom-60">
@@ -195,182 +195,209 @@
                                 <div class="bid">
                                     <div class="bids-avatar">
                                         <div class="freelancer-avatar">
-                                            <div class="verified-badge"></div>
-                                            <a href="single-freelancer-profile.html"><img src="~/Content/Custom/images/user-avatar-big-01.jpg" alt=""></a>
+                                            @*<div class="verified-badge"></div>*@
+                                            <a href="@Url.Action("Details", "User", new { userName = c.User.UserName })">
+                                                <img src="@(c.User.ImagePath ?? Url.Content("~/Content/Custom/images/user-avatar-big-01.jpg"))" alt="аватар">
+                                            </a>
                                         </div>
                                     </div>
 
                                     <div class="bids-content">
                                         <!-- Name -->
                                         <div class="freelancer-name">
-                                            <h4><a href="single-freelancer-profile.html">@c.User.Email <img class="flag" src="images/flags/gb.svg" alt="" title="United Kingdom" data-tippy-placement="top"></a></h4>
-                                            <div class="star-rating" data-rating="4.9"></div>
-                                        </div>
+                                            <h4>
+                                                <a href="@Url.Action("Details", "User", new { userName = c.User.UserName })">
+                                                    @c.User.UserName
+                                                @*<img class="flag" src="images/flags/gb.svg" alt="" title="United Kingdom" data-tippy-placement="top">*@
+                                            </a>
+                                        </h4>
+                                        @{
+                                            var likes = c.User.PositiveThumbs;
+                                            var dislikes = c.User.NegativeThumbs;
+                                            var rate = "0.0";
+                                            if (likes + dislikes > 0)
+                                            {
+                                                rate = Math.Round((double)likes / (likes + dislikes) * 5, 1).ToString().Replace(',', '.');
+                                            }
+                                            if (rate.Length == 1)
+                                            {
+                                                rate = rate + ".0";
+                                            }
+                                        }
+                                        <div class="star-rating" data-rating="@rate"></div>
                                     </div>
+                                </div>
 
-                                    <!-- Bid -->
-                                    <div class="bids-bid">
-                                        <div class="bid-rate">
-                                            <div class="rate">@c.OfferPrice рублей</div>
-                                            <span>за @c.Days дней</span>
-                                        </div>
-                                        @if (Model.ExecutorId != User.Identity.GetUserId() && Model.UserId != User.Identity.GetUserId())
+                                <!-- Bid -->
+                                <div class="bids-bid">
+                                    <div class="bid-rate">
+                                        <div class="rate">@c.OfferPrice рублей</div>
+                                        @if (c.Days > 0)
                                         {
-                                            <div style="margin-left: 23px;" class="buttons-to - right always - visible">
-                                                <a href="#small-dialog" class="popup-with-zoom-anim button dark ripple-effect ico" title="Редактировать" data-tippy-placement="top">
-                                                    <i class="icon-feather-edit"></i>
-                                                </a>
-                                                <a href="#" class="button red ripple-effect ico" title="Удалить" data-tippy-placement="top">
-                                                    <i class="icon-feather-trash-2"></i>
-                                                </a>
-                                            </div>
+                                            <span>за @c.Days дней</span>
+                                        }
+                                        else
+                                        {
+                                            <span>за @c.Hours часов</span>
                                         }
                                     </div>
+                                    @if (Model.ExecutorId != User.Identity.GetUserId() && Model.UserId != User.Identity.GetUserId())
+                                    {
+                                        <div style="margin-left: 23px;" class="buttons-to - right always - visible">
+                                            <a href="#small-dialog" class="popup-with-zoom-anim button dark ripple-effect ico" title="Редактировать" data-tippy-placement="top">
+                                                <i class="icon-feather-edit"></i>
+                                            </a>
+                                            <a href="#" class="button red ripple-effect ico" title="Удалить" data-tippy-placement="top">
+                                                <i class="icon-feather-trash-2"></i>
+                                            </a>
+                                        </div>
+                                    }
                                 </div>
-                                @if (Model.UserId == User.Identity.GetUserId() && Model.ExecutorId == null)
-                                {
-                                    <div class="margin-top-30">
-                                        <a href="#small-dialog-1" style="box-shadow: 0 12px 12px rgba(0,0,0,0.1);border-radius: 25px;" class="popup-with-zoom-anim button ripple-effect"><i class="icon-material-outline-check"></i> Принять предложение</a>
-                                        <a href="#small-dialog-2" style="background-color: #f4f4f4;box-shadow: 0 12px 12px rgba(0,0,0,0.1);color: #333;border-radius: 25px;" class="popup-with-zoom-anim button dark ripple-effect"><i class="icon-feather-mail"></i> Отправить сообщение</a>
-                                    </div>
-                                }
-                                <div class="item-description margin-top-20">
-                                    <p> @c.Description</p>
+                            </div>
+                            @if (Model.UserId == User.Identity.GetUserId() && Model.ExecutorId == null)
+                            {
+                                <div class="margin-top-30">
+                                    <a href="#small-dialog-1" style="box-shadow: 0 12px 12px rgba(0,0,0,0.1);border-radius: 25px;" class="popup-with-zoom-anim button ripple-effect"><i class="icon-material-outline-check"></i> Принять предложение</a>
+                                    <a href="#small-dialog-2" style="background-color: #f4f4f4;box-shadow: 0 12px 12px rgba(0,0,0,0.1);color: #333;border-radius: 25px;" class="popup-with-zoom-anim button dark ripple-effect"><i class="icon-feather-mail"></i> Отправить сообщение</a>
                                 </div>
-                            </li>
-                        }
+                            }
+                            <div class="item-description margin-top-20">
+                                <p style="word-break:break-word;"> @c.Description</p>
+                            </div>
+                        </li>
+                    }
 
-                        <div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+                    <div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
 
 
-                            <div class="sign-in-form">
+                        <div class="sign-in-form">
 
-                                <ul class="popup-tabs-nav">
-                                    <li><a href="#tab">Редактировать предложение</a></li>
-                                </ul>
+                            <ul class="popup-tabs-nav">
+                                <li><a href="#tab">Редактировать предложение</a></li>
+                            </ul>
 
-                                <div class="popup-tabs-container">
+                            <div class="popup-tabs-container">
 
-                                    <!-- Tab -->
-                                    <div class="popup-tab-content" id="tab">
-                                        @using (Html.BeginForm("Edit", "Comment", new { id = c.Id }, FormMethod.Post))
-                                        {
-                                            @Html.AntiForgeryToken()
+                                <!-- Tab -->
+                                <div class="popup-tab-content" id="tab">
+                                    @using (Html.BeginForm("Edit", "Comment", new { id = c.Id }, FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
 
-                                            @Html.Hidden("UserId", c.UserId.ToString())
-                                            @Html.Hidden("CustomViewModelId", c.CustomViewModelId.ToString())
-                                            @Html.Hidden("Description", c.Description.ToString())
+                                        @Html.Hidden("UserId", c.UserId.ToString())
+                                        @Html.Hidden("CustomViewModelId", c.CustomViewModelId.ToString())
+                                        @Html.Hidden("Description", c.Description.ToString())
 
-                                            <!-- Bidding -->
-                                            <div class="bidding-widget">
-                                                <!-- Headline -->
-                                                <span class="bidding-detail margin-top-30">Укажите время выполнения</span>
+                                        <!-- Bidding -->
+                                        <div class="bidding-widget">
+                                            <!-- Headline -->
+                                            <span class="bidding-detail margin-top-30">Укажите время выполнения</span>
 
-                                                <!-- Fields -->
-                                                <div class="bidding-fields">
-                                                    <div class="bidding-field">
-                                                        <!-- Quantity Buttons -->
-                                                        <div class="qtyButtons with-border">
-                                                            <div class="qtyDec"></div>
-                                                            <input id="Days" type="text" name="Days" value="2">
-                                                            <div class="qtyInc"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="bidding-field">
-                                                        <select class="selectpicker default with-border">
-                                                            <option selected>Days</option>
-                                                            <option>Hours</option>
-                                                        </select>
+                                            <!-- Fields -->
+                                            <div class="bidding-fields">
+                                                <div class="bidding-field">
+                                                    <!-- Quantity Buttons -->
+                                                    <div class="qtyButtons with-border">
+                                                        <div class="qtyDec"></div>
+                                                        <input id="Days" type="text" name="Days" value="2">
+                                                        <div class="qtyInc"></div>
                                                     </div>
                                                 </div>
-                                                <br />
-                                                <span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>
-
-                                                <div class="bidding-value"><span id="biddingVal1"></span> руб.</div>
-                                                <input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text" value="" data-slider-handle="custom" data-slider-currency="$" data-slider-min="2500" data-slider-max="4500" data-slider-value="auto" data-slider-step="50" data-slider-tooltip="hide" />
+                                                <div class="bidding-field">
+                                                    <select class="selectpicker default with-border">
+                                                        <option selected>дней</option>
+                                                        <option>часов</option>
+                                                    </select>
+                                                </div>
                                             </div>
+                                            <br />
+                                            <span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>
 
-                                            <!-- Button -->
-                                            <button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button>
-                                        }
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="small-dialog-1" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
-
-                            <!--Tabs -->
-                            <div class="sign-in-form">
-
-                                <ul class="popup-tabs-nav">
-                                    <li><a href="#tab1">Принять предложение</a></li>
-                                </ul>
-
-                                <div class="popup-tabs-container">
-
-                                    <!-- Tab -->
-                                    <div class="popup-tab-content" id="tab">
-
-                                        <!-- Welcome Text -->
-                                        <div class="welcome-text">
-                                            <h3>Принять предложение от исполнителя?</h3>
-                                            <div class="bid-acceptance margin-top-15">
-                                                Надо указать тут цену
-                                            </div>
-
+                                            <div class="bidding-value"><span id="biddingVal1"></span> руб.</div>
+                                            <input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text" value="" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="5000" data-slider-value="auto" data-slider-step="50" data-slider-tooltip="hide" />
                                         </div>
 
-                                        <form id="terms">
-                                            <div class="radio">
-                                                <input id="radio-1" name="radio" type="radio" required>
-                                                <label for="radio-1"><span class="radio-label"></span>  Я ознакомился с правилами</label>
-                                            </div>
-                                        </form>
-
                                         <!-- Button -->
-                                        <a href="@Url.Action("ChooseExecutor", "Custom", new { id = Model.Id, userId = c.UserId })" class="margin-top-15 button full-width button-sliding-icon ripple-effect" type="submit" form="terms">Принять <i class="icon-material-outline-arrow-right-alt"></i></a>
-                                    </div>
+                                        <button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                    }
                                 </div>
+
                             </div>
                         </div>
-                        <!-- Bid Acceptance Popup / End -->
+                    </div>
 
-                        <div id="small-dialog-2" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+                    <div id="small-dialog-1" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
 
-                            <!--Tabs -->
-                            <div class="sign-in-form">
+                        <!--Tabs -->
+                        <div class="sign-in-form">
 
-                                <ul class="popup-tabs-nav">
-                                    <li><a href="#tab2">Отправка сообщения</a></li>
-                                </ul>
+                            <ul class="popup-tabs-nav">
+                                <li><a href="#tab1">Принять предложение</a></li>
+                            </ul>
 
-                                <div class="popup-tabs-container">
+                            <div class="popup-tabs-container">
 
-                                    <!-- Tab -->
-                                    <div class="popup-tab-content" id="tab2">
+                                <!-- Tab -->
+                                <div class="popup-tab-content" id="tab">
 
-                                        <!-- Welcome Text -->
-                                        <div class="welcome-text">
-                                            <h3>Отправить сообщение Марианночке</h3>
+                                    <!-- Welcome Text -->
+                                    <div class="welcome-text">
+                                        <h3>Принять предложение от исполнителя?</h3>
+                                        <div class="bid-acceptance margin-top-15">
+                                            Надо указать тут цену
                                         </div>
 
-                                        <!-- Form -->
-                                        <form method="post" id="send-pm">
-                                            <textarea name="textarea" cols="10" placeholder="Message" class="with-border" required></textarea>
-                                        </form>
-
-                                        <!-- Button -->
-                                        <a class="button full-width button-sliding-icon ripple-effect" type="submit" form="send-pm">Отправить <i class="icon-material-outline-arrow-right-alt"></i></a>
-
                                     </div>
 
+                                    <form id="terms">
+                                        <div class="radio">
+                                            <input id="radio-1" name="radio" type="radio" required>
+                                            <label for="radio-1"><span class="radio-label"></span>  Я ознакомился с правилами</label>
+                                        </div>
+                                    </form>
+
+                                    <!-- Button -->
+                                    <a href="@Url.Action("ChooseExecutor", "Custom", new { id = Model.Id, userId = c.UserId })" class="margin-top-15 button full-width button-sliding-icon ripple-effect" type="submit" form="terms">Принять <i class="icon-material-outline-arrow-right-alt"></i></a>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <!-- Bid Acceptance Popup / End -->
 
-                    }
+                    <div id="small-dialog-2" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+                        <!--Tabs -->
+                        <div class="sign-in-form">
+
+                            <ul class="popup-tabs-nav">
+                                <li><a href="#tab2">Отправка сообщения</a></li>
+                            </ul>
+
+                            <div class="popup-tabs-container">
+
+                                <!-- Tab -->
+                                <div class="popup-tab-content" id="tab2">
+
+                                    <!-- Welcome Text -->
+                                    <div class="welcome-text">
+                                        <h3>Отправить сообщение Марианночке</h3>
+                                    </div>
+
+                                    <!-- Form -->
+                                    <form method="post" id="send-pm">
+                                        <textarea name="textarea" cols="10" placeholder="Message" class="with-border" required></textarea>
+                                    </form>
+
+                                    <!-- Button -->
+                                    <a class="button full-width button-sliding-icon ripple-effect" type="submit" form="send-pm">Отправить <i class="icon-material-outline-arrow-right-alt"></i></a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                }
 
                 </ul>
             </div>
@@ -486,9 +513,20 @@
                                         <span><a href="@Url.Action("Details", "User", new { userName = Model.Executor.UserName })">@Model.Executor.UserName</a></span>
                                     </li>
                                     <li>
+                                        <i class="icon-material-outline-money"></i>
+                                        <h5>Предложенная цена:</h5>
+                                        <span> @Model.ExecutorPrice</span>
+                                    </li>
+                                    <li>
+                                        @{
+                                            var executorComment = Model.Comments.Where(c => c.UserId == Model.ExecutorId).FirstOrDefault();
+                                            var hours = executorComment.Hours;
+                                            var days = executorComment.Days;
+                                            var executorDeadLine = Model.ExecutorStartDate.AddDays(days).AddHours(hours);
+                                        }
                                         <i class="icon-material-outline-access-time"></i>
                                         <h5>Выполнит заказ к:</h5>
-                                        <span> Надо подумать, как сюда время тянуть</span>
+                                        <span> @executorDeadLine</span>
                                     </li>
                                 </ul>
                             </div>
@@ -502,13 +540,15 @@
                         <div class="bidding-widget">
                             <div class="bidding-headline"><h3>Добавить предложение</h3></div>
                             <div class="bidding-inner">
-
                                 <!-- Headline -->
                                 <span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>
 
                                 <!-- Price Slider -->
                                 <div class="bidding-value"><span id="biddingVal"></span> руб.</div>
-                                <input id="slider-price" class="bidding-slider" type="text" value="" data-slider-handle="custom" data-slider-currency="$" data-slider-min="2500" data-slider-max="4500" data-slider-value="auto" data-slider-step="50" data-slider-tooltip="hide" />
+                                <input id="slider-price" class="bidding-slider" type="text" value=""
+                                       data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
+                                       data-slider-max="5000" data-slider-value="auto" data-slider-step="50"
+                                       data-slider-tooltip="hide" />
 
                                 <!-- Headline -->
                                 <span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>
@@ -524,17 +564,17 @@
                                         </div>
                                     </div>
                                     <div class="bidding-field">
-                                        <select class="selectpicker default">
-                                            <option selected>Дней</option>
-                                            <option>Часов</option>
+                                        <select class="selectpicker default" id="time-unit-select">
+                                            <option value="1" selected>Дней</option>
+                                            <option value="2">Часов</option>
                                         </select>
                                     </div>
                                 </div>
                                 <!-- Headline -->
                                 <span class="bidding-detail margin-top-30">Добавьте <strong>комментарий</strong></span>
 
-                                <textarea id="desсription" cols="30" rows="5" class="with-border"></textarea>
-
+                                <textarea id="desсription" cols="30" rows="5" class="with-border" maxlength="200"></textarea>
+                                
                                 <!-- Button -->
                                 <button id="snackbar-place-bid" class="button ripple-effect move-on-hover full-width margin-top-30"><span>Разместить предложение</span></button>
 
@@ -663,6 +703,7 @@
             var decription = $("textarea#desсription").val();
             var slider = $("#slider-price").val();
             var time = $("#time").val();
+            var timeUnit = $("#time-unit-select").val();
 
             if (decription == "") {
                 Snackbar.show({
@@ -682,10 +723,24 @@
                 });
                 return;
             }
+            if (time < 1) {
+                Snackbar.show({
+                    text: 'Введите положительное число часов/дней!',
+                });
+                return;
+            }
 
-            var person = { Description: decription, OfferPrice: slider, Days: time, CustomViewModelId: @Model.Id };
+            var hours = 0;
+            var days = time;    //default
+            //if hours were selected
+            if (timeUnit == 2) {
+                hours = time;
+                days = 0;
+            }
+            var person = { Description: decription, OfferPrice: slider, Days: days, Hours: hours, CustomViewModelId: @Model.Id };
 
-
+            var executorsRating;
+            var executorImagePath;
            // $.post("/Custom/People", person, null, "json");
 
            $.ajax({
@@ -693,8 +748,22 @@
                 url: "/Custom/People",
                 data: person,
                 dataType: "json",
-                success: function (data) {
-                  var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li><a href="#tab">Редактировать предложение</a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab"><form method="post" action="/Comment/Edit/' + data.Id + '">  @Html.AntiForgeryToken() <input type="hidden" value="' + data.UserId + '" name="UserId" /> <input type="hidden" value="' + data.Description + '" name="Description" />   <input type="hidden" value="' + data.CustomViewModelId + '" name="CustomViewModelId" />  <input type="hidden" value="' + data.OfferPrice + '" name="OfferPrice" /> <div class="bidding-widget"><span class="bidding-detail margin-top-30">Укажите время выполнения</span><div class="bidding-fields"><div class="bidding-field"><div class="qtyButtons with-border"><div class="qtyDec"></div><input id="Days" type="text" name="Days" value="2"><div class="qtyInc"></div></div></div><div class="bidding-field"><select class="selectpicker default with-border"><option selected>Дней</option><option>Часов</option></select></div></div></div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>'
+               success: function (data) {
+                   executorsRating = data.executorsRating;
+                   executorImagePath = data.executorImagePath;
+                    var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li><a href="#tab">Редактировать предложение</a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab"><form method="post" action="/Comment/Edit/'
+                        + data.Id + '">  @Html.AntiForgeryToken() <input type="hidden" value="'
+                        + data.UserId + '" name="UserId" /> <input type="hidden" value="'
+                        + data.Description + '" name="Description" />   <input type="hidden" value="'
+                        + data.CustomViewModelId + '" name="CustomViewModelId" />  <input type="hidden" value="'
+                        + data.OfferPrice + '" name="OfferPrice" /> <div class="bidding-widget"><span class="bidding-detail margin-top-30">Укажите время выполнения</span><div class="bidding-fields"><div class="bidding-field"><div class="qtyButtons with-border"><div class="qtyDec"></div><input id="Days" type="text" name="Days" value="2"><div class="qtyInc"></div></div></div><div class="bidding-field"><select class="selectpicker default with-border">';
+
+                    var timeOption = '<option selected>Дней</option><option>Часов</option>';
+                    if (hours>0) {
+                        timeOption = '<option>Дней</option><option selected>Часов</option>';
+                    }
+                    modalEdit+=timeOption+'</select></div></div></div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>';
+
                   $("#boxed-list-ul").append(modalEdit);
                 var votes = $("#votes");
                 var num = $("#votes").text();
@@ -703,9 +772,25 @@
                 }
             });
 
+            //alert('rating = ' + executorsRating + ' | Path = ' + executorImagePath +
+            //    ' | timeUnit = ' + timeUnit + ' | days = ' + person.Days + ' | hours = ' + person.Hours);
+
             var htmlEditBind = '<div style="margin-left: 23px;" class="buttons-to - right always - visible"><a href="#small-dialog" id="editSmall" class="popup-with-zoom-anim button dark ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a> <a href="#" class="button red ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a></div>';
-            var htmlStar = "<div id=\"starId\" class=\"star-rating\" data-rating=\"4.9\"></div>";
-            var htmlComment = "<li><div class='bid'><div class='bids-avatar'><div class='freelancer-avatar'><div class='verified-badge'></div><a href='single-freelancer-profile.html'><img src='/Content/Custom/images/user-avatar-big-01.jpg' alt=''></a></div></div><div class='bids-content'><div class='freelancer-name'><h4><a href='single-freelancer-profile.html'>@User.Identity.Name<img class='flag' src='images/flags/gb.svg' alt='' title='United Kingdom' data-tippy-placement='top'></a></h4>" + htmlStar + "</div></div><div class='bids-bid'><div class='bid-rate'><div class='rate'>" + person.OfferPrice + " рублей</div><span>за " + person.Days + " дней</span></div>"+htmlEditBind+"</div></div><div class='item-description margin-top-30'><p>" + person.Description + "</p></div></li>";
+            var htmlStar = "<div id=\"starId\" class=\"star-rating\" data-rating=\"" + executorsRating+"\"></div>";
+            var htmlComment = "<li><div class='bid'><div class='bids-avatar'><div class='freelancer-avatar'><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name})'><img src='" + executorImagePath + "' alt='аватар'></a></div></div><div class='bids-content'><div class='freelancer-name'><h4><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name })'>@User.Identity.Name</a></h4>"
+                + htmlStar + "</div></div><div class='bids-bid'><div class='bid-rate'><div class='rate'>"
+                + person.OfferPrice + " рублей</div><span>за ";
+
+            if (person.Days > 0) {
+                htmlComment += person.Days + ' дней</span>';
+            }
+            else {
+                htmlComment += person.Hours + ' часов</span>';
+            }
+            
+            htmlComment += '</div>'
+                + htmlEditBind + "</div></div><div class='item-description margin-top-30'><p>"
+                + person.Description + "</p></div></li>";
 
             if (@Model.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() >= 1 || countUserComment >= 1) {
                 Snackbar.show({
