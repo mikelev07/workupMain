@@ -191,11 +191,13 @@ $(function () {
               //  alert(countAttaches)
                 finalFileBuffer = fileBuffer;
                 lastIndexFile = fileBuffer.length //2
+                alert(lastIndexFile)
             } else {
                 finalFileBuffer = finalFileBuffer.concat(fileBuffer);
 
                 for (var i = lastIndexFile; i < finalFileBuffer.length && i < 5; i++) {
                    // if (i == 5) break;
+                    alert(i)
                     file = finalFileBuffer[i].name;
                     if (file.length > 3)
                         fileName = file.substring(0, 3) + '.' + file.substring(file.lastIndexOf('.') + 1)
@@ -398,12 +400,12 @@ $(function () {
                 if (files.length > 0) {
                     if (window.FormData !== undefined) {
                         var data = new FormData();
-                        if (finalFileBuffer.length > 0 && finalFileBuffer.length < 5) {
-                            for (var x = 0; x < finalFileBuffer.length && x < 5; x++) {
+                        if (finalFileBuffer.length > 0 ) {
+                            for (var x = 0; x <= finalFileBuffer.length && x < 5; x++) {
                                 data.append("file" + x, finalFileBuffer[x]);
                             }
                         } else {
-                            for (var x = 0; x < files.length && x < 5; x++) {
+                            for (var x = 0; x <= files.length && x < 5; x++) {
                                 data.append("file" + x, files[x]);
                             }
                         }
@@ -494,8 +496,8 @@ $(function () {
                     if (files.length > 0) {
                         if (window.FormData !== undefined) {
                             var data = new FormData();
-                            if (finalFileBuffer.length > 0) {
-                                for (var x = 0; x < finalFileBuffer.length && x < 5; x++) {
+                            if (finalFileBuffer.length > 0 && finalFileBuffer.length <= 5) {
+                                for (var x = 0; x < finalFileBuffer.length && x < 5 ; x++) {
                                     data.append("file" + x, finalFileBuffer[x]);
                                 }
                             } else {

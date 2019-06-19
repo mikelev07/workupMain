@@ -794,6 +794,12 @@ $(document).ready(function(){
             finalFileBuffer.splice(idAttach, 1);
             countAttaches--;
             lastIndexFile = finalFileBuffer.length;
+            alert(lastIndexFile)
+            if (lastIndexFile == 0) {
+                finalFileBuffer = [];
+                fileBuffer = [];
+                document.getElementById("uploadAttache").value = ""
+            }
             //alert(fileBuffer)
             //finalFileBuffer = fileBuffer;
 
