@@ -25,6 +25,9 @@ namespace HelpMe.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime EndingDate { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime ExecutorStartDate { get; set; }
         public int? TypeTaskId { get; set; }
         public TypeCustomViewModel TypeTask { get; set; }
         public int? CategoryTaskId { get; set; }

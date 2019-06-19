@@ -11,6 +11,7 @@ namespace HelpMe.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public int Days { get; set; }
+        public int Hours { get; set; }
         public int OfferPrice { get; set; } 
         public int? CustomViewModelId { get; set; }
         public CustomViewModel CustomViewModel { get; set; }

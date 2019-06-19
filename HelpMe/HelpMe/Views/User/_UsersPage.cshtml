@@ -26,7 +26,7 @@
                         }
                     }
                     <div title="занят" class="@divClass"></div>
-                    <a href="single-freelancer-profile.html"><img src="@Url.Content(i?.ImagePath)" alt="profile picture"></a>
+                    <a href="@Url.Action("Details", "User", new { userName = i.Username })"><img src="@Url.Content(i?.ImagePath)" alt="аватар"></a>
                 </div>
 
                 <!-- Name -->
@@ -53,7 +53,7 @@
                     }
                 }
                 <div class="freelancer-name">
-                    <h4><a href="single-freelancer-profile.html">@i.Username <span id="@i.Username-st" style="@styleText">@spanText</span></a></h4>
+                    <h4><a href="@Url.Action("Details", "User", new { userName = i.Username })">@i.Username <span id="@i.Username-st" style="@styleText">@spanText</span></a></h4>
                     <span>Занят до 15 мая</span>
                     <div class="freelancer-rating">
                         <div class="star-rating" data-rating="@rate"></div>

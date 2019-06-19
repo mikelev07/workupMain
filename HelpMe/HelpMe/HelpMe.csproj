@@ -283,6 +283,14 @@
     <Compile Include="Migrations\201906180800285_UserViewModelRevCust.Designer.cs">
       <DependentUpon>201906180800285_UserViewModelRevCust.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201906191204401_Comment&amp;CustomMigration.cs" />
+    <Compile Include="Migrations\201906191204401_Comment&amp;CustomMigration.Designer.cs">
+      <DependentUpon>201906191204401_Comment&amp;CustomMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906191258462_Comment&amp;CustomMigration2.cs" />
+    <Compile Include="Migrations\201906191258462_Comment&amp;CustomMigration2.Designer.cs">
+      <DependentUpon>201906191258462_Comment&amp;CustomMigration2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationRoleManager.cs" />
@@ -588,6 +596,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906180800285_UserViewModelRevCust.resx">
       <DependentUpon>201906180800285_UserViewModelRevCust.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906191204401_Comment&amp;CustomMigration.resx">
+      <DependentUpon>201906191204401_Comment&amp;CustomMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906191258462_Comment&amp;CustomMigration2.resx">
+      <DependentUpon>201906191258462_Comment&amp;CustomMigration2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
