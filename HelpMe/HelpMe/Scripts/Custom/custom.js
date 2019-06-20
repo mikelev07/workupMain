@@ -791,7 +791,17 @@ $(document).ready(function(){
             var filesArray = $('#uploadAttache')[0].files;
             var fileBuffer = [];
             Array.prototype.push.apply(fileBuffer, filesArray);
-            finalFileBuffer.splice(idAttach, 1);
+
+            var newIndex = idAttach;/**/
+            $.each(idAttachArray, function (index, value) {/**/
+                if (value < idAttach) {/**/
+                    newIndex--;/**/
+                }/**/
+            });/**/
+
+            finalFileBuffer.splice(newIndex, 1);
+            idAttachArray.push(idAttach);/**/
+
             countAttaches--;
             lastIndexFile = finalFileBuffer.length;
             alert(lastIndexFile)

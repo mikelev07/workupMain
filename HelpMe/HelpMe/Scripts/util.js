@@ -1,4 +1,5 @@
 ﻿var countAttaches = 0;
+var idAttachArray = [];
 
 function starRating(ratingElem) {
 
@@ -448,6 +449,7 @@ $(function () {
                                 $('#fileUp').empty();
                                 $('.message-reply').css('margin-top', "15px");
                                 document.getElementById("uploadAttache").value = "";
+                                idAttachArray = [];
                                 finalFileBuffer = [];
                                 fileBuffer = [];
                                 countAttaches = 0;
@@ -544,6 +546,7 @@ $(function () {
                                     $('#fileUp').empty();
                                     $('.message-reply').css('margin-top', "15px");
                                     document.getElementById("uploadAttache").value = "";
+                                    idAttachArray = [];
                                     finalFileBuffer = [];
                                     fileBuffer = [];
                                     countAttaches = 0;
