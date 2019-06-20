@@ -35,9 +35,9 @@ namespace HelpMe.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -90,32 +90,33 @@ namespace HelpMe.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Index(IndexViewModel model)
         {
-                string fileName = Path.GetFileName(model.ImageFile?.FileName);
-                if (fileName != null)
-                {
-                    string path = Server.MapPath("~/Files/" + fileName);
-                    // сохраняем файл в папку Files в проекте
-                    model.ImageFile.SaveAs(path);
-                }
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            string fileName = Path.GetFileName(model.ImageFile?.FileName);
 
-                if (fileName != null)
-                    user.ImagePath = "../Files/" + fileName;
+            string path = Server.MapPath("~/Files/" + fileName);
+            // сохраняем файл в папку Files в проекте
+            model.ImageFile.SaveAs(path);
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
 
-           
-                user.Age = model.Age;
+            user.ImagePath = "~/Files/" + fileName;
+
+            if (model.Email != null && model.Name != null)
+            {
                 user.Email = model.Email;
+                user.UserName = model.Name;
+            }
 
-                var updateResult = await UserManager.UpdateAsync(user);
-                await db.SaveChangesAsync();
+            user.Age = model.Age;
 
-                return RedirectToAction("Index");
-          
+            var updateResult = await UserManager.UpdateAsync(user);
+            await db.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+
         }
 
         public async Task<ActionResult> Dashboard()
         {
-            string userId = User.Identity.GetUserId(); 
+            string userId = User.Identity.GetUserId();
             var user = await db.Users.Include(u => u.Notes).SingleAsync(u => u.Id == userId);
             return View(user);
         }
@@ -324,7 +325,7 @@ namespace HelpMe.Controllers
 
         public ActionResult Reviews()
         {
-           // var customViewModels = db.Customs.Include(c => c.Comments).Include(c => c.User).OrderBy(x => x.Id);
+            // var customViewModels = db.Customs.Include(c => c.Comments).Include(c => c.User).OrderBy(x => x.Id);
             return View();
         }
 
@@ -392,7 +393,7 @@ namespace HelpMe.Controllers
             base.Dispose(disposing);
         }
 
-#region Вспомогательные приложения
+        #region Вспомогательные приложения
         // Используется для защиты от XSRF-атак при добавлении внешних имен входа
         private const string XsrfKey = "XsrfId";
 
@@ -443,6 +444,6 @@ namespace HelpMe.Controllers
             Error
         }
 
-#endregion
+        #endregion
     }
 }
