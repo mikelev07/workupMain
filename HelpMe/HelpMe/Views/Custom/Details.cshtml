@@ -749,8 +749,9 @@
                 data: person,
                 dataType: "json",
                success: function (data) {
-                   executorsRating = data.executorsRating;
-                   executorImagePath = data.executorImagePath;
+                   alert('rating = ' + data.ExecutorRating + ' | imagePath = ' + data.ExecutorImagePath);
+                   executorsRating = data.ExecutorRating;
+                   executorImagePath = data.ExecutorImagePath;
                     var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li><a href="#tab">Редактировать предложение</a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab"><form method="post" action="/Comment/Edit/'
                         + data.Id + '">  @Html.AntiForgeryToken() <input type="hidden" value="'
                         + data.UserId + '" name="UserId" /> <input type="hidden" value="'
@@ -769,7 +770,10 @@
                 var num = $("#votes").text();
 
                 votes.text(parseInt(num)+1);
-                }
+               },
+               error: function (data) {
+                   alert('Vse ploho s "Custom/People: "' + data.statusText);
+               }
             });
 
             //alert('rating = ' + executorsRating + ' | Path = ' + executorImagePath +

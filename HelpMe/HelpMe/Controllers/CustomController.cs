@@ -368,8 +368,9 @@ namespace HelpMe.Controllers
             var comment = new CommentViewModel { Description = Description, OfferPrice = OfferPrice, Days = Days, Hours = Hours, UserId = User.Identity.GetUserId(), CustomViewModelId = CustomViewModelId };
             CustomViewModel customViewModel = db.Customs.Include(c => c.Comments).FirstOrDefault(c => c.Id == CustomViewModelId);
 
-            var user = comment.User;
-            var imagePath = user.ImagePath ?? Url.Content("~/Content/Custom/images/user-avatar-big-01.jpg");
+            var thisUserId = User.Identity.GetUserId();
+            var user = db.Users.Where(u => u.Id == thisUserId).FirstOrDefault();
+            var imagePath = user.ImagePath ?? "~/Content/Custom/images/user-avatar-big-01.jpg";
 
             if (customViewModel.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() >= 1)
             {
@@ -387,7 +388,7 @@ namespace HelpMe.Controllers
                     CustomViewModelId = comment.CustomViewModelId,
                     UserId = comment.UserId,
                     ExecutorRating = FindExecutorRating(user),//for js method 
-                    ExecutorImagePath = imagePath,//for js method 
+                    ExecutorImagePath = imagePath//for js method 
                 }, JsonRequestBehavior.AllowGet);
                 // return new JsonResult() { Data = comment, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
@@ -506,6 +507,7 @@ namespace HelpMe.Controllers
                 customViewModel.Status = CustomStatus.Open; // открытая заявка
                 customViewModel.UserId = User.Identity.GetUserId();
                 customViewModel.StartDate = DateTime.Now;
+                customViewModel.ExecutorStartDate = DateTime.Now;
                 db.Customs.Add(customViewModel);
                 await db.SaveChangesAsync();
                 string uName = db.Users.Where(c => c.Id == customViewModel.UserId).FirstOrDefault().UserName;
