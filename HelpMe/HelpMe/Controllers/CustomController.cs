@@ -371,6 +371,7 @@ namespace HelpMe.Controllers
             var thisUserId = User.Identity.GetUserId();
             var user = db.Users.Where(u => u.Id == thisUserId).FirstOrDefault();
             var imagePath = user.ImagePath ?? "~/Content/Custom/images/user-avatar-big-01.jpg";
+            imagePath = Url.Content(imagePath);
 
             if (customViewModel.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() >= 1)
             {

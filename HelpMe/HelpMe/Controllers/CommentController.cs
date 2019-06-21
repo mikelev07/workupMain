@@ -130,9 +130,11 @@ namespace HelpMe.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             CommentViewModel commentViewModel = await db.Comments.FindAsync(id);
+            var userId = commentViewModel.CustomViewModelId;
             db.Comments.Remove(commentViewModel);
             await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return Redirect($"{Url.Action("Details", "Custom", new { id = userId })}#boxed-list-ul");
+            //return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
