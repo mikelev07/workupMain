@@ -370,6 +370,7 @@ namespace HelpMe.Controllers
 
             var messages = db.Messages.Include(u => u.UserFrom)
                                       .Include(u => u.UserTo)
+                                      .Include(u => u.MessageAttaches)
                                       .Where(d => d.ChatDialogId == dialog.Id)
                                       .Where(m => (m.UserFromId == userFrom.Id && m.UserToId == userTo.Id) ||
                                       (m.UserFromId == userTo.Id) && m.UserToId == userFrom.Id).OrderBy(m => m.DateSend);
