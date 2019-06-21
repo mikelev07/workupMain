@@ -96,7 +96,7 @@ namespace HelpMe.Controllers
         // POST: Comment/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,UserId,OfferPrice,Days,CustomViewModelId")] CommentViewModel commentViewModel)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,UserId,OfferPrice,Days,Hours,CustomViewModelId")] CommentViewModel commentViewModel)
         {
             if (ModelState.IsValid)
             {

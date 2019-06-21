@@ -191,7 +191,7 @@
                     {
                         if (Model.UserId == User.Identity.GetUserId() || c.UserId == User.Identity.GetUserId())
                         {
-                            <li>
+                            <li id="user-comment-@c.Id">
                                 <div class="bid">
                                     <div class="bids-avatar">
                                         <div class="freelancer-avatar">
@@ -207,7 +207,7 @@
                                         <div class="freelancer-name">
                                             <h4>
                                                 <a href="@Url.Action("Details", "User", new { userName = c.User.UserName })">
-                                                    @c.User.UserName
+                                                    @c.User.UserName | @c.Id
                                                     @*<img class="flag" src="images/flags/gb.svg" alt="" title="United Kingdom" data-tippy-placement="top">*@
                                                 </a>
                                             </h4>
@@ -272,6 +272,7 @@
                             if (comments.Count() > 0)
                             {
                                 var comm = comments.FirstOrDefault();
+                                var updateTargetId = "user-comment-"+ comm.Id;
                                 <div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
 
 
@@ -285,18 +286,35 @@
 
                                             <!-- Tab -->
                                             <div class="popup-tab-content" id="tab">
-                                                @using (Html.BeginForm("Edit", "Comment", new { id = comm.Id }, FormMethod.Post))
+                                                
+                                                @using (Ajax.BeginForm("Edit", "Comment", new { Id=comm.Id}, new AjaxOptions {
+                                                    HttpMethod = "POST",
+                                                    UpdateTargetId = updateTargetId,
+                                                    OnSuccess = "OnSuccessEditPopup"
+                                                }))
                                                 {
                                                     @Html.AntiForgeryToken()
 
+                                                    @*@Html.Hidden("Id", comm.Id.ToString())*@
                                                     @Html.Hidden("UserId", comm.UserId.ToString())
                                                     @Html.Hidden("CustomViewModelId", comm.CustomViewModelId.ToString())
                                                     @Html.Hidden("Description", comm.Description.ToString())
+
+                                                    var timeCount = comm.Days;
+                                                    string nameTime = "Days";
+                                                    if (timeCount == 0)
+                                                    {
+                                                        nameTime = "Hours";
+                                                        timeCount = comm.Hours;
+                                                    }
 
                                                     <!-- Bidding -->
                                                     <div class="bidding-widget">
                                                         <!-- Headline -->
                                                         <span class="bidding-detail margin-top-30">Укажите время выполнения</span>
+                                                        <span>@updateTargetId</span>
+                                                        <span>@comm.Id.ToString()</span>
+                                                        <span>@comm.CustomViewModelId.ToString()</span>
 
                                                         <!-- Fields -->
                                                         <div class="bidding-fields">
@@ -304,14 +322,22 @@
                                                                 <!-- Quantity Buttons -->
                                                                 <div class="qtyButtons with-border">
                                                                     <div class="qtyDec"></div>
-                                                                    <input id="Days" type="text" name="Days" value="2">
+                                                                    <input id="Days" type="text" name="@nameTime" value="@timeCount">
                                                                     <div class="qtyInc"></div>
                                                                 </div>
                                                             </div>
                                                             <div class="bidding-field">
-                                                                <select class="selectpicker default with-border">
-                                                                    <option selected>дней</option>
-                                                                    <option>часов</option>
+                                                                <select class="selectpicker default with-border" id="edit-time-units">
+                                                                    @if (nameTime == "Days")
+                                                                    {
+                                                                        <option selected value="1">дней</option>
+                                                                        <option value="2">часов</option>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="1">дней</option>
+                                                                        <option selected value="2">часов</option>
+                                                                    }
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -319,13 +345,16 @@
                                                         <span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>
 
                                                         <div class="bidding-value"><span id="biddingVal1"></span> руб.</div>
-                                                        <input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text" value="" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="5000" data-slider-value="auto" data-slider-step="50" data-slider-tooltip="hide" />
+                                                        <input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text" 
+                                                               value="" data-slider-handle="custom" data-slider-currency="$" 
+                                                               data-slider-min="0" data-slider-max="5000" data-slider-value="@comm.OfferPrice" 
+                                                               data-slider-step="50" data-slider-tooltip="hide" />
                                                     </div>
 
                                                     //Для проверки
                                                     @*<div>commentId=@comm.Id</div>
-                                                    <div>description=@comm.Description</div>*@
-                                                    
+                                                        <div>description=@comm.Description</div>*@
+
 
                                                     <!-- Button -->
                                                     <button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button>
@@ -335,37 +364,37 @@
                                         </div>
                                     </div>
                                 </div>
-                            }
-                        }
 
-                        <div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
-                            <div class="sign-in-form">
-                                <ul class="popup-tabs-nav">
-                                    <li><a href="#tab">Удалить предложение</a></li>
-                                </ul>
+                                <div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+                                    <div class="sign-in-form">
+                                        <ul class="popup-tabs-nav">
+                                            <li><a href="#tab">Удалить предложение</a></li>
+                                        </ul>
 
-                                <div class="popup-tabs-container">
+                                        <div class="popup-tabs-container">
 
-                                    <!-- Tab -->
-                                    <div class="popup-tab-content" id="tab">
-                                        @using (Html.BeginForm("Delete", "Comment", new { id = c.Id }, FormMethod.Get))
-                                        {
-                                            @Html.AntiForgeryToken()
-                                            <div class="bidding-widget">
-                                                <!-- Headline -->
-                                                <div class="form-actions no-color">
-                                                    <span class="bidding-detail margin-top-30">Действительно хотите удалить предложение?</span>
-                                                </div>
+                                            <!-- Tab -->
+                                            <div class="popup-tab-content" id="tab">
+                                                @using (Html.BeginForm("Delete", "Comment", new { id = comm.Id }, FormMethod.Get))
+                                                {
+                                                    @Html.AntiForgeryToken()
+                                                    <div class="bidding-widget">
+                                                        <!-- Headline -->
+                                                        <div class="form-actions no-color">
+                                                            <span class="bidding-detail margin-top-30">Действительно хотите удалить предложение?</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Button -->
+                                                    <button class="button full-width button-sliding-icon ripple-effect" type="submit">Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                                }
                                             </div>
 
-                                            <!-- Button -->
-                                            <button class="button full-width button-sliding-icon ripple-effect" type="submit">Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i></button>
-                                        }
+                                        </div>
                                     </div>
-
                                 </div>
-                            </div>
-                        </div>
+                            }
+                        }
 
                         <div id="small-dialog-1" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
 
@@ -791,20 +820,30 @@
                 dataType: "json",
                success: function (data) {
                    //alert('rating = ' + data.ExecutorRating + ' | imagePath = ' + data.ExecutorImagePath);
+                   var commentId = data.Id;
                    executorsRating = data.ExecutorRating;
                    executorImagePath = data.ExecutorImagePath;
-                    var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li><a href="#tab">Редактировать предложение</a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab"><form method="post" action="/Comment/Edit/'
-                        + data.Id + '">  @Html.AntiForgeryToken() <input type="hidden" value="'
-                        + data.UserId + '" name="UserId" /> <input type="hidden" value="'
-                        + data.Description + '" name="Description" />   <input type="hidden" value="'
-                        + data.CustomViewModelId + '" name="CustomViewModelId" />  <input type="hidden" value="'
-                        + data.OfferPrice + '" name="OfferPrice" /> <div class="bidding-widget"><span class="bidding-detail margin-top-30">Укажите время выполнения</span><div class="bidding-fields"><div class="bidding-field"><div class="qtyButtons with-border"><div class="qtyDec"></div><input id="Days" type="text" name="Days" value="2"><div class="qtyInc"></div></div></div><div class="bidding-field"><select class="selectpicker default with-border">';
+                   //alert('days = ' + days + ' | hours =' + hours);
+                   var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li><a href="#tab">Редактировать предложение</a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab"><form method="post" action="/Comment/Edit/'
+                       + data.Id + '">  @Html.AntiForgeryToken() <input type="hidden" value="'
+                       + data.UserId + '" name="UserId" /> <input type="hidden" value="'
+                       + data.Description + '" name="Description" />   <input type="hidden" value="'
+                       + data.CustomViewModelId + '" name="CustomViewModelId" />  <input id = "OfferPrice" name = "OfferPrice" class="bidding-slider" type = "text" value ="'
+                       + '" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="5000" data-slider-value="'
+                       + data.OfferPrice + '" data-slider-step="50" data-slider-tooltip="hide"/>'
+                       + '<div class="bidding-widget"><span class="bidding-detail margin-top-30">Укажите время выполнения</span><div class="bidding-fields"><div class="bidding-field"><div class="qtyButtons with-border"><div class="qtyDec"></div>';
+                   if (days > 0) {
+                       modalEdit += '<input id="Days" type="text" name="Days" value="' + days + '">'
+                           + '<div class="qtyInc"></div></div></div><div class="bidding-field"><select class="selectpicker default with-border" id="edit-time-units">'
+                           + '<option value="1" selected>Дней</option><option value="2">Часов</option>';
+                   }
+                   else {
+                       modalEdit += '<input id="Days" type="text" name="Hours" value="' + hours + '">'
+                           + '<div class="qtyInc"></div></div></div><div class="bidding-field"><select class="selectpicker default with-border" id="edit-time-units">'
+                           + '<option value="1">Дней</option><option value="2" selected>Часов</option>';
+                   }
 
-                    var timeOption = '<option selected>Дней</option><option>Часов</option>';
-                    if (hours>0) {
-                        timeOption = '<option>Дней</option><option selected>Часов</option>';
-                    }
-                    modalEdit+=timeOption+'</select></div></div></div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>';
+                    modalEdit+='</select></div></div></div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>';
 
                   $("#boxed-list-ul").append(modalEdit);
                 var votes = $("#votes");
@@ -812,6 +851,7 @@
 
                    votes.text(parseInt(num) + 1);
                    $("#starId").attr("data-rating", executorsRating);
+                   $("#starId li").attr("id", "user-comment-" + commentId)
                    $("#_executorImage").attr('src', executorImagePath);
                    starRating('#starId');
                    $("#add-offer-container").hide();
@@ -820,7 +860,7 @@
                    });
                },
                error: function (data) {
-                   alert('Vse ploho s "Custom/People: "' + data.statusText);
+                   alert('Vse very ploho s "Custom/People: "' + data.statusText);
                }
             });
 
@@ -964,6 +1004,19 @@
 
             }
         });
+
+        $("#edit-time-units").change(function () {
+            if ($(this).val() == 1) {
+                $('#Days').attr('name', 'Days');
+            }
+            else {
+                $('#Days').attr('name', 'Hours');
+            }
+        });
+
+        function OnSuccessEditPopup() {
+            $("#small-dialog").hide();
+        }
 
     </script>
 
