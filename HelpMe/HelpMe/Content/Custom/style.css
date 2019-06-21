@@ -2881,23 +2881,31 @@ em.mm-counter {
 			line-height: 44px;
 		}
 
-			.pagination ul li a i {
-				line-height: 44px;
-				font-size: 24px;
-			}
+        .pagination ul li.active {
+            border-radius: 4px;
+            background-color: #28b661;
+            color: white
+        }
+
+
+
+.pagination ul li a i {
+    line-height: 44px;
+    font-size: 24px;
+}
 
 		.pagination ul li.blank {
 			color: #a0a0a0;
 			padding: 0 6px;
 		}
 
-		.section.gray .pagination .pagination-arrow a:hover,
-		.pagination ul li a.current-page,
-		.pagination ul li a:hover {
-			background-color: #333;
-			color: #fff;
-			box-shadow: 0 2px 8px rgba(0,0,0,0.2)
-		}
+        .section.gray .pagination .pagination-arrow a:hover,
+        .pagination ul li a.current-page,
+        .pagination ul li a:hover {
+            background-color: #28b661;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2)
+        }
 
 		.pagination ul li a.current-page {
 			background-color: #66676b;
@@ -2913,12 +2921,28 @@ em.mm-counter {
 	background-color: #eaeaea;
 }
 
+.PagedList-skipToPrevious {
+    background-color: #f0f0f0;
+}
 
+.PagedList-skipToNext {
+    background-color: #f0f0f0;
+
+}
+    .PagedList-skipToNext a {
+        background-color: #f0f0f0;
+        content: " ";
+    }
+
+    .PagedList-skipToNext a:before {
+        content: " ";
+        font-family: "Material Icons";
+    }
 /* ---------------------------------- */
 /* Sidebar Styles
 ------------------------------------- */
 .sidebar-container {
-	margin-bottom: 40px;
+    margin-bottom: 40px;
 }
 
 .full-page-container .sidebar-container {
@@ -7446,7 +7470,7 @@ table.basic-table {
 		color: #fff;
 		position: relative;
 		top: 0px;
-		line-height: 27px;
+		line-height: 19px;
 	}
 
 
@@ -13947,11 +13971,13 @@ body .pac-container {
 		display: block
 	}
 
-	.bid .freelancer-avatar img {
-		width: 100%;
-		border-radius: 50%;
-		cursor: pointer;
-	}
+    .bid .freelancer-avatar img {
+        width: 100%;
+        min-width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
 
 	.bid .freelancer-avatar .verified-badge {
 		position: absolute;

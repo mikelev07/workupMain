@@ -7,7 +7,7 @@
     ViewBag.Title = "Профиль";
 }
 
-<div class="single-page-header freelancer-header" data-background-image="images/single-freelancer.jpg">
+<div class="single-page-header freelancer-header" data-background-image="../Content/Custom/images/single-freelancer.jpg">
     <div class="container">
         <div class="row">
             <div class="col-md-8">
@@ -452,7 +452,7 @@
         </div>
     </div>
 </div>
-        }
+        
 <!-- Leave a Review Popup / End -->
 <!-- Spacer -->
 <div class="margin-top-15"></div>
@@ -514,23 +514,13 @@
                 <!-- Form -->
                 <form method="post">
 
-                    <div class="input-with-icon-left">
-                        <i class="icon-material-outline-account-circle"></i>
-                        <input type="text" class="input-text with-border" name="name" id="name" placeholder="Имя" />
-                    </div>
-
-                    <div class="input-with-icon-left">
-                        <i class="icon-material-baseline-mail-outline"></i>
-                        <input type="text" class="input-text with-border" name="emailaddress" id="emailaddress" placeholder="Почта" />
-                    </div>
-
+                    <select class="selectpicker" data-live-search="true">
+                        <option>Soda Poppin</option>
+                       
+                    </select>
+                    <br />
+                   
                     <textarea name="textarea" cols="10" placeholder="Сообщения" class="with-border"></textarea>
-
-                    <div class="uploadButton margin-top-25">
-                        <input class="uploadButton-input" type="file" accept="image/*, application/pdf" id="upload" multiple />
-                        <label class="uploadButton-button ripple-effect" for="upload">Add Attachments</label>
-                        <span class="uploadButton-file-name">Разрешенные типы: zip, pdf, png, jpg <br> Max. files size: 50 MB.</span>
-                    </div>
 
                 </form>
 
