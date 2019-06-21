@@ -13971,11 +13971,13 @@ body .pac-container {
 		display: block
 	}
 
-	.bid .freelancer-avatar img {
-		width: 100%;
-		border-radius: 50%;
-		cursor: pointer;
-	}
+    .bid .freelancer-avatar img {
+        width: 100%;
+        min-width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
 
 	.bid .freelancer-avatar .verified-badge {
 		position: absolute;

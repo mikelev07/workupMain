@@ -19,11 +19,11 @@
                             <h3>@Html.DisplayFor(model => model.Name)</h3>
                             <h5>@Html.DisplayFor(model => model.CategoryTask.Name)</h5>
                             <h5>@Html.DisplayFor(model => model.Skill.Name)</h5>
-                            <ul>
+                            <ul style="margin-top:5px">
                                 <li><a href="@Url.Action("Details", "User", new { userName = Model.User.UserName })"><i class="icon-material-outline-face"></i>@Html.DisplayFor(model => model.User.UserName)</a></li>
                                 @*<li><div class="verified-badge-with-title">Проверенный заказчик</div></li>*@
                             </ul>
-                            <div class="task-tags">
+                            <div class="task-tags" style="margin:0">
                                 <span>@HtmlExtensions.EnumDisplayNameFor(Model.Status)</span>
                             </div>
 
