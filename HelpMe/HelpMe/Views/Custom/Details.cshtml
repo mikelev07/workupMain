@@ -610,9 +610,14 @@
                     </div>
                 }
 
-                @if (Model.UserId != User.Identity.GetUserId() && Model.ExecutorId == null && Request.IsAuthenticated && Model.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() < 1)
+                @if (Model.UserId != User.Identity.GetUserId() && Model.ExecutorId == null && Request.IsAuthenticated)
                 {
-                    <div class="sidebar-widget" id="add-offer-container">
+                    var styleText = "display:none";
+                    if(Model.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() < 1)
+                    {
+                        styleText = "";
+                    }
+                    <div class="sidebar-widget" style="@styleText" id="add-offer-container">
                         <div class="bidding-widget">
                             <div class="bidding-headline"><h3>Добавить предложение</h3></div>
                             <div class="bidding-inner">
@@ -677,7 +682,6 @@
     <script>
         $(document).ready(function () {
             $("#boxed-list-ul > li:odd").css("background-color", "#fafafa");
-
         });
 
         function ConfirmDone() {
@@ -849,11 +853,11 @@
                            + '<option value="1">Дней</option><option value="2" selected>Часов</option>';
                    }
 
-                    modalEdit+='</select></div></div></div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>';
+                   modalEdit+='</select></div></div></div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>';
 
-                  $("#boxed-list-ul").append(modalEdit);
-                var votes = $("#votes");
-                var num = $("#votes").text();
+                   $("#boxed-list-ul").append(modalEdit);
+                   var votes = $("#votes");
+                   var num = $("#votes").text();
 
                    votes.text(parseInt(num) + 1);
                    $("#starId").attr("data-rating", executorsRating);
@@ -861,13 +865,13 @@
                    $("#_executorImage").attr('src', executorImagePath);
                    starRating('#starId');
                    $("#add-offer-container").hide();
-                   RangeSlider();
+                   //RangeSlider();
                    Snackbar.show({
                        text: 'Предложение успешно добавлено!',
                    });
                },
                error: function (data) {
-                   alert('Vse very ploho s "Custom/People: "' + data.statusText);
+                   alert('Bratan, it is very ploho s "Custom/People: "' + data.statusText);
                }
             });
 
@@ -934,28 +938,10 @@
 
                 $("#boxed-list-ul").on('click', '.popup-with-zoom-anim', function () {
 
-                    var elEdit = $('#small-dialog');
+                    var el = $('#small-dialog');
                     $.magnificPopup.open({
                         items: {
-                            src: elEdit,
-                        },
-                        type: 'inline',
-                        fixedContentPos: false,
-                        fixedBgPos: true,
-
-                        overflowY: 'auto',
-
-                        closeBtnInside: true,
-                        preloader: false,
-
-                        midClick: true,
-                        removalDelay: 300,
-                        mainClass: 'my-mfp-zoom-in'
-                    });
-                    var elDelete = $('#small-dialog-3');
-                    $.magnificPopup.open({
-                        items: {
-                            src: elDelete,
+                            src: el,
                         },
                         type: 'inline',
                         fixedContentPos: false,
@@ -1057,15 +1043,15 @@
             });
         }
 
-        function RangeSlider() {
-            var currencyAttr = $(".range-slider").attr('data-slider-currency');
-            $(".range-slider").slider({
-                formatter: function (value) {
-                    return currencyAttr + ThousandSeparator(parseInt(value[0])) + " - " + currencyAttr + ThousandSeparator(parseInt(value[1]));
-                }
-            });
-            $(".range-slider-single").slider();
-        }
+        //function RangeSlider() {
+        //    var currencyAttr = $(".range-slider").attr('data-slider-currency');
+        //    $(".range-slider").slider({
+        //        formatter: function (value) {
+        //            return currencyAttr + ThousandSeparator(parseInt(value[0])) + " - " + currencyAttr + ThousandSeparator(parseInt(value[1]));
+        //        }
+        //    });
+        //    $(".range-slider-single").slider();
+        //}
 
     </script>
 
