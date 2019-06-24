@@ -287,10 +287,10 @@
                                             <!-- Tab -->
                                             <div class="popup-tab-content" id="tab">
                                                 
-                                                @using (Ajax.BeginForm("Edit", "Comment", new { Id=comm.Id}, new AjaxOptions {
+                                                @using (Ajax.BeginForm("EditComment", new { Id=comm.Id}, new AjaxOptions {
                                                     HttpMethod = "POST",
                                                     UpdateTargetId = updateTargetId,
-                                                    OnSuccess = "OnSuccessEditPopup"
+                                                    InsertionMode = InsertionMode.Replace
                                                 }))
                                                 {
                                                     @Html.AntiForgeryToken()
@@ -375,7 +375,12 @@
 
                                             <!-- Tab -->
                                             <div class="popup-tab-content" id="tab">
-                                                @using (Html.BeginForm("Delete", "Comment", new { id = comm.Id }, FormMethod.Get))
+                                                @using (Ajax.BeginForm("DeleteComment", new { Id = comm.Id }, new AjaxOptions
+                                                {
+                                                    HttpMethod = "POST",
+                                                    UpdateTargetId = updateTargetId,
+                                                    InsertionMode = InsertionMode.Replace
+                                                }))
                                                 {
                                                     @Html.AntiForgeryToken()
                                                     <div class="bidding-widget">
@@ -1013,10 +1018,6 @@
                 $('#Days').attr('name', 'Hours');
             }
         });
-
-        function OnSuccessEditPopup() {
-            $("#small-dialog").hide();
-        }
 
     </script>
 

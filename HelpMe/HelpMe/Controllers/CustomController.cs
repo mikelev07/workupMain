@@ -394,6 +394,33 @@ namespace HelpMe.Controllers
                 // return new JsonResult() { Data = comment, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
         }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async void EditComment([Bind(Include = "Id,Name,Description,UserId,OfferPrice,Days,Hours,CustomViewModelId")] CommentViewModel commentViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(commentViewModel).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+                return;
+                // return RedirectToAction("Details", "Custom", new { id = commentViewModel.CustomViewModelId }); ;
+            }
+            //ViewBag.CustomViewModelId = new SelectList(db.Customs, "Id", "Name", commentViewModel.CustomViewModelId);
+            return;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async void DeleteComment(int? id)
+        {
+            CommentViewModel commentViewModel = await db.Comments.FindAsync(id);
+            var userId = commentViewModel.CustomViewModelId;
+            db.Comments.Remove(commentViewModel);
+            await db.SaveChangesAsync();
+            return;
+            //return RedirectToAction("Index");
+        }
 
 
         public FileResult GetFileAttach(string path, int? id)
