@@ -207,7 +207,7 @@
                                         <div class="freelancer-name">
                                             <h4>
                                                 <a href="@Url.Action("Details", "User", new { userName = c.User.UserName })">
-                                                    @c.User.UserName | @c.Id
+                                                    @c.User.UserName
                                                     @*<img class="flag" src="images/flags/gb.svg" alt="" title="United Kingdom" data-tippy-placement="top">*@
                                                 </a>
                                             </h4>
@@ -230,7 +230,7 @@
 
                                     <!-- Bid -->
                                     <div class="bids-bid">
-                                        <div class="bid-rate">
+                                        <div class="bid-rate"  id="user-comment-bid-rate-@c.Id">
                                             <div class="rate">@c.OfferPrice рублей</div>
                                             @if (c.Days > 0)
                                             {
@@ -272,7 +272,8 @@
                             if (comments.Count() > 0)
                             {
                                 var comm = comments.FirstOrDefault();
-                                var updateTargetId = "user-comment-"+ comm.Id;
+                                var updateTargetIdEdit = "user-comment-bid-rate-"+ @comm.Id;
+                                var updateTargetIdDelete = "user-comment-"+ comm.Id;
                                 <div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
 
 
@@ -288,9 +289,9 @@
                                             <div class="popup-tab-content" id="tab">
                                                 
                                                 @using (Ajax.BeginForm("EditComment", new { Id=comm.Id}, new AjaxOptions {
-                                                    HttpMethod = "POST",
-                                                    UpdateTargetId = updateTargetId,
-                                                    InsertionMode = InsertionMode.Replace
+                                                    UpdateTargetId = updateTargetIdEdit,
+                                                    InsertionMode = InsertionMode.Replace,
+                                                    OnSuccess = "OnSuccessEditComment"
                                                 }))
                                                 {
                                                     @Html.AntiForgeryToken()
@@ -312,9 +313,9 @@
                                                     <div class="bidding-widget">
                                                         <!-- Headline -->
                                                         <span class="bidding-detail margin-top-30">Укажите время выполнения</span>
-                                                        <span>@updateTargetId</span>
+                                                        @*<span>@updateTargetId</span>
                                                         <span>@comm.Id.ToString()</span>
-                                                        <span>@comm.CustomViewModelId.ToString()</span>
+                                                        <span>@comm.CustomViewModelId.ToString()</span>*@
 
                                                         <!-- Fields -->
                                                         <div class="bidding-fields">
@@ -375,11 +376,11 @@
 
                                             <!-- Tab -->
                                             <div class="popup-tab-content" id="tab">
-                                                @using (Ajax.BeginForm("DeleteComment", new { Id = comm.Id }, new AjaxOptions
+                                                @using (Ajax.BeginForm("DeleteComment","Custom", new { Id = comm.Id }, new AjaxOptions
                                                 {
-                                                    HttpMethod = "POST",
-                                                    UpdateTargetId = updateTargetId,
-                                                    InsertionMode = InsertionMode.Replace
+                                                    UpdateTargetId = updateTargetIdDelete,
+                                                    InsertionMode = InsertionMode.Replace,
+                                                    OnSuccess = "OnSuccessDeleteComment"
                                                 }))
                                                 {
                                                     @Html.AntiForgeryToken()
@@ -860,6 +861,7 @@
                    $("#_executorImage").attr('src', executorImagePath);
                    starRating('#starId');
                    $("#add-offer-container").hide();
+                   RangeSlider();
                    Snackbar.show({
                        text: 'Предложение успешно добавлено!',
                    });
@@ -932,10 +934,28 @@
 
                 $("#boxed-list-ul").on('click', '.popup-with-zoom-anim', function () {
 
-                    var el = $('#small-dialog');
+                    var elEdit = $('#small-dialog');
                     $.magnificPopup.open({
                         items: {
-                            src: el,
+                            src: elEdit,
+                        },
+                        type: 'inline',
+                        fixedContentPos: false,
+                        fixedBgPos: true,
+
+                        overflowY: 'auto',
+
+                        closeBtnInside: true,
+                        preloader: false,
+
+                        midClick: true,
+                        removalDelay: 300,
+                        mainClass: 'my-mfp-zoom-in'
+                    });
+                    var elDelete = $('#small-dialog-3');
+                    $.magnificPopup.open({
+                        items: {
+                            src: elDelete,
                         },
                         type: 'inline',
                         fixedContentPos: false,
@@ -952,58 +972,58 @@
                     });
                 });
 
-                $("#boxed-list-ul").on('click','#starId', function () {
-                    $('#starId').each(function () {
+                //$("#boxed-list-ul").on('click','#starId', function () {
+                //    $('#starId').each(function () {
 
-                        var dataRating = $(this).attr('data-rating');
+                //        var dataRating = $(this).attr('data-rating');
 
-                        // Rating Stars Output
-                        function starsOutput(firstStar, secondStar, thirdStar, fourthStar, fifthStar) {
-                            return ('' +
-                                '<span class="' + firstStar + '"></span>' +
-                                '<span class="' + secondStar + '"></span>' +
-                                '<span class="' + thirdStar + '"></span>' +
-                                '<span class="' + fourthStar + '"></span>' +
-                                '<span class="' + fifthStar + '"></span>');
-                        }
+                //        // Rating Stars Output
+                //        function starsOutput(firstStar, secondStar, thirdStar, fourthStar, fifthStar) {
+                //            return ('' +
+                //                '<span class="' + firstStar + '"></span>' +
+                //                '<span class="' + secondStar + '"></span>' +
+                //                '<span class="' + thirdStar + '"></span>' +
+                //                '<span class="' + fourthStar + '"></span>' +
+                //                '<span class="' + fifthStar + '"></span>');
+                //        }
 
-                        var fiveStars = starsOutput('star', 'star', 'star', 'star', 'star');
+                //        var fiveStars = starsOutput('star', 'star', 'star', 'star', 'star');
 
-                        var fourHalfStars = starsOutput('star', 'star', 'star', 'star', 'star half');
-                        var fourStars = starsOutput('star', 'star', 'star', 'star', 'star empty');
+                //        var fourHalfStars = starsOutput('star', 'star', 'star', 'star', 'star half');
+                //        var fourStars = starsOutput('star', 'star', 'star', 'star', 'star empty');
 
-                        var threeHalfStars = starsOutput('star', 'star', 'star', 'star half', 'star empty');
-                        var threeStars = starsOutput('star', 'star', 'star', 'star empty', 'star empty');
+                //        var threeHalfStars = starsOutput('star', 'star', 'star', 'star half', 'star empty');
+                //        var threeStars = starsOutput('star', 'star', 'star', 'star empty', 'star empty');
 
-                        var twoHalfStars = starsOutput('star', 'star', 'star half', 'star empty', 'star empty');
-                        var twoStars = starsOutput('star', 'star', 'star empty', 'star empty', 'star empty');
+                //        var twoHalfStars = starsOutput('star', 'star', 'star half', 'star empty', 'star empty');
+                //        var twoStars = starsOutput('star', 'star', 'star empty', 'star empty', 'star empty');
 
-                        var oneHalfStar = starsOutput('star', 'star half', 'star empty', 'star empty', 'star empty');
-                        var oneStar = starsOutput('star', 'star empty', 'star empty', 'star empty', 'star empty');
+                //        var oneHalfStar = starsOutput('star', 'star half', 'star empty', 'star empty', 'star empty');
+                //        var oneStar = starsOutput('star', 'star empty', 'star empty', 'star empty', 'star empty');
 
-                        // Rules
-                        if (dataRating >= 4.75) {
-                            $(this).append(fiveStars);
-                        } else if (dataRating >= 4.25) {
-                            $(this).append(fourHalfStars);
-                        } else if (dataRating >= 3.75) {
-                            $(this).append(fourStars);
-                        } else if (dataRating >= 3.25) {
-                            $(this).append(threeHalfStars);
-                        } else if (dataRating >= 2.75) {
-                            $(this).append(threeStars);
-                        } else if (dataRating >= 2.25) {
-                            $(this).append(twoHalfStars);
-                        } else if (dataRating >= 1.75) {
-                            $(this).append(twoStars);
-                        } else if (dataRating >= 1.25) {
-                            $(this).append(oneHalfStar);
-                        } else if (dataRating < 1.25) {
-                            $(this).append(oneStar);
-                        }
+                //        // Rules
+                //        if (dataRating >= 4.75) {
+                //            $(this).append(fiveStars);
+                //        } else if (dataRating >= 4.25) {
+                //            $(this).append(fourHalfStars);
+                //        } else if (dataRating >= 3.75) {
+                //            $(this).append(fourStars);
+                //        } else if (dataRating >= 3.25) {
+                //            $(this).append(threeHalfStars);
+                //        } else if (dataRating >= 2.75) {
+                //            $(this).append(threeStars);
+                //        } else if (dataRating >= 2.25) {
+                //            $(this).append(twoHalfStars);
+                //        } else if (dataRating >= 1.75) {
+                //            $(this).append(twoStars);
+                //        } else if (dataRating >= 1.25) {
+                //            $(this).append(oneHalfStar);
+                //        } else if (dataRating < 1.25) {
+                //            $(this).append(oneStar);
+                //        }
 
-                    });
-                });
+                //    });
+                //});
                 $('#starId')[0].click();
                 countUserComment++;
 
@@ -1018,6 +1038,34 @@
                 $('#Days').attr('name', 'Hours');
             }
         });
+
+        function OnSuccessEditComment() {
+            $(".mfp-close").trigger('click');
+            Snackbar.show({
+                text: 'Предложение успешно изменено!'
+            });
+        }
+
+        function OnSuccessDeleteComment() {
+            $(".mfp-close").trigger('click');
+            $("#add-offer-container").show();
+            var votes = $("#votes");
+            var num = $("#votes").text();
+            votes.text(parseInt(num) - 1);
+            Snackbar.show({
+                text: 'Предложение успешно удалено!'
+            });
+        }
+
+        function RangeSlider() {
+            var currencyAttr = $(".range-slider").attr('data-slider-currency');
+            $(".range-slider").slider({
+                formatter: function (value) {
+                    return currencyAttr + ThousandSeparator(parseInt(value[0])) + " - " + currencyAttr + ThousandSeparator(parseInt(value[1]));
+                }
+            });
+            $(".range-slider-single").slider();
+        }
 
     </script>
 

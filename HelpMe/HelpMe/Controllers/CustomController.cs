@@ -26,7 +26,7 @@ namespace HelpMe.Controllers
 
         // GET: Custom
         public ActionResult Index(int? id, string name, int? typeTaskId, int? taskCategoryId, int? skillId,
-            int? minPrice, int? maxPrice, bool? customsWithoutOffers, int sortId=1)
+            int? minPrice, int? maxPrice, bool? customsWithoutOffers, int sortId = 1)
         {
             //подгружаем только открытые заявки
             var customViewModels = db.Customs/*.Where(c=>c.Status==CustomStatus.Open)*/.Include(c => c.Comments).Include(c => c.User)
@@ -48,7 +48,7 @@ namespace HelpMe.Controllers
                 }
             }
 
-            if(minPrice!=null && minPrice!=0)
+            if (minPrice != null && minPrice != 0)
             {
                 customViewModels = customViewModels.Where(m => m.Price >= minPrice);
             }
@@ -58,7 +58,7 @@ namespace HelpMe.Controllers
                 customViewModels = customViewModels.Where(m => m.Price <= maxPrice);
             }
 
-            if(customsWithoutOffers==true)
+            if (customsWithoutOffers == true)
             {
                 customViewModels = customViewModels.Where(m => m.Comments.Count == 0);
             }
@@ -97,12 +97,12 @@ namespace HelpMe.Controllers
         public IQueryable<CustomViewModel> SortCustoms(IQueryable<CustomViewModel> customs, int sortId)
         {
             //by new customs
-            if(sortId==1)
+            if (sortId == 1)
             {
-                customs =  customs.OrderByDescending(m => m.StartDate);
+                customs = customs.OrderByDescending(m => m.StartDate);
             }
             //by old customs
-            if(sortId==2)
+            if (sortId == 2)
             {
                 customs = customs.OrderBy(m => m.StartDate);
             }
@@ -112,11 +112,11 @@ namespace HelpMe.Controllers
                 customs = customs.OrderByDescending(m => m.Price);
             }
             //by price ascending
-            if(sortId==4)
+            if (sortId == 4)
             {
                 customs = customs.OrderBy(m => m.Price);
             }
-            
+
             return customs;
         }
 
@@ -394,31 +394,45 @@ namespace HelpMe.Controllers
                 // return new JsonResult() { Data = comment, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async void EditComment([Bind(Include = "Id,Name,Description,UserId,OfferPrice,Days,Hours,CustomViewModelId")] CommentViewModel commentViewModel)
+        public async Task<JsonResult> EditComment([Bind(Include = "Id,Name,Description,UserId,OfferPrice,Days,Hours,CustomViewModelId")] CommentViewModel commentViewModel)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(commentViewModel).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return;
+
+                string htmlResult = "<div class=\"rate\">"
+                    + commentViewModel.OfferPrice
+                    + " рублей</div>";
+
+
+                if (commentViewModel.Days > 0)
+                {
+                    htmlResult += "<span> за " + commentViewModel.Days + " дней</span>";
+                }
+                else
+                {
+                    htmlResult += "<span> за "+ commentViewModel.Hours+ " дней</span>";
+                }
+                return Json(htmlResult);
                 // return RedirectToAction("Details", "Custom", new { id = commentViewModel.CustomViewModelId }); ;
             }
             //ViewBag.CustomViewModelId = new SelectList(db.Customs, "Id", "Name", commentViewModel.CustomViewModelId);
-            return;
+            return Json(true);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async void DeleteComment(int? id)
+        public async Task<JsonResult> DeleteComment(int? id)
         {
             CommentViewModel commentViewModel = await db.Comments.FindAsync(id);
             var userId = commentViewModel.CustomViewModelId;
             db.Comments.Remove(commentViewModel);
             await db.SaveChangesAsync();
-            return;
+            return Json("");
             //return RedirectToAction("Index");
         }
 
