@@ -115,20 +115,20 @@
                                     @if (Model.ExecutorId == User.Identity.GetUserId())
                                     {
                                         @Ajax.RawActionLink(
-                      "<i class='icon-feather-trash-2'></i>",
-                       "DeleteAttach",
-                       "Custom",
-                       new
-                       {
-                           id = i.Id,
-                       },
-                       new AjaxOptions
-                       {
-                           OnBegin = "return ConfirmDone()",
-                           HttpMethod = "POST",
-                           OnSuccess = "OnSuccess"
-                       }, new { @class = "button gray ripple-effect ico", @style = "margin-bottom:50px;", title = "Удалить", data_tippy_placement = "top" }
-                   )
+"<i class='icon-feather-trash-2'></i>",
+"DeleteAttach",
+"Custom",
+new
+{
+    id = i.Id,
+},
+new AjaxOptions
+{
+    OnBegin = "return ConfirmDone()",
+    HttpMethod = "POST",
+    OnSuccess = "OnSuccess"
+}, new { @class = "button gray ripple-effect ico", @style = "margin-bottom:50px;", title = "Удалить", data_tippy_placement = "top" }
+)
                                     }
                                 </div>
                                 @if (Model.UserId == User.Identity.GetUserId())
@@ -136,19 +136,19 @@
                                     if (i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
                                     {
                                         @Ajax.RawActionLink(
-                         "<i class='icon-material-outline-monetization-on'></i>Купить решение",
-                          "Buy",
-                          "Custom",
-                          new
-                          {
-                              id = i.Id,
-                          },
-                          new AjaxOptions
-                          {
-                              OnSuccess = "OnSuccess",
-                              HttpMethod = "POST"
-                          }, new { @class = "button ripple-effect margin-top-18", @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:" : "") }
-                      )
+      "<i class='icon-material-outline-monetization-on'></i>Купить решение",
+       "Buy",
+       "Custom",
+       new
+       {
+           id = i.Id,
+       },
+       new AjaxOptions
+       {
+           OnSuccess = "OnSuccess",
+           HttpMethod = "POST"
+       }, new { @class = "button ripple-effect margin-top-18", @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:" : "") }
+   )
                                     }
                                     else
                                     {
@@ -230,7 +230,7 @@
 
                                     <!-- Bid -->
                                     <div class="bids-bid">
-                                        <div class="bid-rate"  id="user-comment-bid-rate-@c.Id">
+                                        <div class="bid-rate" id="user-comment-bid-rate-@c.Id">
                                             <div class="rate">@c.OfferPrice рублей</div>
                                             @if (c.Days > 0)
                                             {
@@ -272,8 +272,8 @@
                             if (comments.Count() > 0)
                             {
                                 var comm = comments.FirstOrDefault();
-                                var updateTargetIdEdit = "user-comment-bid-rate-"+ @comm.Id;
-                                var updateTargetIdDelete = "user-comment-"+ comm.Id;
+                                var updateTargetIdEdit = "user-comment-bid-rate-" + @comm.Id;
+                                var updateTargetIdDelete = "user-comment-" + comm.Id;
                                 <div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
 
 
@@ -287,8 +287,9 @@
 
                                             <!-- Tab -->
                                             <div class="popup-tab-content" id="tab">
-                                                
-                                                @using (Ajax.BeginForm("EditComment", new { Id=comm.Id}, new AjaxOptions {
+
+                                                @using (Ajax.BeginForm("EditComment", new { Id = comm.Id }, new AjaxOptions
+                                                {
                                                     UpdateTargetId = updateTargetIdEdit,
                                                     InsertionMode = InsertionMode.Replace,
                                                     OnSuccess = "OnSuccessEditComment"
@@ -314,8 +315,8 @@
                                                         <!-- Headline -->
                                                         <span class="bidding-detail margin-top-30">Укажите время выполнения</span>
                                                         @*<span>@updateTargetId</span>
-                                                        <span>@comm.Id.ToString()</span>
-                                                        <span>@comm.CustomViewModelId.ToString()</span>*@
+                                                            <span>@comm.Id.ToString()</span>
+                                                            <span>@comm.CustomViewModelId.ToString()</span>*@
 
                                                         <!-- Fields -->
                                                         <div class="bidding-fields">
@@ -346,9 +347,9 @@
                                                         <span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>
 
                                                         <div class="bidding-value"><span id="biddingVal1"></span> руб.</div>
-                                                        <input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text" 
-                                                               value="" data-slider-handle="custom" data-slider-currency="$" 
-                                                               data-slider-min="0" data-slider-max="5000" data-slider-value="@comm.OfferPrice" 
+                                                        <input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text"
+                                                               value="" data-slider-handle="custom" data-slider-currency="$"
+                                                               data-slider-min="0" data-slider-max="5000" data-slider-value="@comm.OfferPrice"
                                                                data-slider-step="50" data-slider-tooltip="hide" />
                                                     </div>
 
@@ -376,7 +377,7 @@
 
                                             <!-- Tab -->
                                             <div class="popup-tab-content" id="tab">
-                                                @using (Ajax.BeginForm("DeleteComment","Custom", new { Id = comm.Id }, new AjaxOptions
+                                                @using (Ajax.BeginForm("DeleteComment", "Custom", new { Id = comm.Id }, new AjaxOptions
                                                 {
                                                     UpdateTargetId = updateTargetIdDelete,
                                                     InsertionMode = InsertionMode.Replace,
@@ -537,11 +538,11 @@
                     {
                         <a style="margin-bottom:20px" href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim">Подтвердить выполнение <i class="icon-material-outline-check"></i></a>
                     }
-                    <a href="@Url.Action("Revision", "Custom", new { id = Model.Id  })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
+                    <a href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
                 }
                 else if (Model.Status == HelpMe.Models.CustomStatus.Close)
                 {
-                    <a href="@Url.Action("Revision", "Custom", new { id = Model.Id  })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
+                    <a href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
                 }
                 else if (Model.Status == HelpMe.Models.CustomStatus.Revision)
                 {
@@ -610,59 +611,63 @@
                     </div>
                 }
 
-                @if (Model.UserId != User.Identity.GetUserId() && Model.ExecutorId == null && Request.IsAuthenticated)
-                {
-                    var styleText = "display:none";
-                    if(Model.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() < 1)
+                @{
+                    if (Request.IsAuthenticated && Model.UserId != User.Identity.GetUserId() && Model.ExecutorId == null && Model.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() < 1)
                     {
-                        styleText = "";
-                    }
-                    <div class="sidebar-widget" style="@styleText" id="add-offer-container">
-                        <div class="bidding-widget">
-                            <div class="bidding-headline"><h3>Добавить предложение</h3></div>
-                            <div class="bidding-inner">
-                                <!-- Headline -->
-                                <span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>
 
-                                <!-- Price Slider -->
-                                <div class="bidding-value"><span id="biddingVal"></span> руб.</div>
-                                <input id="slider-price" class="bidding-slider" type="text" value=""
-                                       data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
-                                       data-slider-max="5000" data-slider-value="auto" data-slider-step="50"
-                                       data-slider-tooltip="hide" />
+                        var styleText = "display:none";
+                        if (Model.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() < 1)
+                        {
+                            styleText = "display: block";
+                        }
 
-                                <!-- Headline -->
-                                <span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>
+                        <div class="sidebar-widget" id="add-offer-container" style="@styleText">
+                            <div class="bidding-widget">
+                                <div class="bidding-headline"><h3>Добавить предложение</h3></div>
+                                <div class="bidding-inner">
+                                    <!-- Headline -->
+                                    <span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>
 
-                                <!-- Fields -->
-                                <div class="bidding-fields">
-                                    <div class="bidding-field">
-                                        <!-- Quantity Buttons -->
-                                        <div class="qtyButtons">
-                                            <div class="qtyDec"></div>
-                                            <input id="time" type="text" name="qtyInput" value="1">
-                                            <div class="qtyInc"></div>
+                                    <!-- Price Slider -->
+                                    <div class="bidding-value"><span id="biddingVal"></span> руб.</div>
+                                    <input id="slider-price" class="bidding-slider" type="text" value=""
+                                           data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
+                                           data-slider-max="5000" data-slider-value="auto" data-slider-step="50"
+                                           data-slider-tooltip="hide" />
+
+                                    <!-- Headline -->
+                                    <span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>
+
+                                    <!-- Fields -->
+                                    <div class="bidding-fields">
+                                        <div class="bidding-field">
+                                            <!-- Quantity Buttons -->
+                                            <div class="qtyButtons">
+                                                <div class="qtyDec"></div>
+                                                <input id="time" type="text" name="qtyInput" value="1">
+                                                <div class="qtyInc"></div>
+                                            </div>
+                                        </div>
+                                        <div class="bidding-field">
+                                            <select class="selectpicker default" id="time-unit-select">
+                                                <option value="1" selected>Дней</option>
+                                                <option value="2">Часов</option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="bidding-field">
-                                        <select class="selectpicker default" id="time-unit-select">
-                                            <option value="1" selected>Дней</option>
-                                            <option value="2">Часов</option>
-                                        </select>
-                                    </div>
+                                    <!-- Headline -->
+                                    <span class="bidding-detail margin-top-30">Добавьте <strong>комментарий</strong></span>
+
+                                    <textarea id="desсription" cols="30" rows="5" class="with-border" maxlength="200"></textarea>
+
+                                    <!-- Button -->
+                                    <button id="snackbar-place-bid" class="button ripple-effect move-on-hover full-width margin-top-30"><span>Разместить предложение</span></button>
+
                                 </div>
-                                <!-- Headline -->
-                                <span class="bidding-detail margin-top-30">Добавьте <strong>комментарий</strong></span>
-
-                                <textarea id="desсription" cols="30" rows="5" class="with-border" maxlength="200"></textarea>
-
-                                <!-- Button -->
-                                <button id="snackbar-place-bid" class="button ripple-effect move-on-hover full-width margin-top-30"><span>Разместить предложение</span></button>
-
+                                <div class="bidding-signup">Еще нет аккаунта? <a href="#sign-in-dialog" class="register-tab sign-in popup-with-zoom-anim">Регистрация</a></div>
                             </div>
-                            <div class="bidding-signup">Еще нет аккаунта? <a href="#sign-in-dialog" class="register-tab sign-in popup-with-zoom-anim">Регистрация</a></div>
                         </div>
-                    </div>
+                    }
                 }
 
 
