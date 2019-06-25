@@ -837,8 +837,11 @@ new AjaxOptions
                    executorsRating = data.ExecutorRating;
                    executorImagePath = data.ExecutorImagePath;
                    //alert('days = ' + days + ' | hours =' + hours);
-                   var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li><a href="#tab">Редактировать предложение</a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab"><form method="post" action="/Comment/Edit/'
-                       + data.Id + '">  @Html.AntiForgeryToken() <input type="hidden" value="'
+                   var modalRemove = "";
+                   var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li><a href="#tab">Редактировать предложение</a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab">'
+                       +'< form method = "post" action = "/Custom/EditComment/'
+                       + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="OnSuccessEditComment" data-ajax-update="#user-comment-bid-rate-' +data.Id+'">'
+                       +'@Html.AntiForgeryToken() <input type="hidden" value="'
                        + data.UserId + '" name="UserId" /> <input type="hidden" value="'
                        + data.Description + '" name="Description" />   <input type="hidden" value="'
                        + data.CustomViewModelId + '" name="CustomViewModelId" />  <input id = "OfferPrice" name = "OfferPrice" class="bidding-slider" type = "text" value ="'
@@ -868,7 +871,7 @@ new AjaxOptions
                    $("#_executorImage").attr('src', executorImagePath);
                    starRating('#starId');
                    $("#add-offer-container").hide();
-                   //RangeSlider();
+                   RangeSlider();
                    Snackbar.show({
                        text: 'Предложение успешно добавлено!',
                    });
@@ -882,7 +885,8 @@ new AjaxOptions
             //    ' | timeUnit = ' + timeUnit + ' | days = ' + person.Days + ' | hours = ' + person.Hours);
             //alert('rating = ' + executorsRating+' | path = ' + executorImagePath);
 
-            var htmlEditBind = '<div style="margin-left: 23px;" class="buttons-to - right always - visible"><a href="#small-dialog" id="editSmall" class="popup-with-zoom-anim button dark ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a> <a href="#small-dialog-remove" class="button red ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a></div>';
+            var htmlEditBind = '<div style="margin-left: 23px;" class="buttons-to - right always - visible"><a href="#small-dialog" id="editSmall" class="popup-with-zoom-anim button dark ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>'
+            +'<a href="#small-dialog-3" class="button red ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a></div>';
             var htmlStar = "<div id=\"starId\" class=\"star-rating\" data-rating=\"" + executorsRating+"\"></div>";
             var htmlComment = "<li><div class='bid'><div class='bids-avatar'><div class='freelancer-avatar'><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name})'><img src='" + executorImagePath + "' alt='аватар' id='_executorImage'></a></div></div><div class='bids-content'><div class='freelancer-name'><h4><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name })'>@User.Identity.Name</a></h4>"
                 + htmlStar + "</div></div><div class='bids-bid'><div class='bid-rate'><div class='rate'>"
@@ -1057,15 +1061,49 @@ new AjaxOptions
             });
         }
 
-        //function RangeSlider() {
-        //    var currencyAttr = $(".range-slider").attr('data-slider-currency');
-        //    $(".range-slider").slider({
-        //        formatter: function (value) {
-        //            return currencyAttr + ThousandSeparator(parseInt(value[0])) + " - " + currencyAttr + ThousandSeparator(parseInt(value[1]));
-        //        }
-        //    });
-        //    $(".range-slider-single").slider();
-        //}
+        function RangeSlider() {
+            // Thousand Separator
+            function ThousandSeparator(nStr) {
+                nStr += '';
+                var x = nStr.split('.');
+                var x1 = x[0];
+                var x2 = x.length > 1 ? '.' + x[1] : '';
+                var rgx = /(\d+)(\d{3})/;
+                while (rgx.test(x1)) {
+                    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                }
+                return x1 + x2;
+            }
+
+            // Bidding Slider Average Value
+            var avgValue = (parseInt($('.bidding-slider').attr("data-slider-min")) + parseInt($('.bidding-slider').attr("data-slider-max"))) / 2;
+            if ($('.bidding-slider').data("slider-value") === 'auto') {
+                $('.bidding-slider').attr({ 'data-slider-value': avgValue });
+            }
+
+            // Bidding Slider Init
+            $('.bidding-slider').slider();
+
+            $(".bidding-slider").on("slide", function (slideEvt) {
+                $("#biddingVal").text(ThousandSeparator(parseInt(slideEvt.value)));
+            });
+            $(".bidding-slider").on("slide", function (slideEvt) {
+                $("#biddingVal1").text(ThousandSeparator(parseInt(slideEvt.value)));
+            });
+            $("#biddingVal").text(ThousandSeparator(parseInt($('.bidding-slider').val())));
+
+            $("#biddingVal1").text(ThousandSeparator(parseInt($('.bidding-slider').val())));
+            // Default Bootstrap Range Slider
+            var currencyAttr = $(".range-slider").attr('data-slider-currency');
+
+            $(".range-slider").slider({
+                formatter: function (value) {
+                    return currencyAttr + ThousandSeparator(parseInt(value[0])) + " - " + currencyAttr + ThousandSeparator(parseInt(value[1]));
+                }
+            });
+
+            $(".range-slider-single").slider();
+        }
 
     </script>
 
