@@ -436,6 +436,13 @@ namespace HelpMe.Controllers
             //return RedirectToAction("Index");
         }
 
+        public async Task<JsonResult> HasComments(int id)
+        {
+            CustomViewModel currentCustom = await db.Customs.FindAsync(id);
+            bool hasComments = currentCustom.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() >= 1;
+            return Json(hasComments);
+        }
+
 
         public FileResult GetFileAttach(string path, int? id)
         {

@@ -899,7 +899,7 @@ new AjaxOptions
                 + htmlEditBind + "</div></div><div class='item-description margin-top-30'><p>"
                 + person.Description + "</p></div></li>";
             
-            if (@Model.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() >= 1 || countUserComment >= 1) {
+            if (HasComments(@Model.Id) || countUserComment >= 1) {
                 Snackbar.show({
                     text: 'Вы не можете добавлять более 1 предложения!'
                 });
@@ -1028,6 +1028,16 @@ new AjaxOptions
             }
         });
 
+        function HasComments(customId) {
+            $.ajax({
+                type: 'GET',
+                url: "/Custom/HasComments/"+customId,
+                success: function (data) {
+                    return data;
+                }
+            });
+        }
+
         function OnSuccessEditComment() {
             $(".mfp-close").trigger('click');
             Snackbar.show({
@@ -1036,7 +1046,7 @@ new AjaxOptions
         }
 
         function OnSuccessDeleteComment() {
-            countUserComment--;
+            if (countUserComment > 0) countUserComment--;
             $(".mfp-close").trigger('click');
             $("#add-offer-container").show();
             var votes = $("#votes");
