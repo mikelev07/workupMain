@@ -265,220 +265,221 @@ new AjaxOptions
                                     <p style="word-break:break-word;"> @c.Description</p>
                                 </div>
                             </li>
-                        }
 
-                        {
-                            var comments = Model.Comments.Where(m => m.UserId == User.Identity.GetUserId());
-                            if (comments.Count() > 0)
                             {
-                                var comm = comments.FirstOrDefault();
-                                var updateTargetIdEdit = "user-comment-bid-rate-" + @comm.Id;
-                                var updateTargetIdDelete = "user-comment-" + comm.Id;
-                                <div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+                                if (Model.Comments.Where(m => m.UserId == User.Identity.GetUserId()).Count() > 0)
+                                {
+                                    var updateTargetIdEdit = "user-comment-bid-rate-" + c.Id;
+                                    var updateTargetIdDelete = "user-comment-" + c.Id;
+                                    <div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
 
 
-                                    <div class="sign-in-form">
+                                        <div class="sign-in-form">
 
-                                        <ul class="popup-tabs-nav">
-                                            <li><a href="#tab">Редактировать предложение</a></li>
-                                        </ul>
+                                            <ul class="popup-tabs-nav">
+                                                <li><a href="#tab">Редактировать предложение</a></li>
+                                            </ul>
+                                            <div class="popup-tabs-container">
 
-                                        <div class="popup-tabs-container">
+                                                <!-- Tab -->
+                                                <div class="popup-tab-content" id="tab">
 
-                                            <!-- Tab -->
-                                            <div class="popup-tab-content" id="tab">
-
-                                                @using (Ajax.BeginForm("EditComment", new { Id = comm.Id }, new AjaxOptions
-                                                {
-                                                    UpdateTargetId = updateTargetIdEdit,
-                                                    InsertionMode = InsertionMode.Replace,
-                                                    OnSuccess = "OnSuccessEditComment"
-                                                }))
-                                                {
-                                                    @Html.AntiForgeryToken()
-
-                                                    @*@Html.Hidden("Id", comm.Id.ToString())*@
-                                                    @Html.Hidden("UserId", comm.UserId.ToString())
-                                                    @Html.Hidden("CustomViewModelId", comm.CustomViewModelId.ToString())
-                                                    @Html.Hidden("Description", comm.Description.ToString())
-
-                                                    var timeCount = comm.Days;
-                                                    string nameTime = "Days";
-                                                    if (timeCount == 0)
+                                                    @using (Ajax.BeginForm("EditComment", new { Id = c.Id }, new AjaxOptions
                                                     {
-                                                        nameTime = "Hours";
-                                                        timeCount = comm.Hours;
-                                                    }
+                                                        UpdateTargetId = updateTargetIdEdit,
+                                                        InsertionMode = InsertionMode.Replace,
+                                                        OnSuccess = "OnSuccessEditComment"
+                                                    }))
+                                                    {
+                                                        @Html.AntiForgeryToken()
 
-                                                    <!-- Bidding -->
-                                                    <div class="bidding-widget">
-                                                        <!-- Headline -->
-                                                        <span class="bidding-detail margin-top-30">Укажите время выполнения</span>
-                                                        @*<span>@updateTargetId</span>
-                                                            <span>@comm.Id.ToString()</span>
-                                                            <span>@comm.CustomViewModelId.ToString()</span>*@
+                                                        @*@Html.Hidden("Id", c.Id.ToString())*@
+                                                        @Html.Hidden("UserId", c.UserId.ToString())
+                                                        @Html.Hidden("CustomViewModelId", c.CustomViewModelId.ToString())
+                                                        @Html.Hidden("Description", c.Description.ToString())
 
-                                                        <!-- Fields -->
-                                                        <div class="bidding-fields">
-                                                            <div class="bidding-field">
-                                                                <!-- Quantity Buttons -->
-                                                                <div class="qtyButtons with-border">
-                                                                    <div class="qtyDec"></div>
-                                                                    <input id="Days" type="text" name="@nameTime" value="@timeCount">
-                                                                    <div class="qtyInc"></div>
+                                                        var timeCount = c.Days;
+                                                        string nameTime = "Days";
+                                                        if (timeCount == 0)
+                                                        {
+                                                            nameTime = "Hours";
+                                                            timeCount = c.Hours;
+                                                        }
+
+                                                        <!-- Bidding -->
+                                                        <div class="bidding-widget">
+                                                            <!-- Headline -->
+                                                            <span class="bidding-detail margin-top-30">Укажите время выполнения</span>
+                                                            @*<span>@updateTargetId</span>
+                                                                <span>@comm.Id.ToString()</span>
+                                                                <span>@comm.CustomViewModelId.ToString()</span>*@
+
+                                                            <!-- Fields -->
+                                                            <div class="bidding-fields">
+                                                                <div class="bidding-field">
+                                                                    <!-- Quantity Buttons -->
+                                                                    <div class="qtyButtons with-border">
+                                                                        <div class="qtyDec"></div>
+                                                                        <input id="Days" type="text" name="@nameTime" value="@timeCount">
+                                                                        <div class="qtyInc"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="bidding-field">
+                                                                    <select class="selectpicker default with-border" id="edit-time-units">
+                                                                        @if (nameTime == "Days")
+                                                                        {
+                                                                            <option selected value="1">дней</option>
+                                                                            <option value="2">часов</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="1">дней</option>
+                                                                            <option selected value="2">часов</option>
+                                                                        }
+                                                                    </select>
                                                                 </div>
                                                             </div>
-                                                            <div class="bidding-field">
-                                                                <select class="selectpicker default with-border" id="edit-time-units">
-                                                                    @if (nameTime == "Days")
-                                                                    {
-                                                                        <option selected value="1">дней</option>
-                                                                        <option value="2">часов</option>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <option value="1">дней</option>
-                                                                        <option selected value="2">часов</option>
-                                                                    }
-                                                                </select>
+                                                            <br />
+                                                            <span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>
+
+                                                            <div class="bidding-value"><span id="biddingVal1"></span> руб.</div>
+                                                            <input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text"
+                                                                   value="" data-slider-handle="custom" data-slider-currency="$"
+                                                                   data-slider-min="0" data-slider-max="5000" data-slider-value="@c.OfferPrice"
+                                                                   data-slider-step="50" data-slider-tooltip="hide" />
+                                                        </div>
+
+                                                        //Для проверки
+                                                        @*<div>commentId=@c.Id</div>
+                                                            <div>description=@c.Description</div>*@
+
+
+                                                        <!-- Button -->
+                                                        <button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                                    }
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+                                        <div class="sign-in-form">
+                                            <ul class="popup-tabs-nav">
+                                                <li><a href="#tab">Удалить предложение</a></li>
+                                            </ul>
+
+                                            <div class="popup-tabs-container">
+
+                                                <!-- Tab -->
+                                                <div class="popup-tab-content" id="tab">
+                                                    @using (Ajax.BeginForm("DeleteComment", "Custom", new { Id = c.Id }, new AjaxOptions
+                                                    {
+                                                        UpdateTargetId = updateTargetIdDelete,
+                                                        InsertionMode = InsertionMode.Replace,
+                                                        OnSuccess = "OnSuccessDeleteComment"
+                                                    }))
+                                                    {
+                                                        @Html.AntiForgeryToken()
+                                                        <div class="bidding-widget">
+                                                            <!-- Headline -->
+                                                            <div class="form-actions no-color">
+                                                                <span class="bidding-detail margin-top-30">Действительно хотите удалить предложение?</span>
                                                             </div>
                                                         </div>
-                                                        <br />
-                                                        <span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>
 
-                                                        <div class="bidding-value"><span id="biddingVal1"></span> руб.</div>
-                                                        <input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text"
-                                                               value="" data-slider-handle="custom" data-slider-currency="$"
-                                                               data-slider-min="0" data-slider-max="5000" data-slider-value="@comm.OfferPrice"
-                                                               data-slider-step="50" data-slider-tooltip="hide" />
-                                                    </div>
+                                                        <!-- Button -->
+                                                        <button class="button full-width button-sliding-icon ripple-effect" type="submit">Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                                    }
+                                                </div>
 
-                                                    //Для проверки
-                                                    @*<div>commentId=@comm.Id</div>
-                                                        <div>description=@comm.Description</div>*@
-
-
-                                                    <!-- Button -->
-                                                    <button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button>
-                                                }
                                             </div>
-
                                         </div>
                                     </div>
-                                </div>
-
-                                <div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
-                                    <div class="sign-in-form">
-                                        <ul class="popup-tabs-nav">
-                                            <li><a href="#tab">Удалить предложение</a></li>
-                                        </ul>
-
-                                        <div class="popup-tabs-container">
-
-                                            <!-- Tab -->
-                                            <div class="popup-tab-content" id="tab">
-                                                @using (Ajax.BeginForm("DeleteComment", "Custom", new { Id = comm.Id }, new AjaxOptions
-                                                {
-                                                    UpdateTargetId = updateTargetIdDelete,
-                                                    InsertionMode = InsertionMode.Replace,
-                                                    OnSuccess = "OnSuccessDeleteComment"
-                                                }))
-                                                {
-                                                    @Html.AntiForgeryToken()
-                                                    <div class="bidding-widget">
-                                                        <!-- Headline -->
-                                                        <div class="form-actions no-color">
-                                                            <span class="bidding-detail margin-top-30">Действительно хотите удалить предложение?</span>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Button -->
-                                                    <button class="button full-width button-sliding-icon ripple-effect" type="submit">Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i></button>
-                                                }
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
+                                }
                             }
+
+                            <div id="small-dialog-1" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+                                <!--Tabs -->
+                                <div class="sign-in-form">
+
+                                    <ul class="popup-tabs-nav">
+                                        <li><a href="#tab1">Принять предложение</a></li>
+                                    </ul>
+
+                                    <div class="popup-tabs-container">
+
+                                        <!-- Tab -->
+                                        <div class="popup-tab-content" id="tab">
+
+                                            <!-- Welcome Text -->
+                                            <div class="welcome-text">
+                                                <h3>Принять предложение от исполнителя?</h3>
+                                                <div class="bid-acceptance margin-top-15">
+                                                    Надо указать тут цену
+                                                </div>
+
+                                            </div>
+
+                                            <form id="terms">
+                                                <div class="radio">
+                                                    <input id="radio-1" name="radio" type="radio" required>
+                                                    <label for="radio-1"><span class="radio-label"></span>  Я ознакомился с правилами</label>
+                                                </div>
+                                            </form>
+
+                                            <!-- Button -->
+                                            <a href="@Url.Action("ChooseExecutor", "Custom", new { id = Model.Id, userId = c.UserId })" class="margin-top-15 button full-width button-sliding-icon ripple-effect" type="submit" form="terms">Принять <i class="icon-material-outline-arrow-right-alt"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Bid Acceptance Popup / End -->
+
+                            <div id="small-dialog-2" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+                                <!--Tabs -->
+                                <div class="sign-in-form">
+
+                                    <ul class="popup-tabs-nav">
+                                        <li><a href="#tab2">Отправка сообщения</a></li>
+                                    </ul>
+
+                                    <div class="popup-tabs-container">
+
+                                        <!-- Tab -->
+                                        <div class="popup-tab-content" id="tab2">
+
+                                            <!-- Welcome Text -->
+                                            <div class="welcome-text">
+                                                <h3>Отправить сообщение Марианночке</h3>
+                                            </div>
+
+                                            <!-- Form -->
+                                            <form method="post" id="send-pm">
+                                                <textarea name="textarea" cols="10" placeholder="Message" class="with-border" required></textarea>
+                                            </form>
+
+                                            <!-- Button -->
+                                            <a class="button full-width button-sliding-icon ripple-effect" type="submit" form="send-pm">Отправить <i class="icon-material-outline-arrow-right-alt"></i></a>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
                         }
-
-                        <div id="small-dialog-1" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
-
-                            <!--Tabs -->
-                            <div class="sign-in-form">
-
-                                <ul class="popup-tabs-nav">
-                                    <li><a href="#tab1">Принять предложение</a></li>
-                                </ul>
-
-                                <div class="popup-tabs-container">
-
-                                    <!-- Tab -->
-                                    <div class="popup-tab-content" id="tab">
-
-                                        <!-- Welcome Text -->
-                                        <div class="welcome-text">
-                                            <h3>Принять предложение от исполнителя?</h3>
-                                            <div class="bid-acceptance margin-top-15">
-                                                Надо указать тут цену
-                                            </div>
-
-                                        </div>
-
-                                        <form id="terms">
-                                            <div class="radio">
-                                                <input id="radio-1" name="radio" type="radio" required>
-                                                <label for="radio-1"><span class="radio-label"></span>  Я ознакомился с правилами</label>
-                                            </div>
-                                        </form>
-
-                                        <!-- Button -->
-                                        <a href="@Url.Action("ChooseExecutor", "Custom", new { id = Model.Id, userId = c.UserId })" class="margin-top-15 button full-width button-sliding-icon ripple-effect" type="submit" form="terms">Принять <i class="icon-material-outline-arrow-right-alt"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Bid Acceptance Popup / End -->
-
-                        <div id="small-dialog-2" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
-
-                            <!--Tabs -->
-                            <div class="sign-in-form">
-
-                                <ul class="popup-tabs-nav">
-                                    <li><a href="#tab2">Отправка сообщения</a></li>
-                                </ul>
-
-                                <div class="popup-tabs-container">
-
-                                    <!-- Tab -->
-                                    <div class="popup-tab-content" id="tab2">
-
-                                        <!-- Welcome Text -->
-                                        <div class="welcome-text">
-                                            <h3>Отправить сообщение Марианночке</h3>
-                                        </div>
-
-                                        <!-- Form -->
-                                        <form method="post" id="send-pm">
-                                            <textarea name="textarea" cols="10" placeholder="Message" class="with-border" required></textarea>
-                                        </form>
-
-                                        <!-- Button -->
-                                        <a class="button full-width button-sliding-icon ripple-effect" type="submit" form="send-pm">Отправить <i class="icon-material-outline-arrow-right-alt"></i></a>
-
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
                     }
+                    <!--End of foreach-->
 
                 </ul>
             </div>
         </div>
+
+
+
         <div id="small-dialog-4" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
 
             <!--Tabs -->
@@ -611,63 +612,60 @@ new AjaxOptions
                     </div>
                 }
 
-                @{
-                    if (Request.IsAuthenticated && Model.UserId != User.Identity.GetUserId() && Model.ExecutorId == null && Model.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() < 1)
+                @if (Request.IsAuthenticated && Model.UserId != User.Identity.GetUserId() && Model.ExecutorId == null)
+                {
+                    var styleText = "display:none";
+                    if (Model.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() < 1)
                     {
+                        styleText = "display: block";
+                    }
 
-                        var styleText = "display:none";
-                        if (Model.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() < 1)
-                        {
-                            styleText = "display: block";
-                        }
+                    <div class="sidebar-widget" id="add-offer-container" style="@styleText">
+                        <div class="bidding-widget">
+                            <div class="bidding-headline"><h3>Добавить предложение</h3></div>
+                            <div class="bidding-inner">
+                                <!-- Headline -->
+                                <span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>
 
-                        <div class="sidebar-widget" id="add-offer-container" style="@styleText">
-                            <div class="bidding-widget">
-                                <div class="bidding-headline"><h3>Добавить предложение</h3></div>
-                                <div class="bidding-inner">
-                                    <!-- Headline -->
-                                    <span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>
+                                <!-- Price Slider -->
+                                <div class="bidding-value"><span id="biddingVal"></span> руб.</div>
+                                <input id="slider-price" class="bidding-slider" type="text" value="@Model.Price"
+                                       data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
+                                       data-slider-max="5000" data-slider-value="@Model.Price" data-slider-step="50"
+                                       data-slider-tooltip="hide" />
 
-                                    <!-- Price Slider -->
-                                    <div class="bidding-value"><span id="biddingVal"></span> руб.</div>
-                                    <input id="slider-price" class="bidding-slider" type="text" value=""
-                                           data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
-                                           data-slider-max="5000" data-slider-value="auto" data-slider-step="50"
-                                           data-slider-tooltip="hide" />
+                                <!-- Headline -->
+                                <span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>
 
-                                    <!-- Headline -->
-                                    <span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>
-
-                                    <!-- Fields -->
-                                    <div class="bidding-fields">
-                                        <div class="bidding-field">
-                                            <!-- Quantity Buttons -->
-                                            <div class="qtyButtons">
-                                                <div class="qtyDec"></div>
-                                                <input id="time" type="text" name="qtyInput" value="1">
-                                                <div class="qtyInc"></div>
-                                            </div>
-                                        </div>
-                                        <div class="bidding-field">
-                                            <select class="selectpicker default" id="time-unit-select">
-                                                <option value="1" selected>Дней</option>
-                                                <option value="2">Часов</option>
-                                            </select>
+                                <!-- Fields -->
+                                <div class="bidding-fields">
+                                    <div class="bidding-field">
+                                        <!-- Quantity Buttons -->
+                                        <div class="qtyButtons">
+                                            <div class="qtyDec"></div>
+                                            <input id="time" type="text" name="qtyInput" value="1">
+                                            <div class="qtyInc"></div>
                                         </div>
                                     </div>
-                                    <!-- Headline -->
-                                    <span class="bidding-detail margin-top-30">Добавьте <strong>комментарий</strong></span>
-
-                                    <textarea id="desсription" cols="30" rows="5" class="with-border" maxlength="200"></textarea>
-
-                                    <!-- Button -->
-                                    <button id="snackbar-place-bid" class="button ripple-effect move-on-hover full-width margin-top-30"><span>Разместить предложение</span></button>
-
+                                    <div class="bidding-field">
+                                        <select class="selectpicker default" id="time-unit-select">
+                                            <option value="1" selected>Дней</option>
+                                            <option value="2">Часов</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="bidding-signup">Еще нет аккаунта? <a href="#sign-in-dialog" class="register-tab sign-in popup-with-zoom-anim">Регистрация</a></div>
+                                <!-- Headline -->
+                                <span class="bidding-detail margin-top-30">Добавьте <strong>комментарий</strong></span>
+
+                                <textarea id="desсription" cols="30" rows="5" class="with-border" maxlength="200" placeholder="Оставьте своё предложение для заказчика..."></textarea>
+
+                                <!-- Button -->
+                                <button id="snackbar-place-bid" class="button ripple-effect move-on-hover full-width margin-top-30"><span>Разместить предложение</span></button>
+
                             </div>
+                            <div class="bidding-signup">Еще нет аккаунта? <a href="#sign-in-dialog" class="register-tab sign-in popup-with-zoom-anim">Регистрация</a></div>
                         </div>
-                    }
+                    </div>
                 }
 
 
@@ -900,7 +898,7 @@ new AjaxOptions
             htmlComment += '</div>'
                 + htmlEditBind + "</div></div><div class='item-description margin-top-30'><p>"
                 + person.Description + "</p></div></li>";
-
+            
             if (@Model.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() >= 1 || countUserComment >= 1) {
                 Snackbar.show({
                     text: 'Вы не можете добавлять более 1 предложения!'
@@ -1038,6 +1036,7 @@ new AjaxOptions
         }
 
         function OnSuccessDeleteComment() {
+            countUserComment--;
             $(".mfp-close").trigger('click');
             $("#add-offer-container").show();
             var votes = $("#votes");
