@@ -281,7 +281,7 @@ $(function () {
 
             var dialogHtml = '<li id="' + htmlEncode(dName) + '-conid" class="" onclick="setValue(this.id)" ><a id="' + htmlEncode(dName) + '" href="#" onclick="loadHistory(this.id)"><div id="" class="message-avatar"><i id="' + htmlEncode(dName) + '-status" class="status-icon status-offline"></i><img src="../Content/Custom/images/user-avatar-small-03.jpg" alt="" /></div><div class="message-by"><div class="message-by-headline"><h5>' + htmlEncode(dName) + '</h5><span class="notificationNew" id="">4 часа назад</span></div><p id="' + htmlEncode(dName) + '-lastmess">Новых сообщений<span style="color:white" id="' + htmlEncode(dName) + '-notif" class="nav-tag-mess">' + htmlEncode(unCount) + '</span></p></div></a></li >';
 
-            $('#chatusers').append(dialogHtml);
+        $('#chatusers').prepend(dialogHtml);
         
         };
 
