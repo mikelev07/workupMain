@@ -207,7 +207,7 @@ new AjaxOptions
                                         <div class="freelancer-name">
                                             <h4>
                                                 <a href="@Url.Action("Details", "User", new { userName = c.User.UserName })">
-                                                    @c.User.UserName
+                                                    @c.User.UserName | @c.Id
                                                     @*<img class="flag" src="images/flags/gb.svg" alt="" title="United Kingdom" data-tippy-placement="top">*@
                                                 </a>
                                             </h4>
@@ -271,13 +271,14 @@ new AjaxOptions
                                 {
                                     var updateTargetIdEdit = "user-comment-bid-rate-" + c.Id;
                                     var updateTargetIdDelete = "user-comment-" + c.Id;
+
                                     <div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
 
 
                                         <div class="sign-in-form">
 
                                             <ul class="popup-tabs-nav">
-                                                <li><a href="#tab">Редактировать предложение</a></li>
+                                                <li><a href="#tab">Редактировать предложение @c.Id</a></li>
                                             </ul>
                                             <div class="popup-tabs-container">
 
@@ -363,7 +364,7 @@ new AjaxOptions
                                     <div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
                                         <div class="sign-in-form">
                                             <ul class="popup-tabs-nav">
-                                                <li><a href="#tab">Удалить предложение</a></li>
+                                                <li><a href="#tab">Удалить предложение @c.Id</a></li>
                                             </ul>
 
                                             <div class="popup-tabs-container">
@@ -822,7 +823,7 @@ new AjaxOptions
             var executorsRating;
             var executorImagePath;
            // $.post("/Custom/People", person, null, "json");
-            
+
            $.ajax({
                 type: "POST",
                 url: "/Custom/People",
@@ -835,8 +836,7 @@ new AjaxOptions
                    executorsRating = data.ExecutorRating;
                    executorImagePath = data.ExecutorImagePath;
                    //alert('days = ' + days + ' | hours =' + hours);
-                   var modalRemove = "";
-                   var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li class="active"><a href="#tab">Редактировать предложение</a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab">'
+                   var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li class="active"><a href="#tab">Редактировать предложение ' + data.Id + '</a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab">'
                        + '<form method="post" action="/Custom/EditComment/'
                        + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="OnSuccessEditComment" data-ajax-update="#user-comment-bid-rate-' + data.Id + '">'
                        + '@Html.AntiForgeryToken() <input type="hidden" value="'
@@ -867,16 +867,30 @@ new AjaxOptions
                        + data.OfferPrice + '" data-slider-step="50" data-slider-tooltip="hide"/>'
                        + '</div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>';
 
+
+                   var modalRemove = '<div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">'
+                       + '<div class="sign-in-form"><ul class="popup-tabs-nav">'
+                       + '<li><a href="#tab">Удалить предложение ' + data.Id + '</a></li>'
+                       + '</ul><div class="popup-tabs-container">'
+                       + '<div class="popup-tab-content" id="tab">'
+                       + '<form method="post" action="/Custom/DeleteComment/'
+                       + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="OnSuccessDeleteComment" data-ajax-update="#user-comment-' + data.Id + '">'
+                       + '@Html.AntiForgeryToken() <div class="bidding-widget">'
+                       + '<div class="form-actions no-color"><span class="bidding-detail margin-top-30">Действительно хотите удалить предложение?</span>'
+                       + '</div></div>'
+                       + '<button class="button full-width button-sliding-icon ripple-effect" type="submit">Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i></button>'
+                       + '</form></div></div></div></div>';
+
                    var votes = $("#votes");
                    var num = $("#votes").text();
                    votes.text(parseInt(num) + 1);
 
                    /****/
                    var htmlEditBind = '<div style="margin-left: 23px;" class="buttons-to - right always - visible"><a href="#small-dialog" id="editSmall" class="popup-with-zoom-anim button dark ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>'
-                       +'<a href="#small-dialog-3" class="button red ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a></div>';
+                       +' <a href="#small-dialog-3" class="button red ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a></div>';
                    var htmlStar = "<div id=\"starId\" class=\"star-rating\" data-rating=\"" + executorsRating+"\"></div>";
 
-                   var htmlComment = '<li id="user-comment-' + data.Id + '">' + "<div class='bid'><div class='bids-avatar'><div class='freelancer-avatar'><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name})'><img src='" + executorImagePath + "' alt='аватар' id='_executorImage'></a></div></div><div class='bids-content'><div class='freelancer-name'><h4><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name })'>@User.Identity.Name</a></h4>"
+                   var htmlComment = '<li id="user-comment-' + data.Id + '">' + "<div class='bid'><div class='bids-avatar'><div class='freelancer-avatar'><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name})'><img src='" + executorImagePath + "' alt='аватар' id='_executorImage'></a></div></div><div class='bids-content'><div class='freelancer-name'><h4><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name })'>@User.Identity.Name | " + data.Id + "</a></h4>"
                    + htmlStar + "</div></div><div class='bids-bid'><div class='bid-rate' id='user-comment-bid-rate-"+data.Id+"'><div class='rate'>"
                    + person.OfferPrice + " рублей</div><span>за ";
 
@@ -903,8 +917,17 @@ new AjaxOptions
                         if ($('#boxed-list-ul>li[id*="user-comment"]').is(':empty')) {
                             $('#boxed-list-ul>li[id*="user-comment"]').remove();
                         }
-                        $("#boxed-list-ul").append(htmlComment);
+                       $("#boxed-list-ul").append(htmlComment);
+                       while ($('#small-dialog').length) {
+                           alert('remove EDIT');
+                           $('#small-dialog').remove();
+                       }
+                       while($('#small-dialog-3').length) {
+                           alert('remove DELETE');
+                           $('#small-dialog-3').remove();
+                       }
                         $("#boxed-list-ul").append(modalEdit);
+                        $("#boxed-list-ul").append(modalRemove);
                         function qtySum() {
                            var arr = document.getElementsByName('qtyInput');
                            var tot = 0;
@@ -936,8 +959,8 @@ new AjaxOptions
                         });
 
 
-                        $("#boxed-list-ul").on('click', '.popup-with-zoom-anim', function () {
-
+                       $('#boxed-list-ul').on('click', 'a[href="#small-dialog"]', function () {
+                           //alert('edit');
                            var el = $('#small-dialog');
                            $.magnificPopup.open({
                                items: {
@@ -955,8 +978,30 @@ new AjaxOptions
                                midClick: true,
                                removalDelay: 300,
                                mainClass: 'my-mfp-zoom-in'
+                            });
+                       });
+
+                       $('#boxed-list-ul').on('click', 'a[href="#small-dialog-3"]', function () {
+                           //alert('delete');
+                           var el = $('#small-dialog-3');
+                           $.magnificPopup.open({
+                               items: {
+                                   src: el,
+                               },
+                               type: 'inline',
+                               fixedContentPos: false,
+                               fixedBgPos: true,
+
+                               overflowY: 'auto',
+
+                               closeBtnInside: true,
+                               preloader: false,
+
+                               midClick: true,
+                               removalDelay: 300,
+                               mainClass: 'my-mfp-zoom-in'
                            });
-                        });
+                       });
                         $('#starId')[0].click();
                         countUserComment++;
 
@@ -991,6 +1036,9 @@ new AjaxOptions
             }
         });
 
+
+
+
         function HasComments(customId) {
             $.ajax({
                 type: 'GET',
@@ -1000,6 +1048,9 @@ new AjaxOptions
                 }
             });
         }
+
+
+
 
         function OnSuccessEditComment() {
             $(".mfp-close").trigger('click');
@@ -1015,15 +1066,24 @@ new AjaxOptions
             var votes = $("#votes");
             var num = $("#votes").text();
             votes.text(parseInt(num) - 1);
-            //удаляем модальное окно, 
+            //удаляем модальные окна, 
             //а то косяк с редактированием после удаления
-            if ($('#small-dialog').length) {
+            while ($('#small-dialog').length) {
+                alert('remove EDIT');
                 $('#small-dialog').remove();
+            }
+            while ($('#small-dialog-3').length) {
+                alert('remove DELETE');
+                $('#small-dialog-3').remove();
             }
             Snackbar.show({
                 text: 'Предложение успешно удалено!',
             });
         }
+
+
+
+
 
         function RangeSlider() {
             // Thousand Separator
