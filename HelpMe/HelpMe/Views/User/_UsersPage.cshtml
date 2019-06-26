@@ -26,7 +26,7 @@
                         }
                     }
                     <div title="занят" class="@divClass"></div>
-                    <a href="@Url.Action("Details", "User", new { userName = i.Username })"><img src="@Url.Content(i?.ImagePath)" ></a>
+                    <a href="@Url.Action("Details", "User", new { userName = i.Username })" target="_blank"><img src="@Url.Content(i?.ImagePath)" ></a>
                 </div>
 
                 <!-- Name -->
@@ -53,7 +53,7 @@
                     }
                 }
                 <div class="freelancer-name">
-                    <h4><a href="@Url.Action("Details", "User", new { userName = i.Username })">@i.Username <span id="@i.Username-st" style="@styleText">@spanText</span></a></h4>
+                    <h4><a href="@Url.Action("Details", "User", new { userName = i.Username })" target="_blank">@i.Username <span id="@i.Username-st" style="@styleText">@spanText</span></a></h4>
                     <span>
                     <div class="task-tags" style="margin:0">
                         @*<span>@i.TaskCategories.Take(1).FirstOrDefault().Name</span>
@@ -88,7 +88,7 @@
 
                 </ul>
             </div>
-            <a href=@Url.Action("Details", new { userName = i.Username }) class="button button-sliding-icon ripple-effect">Посмотреть профиль <i class="icon-material-outline-arrow-right-alt"></i></a>
+            <a href=@Url.Action("Details", new { userName = i.Username }) class="button button-sliding-icon ripple-effect" target="_blank">Посмотреть профиль <i class="icon-material-outline-arrow-right-alt"></i></a>
         </div>
     </div>
 }

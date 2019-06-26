@@ -207,7 +207,7 @@ new AjaxOptions
                                         <div class="freelancer-name">
                                             <h4>
                                                 <a href="@Url.Action("Details", "User", new { userName = c.User.UserName })">
-                                                    @c.User.UserName
+                                                    @c.User.UserName | @c.Id
                                                     @*<img class="flag" src="images/flags/gb.svg" alt="" title="United Kingdom" data-tippy-placement="top">*@
                                                 </a>
                                             </h4>
@@ -277,7 +277,7 @@ new AjaxOptions
                                         <div class="sign-in-form">
 
                                             <ul class="popup-tabs-nav">
-                                                <li><a href="#tab">Редактировать предложение</a></li>
+                                                <li><a href="#tab">Редактировать предложение @c.Id</a></li>
                                             </ul>
                                             <div class="popup-tabs-container">
 
@@ -825,26 +825,27 @@ new AjaxOptions
             var executorsRating;
             var executorImagePath;
            // $.post("/Custom/People", person, null, "json");
-
+            
            $.ajax({
                 type: "POST",
                 url: "/Custom/People",
                 data: person,
                 dataType: "json",
                success: function (data) {
+                   //alert('added comment #' + data.Id);
                    //alert('rating = ' + data.ExecutorRating + ' | imagePath = ' + data.ExecutorImagePath);
                    var commentId = data.Id;
                    executorsRating = data.ExecutorRating;
                    executorImagePath = data.ExecutorImagePath;
                    //alert('days = ' + days + ' | hours =' + hours);
                    var modalRemove = "";
-                   var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li><a href="#tab">Редактировать предложение</a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab">'
-                       +'< form method = "post" action = "/Custom/EditComment/'
+                   var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li><a href="#tab">Редактировать предложение ' + data.Id + '</a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab">'
+                       +'<form method="post" action="/Custom/EditComment/'
                        + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="OnSuccessEditComment" data-ajax-update="#user-comment-bid-rate-' +data.Id+'">'
-                       +'@Html.AntiForgeryToken() <input type="hidden" value="'
+                       + '@Html.AntiForgeryToken() <input type="hidden" value="'
                        + data.UserId + '" name="UserId" /> <input type="hidden" value="'
                        + data.Description + '" name="Description" />   <input type="hidden" value="'
-                       + data.CustomViewModelId + '" name="CustomViewModelId" />  <input id = "OfferPrice" name = "OfferPrice" class="bidding-slider" type = "text" value ="'
+                       + data.CustomViewModelId + '" name="CustomViewModelId" />  <input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text" value="'
                        + '" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="5000" data-slider-value="'
                        + data.OfferPrice + '" data-slider-step="50" data-slider-tooltip="hide"/>'
                        + '<div class="bidding-widget"><span class="bidding-detail margin-top-30">Укажите время выполнения</span><div class="bidding-fields"><div class="bidding-field"><div class="qtyButtons with-border"><div class="qtyDec"></div>';
@@ -861,11 +862,102 @@ new AjaxOptions
 
                    modalEdit+='</select></div></div></div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>';
 
-                   $("#boxed-list-ul").append(modalEdit);
                    var votes = $("#votes");
                    var num = $("#votes").text();
-
                    votes.text(parseInt(num) + 1);
+
+                   /****/
+                   var htmlEditBind = '<div style="margin-left: 23px;" class="buttons-to - right always - visible"><a href="#small-dialog" id="editSmall" class="popup-with-zoom-anim button dark ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>'
+                       +'<a href="#small-dialog-3" class="button red ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a></div>';
+                   var htmlStar = "<div id=\"starId\" class=\"star-rating\" data-rating=\"" + executorsRating+"\"></div>";
+
+                   var htmlComment = '<li id="user-comment-' + data.Id + '">' + "<div class='bid'><div class='bids-avatar'><div class='freelancer-avatar'><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name})'><img src='" + executorImagePath + "' alt='аватар' id='_executorImage'></a></div></div><div class='bids-content'><div class='freelancer-name'><h4><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name })'>@User.Identity.Name | " + data.Id + "</a></h4>"
+                   + htmlStar + "</div></div><div class='bids-bid'><div class='bid-rate'><div class='rate'>"
+                   + person.OfferPrice + " рублей</div><span>за ";
+
+                   if (person.Days > 0) {
+                       htmlComment += person.Days + ' дней</span>';
+                   }
+                   else {
+                       htmlComment += person.Hours + ' часов</span>';
+                   }
+
+                   htmlComment += '</div>'
+                       + htmlEditBind + "</div></div><div class='item-description margin-top-30'><p>"
+                       + person.Description + "</p></div></li>";
+
+                   if (HasComments(@Model.Id) || countUserComment >= 1) {
+                        Snackbar.show({
+                            text: 'Вы не можете добавлять более 1 предложения!',
+                        });
+                        return null;
+                   }
+                   else {
+                    //шоб не было отступа из-за <li></li>
+                    //при добавлении нового комента(сразу же после удаления)
+                        if ($('#boxed-list-ul>li[id*="user-comment"]').is(':empty')) {
+                            $('#boxed-list-ul>li[id*="user-comment"]').remove();
+                        }
+                        $("#boxed-list-ul").append(htmlComment);
+                        $("#boxed-list-ul").append(modalEdit);
+                        function qtySum() {
+                           var arr = document.getElementsByName('qtyInput');
+                           var tot = 0;
+                           for (var i = 0; i < arr.length; i++) {
+                               if (parseInt(arr[i].value))
+                                   tot += parseInt(arr[i].value);
+                           }
+                        }
+                        qtySum();
+
+                        $(document).on("click", ".qtyDec, .qtyInc", function () {
+
+                           var $button = $(this);
+                           var oldValue = $button.parent().find("input").val();
+
+                           if ($button.hasClass('qtyInc')) {
+                               $button.parent().find("input").val(parseFloat(oldValue) + 1);
+                           } else {
+                               if (oldValue > 1) {
+                                   $button.parent().find("input").val(parseFloat(oldValue) - 1);
+                               } else {
+                                   $button.parent().find("input").val(1);
+                               }
+                           }
+
+                           qtySum();
+                           $(".qtyTotal").addClass("rotate-x");
+
+                        });
+
+
+                        $("#boxed-list-ul").on('click', '.popup-with-zoom-anim', function () {
+
+                           var el = $('#small-dialog');
+                           $.magnificPopup.open({
+                               items: {
+                                   src: el,
+                               },
+                               type: 'inline',
+                               fixedContentPos: false,
+                               fixedBgPos: true,
+
+                               overflowY: 'auto',
+
+                               closeBtnInside: true,
+                               preloader: false,
+
+                               midClick: true,
+                               removalDelay: 300,
+                               mainClass: 'my-mfp-zoom-in'
+                           });
+                        });
+                        $('#starId')[0].click();
+                        countUserComment++;
+
+                   }
+                   /***************************************************************/
+
                    $("#starId").attr("data-rating", executorsRating);
                    $("#starId li").attr("id", "user-comment-" + commentId)
                    $("#_executorImage").attr('src', executorImagePath);
@@ -880,148 +972,9 @@ new AjaxOptions
                    alert('Bratan, it is very ploho s "Custom/People: "' + data.statusText);
                }
             });
-
-            //alert('rating = ' + executorsRating + ' | Path = ' + executorImagePath +
-            //    ' | timeUnit = ' + timeUnit + ' | days = ' + person.Days + ' | hours = ' + person.Hours);
-            //alert('rating = ' + executorsRating+' | path = ' + executorImagePath);
-
-            var htmlEditBind = '<div style="margin-left: 23px;" class="buttons-to - right always - visible"><a href="#small-dialog" id="editSmall" class="popup-with-zoom-anim button dark ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>'
-            +'<a href="#small-dialog-3" class="button red ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a></div>';
-            var htmlStar = "<div id=\"starId\" class=\"star-rating\" data-rating=\"" + executorsRating+"\"></div>";
-            var htmlComment = "<li><div class='bid'><div class='bids-avatar'><div class='freelancer-avatar'><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name})'><img src='" + executorImagePath + "' alt='аватар' id='_executorImage'></a></div></div><div class='bids-content'><div class='freelancer-name'><h4><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name })'>@User.Identity.Name</a></h4>"
-                + htmlStar + "</div></div><div class='bids-bid'><div class='bid-rate'><div class='rate'>"
-                + person.OfferPrice + " рублей</div><span>за ";
-
-            if (person.Days > 0) {
-                htmlComment += person.Days + ' дней</span>';
-            }
-            else {
-                htmlComment += person.Hours + ' часов</span>';
-            }
-
-            htmlComment += '</div>'
-                + htmlEditBind + "</div></div><div class='item-description margin-top-30'><p>"
-                + person.Description + "</p></div></li>";
-            
-            if (HasComments(@Model.Id) || countUserComment >= 1) {
-                Snackbar.show({
-                    text: 'Вы не можете добавлять более 1 предложения!'
-                });
-                return null;
-            }
-            else {
-
-                $("#boxed-list-ul").append(htmlComment);
-                function qtySum() {
-                    var arr = document.getElementsByName('qtyInput');
-                    var tot = 0;
-                    for (var i = 0; i < arr.length; i++) {
-                        if (parseInt(arr[i].value))
-                            tot += parseInt(arr[i].value);
-                    }
-                }
-                qtySum();
-
-                $(document).on("click", ".qtyDec, .qtyInc", function () {
-
-                    var $button = $(this);
-                    var oldValue = $button.parent().find("input").val();
-
-                    if ($button.hasClass('qtyInc')) {
-                        $button.parent().find("input").val(parseFloat(oldValue) + 1);
-                    } else {
-                        if (oldValue > 1) {
-                            $button.parent().find("input").val(parseFloat(oldValue) - 1);
-                        } else {
-                            $button.parent().find("input").val(1);
-                        }
-                    }
-
-                    qtySum();
-                    $(".qtyTotal").addClass("rotate-x");
-
-                });
-
-
-                $("#boxed-list-ul").on('click', '.popup-with-zoom-anim', function () {
-
-                    var el = $('#small-dialog');
-                    $.magnificPopup.open({
-                        items: {
-                            src: el,
-                        },
-                        type: 'inline',
-                        fixedContentPos: false,
-                        fixedBgPos: true,
-
-                        overflowY: 'auto',
-
-                        closeBtnInside: true,
-                        preloader: false,
-
-                        midClick: true,
-                        removalDelay: 300,
-                        mainClass: 'my-mfp-zoom-in'
-                    });
-                });
-
-                //$("#boxed-list-ul").on('click','#starId', function () {
-                //    $('#starId').each(function () {
-
-                //        var dataRating = $(this).attr('data-rating');
-
-                //        // Rating Stars Output
-                //        function starsOutput(firstStar, secondStar, thirdStar, fourthStar, fifthStar) {
-                //            return ('' +
-                //                '<span class="' + firstStar + '"></span>' +
-                //                '<span class="' + secondStar + '"></span>' +
-                //                '<span class="' + thirdStar + '"></span>' +
-                //                '<span class="' + fourthStar + '"></span>' +
-                //                '<span class="' + fifthStar + '"></span>');
-                //        }
-
-                //        var fiveStars = starsOutput('star', 'star', 'star', 'star', 'star');
-
-                //        var fourHalfStars = starsOutput('star', 'star', 'star', 'star', 'star half');
-                //        var fourStars = starsOutput('star', 'star', 'star', 'star', 'star empty');
-
-                //        var threeHalfStars = starsOutput('star', 'star', 'star', 'star half', 'star empty');
-                //        var threeStars = starsOutput('star', 'star', 'star', 'star empty', 'star empty');
-
-                //        var twoHalfStars = starsOutput('star', 'star', 'star half', 'star empty', 'star empty');
-                //        var twoStars = starsOutput('star', 'star', 'star empty', 'star empty', 'star empty');
-
-                //        var oneHalfStar = starsOutput('star', 'star half', 'star empty', 'star empty', 'star empty');
-                //        var oneStar = starsOutput('star', 'star empty', 'star empty', 'star empty', 'star empty');
-
-                //        // Rules
-                //        if (dataRating >= 4.75) {
-                //            $(this).append(fiveStars);
-                //        } else if (dataRating >= 4.25) {
-                //            $(this).append(fourHalfStars);
-                //        } else if (dataRating >= 3.75) {
-                //            $(this).append(fourStars);
-                //        } else if (dataRating >= 3.25) {
-                //            $(this).append(threeHalfStars);
-                //        } else if (dataRating >= 2.75) {
-                //            $(this).append(threeStars);
-                //        } else if (dataRating >= 2.25) {
-                //            $(this).append(twoHalfStars);
-                //        } else if (dataRating >= 1.75) {
-                //            $(this).append(twoStars);
-                //        } else if (dataRating >= 1.25) {
-                //            $(this).append(oneHalfStar);
-                //        } else if (dataRating < 1.25) {
-                //            $(this).append(oneStar);
-                //        }
-
-                //    });
-                //});
-                $('#starId')[0].click();
-                countUserComment++;
-
-            }
         });
+
+
 
         $("#edit-time-units").change(function () {
             if ($(this).val() == 1) {
@@ -1045,7 +998,7 @@ new AjaxOptions
         function OnSuccessEditComment() {
             $(".mfp-close").trigger('click');
             Snackbar.show({
-                text: 'Предложение успешно изменено!'
+                text: 'Предложение успешно изменено!',
             });
         }
 
@@ -1056,8 +1009,13 @@ new AjaxOptions
             var votes = $("#votes");
             var num = $("#votes").text();
             votes.text(parseInt(num) - 1);
+            //удаляем модальное окно, 
+            //а то косяк с редактированием после удаления
+            if ($('#small-dialog').length) {
+                $('#small-dialog').remove();
+            }
             Snackbar.show({
-                text: 'Предложение успешно удалено!'
+                text: 'Предложение успешно удалено!',
             });
         }
 
