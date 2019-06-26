@@ -415,7 +415,7 @@ namespace HelpMe.Controllers
                 }
                 else
                 {
-                    htmlResult += "<span> за "+ commentViewModel.Hours+ " дней</span>";
+                    htmlResult += "<span> за "+ commentViewModel.Hours+ " часов</span>";
                 }
                 return Json(htmlResult);
                 // return RedirectToAction("Details", "Custom", new { id = commentViewModel.CustomViewModelId }); ;

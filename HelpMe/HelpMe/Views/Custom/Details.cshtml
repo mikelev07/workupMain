@@ -877,7 +877,7 @@ new AjaxOptions
                    var htmlStar = "<div id=\"starId\" class=\"star-rating\" data-rating=\"" + executorsRating+"\"></div>";
 
                    var htmlComment = '<li id="user-comment-' + data.Id + '">' + "<div class='bid'><div class='bids-avatar'><div class='freelancer-avatar'><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name})'><img src='" + executorImagePath + "' alt='аватар' id='_executorImage'></a></div></div><div class='bids-content'><div class='freelancer-name'><h4><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name })'>@User.Identity.Name</a></h4>"
-                   + htmlStar + "</div></div><div class='bids-bid'><div class='bid-rate'><div class='rate'>"
+                   + htmlStar + "</div></div><div class='bids-bid'><div class='bid-rate' id='user-comment-bid-rate-"+data.Id+"'><div class='rate'>"
                    + person.OfferPrice + " рублей</div><span>за ";
 
                    if (person.Days > 0) {
