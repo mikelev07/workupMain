@@ -207,7 +207,7 @@ new AjaxOptions
                                         <div class="freelancer-name">
                                             <h4>
                                                 <a href="@Url.Action("Details", "User", new { userName = c.User.UserName })">
-                                                    @c.User.UserName | @c.Id
+                                                    @c.User.UserName
                                                     @*<img class="flag" src="images/flags/gb.svg" alt="" title="United Kingdom" data-tippy-placement="top">*@
                                                 </a>
                                             </h4>
@@ -277,7 +277,7 @@ new AjaxOptions
                                         <div class="sign-in-form">
 
                                             <ul class="popup-tabs-nav">
-                                                <li><a href="#tab">Редактировать предложение @c.Id</a></li>
+                                                <li><a href="#tab">Редактировать предложение</a></li>
                                             </ul>
                                             <div class="popup-tabs-container">
 
@@ -310,9 +310,6 @@ new AjaxOptions
                                                         <div class="bidding-widget">
                                                             <!-- Headline -->
                                                             <span class="bidding-detail margin-top-30">Укажите время выполнения</span>
-                                                            @*<span>@updateTargetId</span>
-                                                                <span>@comm.Id.ToString()</span>
-                                                                <span>@comm.CustomViewModelId.ToString()</span>*@
 
                                                             <!-- Fields -->
                                                             <div class="bidding-fields">
@@ -839,28 +836,36 @@ new AjaxOptions
                    executorImagePath = data.ExecutorImagePath;
                    //alert('days = ' + days + ' | hours =' + hours);
                    var modalRemove = "";
-                   var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li><a href="#tab">Редактировать предложение ' + data.Id + '</a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab">'
-                       +'<form method="post" action="/Custom/EditComment/'
-                       + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="OnSuccessEditComment" data-ajax-update="#user-comment-bid-rate-' +data.Id+'">'
+                   var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li class="active"><a href="#tab">Редактировать предложение</a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab">'
+                       + '<form method="post" action="/Custom/EditComment/'
+                       + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="OnSuccessEditComment" data-ajax-update="#user-comment-bid-rate-' + data.Id + '">'
                        + '@Html.AntiForgeryToken() <input type="hidden" value="'
-                       + data.UserId + '" name="UserId" /> <input type="hidden" value="'
-                       + data.Description + '" name="Description" />   <input type="hidden" value="'
-                       + data.CustomViewModelId + '" name="CustomViewModelId" />  <input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text" value="'
-                       + '" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="5000" data-slider-value="'
-                       + data.OfferPrice + '" data-slider-step="50" data-slider-tooltip="hide"/>'
-                       + '<div class="bidding-widget"><span class="bidding-detail margin-top-30">Укажите время выполнения</span><div class="bidding-fields"><div class="bidding-field"><div class="qtyButtons with-border"><div class="qtyDec"></div>';
+                       + data.UserId + '" name="UserId" /><input type="hidden" value="'
+                       + data.CustomViewModelId + '" name="CustomViewModelId" /><input type="hidden" value="'
+                       + data.Description + '" name="Description" />'
+                       + '<div class="bidding-widget"><span class="bidding-detail margin-top-30">Укажите время выполнения</span>'
+                       + '<div class="bidding-fields"><div class="bidding-field"><div class="qtyButtons with-border"><div class="qtyDec"></div>';
+
                    if (days > 0) {
                        modalEdit += '<input id="Days" type="text" name="Days" value="' + days + '">'
-                           + '<div class="qtyInc"></div></div></div><div class="bidding-field"><select class="selectpicker default with-border" id="edit-time-units">'
-                           + '<option value="1" selected>Дней</option><option value="2">Часов</option>';
+                           + '<div class="qtyInc"></div></div></div>'
+                           + '<div class="bidding-field"><select class="selectpicker default with-border" id="edit-time-units">'
+                           + '<option selected value="1">дней</option><option value="2">часов</option>';
                    }
                    else {
                        modalEdit += '<input id="Days" type="text" name="Hours" value="' + hours + '">'
-                           + '<div class="qtyInc"></div></div></div><div class="bidding-field"><select class="selectpicker default with-border" id="edit-time-units">'
-                           + '<option value="1">Дней</option><option value="2" selected>Часов</option>';
+                           + '<div class="qtyInc"></div></div></div>'
+                           + '<div class="bidding-field"><select class="selectpicker default with-border" id="edit-time-units">'
+                           + '<option value="1">дней</option><option selected value="2">часов</option>';
                    }
 
-                   modalEdit+='</select></div></div></div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>';
+                   modalEdit += '</select></div></div><br />'
+                       + '<span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>'
+                       + '<div class="bidding-value"><span id="biddingVal1"></span> руб.</div>'
+                       + '<input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text" value="'
+                       + '" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="5000" data-slider-value="'
+                       + data.OfferPrice + '" data-slider-step="50" data-slider-tooltip="hide"/>'
+                       + '</div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>';
 
                    var votes = $("#votes");
                    var num = $("#votes").text();
@@ -871,7 +876,7 @@ new AjaxOptions
                        +'<a href="#small-dialog-3" class="button red ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a></div>';
                    var htmlStar = "<div id=\"starId\" class=\"star-rating\" data-rating=\"" + executorsRating+"\"></div>";
 
-                   var htmlComment = '<li id="user-comment-' + data.Id + '">' + "<div class='bid'><div class='bids-avatar'><div class='freelancer-avatar'><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name})'><img src='" + executorImagePath + "' alt='аватар' id='_executorImage'></a></div></div><div class='bids-content'><div class='freelancer-name'><h4><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name })'>@User.Identity.Name | " + data.Id + "</a></h4>"
+                   var htmlComment = '<li id="user-comment-' + data.Id + '">' + "<div class='bid'><div class='bids-avatar'><div class='freelancer-avatar'><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name})'><img src='" + executorImagePath + "' alt='аватар' id='_executorImage'></a></div></div><div class='bids-content'><div class='freelancer-name'><h4><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name })'>@User.Identity.Name</a></h4>"
                    + htmlStar + "</div></div><div class='bids-bid'><div class='bid-rate'><div class='rate'>"
                    + person.OfferPrice + " рублей</div><span>за ";
 
@@ -958,6 +963,7 @@ new AjaxOptions
                    }
                    /***************************************************************/
 
+                   $('.selectpicker').selectpicker({});
                    $("#starId").attr("data-rating", executorsRating);
                    $("#starId li").attr("id", "user-comment-" + commentId)
                    $("#_executorImage").attr('src', executorImagePath);
