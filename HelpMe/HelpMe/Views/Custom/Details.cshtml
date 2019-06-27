@@ -679,7 +679,6 @@ new AjaxOptions
 
 
 @section Scripts {
-
     <script>
         $(document).ready(function () {
             $("#boxed-list-ul > li:odd").css("background-color", "#fafafa");
@@ -692,94 +691,93 @@ new AjaxOptions
         $('a[name=deleteAt]').on('click', function (e) {
             var ItemId = $('a[name=deleteAt]').prop('id').replace('buyElement1-', '');
             alert(ItemId);
-         $.ajax({
-                        cache: false,
-                        url: '@Url.Action("DeleteAttach", "Custom")',
-                        type: 'POST',
-                        data: { id: ItemId },
-                       success: function (result) {
-                        $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id='+@Model.Id)
-                        },
-                        error: function (result) {
-                            alert('Вложение удалено');
-                        }
-                    });
+            $.ajax({
+                cache: false,
+                url: '@Url.Action("DeleteAttach", "Custom")',
+                type: 'POST',
+                data: { id: ItemId },
+                success: function (result) {
+                    $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id=' +@Model.Id);
+                },
+                error: function (result) {
+                    alert('Вложение удалено');
+                }
+            });
         });
 
         function OnSuccess() {
-                $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id='+@Model.Id)
+            $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id=' +@Model.Id);
         }
 
-        function OnSuccessBuy() {
+        //function OnSuccessBuy() {
 
-        }
+        //}
 
         var progressBar = $('#progressbar');
 
-           $('#submit').on('click', function (e) {
-               e.preventDefault();
-               var c = document.getElementById('CustomViewModelId').value;
-               var d = document.getElementById('ExecutorPrice').value;
-        var files = document.getElementById('uploadFile').files;
-        if (files.length > 0) {
-            if (window.FormData !== undefined) {
-                var data = new FormData();
-                for (var x = 0; x < files.length; x++) {
-                    data.append("file" + x, files[x]);
-                    data.append('CustomViewModelId', c);
-                    data.append('ExecutorPrice', d)
-                }
-
-                $.ajax({
-                    xhr: function () {
-                        var xhr = new window.XMLHttpRequest();
-                        xhr.upload.addEventListener("progress", function (evt) {
-                            if (evt.lengthComputable) {
-                                var percentComplete = evt.loaded / evt.total;
-                                console.log(percentComplete);
-                                $('.progress').css({
-                                    width: percentComplete * 100 + '%'
-                                });
-                                if (percentComplete === 1) {
-                                    $('.progress').addClass('hide');
-                                }
-                            }
-                        }, false);
-                        xhr.addEventListener("progress", function (evt) {
-                            if (evt.lengthComputable) {
-                                var percentComplete = evt.loaded / evt.total;
-                                console.log(percentComplete);
-                                $('.progress').css({
-                                    width: percentComplete * 100 + '%'
-                                });
-                            }
-                        }, false);
-                        return xhr;
-                    },
-                    type: "POST",
-                    url: '@Url.Action("Upload", "Custom")',
-                    contentType: false,
-                    processData: false,
-                    data: data,
-                    success: function (result) {
-                        $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id='+@Model.Id);
-                      var votes = $("#attaches");
-                      var num = $("#attaches").text();
-                      votes.text(parseInt(num)+1);
-                    },
-                    error: function (xhr, status, p3) {
-                        alert(xhr.responseText);
+        $('#submit').on('click', function (e) {
+            e.preventDefault();
+            var c = document.getElementById('CustomViewModelId').value;
+            var d = document.getElementById('ExecutorPrice').value;
+            var files = document.getElementById('uploadFile').files;
+            if (files.length > 0) {
+                if (window.FormData !== undefined) {
+                    var data = new FormData();
+                    for (var x = 0; x < files.length; x++) {
+                        data.append("file" + x, files[x]);
+                        data.append('CustomViewModelId', c);
+                        data.append('ExecutorPrice', d)
                     }
-                });
-            } else {
-                alert("Браузер не поддерживает загрузку файлов HTML5!");
+
+                    $.ajax({
+                        xhr: function () {
+                            var xhr = new window.XMLHttpRequest();
+                            xhr.upload.addEventListener("progress", function (evt) {
+                                if (evt.lengthComputable) {
+                                    var percentComplete = evt.loaded / evt.total;
+                                    console.log(percentComplete);
+                                    $('.progress').css({
+                                        width: percentComplete * 100 + '%'
+                                    });
+                                    if (percentComplete === 1) {
+                                        $('.progress').addClass('hide');
+                                    }
+                                }
+                            }, false);
+                            xhr.addEventListener("progress", function (evt) {
+                                if (evt.lengthComputable) {
+                                    var percentComplete = evt.loaded / evt.total;
+                                    $('.progress').css({
+                                        width: percentComplete * 100 + '%'
+                                    });
+                                }
+                            }, false);
+                            return xhr;
+                        },
+                        type: "POST",
+                        url: '@Url.Action("Upload", "Custom")',
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        success: function (result) {
+                            $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id=' +@Model.Id);
+                            var votes = $("#attaches");
+                            var num = $("#attaches").text();
+                            votes.text(parseInt(num) + 1);
+                        },
+                        error: function (xhr, status, p3) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                } else {
+                    alert("Браузер не поддерживает загрузку файлов HTML5!");
+                }
             }
-        }
-    });
+        });
 
 
 
-    var countUserComment = 0;
+        var countUserComment = 0;
         $("#snackbar-place-bid").click(function () {
             var decription = $("textarea#desсription").val();
             var slider = $("#slider-price").val();
@@ -824,207 +822,209 @@ new AjaxOptions
             var executorImagePath;
            // $.post("/Custom/People", person, null, "json");
 
-           $.ajax({
+            $.ajax({
                 type: "POST",
                 url: "/Custom/People",
                 data: person,
                 dataType: "json",
-               success: function (data) {
-                   //alert('added comment #' + data.Id);
-                   //alert('rating = ' + data.ExecutorRating + ' | imagePath = ' + data.ExecutorImagePath);
-                   var commentId = data.Id;
-                   executorsRating = data.ExecutorRating;
-                   executorImagePath = data.ExecutorImagePath;
-                   //alert('days = ' + days + ' | hours =' + hours);
-                   var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li class="active"><a href="#tab">Редактировать предложение ' + data.Id + '</a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab">'
-                       + '<form method="post" action="/Custom/EditComment/'
-                       + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="OnSuccessEditComment" data-ajax-update="#user-comment-bid-rate-' + data.Id + '">'
-                       + '@Html.AntiForgeryToken() <input type="hidden" value="'
-                       + data.UserId + '" name="UserId" /><input type="hidden" value="'
-                       + data.CustomViewModelId + '" name="CustomViewModelId" /><input type="hidden" value="'
-                       + data.Description + '" name="Description" />'
-                       + '<div class="bidding-widget"><span class="bidding-detail margin-top-30">Укажите время выполнения</span>'
-                       + '<div class="bidding-fields"><div class="bidding-field"><div class="qtyButtons with-border"><div class="qtyDec"></div>';
+                success: function (data) {
+                    var commentId = data.Id;
+                    executorsRating = data.ExecutorRating;
+                    executorImagePath = data.ExecutorImagePath;
 
-                   if (days > 0) {
-                       modalEdit += '<input id="Days" type="text" name="Days" value="' + days + '">'
-                           + '<div class="qtyInc"></div></div></div>'
-                           + '<div class="bidding-field"><select class="selectpicker default with-border" id="edit-time-units">'
-                           + '<option selected value="1">дней</option><option value="2">часов</option>';
-                   }
-                   else {
-                       modalEdit += '<input id="Days" type="text" name="Hours" value="' + hours + '">'
-                           + '<div class="qtyInc"></div></div></div>'
-                           + '<div class="bidding-field"><select class="selectpicker default with-border" id="edit-time-units">'
-                           + '<option value="1">дней</option><option selected value="2">часов</option>';
-                   }
+                    var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li class="active"><a href="#tab">Редактировать предложение ' + data.Id + '</a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab">'
+                        + '<form method="post" action="/Custom/EditComment/'
+                        + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="OnSuccessEditComment" data-ajax-update="#user-comment-bid-rate-' + data.Id + '">'
+                        + '@Html.AntiForgeryToken() <input type="hidden" value="'
+                        + data.UserId + '" name="UserId" /><input type="hidden" value="'
+                        + data.CustomViewModelId + '" name="CustomViewModelId" /><input type="hidden" value="'
+                        + data.Description + '" name="Description" />'
+                        + '<div class="bidding-widget"><span class="bidding-detail margin-top-30">Укажите время выполнения</span>'
+                        + '<div class="bidding-fields"><div class="bidding-field"><div class="qtyButtons with-border"><div class="qtyDec"></div>';
 
-                   modalEdit += '</select></div></div><br />'
-                       + '<span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>'
-                       + '<div class="bidding-value"><span id="biddingVal1"></span> руб.</div>'
-                       + '<input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text" value="'
-                       + '" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="5000" data-slider-value="'
-                       + data.OfferPrice + '" data-slider-step="50" data-slider-tooltip="hide"/>'
-                       + '</div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>';
+                    if (days > 0) {
+                        modalEdit += '<input id="Days" type="text" name="Days" value="' + days + '">'
+                            + '<div class="qtyInc"></div></div></div>'
+                            + '<div class="bidding-field"><select class="selectpicker default with-border" id="edit-time-units">'
+                            + '<option selected value="1">дней</option><option value="2">часов</option>';
+                    }
+                    else {
+                        modalEdit += '<input id="Days" type="text" name="Hours" value="' + hours + '">'
+                            + '<div class="qtyInc"></div></div></div>'
+                            + '<div class="bidding-field"><select class="selectpicker default with-border" id="edit-time-units">'
+                            + '<option value="1">дней</option><option selected value="2">часов</option>';
+                    }
+                    modalEdit += '</select></div></div><br />'
+                        + '<span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>'
+                        + '<div class="bidding-value"><span id="biddingVal1"></span> руб.</div>'
+                        + '<input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text" value="'
+                        + '" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="5000" data-slider-value="'
+                        + data.OfferPrice + '" data-slider-step="50" data-slider-tooltip="hide"/>'
+                        + '</div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>';
 
 
-                   var modalRemove = '<div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">'
-                       + '<div class="sign-in-form"><ul class="popup-tabs-nav">'
-                       + '<li><a href="#tab">Удалить предложение ' + data.Id + '</a></li>'
-                       + '</ul><div class="popup-tabs-container">'
-                       + '<div class="popup-tab-content" id="tab">'
-                       + '<form method="post" action="/Custom/DeleteComment/'
-                       + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="OnSuccessDeleteComment" data-ajax-update="#user-comment-' + data.Id + '">'
-                       + '@Html.AntiForgeryToken() <div class="bidding-widget">'
-                       + '<div class="form-actions no-color"><span class="bidding-detail margin-top-30">Действительно хотите удалить предложение?</span>'
-                       + '</div></div>'
-                       + '<button class="button full-width button-sliding-icon ripple-effect" type="submit">Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i></button>'
-                       + '</form></div></div></div></div>';
+                    var modalRemove = '<div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">'
+                        + '<div class="sign-in-form"><ul class="popup-tabs-nav">'
+                        + '<li class="active"><a href="#tab">Удалить предложение ' + data.Id + '</a></li>'
+                        + '</ul><div class="popup-tabs-container">'
+                        + '<div class="popup-tab-content" id="tab">'
+                        + '<form method="post" action="/Custom/DeleteComment/'
+                        + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="OnSuccessDeleteComment" data-ajax-update="#user-comment-' + data.Id + '">'
+                        + '@Html.AntiForgeryToken() <div class="bidding-widget">'
+                        + '<div class="form-actions no-color"><span class="bidding-detail margin-top-30">Действительно хотите удалить предложение?</span>'
+                        + '</div></div>'
+                        + '<button class="button full-width button-sliding-icon ripple-effect" type="submit">Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i></button>'
+                        + '</form></div></div></div></div>';
 
-                   var votes = $("#votes");
-                   var num = $("#votes").text();
-                   votes.text(parseInt(num) + 1);
+                    var votes = $("#votes");
+                    var num = $("#votes").text();
+                    votes.text(parseInt(num) + 1);
 
-                   /****/
-                   var htmlEditBind = '<div style="margin-left: 23px;" class="buttons-to - right always - visible"><a href="#small-dialog" id="editSmall" class="popup-with-zoom-anim button dark ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>'
-                       +' <a href="#small-dialog-3" class="button red ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a></div>';
-                   var htmlStar = "<div id=\"starId\" class=\"star-rating\" data-rating=\"" + executorsRating+"\"></div>";
+                    /****/
+                    var htmlEditBind = '<div style="margin-left: 23px;" class="buttons-to - right always - visible">'
+                        + '<a href="#small-dialog" class="popup-with-zoom-anim button dark ripple-effect ico" title = "Редактировать" data-tippy-placement="top"> <i class="icon-feather-edit"></i></a > '
+                        + ' <a href="#small-dialog-3" class="popup-with-zoom-anim button red ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>'
+                        + '</div > ';
+                    var htmlStar = '<div id="starId" class="star-rating" data-rating="' + executorsRating+'"></div>';
 
-                   var htmlComment = '<li id="user-comment-' + data.Id + '">' + "<div class='bid'><div class='bids-avatar'><div class='freelancer-avatar'><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name})'><img src='" + executorImagePath + "' alt='аватар' id='_executorImage'></a></div></div><div class='bids-content'><div class='freelancer-name'><h4><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name })'>@User.Identity.Name | " + data.Id + "</a></h4>"
-                   + htmlStar + "</div></div><div class='bids-bid'><div class='bid-rate' id='user-comment-bid-rate-"+data.Id+"'><div class='rate'>"
-                   + person.OfferPrice + " рублей</div><span>за ";
+                    var htmlComment = '<li id="user-comment-' + data.Id + '">' + "<div class='bid'><div class='bids-avatar'><div class='freelancer-avatar'><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name})'><img src='" + executorImagePath + "' alt='аватар' id='_executorImage'></a></div></div><div class='bids-content'><div class='freelancer-name'><h4><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name })'>@User.Identity.Name | " + data.Id + "</a></h4>"
+                        + htmlStar + "</div></div><div class='bids-bid'><div class='bid-rate' id='user-comment-bid-rate-"+data.Id+"'><div class='rate'>"
+                        + person.OfferPrice + " рублей</div><span>за ";
 
-                   if (person.Days > 0) {
-                       htmlComment += person.Days + ' дней</span>';
-                   }
-                   else {
-                       htmlComment += person.Hours + ' часов</span>';
-                   }
+                    if (person.Days > 0) {
+                        htmlComment += person.Days + ' дней</span>';
+                    }
+                    else {
+                        htmlComment += person.Hours + ' часов</span>';
+                    }
 
-                   htmlComment += '</div>'
-                       + htmlEditBind + "</div></div><div class='item-description margin-top-30'><p>"
-                       + person.Description + "</p></div></li>";
+                    htmlComment += '</div>'
+                        + htmlEditBind + "</div></div><div class='item-description margin-top-30'><p>"
+                        + person.Description + "</p></div></li>";
 
-                   if (HasComments(@Model.Id) || countUserComment >= 1) {
+                    if (HasComments(@Model.Id) || countUserComment >= 1) {
                         Snackbar.show({
                             text: 'Вы не можете добавлять более 1 предложения!',
                         });
                         return null;
-                   }
-                   else {
-                    //шоб не было отступа из-за <li></li>
-                    //при добавлении нового комента(сразу же после удаления)
+                    }
+                    else {
+                        //шоб не было отступа из-за <li></li>
+                        //при добавлении нового комента(сразу же после удаления)
                         if ($('#boxed-list-ul>li[id*="user-comment"]').is(':empty')) {
                             $('#boxed-list-ul>li[id*="user-comment"]').remove();
                         }
-                       $("#boxed-list-ul").append(htmlComment);
-                       while ($('#small-dialog').length) {
-                           alert('remove EDIT');
-                           $('#small-dialog').remove();
-                       }
-                       while($('#small-dialog-3').length) {
-                           alert('remove DELETE');
-                           $('#small-dialog-3').remove();
-                       }
+                        if($('#small-dialog').length) {
+                            $('#small-dialog').remove();
+                        }
+                        if($('#small-dialog-3').length) {
+                            $('div#small-dialog-3').remove();
+                        }
+                        $("#boxed-list-ul").append(htmlComment);
                         $("#boxed-list-ul").append(modalEdit);
                         $("#boxed-list-ul").append(modalRemove);
+
                         function qtySum() {
-                           var arr = document.getElementsByName('qtyInput');
-                           var tot = 0;
-                           for (var i = 0; i < arr.length; i++) {
-                               if (parseInt(arr[i].value))
-                                   tot += parseInt(arr[i].value);
-                           }
+                            var arr = document.getElementsByName('qtyInput');
+                            var tot = 0;
+                            for (var i = 0; i < arr.length; i++) {
+                                if (parseInt(arr[i].value)) {
+                                    tot += parseInt(arr[i].value);
+                                }
+                            }
                         }
                         qtySum();
 
+
+                        //!!check this for incrementing bug
                         $(document).on("click", ".qtyDec, .qtyInc", function () {
+                            var $button = $(this);
+                            var oldValue = $button.parent().find("input").val();
 
-                           var $button = $(this);
-                           var oldValue = $button.parent().find("input").val();
+                            if ($button.hasClass('qtyInc')) {
+                                $button.parent().find("input").val(parseFloat(oldValue) + 1);
+                            }
+                            else {
+                                if (oldValue > 1) {
+                                    $button.parent().find("input").val(parseFloat(oldValue) - 1);
+                                }
+                                else {
+                                    $button.parent().find("input").val(1);
+                                }
+                            }
 
-                           if ($button.hasClass('qtyInc')) {
-                               $button.parent().find("input").val(parseFloat(oldValue) + 1);
-                           } else {
-                               if (oldValue > 1) {
-                                   $button.parent().find("input").val(parseFloat(oldValue) - 1);
-                               } else {
-                                   $button.parent().find("input").val(1);
-                               }
-                           }
-
-                           qtySum();
-                           $(".qtyTotal").addClass("rotate-x");
+                            qtySum();
+                            $(".qtyTotal").addClass("rotate-x");
 
                         });
 
-
-                       $('#boxed-list-ul').on('click', 'a[href="#small-dialog"]', function () {
-                           //alert('edit');
-                           var el = $('#small-dialog');
-                           $.magnificPopup.open({
-                               items: {
-                                   src: el,
-                               },
-                               type: 'inline',
-                               fixedContentPos: false,
-                               fixedBgPos: true,
-
-                               overflowY: 'auto',
-
-                               closeBtnInside: true,
-                               preloader: false,
-
-                               midClick: true,
-                               removalDelay: 300,
-                               mainClass: 'my-mfp-zoom-in'
-                            });
-                       });
-
-                       $('#boxed-list-ul').on('click', 'a[href="#small-dialog-3"]', function () {
-                           //alert('delete');
-                           var el = $('#small-dialog-3');
-                           $.magnificPopup.open({
-                               items: {
-                                   src: el,
-                               },
-                               type: 'inline',
-                               fixedContentPos: false,
-                               fixedBgPos: true,
-
-                               overflowY: 'auto',
-
-                               closeBtnInside: true,
-                               preloader: false,
-
-                               midClick: true,
-                               removalDelay: 300,
-                               mainClass: 'my-mfp-zoom-in'
-                           });
-                       });
                         $('#starId')[0].click();
                         countUserComment++;
 
-                   }
+                    }
                    /***************************************************************/
 
-                   $('.selectpicker').selectpicker({});
-                   $("#starId").attr("data-rating", executorsRating);
-                   $("#starId li").attr("id", "user-comment-" + commentId)
-                   $("#_executorImage").attr('src', executorImagePath);
-                   starRating('#starId');
-                   $("#add-offer-container").hide();
-                   RangeSlider();
-                   Snackbar.show({
-                       text: 'Предложение успешно добавлено!',
-                   });
-               },
-               error: function (data) {
-                   alert('Bratan, it is very ploho s "Custom/People: "' + data.statusText);
-               }
+                    $('.selectpicker').selectpicker();
+                    $("#starId").attr("data-rating", executorsRating);
+                    $("#starId li").attr("id", "user-comment-" + commentId);
+                    $("#_executorImage").attr('src', executorImagePath);
+                    starRating('#starId');
+                    $("#add-offer-container").hide();
+                    RangeSlider();
+                    Snackbar.show({
+                        text: 'Предложение успешно добавлено!',
+                    });
+                },
+                error: function (data) {
+                    alert('Bratan, it is very ploho s "Custom/People: "' + data.statusText);
+                }
             });
         });
 
+
+        $('#boxed-list-ul').on('click', 'a[href="#small-dialog"]', function () {
+            //alert('edit');
+            var el = $('#small-dialog');
+            $.magnificPopup.open({
+                items: {
+                    src: el,
+                },
+                type: 'inline',
+                fixedContentPos: false,
+                fixedBgPos: true,
+
+                overflowY: 'auto',
+
+                closeBtnInside: true,
+                preloader: false,
+
+                midClick: true,
+                removalDelay: 300,
+                mainClass: 'my-mfp-zoom-in'
+            });
+        });
+
+        $('#boxed-list-ul').on('click', 'a[href="#small-dialog-3"]', function () {
+            //alert('delete');
+            var el = $('#small-dialog-3');
+            $.magnificPopup.open({
+                items: {
+                    src: el,
+                },
+                type: 'inline',
+                fixedContentPos: false,
+                fixedBgPos: true,
+
+                overflowY: 'auto',
+
+                closeBtnInside: true,
+                preloader: false,
+
+                midClick: true,
+                removalDelay: 300,
+                mainClass: 'my-mfp-zoom-in'
+            });
+        });
 
 
         $("#edit-time-units").change(function () {
@@ -1062,20 +1062,23 @@ new AjaxOptions
         function OnSuccessDeleteComment() {
             if (countUserComment > 0) countUserComment--;
             $(".mfp-close").trigger('click');
-            $("#add-offer-container").show();
             var votes = $("#votes");
             var num = $("#votes").text();
             votes.text(parseInt(num) - 1);
-            //удаляем модальные окна, 
+            //удаляем модальные окна,
             //а то косяк с редактированием после удаления
-            while ($('#small-dialog').length) {
-                alert('remove EDIT');
+            if($('#small-dialog').length) {
+                //alert('remove EDIT');
                 $('#small-dialog').remove();
             }
-            while ($('#small-dialog-3').length) {
-                alert('remove DELETE');
+            if($('#small-dialog-3').length) {
+                //alert('remove DELETE');
                 $('#small-dialog-3').remove();
             }
+            
+            $("#add-offer-container bidding-slider").slider('refresh');
+            $("#add-offer-container").show();
+
             Snackbar.show({
                 text: 'Предложение успешно удалено!',
             });
