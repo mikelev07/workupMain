@@ -610,15 +610,10 @@ new AjaxOptions
                     </div>
                 }
 
-                @if (Request.IsAuthenticated && Model.UserId != User.Identity.GetUserId() && Model.ExecutorId == null)
+                @if (Request.IsAuthenticated && Model.UserId != User.Identity.GetUserId() && Model.ExecutorId == null && Model.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() < 1)
                 {
-                    var styleText = "display:none";
-                    if (Model.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() < 1)
-                    {
-                        styleText = "display: block";
-                    }
 
-                    <div class="sidebar-widget" id="add-offer-container" style="@styleText">
+                    <div class="sidebar-widget" id="add-offer-container">
                         <div class="bidding-widget">
                             <div class="bidding-headline"><h3>Добавить предложение</h3></div>
                             <div class="bidding-inner">
@@ -778,7 +773,7 @@ new AjaxOptions
 
 
         var countUserComment = 0;
-        $("#snackbar-place-bid").click(function () {
+        $(document).on('click', '#snackbar-place-bid', function () {
             var decription = $("textarea#desсription").val();
             var slider = $("#slider-price").val();
             var time = $("#time").val();
@@ -821,7 +816,6 @@ new AjaxOptions
             var executorsRating;
             var executorImagePath;
            // $.post("/Custom/People", person, null, "json");
-
             $.ajax({
                 type: "POST",
                 url: "/Custom/People",
@@ -970,6 +964,7 @@ new AjaxOptions
                     $("#_executorImage").attr('src', executorImagePath);
                     starRating('#starId');
                     $("#add-offer-container").hide();
+                    $("#add-offer-container").empty();
                     RangeSlider();
                     Snackbar.show({
                         text: 'Предложение успешно добавлено!',
@@ -1076,9 +1071,30 @@ new AjaxOptions
                 $('#small-dialog-3').remove();
             }
             
-            $("#add-offer-container bidding-slider").slider('refresh');
-            $("#add-offer-container").show();
+            var addOfferContainer = '<div class="bidding-widget">'
+                + '<div class="bidding-headline"><h3>Добавить предложение</h3></div>'
+                + '<div class="bidding-inner"><span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>'
+                + '<div class="bidding-value"><span id="biddingVal"></span> руб.</div>'
+                + '<input id="slider-price" class="bidding-slider" type="text" value="@Model.Price" '
+                + 'data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" '
+                + 'data-slider-max="5000" data-slider-value="@Model.Price" data-slider-step="50" '
+                + 'data-slider-tooltip="hide"/><span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>'
+                + '<div class="bidding-fields"><div class="bidding-field">'
+                + '<div class="qtyButtons">'
+                + '<div class="qtyDec"></div><input id="time" type="text" name="qtyInput" value="1">'
+                + '<div class="qtyInc"></div></div></div><div class="bidding-field">'
+                + '<select class="selectpicker default" id="time-unit-select">'
+                + '<option value="1" selected>Дней</option><option value="2">Часов</option></select></div>'
+                + '</div><span class="bidding-detail margin-top-30">Добавьте <strong>комментарий</strong></span>'
+                + '<textarea id="desсription" cols="30" rows="5" class="with-border" maxlength="200" placeholder="Оставьте своё предложение для заказчика..."></textarea>'
+                + '<button id="snackbar-place-bid" class="button ripple-effect move-on-hover full-width margin-top-30"><span>Разместить предложение</span></button>'
+                + '</div><div class="bidding-signup">Еще нет аккаунта? <a href="#sign-in-dialog" class="register-tab sign-in popup-with-zoom-anim">Регистрация</a></div></div>';            
+            $("#add-offer-container").append(addOfferContainer);
 
+            $('.selectpicker').selectpicker();
+            RangeSlider();
+            $("#add-offer-container").show();
+            jQuery._data($('#snackbar-place-bid'), "events")
             Snackbar.show({
                 text: 'Предложение успешно удалено!',
             });
