@@ -115,20 +115,20 @@
                                     @if (Model.ExecutorId == User.Identity.GetUserId())
                                     {
                                         @Ajax.RawActionLink(
-"<i class='icon-feather-trash-2'></i>",
-"DeleteAttach",
-"Custom",
-new
-{
-    id = i.Id,
-},
-new AjaxOptions
-{
-    OnBegin = "return ConfirmDone()",
-    HttpMethod = "POST",
-    OnSuccess = "OnSuccess"
-}, new { @class = "button gray ripple-effect ico", @style = "margin-bottom:50px;", title = "Удалить", data_tippy_placement = "top" }
-)
+                                            "<i class='icon-feather-trash-2'></i>",
+                                            "DeleteAttach",
+                                            "Custom",
+                                            new
+                                            {
+                                                id = i.Id,
+                                            },
+                                            new AjaxOptions
+                                            {
+                                                OnBegin = "return ConfirmDone()",
+                                                HttpMethod = "POST",
+                                                OnSuccess = "OnSuccess"
+                                            }, new { @class = "button gray ripple-effect ico", @style = "margin-bottom:50px;", title = "Удалить", data_tippy_placement = "top" }
+                                            )
                                     }
                                 </div>
                                 @if (Model.UserId == User.Identity.GetUserId())
