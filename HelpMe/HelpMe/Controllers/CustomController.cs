@@ -127,8 +127,10 @@ namespace HelpMe.Controllers
 
         public ActionResult Tasks()
         {
-            var customViewModels = db.Customs.Include(c => c.Comments).Include(c => c.User).OrderBy(x => x.Id);
-            return View();
+            string userId = User.Identity.GetUserId();
+
+            var tasksModel = db.Customs.Where(t => t.UserId == userId).ToList();
+            return View(tasksModel);
         }
 
         public ActionResult Bidders()
