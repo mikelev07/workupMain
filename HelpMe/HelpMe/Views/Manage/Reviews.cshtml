@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "~/Views/Shared/_LayoutDash.cshtml";
 }
-
+@model HelpMe.Models.ReviewDashModel
 
 <!-- Dashboard Content
     ================================================== -->
@@ -30,66 +30,32 @@
 
                     <!-- Headline -->
                     <div class="headline">
-                        <h3><i class="icon-material-outline-business"></i> Рейтинг имплоироув</h3>
+                        <h3><i class="icon-material-outline-business"></i> Мои отзывы</h3>
                     </div>
 
                     <div class="content">
                         <ul class="dashboard-box-list">
-                            <li>
-                                <div class="boxed-list-item">
-                                    <!-- Content -->
-                                    <div class="item-content">
-                                        <h4>Пофиксить котов</h4>
-                                        <span class="company-not-rated margin-bottom-5">Нет рейтинга</span>
-                                    </div>
-                                </div>
-
-                                <a href="#small-dialog-2" class="popup-with-zoom-anim button ripple-effect margin-top-5 margin-bottom-10"><i class="icon-material-outline-thumb-up"></i> Главный кок</a>
-                            </li>
-                            <li>
-                                <div class="boxed-list-item">
-                                    <!-- Content -->
-                                    <div class="item-content">
-                                        <h4>Расширенный мод</h4>
-                                        <span class="company-not-rated margin-bottom-5">Нет рейтинга</span>
-                                    </div>
-                                </div>
-
-                                <a href="#small-dialog-2" class="popup-with-zoom-anim button ripple-effect margin-top-5 margin-bottom-10"><i class="icon-material-outline-thumb-up"></i> Оставить отзыв</a>
-                            </li>
-                            <li>
-                                <div class="boxed-list-item">
-                                    <!-- Content -->
-                                    <div class="item-content">
-                                        <h4>Пофиксить главный агрегатор</h4>
-                                        <div class="item-details margin-top-10">
-                                            <div class="star-rating" data-rating="5.0"></div>
-                                            <div class="detail-item"><i class="icon-material-outline-date-range"></i> Май 2019</div>
-                                        </div>
-                                        <div class="item-description">
-                                            <p>Главная звезда современности.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <a href="#small-dialog-1" class="popup-with-zoom-anim button gray ripple-effect margin-top-5 margin-bottom-10"><i class="icon-feather-edit"></i> Изменить отзыв</a>
-                            </li>
+                            @foreach (var i in Model.Reviews)
+                            {
                             <li>
                                 <div class="boxed-list-item">
                                     <!-- Content -->
                                     <div class="item-content">
                                         <h4>Курсы по момологии</h4>
+                                        <span>@i.Owner.UserName</span>
                                         <div class="item-details margin-top-10">
+                                            Вы поставили: &nbsp;
                                             <div class="star-rating" data-rating="5.0"></div>
                                             <div class="detail-item"><i class="icon-material-outline-date-range"></i> Май 2019</div>
                                         </div>
                                         <div class="item-description">
-                                            <p>Главный коммуникатор.</p>
+                                            <p>@i.Description.</p>
                                         </div>
                                     </div>
                                 </div>
                                 <a href="#small-dialog-1" class="popup-with-zoom-anim button gray ripple-effect margin-top-5 margin-bottom-10"><i class="icon-feather-edit"></i> Изменить отзыв</a>
                             </li>
-
+                            }
                         </ul>
                     </div>
                 </div>
@@ -117,38 +83,30 @@
 
                     <!-- Headline -->
                     <div class="headline">
-                        <h3><i class="icon-material-outline-face"></i> Рейтинг гринадерофф</h3>
+                        <h3><i class="icon-material-outline-face"></i>Отзовы обо мне</h3>
                     </div>
 
                     <div class="content">
                         <ul class="dashboard-box-list">
-                            <li>
-                                <div class="boxed-list-item">
-                                    <!-- Content -->
-                                    <div class="item-content">
-                                        <h4>Главная звезда коммунистов</h4>
-                                        <span class="company-not-rated margin-bottom-5">Нет рейтинга</span>
-                                    </div>
-                                </div>
 
-                                <a href="#small-dialog-2" class="popup-with-zoom-anim button ripple-effect margin-top-5 margin-bottom-10"><i class="icon-material-outline-thumb-up"></i> Оставить отзыв</a>
-                            </li>
-                            <li>
-                                <div class="boxed-list-item">
-                                    <!-- Content -->
-                                    <div class="item-content">
-                                        <h4>Найди 5 отличий</h4>
-                                        <div class="item-details margin-top-10">
-                                            <div class="star-rating" data-rating="5.0"></div>
-                                            <div class="detail-item"><i class="icon-material-outline-date-range"></i> Август 2018</div>
-                                        </div>
-                                        <div class="item-description">
-                                            <p>Дурачинус.</p>
+                           @foreach (var i in Model.MyReviews)
+                           {
+                                <li>
+                                    <div class="boxed-list-item">
+                                        <!-- Content -->
+                                        <div class="item-content">
+                                            <h4>Главная звезда коммунистов</h4>
+                                            <span >@i.User.UserName</span>
+                                            <span class="company-not-rated margin-bottom-5">Нет рейтинга</span>
+                                            <div class="item-description">
+                                                <p>@i.Description.</p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <a href="#small-dialog-1" class="popup-with-zoom-anim button gray ripple-effect margin-top-5 margin-bottom-10"><i class="icon-feather-edit"></i> Редактировать отзыв</a>
-                            </li>
+
+                                    <a href="#small-dialog-2" class="popup-with-zoom-anim button ripple-effect margin-top-5 margin-bottom-10"><i class="icon-material-outline-thumb-up"></i> Оставить отзыв пользователю</a>
+                                </li>
+                           }
                         </ul>
                     </div>
                 </div>

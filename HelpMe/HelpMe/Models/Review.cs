@@ -19,6 +19,12 @@ namespace HelpMe.Models
         public virtual User Owner { get; set; }
     }
 
+    public class ReviewDashModel
+    {
+        public IEnumerable<Review> MyReviews { get; set; }
+        public IEnumerable<Review> Reviews { get; set; }
+    }
+
     public class ReviewIndexViewModel
     {
         public IEnumerable<Review> Reviews { get; set; }

@@ -326,7 +326,16 @@ namespace HelpMe.Controllers
         public ActionResult Reviews()
         {
             // var customViewModels = db.Customs.Include(c => c.Comments).Include(c => c.User).OrderBy(x => x.Id);
-            return View();
+            string userId = User.Identity.GetUserId();
+
+            var rewsModel = db.Reviews.Where(t => t.UserId == userId).ToList();
+            
+            var myrewsModel = db.Reviews.Where(t => t.OwnerId == userId).ToList();
+
+            ReviewDashModel reviews = new ReviewDashModel { MyReviews = myrewsModel, Reviews = rewsModel };
+
+            return View(reviews);
+           
         }
 
         public ActionResult Likeit()
