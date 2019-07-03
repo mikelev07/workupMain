@@ -929,29 +929,6 @@
                         }
                         qtySum();
 
-
-                        //!!check this for incrementing bug
-                        $(document).on("click", ".qtyDec, .qtyInc", function () {
-                            var $button = $(this);
-                            var oldValue = $button.parent().find("input").val();
-
-                            if ($button.hasClass('qtyInc')) {
-                                $button.parent().find("input").val(parseFloat(oldValue) + 1);
-                            }
-                            else {
-                                if (oldValue > 1) {
-                                    $button.parent().find("input").val(parseFloat(oldValue) - 1);
-                                }
-                                else {
-                                    $button.parent().find("input").val(1);
-                                }
-                            }
-
-                            qtySum();
-                            $(".qtyTotal").addClass("rotate-x");
-
-                        });
-
                         $('#starId')[0].click();
                         countUserComment++;
 
@@ -974,6 +951,32 @@
                     alert('Bratan, it is very ploho s "Custom/People: "' + data.statusText);
                 }
             });
+        });
+
+
+        //!!check this for incrementing bug
+        $(document).on("click", ".qtyDec, .qtyInc", function () {
+
+            var events = $._data(this, "events");
+            if (events == null) {
+                var $button = $(this);
+                var oldValue = $button.parent().find("input").val();
+
+                if ($button.hasClass('qtyInc')) {
+                    $button.parent().find("input").val(parseFloat(oldValue) + 1);
+                }
+                else {
+                    if (oldValue > 1) {
+                        $button.parent().find("input").val(parseFloat(oldValue) - 1);
+                    }
+                    else {
+                        $button.parent().find("input").val(1);
+                    }
+                }
+
+                qtySum();
+                $(".qtyTotal").addClass("rotate-x");}
+
         });
 
 
@@ -1070,7 +1073,7 @@
                 //alert('remove DELETE');
                 $('#small-dialog-3').remove();
             }
-            
+
             var addOfferContainer = '<div class="bidding-widget">'
                 + '<div class="bidding-headline"><h3>Добавить предложение</h3></div>'
                 + '<div class="bidding-inner"><span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>'
@@ -1088,13 +1091,23 @@
                 + '</div><span class="bidding-detail margin-top-30">Добавьте <strong>комментарий</strong></span>'
                 + '<textarea id="desсription" cols="30" rows="5" class="with-border" maxlength="200" placeholder="Оставьте своё предложение для заказчика..."></textarea>'
                 + '<button id="snackbar-place-bid" class="button ripple-effect move-on-hover full-width margin-top-30"><span>Разместить предложение</span></button>'
-                + '</div><div class="bidding-signup">Еще нет аккаунта? <a href="#sign-in-dialog" class="register-tab sign-in popup-with-zoom-anim">Регистрация</a></div></div>';            
-            $("#add-offer-container").append(addOfferContainer);
+                + '</div><div class="bidding-signup">Еще нет аккаунта? <a href="#sign-in-dialog" class="register-tab sign-in popup-with-zoom-anim">Регистрация</a></div></div>';
+
+            if ($('#add-offer-container').length) {
+                $("#add-offer-container").append(addOfferContainer);
+            }
+            else {
+                addOfferContainer = '<div class="sidebar-widget" id="add-offer-container">'
+                    + addOfferContainer
+                    + '</div>';
+                $('.sidebar-container').append(addOfferContainer);
+            }
 
             $('.selectpicker').selectpicker();
             RangeSlider();
+
             $("#add-offer-container").show();
-            jQuery._data($('#snackbar-place-bid'), "events")
+            jQuery._data($('#snackbar-place-bid'), "events");
             Snackbar.show({
                 text: 'Предложение успешно удалено!',
             });

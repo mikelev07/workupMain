@@ -14570,8 +14570,12 @@ a.dashboard-responsive-nav-trigger {
 			border-radius: 50%;
 			position: relative;
 			margin: 0 0 0 4px;
-			top: -2px;
+			/*top: -2px;*/
 		}
+
+        span.nav-tag {
+            top:0;
+        }
 
 		/* Dropdown Styles */
 		.dashboard-nav ul li ul {
