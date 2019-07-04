@@ -182,7 +182,22 @@
 
             <div class="boxed-list margin-bottom-60">
                 <div class="boxed-list-headline">
-                    <h3><i class="icon-material-outline-group"></i>Предложения исполнителей  <span style="color:white" class="nav-tag" id="votes">@Model.Comments.Count </span> </h3>
+                    <h3>
+                        <i class="icon-material-outline-group"></i>Предложения исполнителей  <span style="color:white" class="nav-tag" id="votes">@Model.Comments.Count </span>
+                        @if (Model.UserId == User.Identity.GetUserId())
+                        {
+                            <div class="sort-by">
+                                <span>Сортировать по:</span>
+                                <select class="selectpicker hide-tick" id="sortComments">
+                                    <option value="1" selected>Новым</option>
+                                    <option value="2">Давним</option>
+                                    <option value="3">Рейтингу</option>
+                                    <option value="4">Дешевым</option>
+                                    <option value="5">Дорогим</option>
+                                </select>
+                            </div>
+                        }
+                    </h3>
                 </div>
 
 
@@ -207,7 +222,7 @@
                                         <div class="freelancer-name">
                                             <h4>
                                                 <a href="@Url.Action("Details", "User", new { userName = c.User.UserName })">
-                                                    @c.User.UserName | @c.Id
+                                                    @c.User.UserName @*| @c.Id*@
                                                     @*<img class="flag" src="images/flags/gb.svg" alt="" title="United Kingdom" data-tippy-placement="top">*@
                                                 </a>
                                             </h4>
@@ -241,7 +256,7 @@
                                                 <span>за @c.Hours часов</span>
                                             }
                                         </div>
-                                        @if (Model.ExecutorId != User.Identity.GetUserId() && Model.UserId != User.Identity.GetUserId())
+                                        @if (Model.ExecutorId != User.Identity.GetUserId() && Model.UserId != User.Identity.GetUserId() && Model.ExecutorId == null)
                                         {
                                             <div style="margin-left: 23px;" class="buttons-to - right always - visible">
                                                 <a href="#small-dialog" class="popup-with-zoom-anim button dark ripple-effect ico" title="Редактировать" data-tippy-placement="top">
@@ -257,8 +272,8 @@
                                 @if (Model.UserId == User.Identity.GetUserId() && Model.ExecutorId == null)
                                 {
                                     <div class="margin-top-30">
-                                        <a href="#small-dialog-1" style="box-shadow: 0 12px 12px rgba(0,0,0,0.1);border-radius: 25px;" class="popup-with-zoom-anim button ripple-effect"><i class="icon-material-outline-check"></i> Принять предложение</a>
-                                        <a href="#small-dialog-2" style="background-color: #f4f4f4;box-shadow: 0 12px 12px rgba(0,0,0,0.1);color: #333;border-radius: 25px;" class="popup-with-zoom-anim button dark ripple-effect"><i class="icon-feather-mail"></i> Отправить сообщение</a>
+                                        <a href="#small-dialog-1-@c.Id" style="box-shadow: 0 12px 12px rgba(0,0,0,0.1);border-radius: 25px;" class="popup-with-zoom-anim button ripple-effect"><i class="icon-material-outline-check"></i> Принять предложение</a>
+                                        <a href="#small-dialog-2-@c.Id" style="background-color: #f4f4f4;box-shadow: 0 12px 12px rgba(0,0,0,0.1);color: #333;border-radius: 25px;" class="popup-with-zoom-anim button dark ripple-effect"><i class="icon-feather-mail"></i> Отправить сообщение</a>
                                     </div>
                                 }
                                 <div class="item-description margin-top-20">
@@ -278,7 +293,7 @@
                                         <div class="sign-in-form">
 
                                             <ul class="popup-tabs-nav">
-                                                <li><a href="#tab">Редактировать предложение @c.Id</a></li>
+                                                <li><a href="#tab">Редактировать предложение</a></li>
                                             </ul>
                                             <div class="popup-tabs-container">
 
@@ -364,7 +379,7 @@
                                     <div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
                                         <div class="sign-in-form">
                                             <ul class="popup-tabs-nav">
-                                                <li><a href="#tab">Удалить предложение @c.Id</a></li>
+                                                <li><a href="#tab">Удалить предложение</a></li>
                                             </ul>
 
                                             <div class="popup-tabs-container">
@@ -397,7 +412,7 @@
                                 }
                             }
 
-                            <div id="small-dialog-1" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+                            <div id="small-dialog-1-@c.Id" class="small-dialog-1 zoom-anim-dialog mfp-hide dialog-with-tabs">
 
                                 <!--Tabs -->
                                 <div class="sign-in-form">
@@ -413,29 +428,41 @@
 
                                             <!-- Welcome Text -->
                                             <div class="welcome-text">
-                                                <h3>Принять предложение от исполнителя?</h3>
+                                                <h3>Принять предложение от @c.User.UserName?</h3>
                                                 <div class="bid-acceptance margin-top-15">
-                                                    Надо указать тут цену
+                                                    <div class="bid-rate" id="user-comment-bid-rate-@c.Id">
+                                                        <div class="rate">@c.OfferPrice рублей</div>
+                                                        @if (c.Days > 0)
+                                                        {
+                                                            <span>за @c.Days дней</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>за @c.Hours часов</span>
+                                                        }
+                                                    </div>
                                                 </div>
 
                                             </div>
 
-                                            <form id="terms">
+                                            @using (Html.BeginForm("ChooseExecutor", "Custom", new { id = Model.Id, userId = c.UserId }))
+                                            {
                                                 <div class="radio">
-                                                    <input id="radio-1" name="radio" type="radio" required>
+                                                    <input id="radio-1" name="radio" 
+                                                           type="radio" required
+                                                           oninvalid="this.setCustomValidity('Сначала нужно ознакомиться с правилами')">
                                                     <label for="radio-1"><span class="radio-label"></span>  Я ознакомился с правилами</label>
                                                 </div>
-                                            </form>
-
-                                            <!-- Button -->
-                                            <a href="@Url.Action("ChooseExecutor", "Custom", new { id = Model.Id, userId = c.UserId })" class="margin-top-15 button full-width button-sliding-icon ripple-effect" type="submit" form="terms">Принять <i class="icon-material-outline-arrow-right-alt"></i></a>
+                                                <input class="margin-top-15 button full-width button-sliding-icon ripple-effect"
+                                                       type="submit" value="Принять" />
+                                            }
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <!-- Bid Acceptance Popup / End -->
 
-                            <div id="small-dialog-2" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+                            <div id="small-dialog-2-@c.Id" class="small-dialog-2 zoom-anim-dialog mfp-hide dialog-with-tabs">
 
                                 <!--Tabs -->
                                 <div class="sign-in-form">
@@ -451,16 +478,16 @@
 
                                             <!-- Welcome Text -->
                                             <div class="welcome-text">
-                                                <h3>Отправить сообщение Марианночке</h3>
+                                                <h3>Отправить сообщение @c.User.UserName</h3>
                                             </div>
 
                                             <!-- Form -->
                                             <form method="post" id="send-pm">
-                                                <textarea name="textarea" cols="10" placeholder="Message" class="with-border" required></textarea>
+                                                <textarea name="textarea" cols="10" placeholder="Оставьте сообщение..." class="with-border" required></textarea>
                                             </form>
 
                                             <!-- Button -->
-                                            <a class="button full-width button-sliding-icon ripple-effect" type="submit" form="send-pm">Отправить <i class="icon-material-outline-arrow-right-alt"></i></a>
+                                            <a class="button full-width button-sliding-icon ripple-effect" type="submit" form="send-pm" target="_blank">Отправить <i class="icon-material-outline-arrow-right-alt"></i></a>
 
                                         </div>
 
@@ -1111,6 +1138,8 @@
             Snackbar.show({
                 text: 'Предложение успешно удалено!',
             });
+
+            $('#sortField').change(CallIndex);
         }
 
 
