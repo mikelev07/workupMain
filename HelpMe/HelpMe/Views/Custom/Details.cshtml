@@ -188,7 +188,7 @@
                         {
                             <div class="sort-by">
                                 <span>Сортировать по:</span>
-                                <select class="selectpicker hide-tick" id="sortComments">
+                                <select class="selectpicker hide-tick" id="sortComments" autocomplete="off">
                                     <option value="1" selected>Новым</option>
                                     <option value="2">Давним</option>
                                     <option value="3">Рейтингу</option>
@@ -202,11 +202,11 @@
 
 
                 <ul class="boxed-list-ul" id="boxed-list-ul">
-                    @foreach (var c in Model.Comments)
+                    @foreach (var c in Model.Comments.Reverse())
                     {
                         if (Model.UserId == User.Identity.GetUserId() || c.UserId == User.Identity.GetUserId())
                         {
-                            <li id="user-comment-@c.Id">
+                            <li id="user-comment-@c.Id" class="comments">
                                 <div class="bid">
                                     <div class="bids-avatar">
                                         <div class="freelancer-avatar">
@@ -222,7 +222,7 @@
                                         <div class="freelancer-name">
                                             <h4>
                                                 <a href="@Url.Action("Details", "User", new { userName = c.User.UserName })">
-                                                    @c.User.UserName @*| @c.Id*@
+                                                    @c.User.UserName  <h6 class="custom-comments">@c.CreationDate</h6>@*| @c.Id*@
                                                     @*<img class="flag" src="images/flags/gb.svg" alt="" title="United Kingdom" data-tippy-placement="top">*@
                                                 </a>
                                             </h4>
@@ -448,7 +448,7 @@
                                             @using (Html.BeginForm("ChooseExecutor", "Custom", new { id = Model.Id, userId = c.UserId }))
                                             {
                                                 <div class="radio">
-                                                    <input id="radio-1" name="radio" 
+                                                    <input id="radio-1" name="radio"
                                                            type="radio" required
                                                            oninvalid="this.setCustomValidity('Сначала нужно ознакомиться с правилами')">
                                                     <label for="radio-1"><span class="radio-label"></span>  Я ознакомился с правилами</label>
@@ -702,6 +702,7 @@
 
 @section Scripts {
     <script>
+
         $(document).ready(function () {
             $("#boxed-list-ul > li:odd").css("background-color", "#fafafa");
         });
@@ -908,7 +909,7 @@
                         + '</div > ';
                     var htmlStar = '<div id="starId" class="star-rating" data-rating="' + executorsRating+'"></div>';
 
-                    var htmlComment = '<li id="user-comment-' + data.Id + '">' + "<div class='bid'><div class='bids-avatar'><div class='freelancer-avatar'><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name})'><img src='" + executorImagePath + "' alt='аватар' id='_executorImage'></a></div></div><div class='bids-content'><div class='freelancer-name'><h4><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name })'>@User.Identity.Name | " + data.Id + "</a></h4>"
+                    var htmlComment = '<li id="user-comment-' + data.Id + '">' + "<div class='bid'><div class='bids-avatar'><div class='freelancer-avatar'><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name})'><img src='" + executorImagePath + "' alt='аватар' id='_executorImage'></a></div></div><div class='bids-content'><div class='freelancer-name'><h4><a href='@Url.Action("Details", "User", new { userName = User.Identity.Name })'>@User.Identity.Name  <h6 class='custom-comments'>" + data.CreationDate +"</h6></a></h4>"
                         + htmlStar + "</div></div><div class='bids-bid'><div class='bid-rate' id='user-comment-bid-rate-"+data.Id+"'><div class='rate'>"
                         + person.OfferPrice + " рублей</div><span>за ";
 
@@ -941,9 +942,10 @@
                         if($('#small-dialog-3').length) {
                             $('div#small-dialog-3').remove();
                         }
-                        $("#boxed-list-ul").append(htmlComment);
-                        $("#boxed-list-ul").append(modalEdit);
-                        $("#boxed-list-ul").append(modalRemove);
+
+                        $("#boxed-list-ul").prepend(htmlComment);
+                        $("#boxed-list-ul").prepend(modalEdit);
+                        $("#boxed-list-ul").prepend(modalRemove);
 
                         function qtySum() {
                             var arr = document.getElementsByName('qtyInput');
@@ -967,7 +969,7 @@
                     $("#starId li").attr("id", "user-comment-" + commentId);
                     $("#_executorImage").attr('src', executorImagePath);
                     starRating('#starId');
-                    $("#add-offer-container").hide();
+                    $("#add-offer-container").hide(500);
                     $("#add-offer-container").empty();
                     RangeSlider();
                     Snackbar.show({
@@ -1133,14 +1135,59 @@
             $('.selectpicker').selectpicker();
             RangeSlider();
 
-            $("#add-offer-container").show();
+            $("#add-offer-container").show(500);
             jQuery._data($('#snackbar-place-bid'), "events");
             Snackbar.show({
                 text: 'Предложение успешно удалено!',
             });
-
-            $('#sortField').change(CallIndex);
         }
+
+        $('#sortComments').on('change', function () {
+            var sortingType = $(this).val();
+            //console.log('sortingType = '+sortingType);
+            var initialComments = $('.comments');
+            var sortedComments;
+
+            switch (sortingType) {
+                case '2'://по давним
+                    //console.log('sortComments = по давним');
+                    sortedComments = initialComments.sort(function (a, b) {
+                        return $(a).find('h6').text() > $(b).find('h6').text();
+                    });
+                    break;
+
+                case '3'://по рейтингу
+                    //console.log('sortComments = по рейтингу');
+                    sortedComments = initialComments.sort(function (a, b) {
+                        return $(a).find('.star-rating').data('rating') < $(b).find('.star-rating').data('rating');
+                    });
+                    break;
+
+                case '4'://по дешевым
+                    //console.log('sortComments = по дешевым');
+                    sortedComments = initialComments.sort(function (a, b) {
+                        return parseInt($(a).find('.rate').text()) > parseInt($(b).find('.rate').text());
+                    });
+                    break;
+
+                case '5'://по дорогим
+                    //console.log('sortComments = по дорогим');
+                    sortedComments = initialComments.sort(function (a, b) {
+                        return parseInt($(a).find('.rate').text()) < parseInt($(b).find('.rate').text());
+                    });
+                    break;
+
+                default://по новым (по умолчанию)
+                    //console.log('sortComments = по новым');
+                    sortedComments = initialComments.sort(function (a, b) {
+                        return $(a).find('h6').text() < $(b).find('h6').text();
+                    });
+                    break;
+            }
+            $('#boxed-list-ul').html(sortedComments);
+            $('#boxed-list-ul>li').css('background-color', 'transparent');
+            $('#boxed-list-ul>li:odd').css('background-color', '#fafafa');
+        });
 
 
 

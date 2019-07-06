@@ -37,7 +37,7 @@
                "Все дисциплины", new { @class = "selectpicker-filterdropdown", id ="TaskList", autocomplete = "off"})
                     <br />
                     @Html.DropDownList("Все предметы", Enumerable.Empty<SelectListItem>(),
-               "Все предметы", new { @class = "selectpicker-filterdropdown", id ="SkillList", autocomplete = "off"})
+               "Все предметы", new { @class = "selectpicker-filterdropdown", id ="SkillList", @disabled = "disabled", autocomplete = "off"})
                 </div>
 
                 <!-- Budget -->
@@ -82,7 +82,7 @@
 
                 <div class="sort-by">
                     <span>Сортировать по:</span>
-                    <select id="sort-customs-field" class="selectpicker hide-tick">
+                    <select id="sort-customs-field" class="selectpicker hide-tick" autocomplete="off">
                         <option value="1">Новинкам</option>
                         <option value="2">Старым</option>
                         <option value="3">Дорогим</option>
@@ -369,11 +369,18 @@
                                     $("#more-customs-button").hide();
                                 }
                                 $("#found-customs-count").html("Найдено заказов: " + data);
+                                $("#lds-ring-count").children().hide();
+                            },
+                            error: function () {
+                                $("#lds-ring-count").children().hide();
+                                //alert('error in GetCustomCount!!');
                             }
                         });
-                        $("#lds-ring-count").children().hide();
                     },
-                    error: function (data) { alert(data.responseText); }
+                    error: function (data) {
+                        $("#lds-ring-count").children().hide();
+                        alert(data.responseText);
+                    }
                 });
             }
 
@@ -402,13 +409,14 @@
                         }
                         $('#SkillList').selectpicker("refresh");
                     },
-                    error: function (data) { alert(data.responseText); }
+                    error: function (data) {
+                        alert(data.responseText);
+                    }
                 });
             }
 
             function ResetCustoms() {
                 page = 0;
-                $("#lds-ring-count").children().show();
                 var orderName = $("#name").val();
                 var taskListId = $("#TaskList").val();
                 var skillListId = $("#SkillList").val();
@@ -424,6 +432,7 @@
                     || maxPrice != $('#budget-range-slider').attr('data-slider-max')
                     || customsWithoutOffers
                 ) {
+                    $("#lds-ring-count").children().show();
                     $("#name").val("");
                     $("#TaskList").val('').selectpicker("render");
                     $("#SkillList").val('').selectpicker("render");
@@ -459,11 +468,18 @@
                                         $("#more-customs-button").hide();
                                     }
                                     $("#found-customs-count").html("Найдено заказов: " + data);
+                                    $("#lds-ring-count").children().hide();
+                                },
+                                error: function () {
+                                    $("#lds-ring-count").children().hide();
+                                    //alert('error in GetCustomCount!!');
                                 }
                             });
-                            $("#lds-ring-count").children().hide();
                         },
-                        error: function (data) { alert(data.responseText); }
+                        error: function (data) {
+                            $("#lds-ring-count").children().hide();
+                            //alert(data.responseText);
+                        }
                     });
                 }
             }

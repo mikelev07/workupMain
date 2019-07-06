@@ -367,7 +367,15 @@ namespace HelpMe.Controllers
         [HttpPost]
         public JsonResult People(string Description, int CustomViewModelId, int OfferPrice, int Days, int Hours)
         {
-            var comment = new CommentViewModel { Description = Description, OfferPrice = OfferPrice, Days = Days, Hours = Hours, UserId = User.Identity.GetUserId(), CustomViewModelId = CustomViewModelId };
+            var comment = new CommentViewModel {
+                Description = Description,
+                CreationDate = DateTime.Now,
+                OfferPrice = OfferPrice,
+                Days = Days,
+                Hours = Hours,
+                UserId = User.Identity.GetUserId(),
+                CustomViewModelId = CustomViewModelId
+            };
             CustomViewModel customViewModel = db.Customs.Include(c => c.Comments).FirstOrDefault(c => c.Id == CustomViewModelId);
 
             var thisUserId = User.Identity.GetUserId();
@@ -387,6 +395,7 @@ namespace HelpMe.Controllers
                 {
                     Id = comment.Id,
                     Description = comment.Description,
+                    CreationDate = comment.CreationDate,
                     OfferPrice = comment.OfferPrice,
                     CustomViewModelId = comment.CustomViewModelId,
                     UserId = comment.UserId,

@@ -291,6 +291,10 @@
     <Compile Include="Migrations\201906191258462_Comment&amp;CustomMigration2.Designer.cs">
       <DependentUpon>201906191258462_Comment&amp;CustomMigration2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201907060844463_CommentCreationDateMigra.cs" />
+    <Compile Include="Migrations\201907060844463_CommentCreationDateMigra.Designer.cs">
+      <DependentUpon>201907060844463_CommentCreationDateMigra.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationRoleManager.cs" />
@@ -602,6 +606,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906191258462_Comment&amp;CustomMigration2.resx">
       <DependentUpon>201906191258462_Comment&amp;CustomMigration2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907060844463_CommentCreationDateMigra.resx">
+      <DependentUpon>201907060844463_CommentCreationDateMigra.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

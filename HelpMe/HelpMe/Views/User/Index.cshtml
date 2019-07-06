@@ -27,7 +27,7 @@
                     <br>
                     @*@Html.DropDownList("Все предметы", ViewBag.Skills as SelectList,
                         new { @class = "selectpicker", id="SkillList" })*@
-                    @Html.DropDownList("All subjects", Enumerable.Empty<SelectListItem>(),
+                    @Html.DropDownList("Все предметы", Enumerable.Empty<SelectListItem>(),
                    "Все предметы", new { @class = "selectpicker-filterdropdown", id = "SkillList", @disabled="disabled", autocomplete = "off"})
                     @*<select class="selectpicker" data-live-search="true" title="Все предметы">
                             <option>Математик</option>
@@ -117,7 +117,7 @@
 
                 <div class="sort-by">
                     <span>Сортировать по:</span>
-                    <select class="selectpicker hide-tick" id="sortField">
+                    <select class="selectpicker hide-tick" id="sortField" autocomplete="off">
                         <option value="1" selected>Рейтингу</option>
                         <option value="2">Давним</option>
                         <option value="3">Новым</option>
@@ -332,7 +332,6 @@
             //reset filtration event handler
             $("#reset-filter-button").click(function () {
                 page = 0;
-                $("#lds-ring-count").children().show();
                 var nickName = $("#autocomplete-input").val();
                 var taskListId = $("#TaskList").val();
                 var skillListId = $("#SkillList").val();
@@ -343,6 +342,7 @@
                 //var isOnline = $("#tag1").is(':checked');
                 //var isNotBusy = $("#tag2").is(':checked');
                 if (nickName || taskListId || skillListId || count != 0 || executorsOnline || executorsReady) {
+                    $("#lds-ring-count").children().show();
                     $("#work-range").slider('refresh');
                     $("#autocomplete-input").val("");
                     $("#TaskList").val('').selectpicker("render");
@@ -384,12 +384,19 @@
                                         $("#load-more-button").hide();
                                     }
                                     $("#found-users-count").html("Найдено исполнителей: " + data);
+                                    $("#lds-ring-count").children().hide();
+                                },
+                                error: function (data) {
+                                    $("#lds-ring-count").children().hide();
+                                    //alert(data.responseText);
                                 }
                             });
-                            $("#lds-ring-count").children().hide();
 
                         },
-                        error: function (data) { alert(data.responseText); }
+                        error: function (data) {
+                            $("#lds-ring-count").children().hide();
+                            //alert(data.responseText);
+                        }
                     });
                 }
             });
@@ -458,8 +465,8 @@
             }
 
             function CallIndex() {
-                page = 0;
                 $("#lds-ring-count").children().show();
+                page = 0;
                 var nickName = $("#autocomplete-input").val();
                 var taskListId = $("#TaskList").val();
                 if (!taskListId) {
@@ -507,11 +514,18 @@
                                     $("#load-more-button").hide();
                                 }
                                 $("#found-users-count").html("Найдено исполнителей: " + data);
+                                $("#lds-ring-count").children().hide();
+                            },
+                            error: function (data) {
+                                $("#lds-ring-count").children().hide();
+                                //alert(data.responseText);
                             }
                         });
-                        $("#lds-ring-count").children().hide();
                     },
-                    error: function (data) { alert(data.responseText); }
+                    error: function (data) {
+                        $("#lds-ring-count").children().hide();
+                        //alert(data.responseText);
+                    }
                 });
             }
 
@@ -540,7 +554,9 @@
                         }
                         $('#SkillList').selectpicker("refresh");
                     },
-                    error: function (data) { alert(data.responseText); }
+                    error: function (data) {
+                        //alert(data.responseText);
+                    }
                 });
             }
         });

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -10,6 +11,9 @@ namespace HelpMe.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime CreationDate { get; set; }
         public int Days { get; set; }
         public int Hours { get; set; }
         public int OfferPrice { get; set; } 

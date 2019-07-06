@@ -14015,6 +14015,12 @@ body .pac-container {
 	margin-top: -2px;
 }
 
+.custom-comments{
+    color: #333;
+    font-weight: 600;
+    font-size: 14px;
+}
+
 @media (max-width: 768px) {
 	.bid .freelancer-avatar {
 		width: 70px;
