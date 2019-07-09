@@ -442,19 +442,18 @@
                                                         }
                                                     </div>
                                                 </div>
-
                                             </div>
 
                                             @using (Html.BeginForm("ChooseExecutor", "Custom", new { id = Model.Id, userId = c.UserId }))
                                             {
                                                 <div class="radio">
-                                                    <input id="radio-1" name="radio"
-                                                           type="radio" required
-                                                           oninvalid="this.setCustomValidity('Сначала нужно ознакомиться с правилами')">
-                                                    <label for="radio-1"><span class="radio-label"></span>  Я ознакомился с правилами</label>
+                                                    <input id="radio-accept-executor" name="radio" type="radio" required autocomplete="off"
+                                                           oninvalid="setCustomValidity('Сперва нужно ознакомиться с правилами!')"
+                                                           oninput="setCustomValidity('')"/>
+                                                    <label for="radio-accept-executor"><span class="radio-label"></span>  Я ознакомился с правилами</label>
                                                 </div>
                                                 <input class="margin-top-15 button full-width button-sliding-icon ripple-effect"
-                                                       type="submit" value="Принять" />
+                                                       type="submit" value="Принять"/>
                                             }
                                         </div>
                                     </div>
@@ -462,9 +461,36 @@
                             </div>
                             <!-- Bid Acceptance Popup / End -->
 
+
                             <div id="small-dialog-2-@c.Id" class="small-dialog-2 zoom-anim-dialog mfp-hide dialog-with-tabs">
 
-                                <!--Tabs -->
+                                <ul class="popup-tabs-nav">
+                                    <li><a href="#tab2">Отправка сообщения</a></li>
+                                </ul>
+                                <div class="popup-tabs-container">
+                                    @using (Html.BeginForm("AddMessage", "Chat", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken();
+                                        <!-- Tab -->
+                                        
+                                        <div class="popup-tab-content" id="tab2">
+
+                                            <!-- Welcome Text -->
+                                            <div class="welcome-text">
+                                                <h3>Отправьте сообщение @c.User.UserName</h3>
+                                            </div>
+                                            @Html.Hidden("UserFromId", User.Identity.GetUserId())
+                                            @Html.Hidden("UserToId", c.UserId)
+
+                                            <textarea name="Description" id="Description" cols="10" placeholder="Сообщение" class="with-border"></textarea>
+                                            <!-- Button -->
+                                            <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Отправить <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                        </div>
+                                    }
+
+                                </div>
+
+                                @*<!--Tabs -->
                                 <div class="sign-in-form">
 
                                     <ul class="popup-tabs-nav">
@@ -492,7 +518,7 @@
                                         </div>
 
                                     </div>
-                                </div>
+                                </div>*@
                             </div>
 
                         }
@@ -1184,13 +1210,11 @@
                     });
                     break;
             }
-            $('#boxed-list-ul').html(sortedComments);
+            $('#boxed-list-ul').append(sortedComments);
             $('#boxed-list-ul>li').css('background-color', 'transparent');
             $('#boxed-list-ul>li:odd').css('background-color', '#fafafa');
         });
-
-
-
+        
 
 
         function RangeSlider() {
