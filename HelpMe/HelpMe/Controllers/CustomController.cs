@@ -155,6 +155,48 @@ namespace HelpMe.Controllers
             await db.SaveChangesAsync();
             return Json(true);
         }
+        public ActionResult LoadMyAttaches(int? id)
+        {
+            var allAttaches = db.MyAttachments.Include(c => c.CustomViewModel).Where(c => c.CustomViewModelId == id).ToList();
+            return PartialView(allAttaches);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UploadAttach()
+        {
+            var idCustom = Convert.ToInt32(Request.Form["CustomViewModelId"]);
+            CustomViewModel customViewModel = await db.Customs.Include(c => c.User).Include(a => a.Attachments).FirstOrDefaultAsync(c => c.Id == idCustom);
+            //var count = customViewModel.MyAttachments.Count;
+            
+                MyAttachModel attach = new MyAttachModel();
+
+                foreach (string file in Request.Files)
+                {
+                    var upload = Request.Files[file];
+
+                    if (upload != null)
+                    {
+                        // получаем имя файла
+                        string fileName = System.IO.Path.GetFileName(upload.FileName);
+                        // сохраняем файл в папку Files в проекте
+                        upload.SaveAs(Server.MapPath("~/Files/" + fileName));
+                        string path = Server.MapPath("~/Files/" + fileName);
+                        // сохраняем файл в папку Files в проекте
+                        upload.SaveAs(path);
+                        attach.Id = 1;
+                       
+                        attach.CustomViewModelId = Convert.ToInt32(Request.Form["CustomViewModelId"]);
+                        attach.AttachFilePath = path;
+                       
+                        attach.UserId = User.Identity.GetUserId();
+                        db.MyAttachments.Add(attach);
+                       // SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
+                        await db.SaveChangesAsync();
+                    }
+                }
+            
+            return Json("Файл загружен");
+        }
 
         [HttpPost]
         public async Task<JsonResult> Upload()
