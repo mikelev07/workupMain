@@ -252,10 +252,16 @@ namespace HelpMe.Controllers
 
                 string myId = User.Identity.GetUserId();
                 Wallet wallet = db.Wallets.Where(x => x.UserId == myId).FirstOrDefault();
-
+                Transaction transaction = new Transaction();
+                transaction.Id = 1;
                 if (wallet.Summ - attachViewModel.ExecutorPrice > 0)
                 {
                     wallet.Summ -= attachViewModel.ExecutorPrice;
+                    transaction.Price = attachViewModel.ExecutorPrice;
+                    transaction.FromUserId = myId;
+                    transaction.ToUserId = attachViewModel.CustomViewModel.ExecutorId;
+                    db.Transactions.Add(transaction);
+                    await db.SaveChangesAsync();
                 }
                 else
                 {

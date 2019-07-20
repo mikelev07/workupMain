@@ -132,6 +132,7 @@ namespace HelpMe.Models
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<ChatDialog> ChatDialogs { get; set; }
         public DbSet<Wallet> Wallets { get; set; } // коллекция сущностей типа Wallet
+        public DbSet<Transaction> Transactions { get; set; } 
 
         public static ApplicationDbContext Create()
         {

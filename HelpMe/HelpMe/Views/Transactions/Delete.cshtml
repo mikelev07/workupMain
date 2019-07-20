@@ -1,0 +1,56 @@
+﻿@model HelpMe.Models.Transaction
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Delete</title>
+</head>
+<body>
+    <h3>Are you sure you want to delete this?</h3>
+    <div>
+        <h4>Transaction</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Price)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Price)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.AttachId)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.AttachId)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Status)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Status)
+            </dd>
+    
+        </dl>
+    
+        @using (Html.BeginForm()) {
+            @Html.AntiForgeryToken()
+    
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-default" /> |
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+        }
+    </div>
+</body>
+</html>
