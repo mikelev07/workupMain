@@ -151,6 +151,11 @@ namespace HelpMe.Controllers
 
             AttachModel attach = await db.Attachments.FindAsync(id);
             var customId = attach.CustomViewModelId;
+
+            var customViewModel = await db.Customs.FirstOrDefaultAsync(c=> c.Id==customId);
+            db.Entry(customViewModel).State = EntityState.Modified;
+            customViewModel.Status = CustomStatus.Check;//выполняется исполнителем
+
             db.Attachments.Remove(attach);
             await db.SaveChangesAsync();
             return Json(true);
@@ -229,6 +234,8 @@ namespace HelpMe.Controllers
                         attach.UserId = User.Identity.GetUserId();
                         db.Attachments.Add(attach);
                         SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
+                        db.Entry(customViewModel).State = EntityState.Modified;
+                        customViewModel.Status = CustomStatus.NeedBuy;//ожидает покупки
                         await db.SaveChangesAsync();
                     }
                 }
@@ -268,8 +275,8 @@ namespace HelpMe.Controllers
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
                 attachViewModel.AttachStatus = AttachStatus.Purchased;
-                if (attachViewModel.CustomViewModel.Attachments.Where(c => c.AttachStatus == AttachStatus.Purchased).Count() == 0)
-                    attachViewModel.CustomViewModel.Status = CustomStatus.CheckCustom;
+                if (attachViewModel.CustomViewModel.Attachments.Where(c => c.AttachStatus == AttachStatus.NotPurchased).Count() == 0)
+                    attachViewModel.CustomViewModel.Status = CustomStatus.CheckCustom;//проверяется заказчиком
                 db.Entry(wallet).State = EntityState.Modified;
                 await db.SaveChangesAsync();
 
@@ -545,6 +552,7 @@ namespace HelpMe.Controllers
                                                               .Include(c => c.TypeTask)
                                                               .Include(c => c.User)
                                                               .Include(c => c.Attachments)
+                                                              .Include(c=>c.MyAttachments)
                                                               .FirstOrDefaultAsync(c => c.Id == id);
 
             if (customViewModel == null)

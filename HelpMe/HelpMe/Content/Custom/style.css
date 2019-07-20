@@ -14383,14 +14383,14 @@ a.attachment-box:hover i {
 }
 
 @media (max-width: 768px) {
-	.boxed-list-item .item-details,
-	.attachments-container,
-	.attachments-container .attachment-box,
-	.freelancer-indicators,
-	.freelancer-indicators .indicator {
-		display: block;
-		width: 100%;
-	}
+    .boxed-list-item .item-details,
+    .attachments-container,
+    .attachments-container .attachment-box,
+    .freelancer-indicators,
+    .freelancer-indicators .indicator {
+        display: block;
+        width: 100%;
+    }
 
 	.boxed-list-item .item-image {
 		display: none;

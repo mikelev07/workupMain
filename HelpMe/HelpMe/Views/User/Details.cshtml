@@ -135,9 +135,9 @@
                             <div class="boxed-list margin-bottom-60">
 
                                 <ul id="cust" class="boxed-list-ul">
-                                    @if (Model.Customs.Count()>0)
+                                    @if (Model.Customs.Count() > 0)
                                     {
-                                        Html.Partial("_DetailsCustomsPage", Model.Customs.Where(c=>c.Status==HelpMe.Models.CustomStatus.Close).OrderByDescending(c => c.EndingDate).ToPagedList(
+                                        Html.Partial("_DetailsCustomsPage", Model.Customs.Where(c => c.Status == HelpMe.Models.CustomStatus.Close).OrderByDescending(c => c.EndingDate).ToPagedList(
                                             (int)ViewData["CustomsPage"], (int)ViewData["CustomsPageSize"]));
                                     }
                                     else
@@ -281,8 +281,8 @@
                     <div class="overview-item"><strong>@Model.PositiveThumbs</strong><span>Положительных отзывов</span></div>
                     <div class="overview-item"><strong>@Model.NegativeThumbs</strong><span>Отрицательных отзывов</span></div>
                 </div>
-                
-                @if (Request.IsAuthenticated)
+
+                @if (Request.IsAuthenticated && Model.Id != User.Identity.GetUserId())
                 {
                     <!-- Button -->
                     <a href="#small-dialog-2" class="apply-now-button popup-with-zoom-anim margin-bottom-20">Привлечь к заданию <i class="icon-material-outline-arrow-right-alt"></i></a>
@@ -291,284 +291,286 @@
 
                     <a href="#small-dialog" class="apply-now-button popup-with-zoom-anim margin-bottom-40">Оставить отзыв <i class="icon-material-outline-arrow-right-alt"></i></a>
                 }
-                    <!-- Freelancer Indicators -->
-                    <div class="sidebar-widget">
-                        <div class="freelancer-indicators">
+                <!-- Freelancer Indicators -->
+                <div class="sidebar-widget">
+                    <div class="freelancer-indicators">
 
-                            <!-- Indicator -->
-                            @{
-                                var total = Model.Customs.Count();
-                                int procent = 0;
-                                if (total > 0)
-                                {
-                                    var inTime = Model.Customs.Where(c => c.DoneInTime == true).Count();
-                                    procent = (int)Math.Round((double)inTime / total, 0);
-                                }
+                        <!-- Indicator -->
+                        @{
+                            var total = Model.Customs.Count();
+                            int procent = 0;
+                            if (total > 0)
+                            {
+                                var inTime = Model.Customs.Where(c => c.DoneInTime == true).Count();
+                                procent = (int)Math.Round((double)inTime / total, 0);
                             }
-                            <div class="indicator">
-                                <strong>@procent%</strong>
-                                <div class="indicator-bar" data-indicator-percentage="@procent"><span></span></div>
-                                <span>Вовремя</span>
-                            </div>
+                        }
+                        <div class="indicator">
+                            <strong>@procent%</strong>
+                            <div class="indicator-bar" data-indicator-percentage="@procent"><span></span></div>
+                            <span>Вовремя</span>
+                        </div>
 
-                            <!-- Indicator -->
-                            @{
-                                var goodReviews = 0;
-                                if (likes + dislikes > 0)
-                                {
-                                    goodReviews = (int)Math.Round((double)Model.PositiveThumbs / (Model.PositiveThumbs + Model.NegativeThumbs) * 100, 0);
-                                }
+                        <!-- Indicator -->
+                        @{
+                            var goodReviews = 0;
+                            if (likes + dislikes > 0)
+                            {
+                                goodReviews = (int)Math.Round((double)Model.PositiveThumbs / (Model.PositiveThumbs + Model.NegativeThumbs) * 100, 0);
                             }
-                            <div class="indicator">
-                                <strong>@goodReviews%</strong>
-                                <div class="indicator-bar" data-indicator-percentage="@goodReviews"><span></span></div>
-                                <span>Положительные отзывы</span>
-                            </div>
+                        }
+                        <div class="indicator">
+                            <strong>@goodReviews%</strong>
+                            <div class="indicator-bar" data-indicator-percentage="@goodReviews"><span></span></div>
+                            <span>Положительные отзывы</span>
+                        </div>
 
-                            <!-- Indicator -->
-                            <!--
-                <div class="indicator">
-                    <strong>90%</strong>
-                    <div class="indicator-bar" data-indicator-percentage="90"><span></span></div>
-                    <span>Вовремя</span>
+                        <!-- Indicator -->
+                        <!--
+                        <div class="indicator">
+                            <strong>90%</strong>
+                            <div class="indicator-bar" data-indicator-percentage="90"><span></span></div>
+                            <span>Вовремя</span>
+                        </div>
+                        -->
+                        <!-- Indicator -->
+                        <!--
+                        <div class="indicator">
+                            <strong>80%</strong>
+                            <div class="indicator-bar" data-indicator-percentage="80"><span></span></div>
+                            <span>Бюджет</span>
+                        </div>
+                        -->
+                    </div>
                 </div>
-                -->
-                            <!-- Indicator -->
-                            <!--
-                <div class="indicator">
-                    <strong>80%</strong>
-                    <div class="indicator-bar" data-indicator-percentage="80"><span></span></div>
-                    <span>Бюджет</span>
+
+
+                <!-- Widget -->
+                <!-- Widget -->
+                <div class="sidebar-widget">
+                    <h3>Портфолио</h3>
+                    <div class="attachments-container">
+                        <a href="#" class="attachment-box ripple-effect"><span>Cover Letter</span><i>PDF</i></a>
+                        <a href="#" class="attachment-box ripple-effect"><span>Contract</span><i>DOCX</i></a>
+                    </div>
                 </div>
-                -->
-                        </div>
-                    </div>
 
+                <!-- Sidebar Widget -->
+                <div class="sidebar-widget">
+                    <h3>Добавить в избранное</h3>
 
-                    <!-- Widget -->
-                    <!-- Widget -->
-                    <div class="sidebar-widget">
-                        <h3>Портфолио</h3>
-                        <div class="attachments-container">
-                            <a href="#" class="attachment-box ripple-effect"><span>Cover Letter</span><i>PDF</i></a>
-                            <a href="#" class="attachment-box ripple-effect"><span>Contract</span><i>DOCX</i></a>
-                        </div>
-                    </div>
+                    <!-- Bookmark Button -->
+                    <button class="bookmark-button margin-bottom-25">
+                        <span class="bookmark-icon"></span>
+                        <span class="bookmark-text">Отметить</span>
+                        <span class="bookmarked-text">Отмечено</span>
+                    </button>
 
-                    <!-- Sidebar Widget -->
-                    <div class="sidebar-widget">
-                        <h3>Добавить в избранное</h3>
-
-                        <!-- Bookmark Button -->
-                        <button class="bookmark-button margin-bottom-25">
-                            <span class="bookmark-icon"></span>
-                            <span class="bookmark-text">Отметить</span>
-                            <span class="bookmarked-text">Отмечено</span>
-                        </button>
-
-                        <!-- Copy URL -->
-                        <div class="copy-url">
-                            <input id="copy-url" type="text" value="" class="with-border">
-                            <button class="copy-url-button ripple-effect" data-clipboard-target="#copy-url" title="Скопировано" data-tippy-placement="top"><i class="icon-material-outline-file-copy"></i></button>
-                        </div>
-
+                    <!-- Copy URL -->
+                    <div class="copy-url">
+                        <input id="copy-url" type="text" value="" class="with-border">
+                        <button class="copy-url-button ripple-effect" data-clipboard-target="#copy-url" title="Скопировано" data-tippy-placement="top"><i class="icon-material-outline-file-copy"></i></button>
                     </div>
 
                 </div>
-        </div>
 
-    </div>
-</div>
-
-<!-- Leave a Review Popup
-================================================== -->
-<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
-
-    <!--Tabs -->
-    <div class="sign-in-form">
-
-        <ul class="popup-tabs-nav">
-            <li><a href="#tab">Оставьте отзыв</a></li>
-        </ul>
-
-        <div class="popup-tabs-container">
-
-            <!-- Tab -->
-            <div class="popup-tab-content" id="tab">
-
-                @using (Html.BeginForm("Create", "Review", FormMethod.Post))
-                {
-                    @Html.AntiForgeryToken() <!-- Welcome Text -->
-                    <div class="welcome-text">
-                        <h3>@User.Identity.Name, оцените исполнителя @Model.UserName:</h3>
-
-                        <!-- Form -->
-                        <!-- Leave Rating -->
-                        <div class="clearfix"></div>
-                        <div class="leave-rating-container">
-                            <div class="leave-rating margin-bottom-5">
-                                <input type="radio" name="Rating" id="rating-1" value="5" required>
-                                <label for="rating-1" class="icon-material-outline-star"></label>
-                                <input type="radio" name="Rating" id="rating-2" value="4" required>
-                                <label for="rating-2" class="icon-material-outline-star"></label>
-                                <input type="radio" name="Rating" id="rating-3" value="3" required>
-                                <label for="rating-3" class="icon-material-outline-star"></label>
-                                <input type="radio" name="Rating" id="rating-4" value="2" required>
-                                <label for="rating-4" class="icon-material-outline-star"></label>
-                                <input type="radio" name="Rating" id="rating-5" value="1" required>
-                                <label for="rating-5" class="icon-material-outline-star"></label>
-                            </div>
-                        </div>
-                        <div class="clearfix"></div>
-                        <!-- Leave Rating / End-->
-                    </div>
-                    @*<div class="row">
-                            <div class="col-xl-12">
-                                <div class="input-with-icon-left" title="Ваш никнейм" data-tippy-placement="bottom">
-                                    <i class="icon-material-outline-account-circle"></i>
-                                    <input type="text" class="input-text with-border" name="name" id="name" readonly placeholder="@User.Identity.Name" />
-                                </div>
-                            </div>
-
-                            <div class="col-xl-12">
-                                <div class="input-with-icon-left">
-                                    <i class="icon-material-outline-rate-review"></i>
-                                    <input type="text" class="input-text with-border" name="reviewtitle" id="reviewtitle" placeholder="Описание" required />
-                                </div>
-                            </div>
-                        </div>*@
-                    @*<div class="row">
-                            <div class="col-xl-12">
-                                <i class="icon-material-outline-rate-review"></i>
-                                <textarea class="with-border" rows="5" cols="7" placeholder="Оставьте отзыв об исполнителе" required></textarea>
-                            </div>
-                        </div>*@
-                    @Html.TextArea("Description", "", new { rows = "5", cols = "7", @placeholder = "Оставьте развернутый отзыв...", @class = "with-border" })
-                    @Html.Hidden("OwnerId", Model.Id)
-                    <!-- Button -->
-                    <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Оставить отзыв <i class="icon-material-outline-arrow-right-alt"></i></button>
-                }
             </div>
-
         </div>
+
     </div>
 </div>
-        
-<!-- Leave a Review Popup / End -->
-<!-- Spacer -->
-<div class="margin-top-15"></div>
+@if (Request.IsAuthenticated && Model.Id != User.Identity.GetUserId())
+{
+    <!-- Leave a Review Popup
+    ================================================== -->
+    <div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+        <!--Tabs -->
+        <div class="sign-in-form">
+
+            <ul class="popup-tabs-nav">
+                <li><a href="#tab">Оставьте отзыв</a></li>
+            </ul>
+
+            <div class="popup-tabs-container">
+
+                <!-- Tab -->
+                <div class="popup-tab-content" id="tab">
+
+                    @using (Html.BeginForm("Create", "Review", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken() <!-- Welcome Text -->
+                        <div class="welcome-text">
+                            <h3>@User.Identity.Name, оцените исполнителя @Model.UserName:</h3>
+
+                            <!-- Form -->
+                            <!-- Leave Rating -->
+                            <div class="clearfix"></div>
+                            <div class="leave-rating-container">
+                                <div class="leave-rating margin-bottom-5">
+                                    <input type="radio" name="Rating" id="rating-1" value="5" required>
+                                    <label for="rating-1" class="icon-material-outline-star"></label>
+                                    <input type="radio" name="Rating" id="rating-2" value="4" required>
+                                    <label for="rating-2" class="icon-material-outline-star"></label>
+                                    <input type="radio" name="Rating" id="rating-3" value="3" required>
+                                    <label for="rating-3" class="icon-material-outline-star"></label>
+                                    <input type="radio" name="Rating" id="rating-4" value="2" required>
+                                    <label for="rating-4" class="icon-material-outline-star"></label>
+                                    <input type="radio" name="Rating" id="rating-5" value="1" required>
+                                    <label for="rating-5" class="icon-material-outline-star"></label>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <!-- Leave Rating / End-->
+                        </div>
+                        @*<div class="row">
+                                <div class="col-xl-12">
+                                    <div class="input-with-icon-left" title="Ваш никнейм" data-tippy-placement="bottom">
+                                        <i class="icon-material-outline-account-circle"></i>
+                                        <input type="text" class="input-text with-border" name="name" id="name" readonly placeholder="@User.Identity.Name" />
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-12">
+                                    <div class="input-with-icon-left">
+                                        <i class="icon-material-outline-rate-review"></i>
+                                        <input type="text" class="input-text with-border" name="reviewtitle" id="reviewtitle" placeholder="Описание" required />
+                                    </div>
+                                </div>
+                            </div>*@
+                        @*<div class="row">
+                                <div class="col-xl-12">
+                                    <i class="icon-material-outline-rate-review"></i>
+                                    <textarea class="with-border" rows="5" cols="7" placeholder="Оставьте отзыв об исполнителе" required></textarea>
+                                </div>
+                            </div>*@
+                        @Html.TextArea("Description", "", new { rows = "5", cols = "7", @placeholder = "Оставьте развернутый отзыв...", @class = "with-border" })
+                        @Html.Hidden("OwnerId", Model.Id)
+                        <!-- Button -->
+                        <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Оставить отзыв <i class="icon-material-outline-arrow-right-alt"></i></button>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Leave a Review Popup / End -->
+    <!-- Spacer -->
+    <div class="margin-top-15"></div>
 
 
-<div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+    <div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
 
-    <!--Tabs -->
-    <div class="sign-in-form">
+        <!--Tabs -->
+        <div class="sign-in-form">
 
-        <ul class="popup-tabs-nav">
-            <li><a href="#tab">Ваше сообщение</a></li>
-        </ul>
+            <ul class="popup-tabs-nav">
+                <li><a href="#tab">Ваше сообщение</a></li>
+            </ul>
 
-        <div class="popup-tabs-container">
-            @using (Html.BeginForm("AddMessage", "Chat", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken();
+            <div class="popup-tabs-container">
+                @using (Html.BeginForm("AddMessage", "Chat", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken();
+                    <!-- Tab -->
+                    <div class="popup-tab-content" id="tab">
+
+                        <!-- Welcome Text -->
+                        <div class="welcome-text">
+                            <h3>Отправьте сообщение</h3>
+                        </div>
+                        @Html.Hidden("UserFromId", User.Identity.GetUserId())
+                        @Html.Hidden("UserToId", Model.Id)
+
+                        <textarea name="Description" id="Description" cols="10" placeholder="Сообщение" class="with-border"></textarea>
+                        <!-- Button -->
+                        <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Отправить <i class="icon-material-outline-arrow-right-alt"></i></button>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+    <!-- Make an Offer Popup
+    ================================================== -->
+    <div id="small-dialog-2" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+        <!--Tabs -->
+        <div class="sign-in-form">
+
+            <ul class="popup-tabs-nav">
+                <li><a href="#tab">Сделать предложение</a></li>
+            </ul>
+
+            <div class="popup-tabs-container">
+
                 <!-- Tab -->
                 <div class="popup-tab-content" id="tab">
 
                     <!-- Welcome Text -->
                     <div class="welcome-text">
-                        <h3>Отправьте сообщение</h3>
+                        <h3>Предложение для @Model.UserName:</h3>
                     </div>
-                    @Html.Hidden("UserFromId", User.Identity.GetUserId())
-                    @Html.Hidden("UserToId", Model.Id)
 
-                    <textarea name="Description" id="Description" cols="10" placeholder="Сообщение" class="with-border"></textarea>
+                    <!-- Form -->
+                    <form method="post">
+
+                        <select class="selectpicker" data-live-search="true">
+                            <option>Soda Poppin</option>
+
+                        </select>
+                        <br />
+
+                        <textarea name="textarea" cols="10" placeholder="Сообщения" class="with-border"></textarea>
+
+                    </form>
+
                     <!-- Button -->
-                    <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Отправить <i class="icon-material-outline-arrow-right-alt"></i></button>
+                    <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Сделать предложение <i class="icon-material-outline-arrow-right-alt"></i></button>
+
                 </div>
-            }
+                <!-- Login -->
+                <div class="popup-tab-content" id="loginn">
 
-        </div>
-    </div>
-</div>
-<!-- Make an Offer Popup
-================================================== -->
-<div id="small-dialog-2" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+                    <!-- Welcome Text -->
+                    <div class="welcome-text">
+                        <h3>Discuss Your Project With Tom</h3>
+                    </div>
 
-    <!--Tabs -->
-    <div class="sign-in-form">
+                    <!-- Form -->
+                    <form method="post" id="make-an-offer-form">
 
-        <ul class="popup-tabs-nav">
-            <li><a href="#tab">Сделать предложение</a></li>
-        </ul>
+                        <div class="input-with-icon-left">
+                            <i class="icon-material-outline-account-circle"></i>
+                            <input type="text" class="input-text with-border" name="name2" id="name2" placeholder="First and Last Name" required />
+                        </div>
 
-        <div class="popup-tabs-container">
+                        <div class="input-with-icon-left">
+                            <i class="icon-material-baseline-mail-outline"></i>
+                            <input type="text" class="input-text with-border" name="emailaddress2" id="emailaddress2" placeholder="Email Address" required />
+                        </div>
 
-            <!-- Tab -->
-            <div class="popup-tab-content" id="tab">
+                        <textarea name="textarea" cols="10" placeholder="Message" class="with-border"></textarea>
 
-                <!-- Welcome Text -->
-                <div class="welcome-text">
-                    <h3>Предложение для @Model.UserName:</h3>
+                        <div class="uploadButton margin-top-25">
+                            <input class="uploadButton-input" type="file" accept="image/*, application/pdf" id="upload-cv" multiple />
+                            <label class="uploadButton-button" for="upload-cv">Add Attachments</label>
+                            <span class="uploadButton-file-name">Allowed file types: zip, pdf, png, jpg <br> Max. files size: 50 MB.</span>
+                        </div>
+
+                    </form>
+
+                    <!-- Button -->
+                    <button class="button full-width button-sliding-icon ripple-effect" type="submit" form="make-an-offer-form">Make an Offer <i class="icon-material-outline-arrow-right-alt"></i></button>
+
                 </div>
-
-                <!-- Form -->
-                <form method="post">
-
-                    <select class="selectpicker" data-live-search="true">
-                        <option>Soda Poppin</option>
-                       
-                    </select>
-                    <br />
-                   
-                    <textarea name="textarea" cols="10" placeholder="Сообщения" class="with-border"></textarea>
-
-                </form>
-
-                <!-- Button -->
-                <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Сделать предложение <i class="icon-material-outline-arrow-right-alt"></i></button>
 
             </div>
-            <!-- Login -->
-            <div class="popup-tab-content" id="loginn">
-
-                <!-- Welcome Text -->
-                <div class="welcome-text">
-                    <h3>Discuss Your Project With Tom</h3>
-                </div>
-
-                <!-- Form -->
-                <form method="post" id="make-an-offer-form">
-
-                    <div class="input-with-icon-left">
-                        <i class="icon-material-outline-account-circle"></i>
-                        <input type="text" class="input-text with-border" name="name2" id="name2" placeholder="First and Last Name" required />
-                    </div>
-
-                    <div class="input-with-icon-left">
-                        <i class="icon-material-baseline-mail-outline"></i>
-                        <input type="text" class="input-text with-border" name="emailaddress2" id="emailaddress2" placeholder="Email Address" required />
-                    </div>
-
-                    <textarea name="textarea" cols="10" placeholder="Message" class="with-border"></textarea>
-
-                    <div class="uploadButton margin-top-25">
-                        <input class="uploadButton-input" type="file" accept="image/*, application/pdf" id="upload-cv" multiple />
-                        <label class="uploadButton-button" for="upload-cv">Add Attachments</label>
-                        <span class="uploadButton-file-name">Allowed file types: zip, pdf, png, jpg <br> Max. files size: 50 MB.</span>
-                    </div>
-
-                </form>
-
-                <!-- Button -->
-                <button class="button full-width button-sliding-icon ripple-effect" type="submit" form="make-an-offer-form">Make an Offer <i class="icon-material-outline-arrow-right-alt"></i></button>
-
-            </div>
-
         </div>
     </div>
-</div>
 
+}
 @section scripts{
     <script type="text/javascript">
 

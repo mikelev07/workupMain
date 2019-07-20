@@ -23,7 +23,7 @@
                                 <li><a href="@Url.Action("Details", "User", new { userName = Model.User.UserName })"><i class="icon-material-outline-face"></i>@Html.DisplayFor(model => model.User.UserName)</a></li>
                                 @*<li><div class="verified-badge-with-title">Проверенный заказчик</div></li>*@
                             </ul>
-                            <div class="task-tags" style="margin:0">
+                            <div id="custom-status" class="task-tags" style="margin:0">
                                 <span>@HtmlExtensions.EnumDisplayNameFor(Model.Status)</span>
                             </div>
 
@@ -48,23 +48,23 @@
             <div class="single-page-section">
                 <h3 class="margin-bottom-25">Описание задачи</h3>
                 <p style="-moz-hyphens: auto;-webkit-hyphens: auto;-ms-hyphens: auto;">
-                    @Html.Nl2Br(Model.Description)
+                    <em>@Html.Nl2Br(Model.Description)</em>
                 </p>
             </div>
 
             <div style="margin-bottom: 30px;" class="single-page-section">
-                <h3>Вложения </h3>
-                <div  class="attachments-container">
+                <h3>Вложения заказчика</h3>
+                <div id="Uploaded_Results_My" class="attachments-container">
                     <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = Model.AttachFilePath })"><span>Файл задания</span><i>PDF</i></a>
-                  </div>
+                    @foreach (var i in Model.MyAttachments)
+                    {
+                        <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = i.AttachFilePath })"><span>Файл задания</span><i>PDF</i></a>
+                    }
+                </div>
                 <br />
-                    <div id="Uploaded_Results_My">
-                        @foreach (var i in Model.MyAttachments)
-                        {
-                           <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = i.AttachFilePath })"><span>Файл вложения</span><i>PDF</i></a>
-                   
-                        }
-                    </div>
+
+                @if (Request.IsAuthenticated && Model.UserId == User.Identity.GetUserId())
+                {
                     <div class="accordion js-accordion">
 
                         <!-- Accordion Item -->
@@ -87,7 +87,7 @@
                                                     <span class="uploadButton-file-name">Загрузите файл вложения любого формата</span>
                                                 </div>
                                                 <div class="progress"></div>
-                                               
+
                                                 <input id="submitAttach" type="submit" value="Загрузить" class="button ripple-effect margin-top-10" />
                                             </div>
                                         }
@@ -97,7 +97,7 @@
                             </div>
                         </div>
                     </div>
-               
+                }
             </div>
             @if (Request.IsAuthenticated && Model.ExecutorId == User.Identity.GetUserId())
             {
@@ -142,69 +142,55 @@
                 </div>
             }
             <br />
-            @if (Model.ExecutorId == User.Identity.GetUserId() || Model.UserId == User.Identity.GetUserId())
+            @if (Model.ExecutorId != null && (Model.ExecutorId == User.Identity.GetUserId() || Model.UserId == User.Identity.GetUserId()))
             {
                 <div class="single-page-section">
                     <h3>Вложения исполнителя <span style="color: white" class="nav-tag" id="attaches">@Model.Attachments.Count </span></h3>
                     <div id="Uploaded_Results">
-                        @foreach (var i in Model.Attachments)
-                        {
-                            <div style="border-bottom: 1px solid #e4e4e4; margin-bottom:35px;" id="itemAttach">
-                                <div class="attachments-container">
-                                    <a style='@(i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased && Model.ExecutorId != User.Identity.GetUserId() ? "pointer-events: none;" : "")' href="@Url.Action("GetFileAttach", "Custom", new { path = i.AttachFilePath, id = i.Id })" class="attachment-box ripple-effect "><span>Файл исполнителя</span><i>Скачать</i></a>
-
-                                    @if (Model.ExecutorId == User.Identity.GetUserId())
-                                    {
-                                        @Ajax.RawActionLink(
-                                            "<i class='icon-feather-trash-2'></i>",
-                                            "DeleteAttach",
-                                            "Custom",
-                                            new
-                                            {
-                                                id = i.Id,
-                                            },
-                                            new AjaxOptions
-                                            {
-                                                OnBegin = "return ConfirmDone()",
-                                                HttpMethod = "POST",
-                                                OnSuccess = "OnSuccess"
-                                            }, new { @class = "button gray ripple-effect ico", @style = "margin-bottom:50px;", title = "Удалить", data_tippy_placement = "top" }
-                                            )
-                                    }
-                                </div>
-                                @if (Model.UserId == User.Identity.GetUserId())
+                        <div style="border-bottom: 1px solid #e4e4e4; margin-bottom:35px;" id="itemAttach">
+                            <div class="attachments-container">
+                                @foreach (var i in Model.Attachments)
                                 {
-                                    if (i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
-                                    {
-                                        @Ajax.RawActionLink(
-      "<i class='icon-material-outline-monetization-on'></i>Купить решение",
-       "Buy",
-       "Custom",
-       new
-       {
-           id = i.Id,
-       },
-       new AjaxOptions
-       {
-           OnSuccess = "OnSuccess",
-           HttpMethod = "POST"
-       }, new { @class = "button ripple-effect margin-top-18", @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:" : "") }
-   )
-                                    }
-                                    else
-                                    {
-                                        <div class="task-tags">
-                                            <span>Работа куплена</span>
-                                        </div>
+                                    <div>
+                                        <a style='@(i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased && Model.ExecutorId != User.Identity.GetUserId() ? "pointer-events: none;" : "")'
+                                           href="@Url.Action("GetFileAttach", "Custom", new { path = i.AttachFilePath, id = i.Id })"
+                                           class="attachment-box ripple-effect "><span>Файл исполнителя</span><i>Скачать</i></a>
 
-                                    }
+                                        @if (Model.ExecutorId == User.Identity.GetUserId() && i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
+                                        {
+                                            @Ajax.RawActionLink(
+                                                "<i class='icon-feather-trash-2'></i>", "DeleteAttach","Custom",
+                                                new{ id = i.Id},
+                                                new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
+                                                new { @class = "button gray ripple-effect ico", @style = "margin-bottom:50px;", title = "Удалить", data_tippy_placement = "top" }
+                                                )
+                                        }
+                                        @if (Model.UserId == User.Identity.GetUserId())
+                                        {
+                                            if (i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
+                                            {
+                                                @Ajax.RawActionLink(
+                                               "<i class='icon-material-outline-monetization-on'></i>Купить решение","Buy", "Custom",
+                                               new{id = i.Id},
+                                               new AjaxOptions{ OnSuccess = "OnSuccess",HttpMethod = "POST"},
+                                               new { @class = "button ripple-effect margin-top-18", @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:" : "") }
+                                               )
+                                            }
+                                            else
+                                            {
+                                                <div class="task-tags">
+                                                    <span>Работа куплена</span>
+                                                </div>
 
+                                            }
+
+                                        }
+                                    </div>
                                 }
-
-                                <br />
                             </div>
+                        </div>
 
-                        }
+
                     </div>
 
 
@@ -490,11 +476,11 @@
                                                 <div class="radio">
                                                     <input id="radio-accept-executor" name="radio" type="radio" required autocomplete="off"
                                                            oninvalid="setCustomValidity('Сперва нужно ознакомиться с правилами!')"
-                                                           oninput="setCustomValidity('')"/>
+                                                           oninput="setCustomValidity('')" />
                                                     <label for="radio-accept-executor"><span class="radio-label"></span>  Я ознакомился с правилами</label>
                                                 </div>
                                                 <input class="margin-top-15 button full-width button-sliding-icon ripple-effect"
-                                                       type="submit" value="Принять"/>
+                                                       type="submit" value="Принять" />
                                             }
                                         </div>
                                     </div>
@@ -513,7 +499,7 @@
                                     {
                                         @Html.AntiForgeryToken();
                                         <!-- Tab -->
-                                        
+
                                         <div class="popup-tab-content" id="tab2">
 
                                             <!-- Welcome Text -->
@@ -532,34 +518,34 @@
                                 </div>
 
                                 @*<!--Tabs -->
-                                <div class="sign-in-form">
+                                    <div class="sign-in-form">
 
-                                    <ul class="popup-tabs-nav">
-                                        <li><a href="#tab2">Отправка сообщения</a></li>
-                                    </ul>
+                                        <ul class="popup-tabs-nav">
+                                            <li><a href="#tab2">Отправка сообщения</a></li>
+                                        </ul>
 
-                                    <div class="popup-tabs-container">
+                                        <div class="popup-tabs-container">
 
-                                        <!-- Tab -->
-                                        <div class="popup-tab-content" id="tab2">
+                                            <!-- Tab -->
+                                            <div class="popup-tab-content" id="tab2">
 
-                                            <!-- Welcome Text -->
-                                            <div class="welcome-text">
-                                                <h3>Отправить сообщение @c.User.UserName</h3>
+                                                <!-- Welcome Text -->
+                                                <div class="welcome-text">
+                                                    <h3>Отправить сообщение @c.User.UserName</h3>
+                                                </div>
+
+                                                <!-- Form -->
+                                                <form method="post" id="send-pm">
+                                                    <textarea name="textarea" cols="10" placeholder="Оставьте сообщение..." class="with-border" required></textarea>
+                                                </form>
+
+                                                <!-- Button -->
+                                                <a class="button full-width button-sliding-icon ripple-effect" type="submit" form="send-pm" target="_blank">Отправить <i class="icon-material-outline-arrow-right-alt"></i></a>
+
                                             </div>
 
-                                            <!-- Form -->
-                                            <form method="post" id="send-pm">
-                                                <textarea name="textarea" cols="10" placeholder="Оставьте сообщение..." class="with-border" required></textarea>
-                                            </form>
-
-                                            <!-- Button -->
-                                            <a class="button full-width button-sliding-icon ripple-effect" type="submit" form="send-pm" target="_blank">Отправить <i class="icon-material-outline-arrow-right-alt"></i></a>
-
                                         </div>
-
-                                    </div>
-                                </div>*@
+                                    </div>*@
                             </div>
 
                         }
@@ -627,24 +613,21 @@
                 <div class="countdown green margin-bottom-35">До завершения: @totalDays дней и @totalHours часов </div>
                 @if (Model.UserId == User.Identity.GetUserId() && Model.Status == HelpMe.Models.CustomStatus.CheckCustom)
                 {
-                    if (Model.Status != HelpMe.Models.CustomStatus.Close)
-                    {
-                        <a style="margin-bottom:20px" href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim">Подтвердить выполнение <i class="icon-material-outline-check"></i></a>
-                    }
+                    <a style="margin-bottom:20px" href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim">Подтвердить выполнение <i class="icon-material-outline-check"></i></a>
                     <a href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
                 }
                 else if (Model.Status == HelpMe.Models.CustomStatus.Close)
                 {
                     <a href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
                 }
-                else if (Model.Status == HelpMe.Models.CustomStatus.Revision)
-                {
-                    <a style="margin-bottom:20px" href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim">Подтвердить выполнение <i class="icon-material-outline-check"></i></a>
-                }
+                @*else if (Model.Status == HelpMe.Models.CustomStatus.Revision)
+                    {
+                        <a style="margin-bottom:20px" href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim">Подтвердить выполнение <i class="icon-material-outline-check"></i></a>
+                    }*@
                 <div class="js-accordion sidebar-widget">
                     <div class="job-overview accordion__item js-accordion-item">
                         <div style="color:#333; font-size: 18px;  background-color: #f2f2f2; border-radius: 4px; padding: 20px 35px" class="accordion-header js-accordion-header">
-                            <i class="icon-material-outline-info"></i> Кратко
+                            <i class="icon-material-outline-info"></i> Краткая информация
                         </div>
                         <div class="job-overview-inner js-accordion-body" style="display:none">
 
@@ -776,6 +759,7 @@
 
         function ConfirmDone() {
             return confirm("Вы уверены, что хотите удалить вложение?");
+            $('#custom-status span').text('Выполняется исполнителем');
         }
 
         $('a[name=deleteAt]').on('click', function (e) {
@@ -797,6 +781,7 @@
 
         function OnSuccess() {
             $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id=' +@Model.Id);
+            $('#custom-status span').text('Проверяется заказчиком');
         }
 
         //function OnSuccessBuy() {
@@ -1313,7 +1298,7 @@
             $('#boxed-list-ul>li').css('background-color', 'transparent');
             $('#boxed-list-ul>li:odd').css('background-color', '#fafafa');
         });
-        
+
 
 
         function RangeSlider() {

@@ -309,6 +309,7 @@
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Models\RoleViewModel.cs" />
+    <Compile Include="Models\Transaction.cs" />
     <Compile Include="Models\TypeCustomViewModel.cs" />
     <Compile Include="Models\Wallet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

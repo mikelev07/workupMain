@@ -6,13 +6,13 @@
     
 <div style="border-bottom: 1px solid #e4e4e4; margin-bottom:35px;" id="itemAttach">
     <div class="attachments-container">
-        <a style='@(i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased && i.CustomViewModel.ExecutorId != User.Identity.GetUserId() ? "pointer-events: none;" : "")' href="@Url.Action("GetFileAttach", "Custom", new { path = i.AttachFilePath, id = i.Id })" class="attachment-box ripple-effect "><span>Файл исполнителя</span><i>Скачать</i></a>
-        @if (i.CustomViewModel.ExecutorId == User.Identity.GetUserId())
+        <a style='@(i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased && i.CustomViewModel.ExecutorId != User.Identity.GetUserId() ? "pointer-events: none;" : "")' 
+           href="@Url.Action("GetFileAttach", "Custom", new { path = i.AttachFilePath, id = i.Id })" 
+           class="attachment-box ripple-effect "><span>Файл исполнителя</span><i>Скачать</i></a>
+        @if (i.CustomViewModel.ExecutorId == User.Identity.GetUserId() && i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
         {
             @Ajax.RawActionLink(
-                 "<i class='icon-feather-trash-2'></i>",
-                  "DeleteAttach",
-                  "Custom",
+                 "<i class='icon-feather-trash-2'></i>",  "DeleteAttach", "Custom",
                   new
                   {
                       id = i.Id,
@@ -22,7 +22,11 @@
                       OnBegin = "return ConfirmDone()",
                       HttpMethod = "POST",
                       OnSuccess = "OnSuccess"
-                  }, new { @class = "button gray ripple-effect ico", @style = "margin-bottom:50px;", title = "Удалить", data_tippy_placement = "top" }
+                  },
+                  new { @class = "button gray ripple-effect ico",
+                      @style = "margin-bottom:50px;",
+                      title = "Удалить",
+                      data_tippy_placement = "top" }
               )
         }
     </div>
