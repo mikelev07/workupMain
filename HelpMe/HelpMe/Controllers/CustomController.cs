@@ -405,6 +405,18 @@ namespace HelpMe.Controllers
             return new JsonResult() { Data = results, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
+        [AcceptVerbs(HttpVerbs.Get)]
+        public JsonResult GetMyAttachments(int id)
+        {
+            var model = db.Customs.Where(i => i.Id == id).SingleOrDefault();
+            var results = model.MyAttachments.Select(e => new
+            {
+               e.AttachFilePath
+            }).ToList();
+
+            return new JsonResult() { Data = results, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
         private string FindExecutorRating(User user)
         {
             var likes = user.PositiveThumbs;

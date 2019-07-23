@@ -781,17 +781,27 @@
         });
 
         $('#getArch').click(function () {
-            $.ajax({
-                url: '@Url.Action("GetArchive", "Custom")',
-                type: 'POST',
-                data: { files: '@Model.MyAttachments.Select(p => p.AttachFilePath).ToList()' },
+           $.ajax({
+                url: '@Url.Action("GetMyAttachments", "Custom")?id=' +'@Model.Id',
+                type: 'GET',
                 success: function (result) {
-                   // window.location =;
+                    $.ajax({
+                        url: '@Url.Action("GetArchive", "Custom")',
+                        type: 'POST',
+                        data: { 'files': result },
+                        success: function (result) {
+                           // window.location =;
+                        },
+                        error: function (result) {
+                            alert('Вложение удалено');
+                        }
+                    });
                 },
                 error: function (result) {
                     alert('Вложение удалено');
                 }
-            });
+            }); 
+           
         });
 
         $('a[name=deleteAt]').on('click', function (e) {
