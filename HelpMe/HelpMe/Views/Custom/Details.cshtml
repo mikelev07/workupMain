@@ -54,8 +54,9 @@
 
             <div style="margin-bottom: 30px;" class="single-page-section">
                 <h3>Вложения заказчика</h3>
-                <div id="Uploaded_Results_My" class="attachments-container">
+                <button style="margin-bottom:20px" id="getArch" class="button gray ripple-effect button-sliding-icon">Скачать все архивом <i class="icon-feather-arrow-down"></i></button>                 <div id="Uploaded_Results_My" class="attachments-container">
                     <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = Model.AttachFilePath })"><span>Файл задания</span><i>PDF</i></a>
+
                     @foreach (var i in Model.MyAttachments)
                     {
                         <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = i.AttachFilePath })"><span>Файл задания</span><i>PDF</i></a>
@@ -762,6 +763,22 @@
             $('#custom-status span').text('Выполняется исполнителем');
         }
 
+
+        $('#getArch').click(function () {
+            $.ajax({
+                url: '@Url.Action("GetArchive", "Custom")',
+                type: 'POST',
+                data: { files: '@Model.MyAttachments.Select(p => p.AttachFilePath).ToList()' },
+                success: function (result) {
+                   // window.location =;
+                },
+                error: function (result) {
+                    alert('Вложение удалено');
+                }
+            });
+        });
+
+       
         $('a[name=deleteAt]').on('click', function (e) {
             var ItemId = $('a[name=deleteAt]').prop('id').replace('buyElement1-', '');
             alert(ItemId);
@@ -1344,11 +1361,6 @@
 
             $(".range-slider-single").slider();
         }
-
-    </script>
-
-    <script>
-
 
         // Snackbar for user status switcher
         $('#snackbar-user-status label').click(function () {

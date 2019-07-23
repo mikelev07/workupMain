@@ -14,7 +14,8 @@ using System.IO;
 using PagedList;
 using System.Runtime.Remoting.Contexts;
 using Microsoft.AspNet.SignalR;
-
+using ICSharpCode.SharpZipLib.Zip;
+using ICSharpCode.SharpZipLib.Core;
 
 namespace HelpMe.Controllers
 {
@@ -537,6 +538,14 @@ namespace HelpMe.Controllers
             return File(path, file_type, file_name);
         }
 
+        public FileResult GetFileNew(string path)
+        {
+            string file_type = "application/" + Path.GetExtension(path);
+            string file_name = Path.GetFileName(path);
+
+            return File(path, file_type, file_name);
+        }
+
         // GET: Custom/Details/5
         public async Task<ActionResult> Details(int? id)
         {
@@ -693,6 +702,46 @@ namespace HelpMe.Controllers
                 return View(customViewModel);
             }
             else { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
+        }
+
+        [HttpPost]
+        public ActionResult GetArchive(List<string> files)
+        {
+            List<string> filenames = files.ToList();
+
+            string filename = Guid.NewGuid().ToString() + ".zip";
+
+            MemoryStream outputMemStream = new MemoryStream();
+            ZipOutputStream zipStream = new ZipOutputStream(outputMemStream);
+
+            zipStream.SetLevel(3); // уровень сжатия от 0 до 9
+
+            foreach (string file in filenames)
+            {
+                FileInfo fil = new FileInfo(file);
+                var fileName = fil.Name;
+                FileInfo fi = new FileInfo(Server.MapPath("~/Files/" + fileName));
+
+                string entryName = ZipEntry.CleanName(fi.Name);
+                ZipEntry newEntry = new ZipEntry(entryName);
+                newEntry.DateTime = fi.LastWriteTime;
+                newEntry.Size = fi.Length;
+                zipStream.PutNextEntry(newEntry);
+
+                byte[] buffer = new byte[4096];
+                using (FileStream streamReader = System.IO.File.OpenRead(fi.FullName))
+                {
+                    StreamUtils.Copy(streamReader, zipStream, buffer);
+                }
+                zipStream.CloseEntry();
+            }
+            zipStream.IsStreamOwner = false;
+            zipStream.Close();
+
+            outputMemStream.Position = 0;
+
+            string file_type = "application/zip";
+            return File(outputMemStream, file_type, filename);
         }
 
         // POST: Custom/Delete/5
