@@ -4,7 +4,7 @@
 @foreach (var i in Model)
 {
     
-<div style="border-bottom: 1px solid #e4e4e4; margin-bottom:35px;" id="itemAttach">
+<div id="itemAttach">
     <div class="attachments-container">
         <a style='@(i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased && i.CustomViewModel.ExecutorId != User.Identity.GetUserId() ? "pointer-events: none;" : "")' 
            href="@Url.Action("GetFileAttach", "Custom", new { path = i.AttachFilePath, id = i.Id })" 

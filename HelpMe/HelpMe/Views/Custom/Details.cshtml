@@ -131,7 +131,7 @@
                                                 <i class="icon-material-outline-local-atm"></i>
                                                 <input style="width:250px" name="ExecutorPrice" id="ExecutorPrice" type="text" class="input-text" placeholder="Цена">
                                             </div>
-                                            <input id="submit" type="submit" value="Загрузить" class="button ripple-effect margin-top-10" />
+                                            <input id="add-solution" type="submit" value="Загрузить" class="button ripple-effect margin-top-10" />
                                         </div>
                                     }
 
@@ -170,15 +170,15 @@
                                             if (i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
                                             {
                                                 @Ajax.RawActionLink(
-                                               "<i class='icon-material-outline-monetization-on'></i>Купить решение","Buy", "Custom",
+                                               "<i class='icon-material-outline-monetization-on'></i>Купить","Buy", "Custom",
                                                new{id = i.Id},
                                                new AjaxOptions{ OnSuccess = "OnSuccess",HttpMethod = "POST"},
-                                               new { @class = "button ripple-effect margin-top-18", @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:" : "") }
+                                               new { @class = "button ripple-effect margin-bottom-50", @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:" : "") }
                                                )
                                             }
                                             else
                                             {
-                                                <div class="task-tags">
+                                                <div class="task-tags margin-bottom-50">
                                                     <span>Работа куплена</span>
                                                 </div>
 
@@ -479,7 +479,7 @@
                                                            oninput="setCustomValidity('')" />
                                                     <label for="radio-accept-executor"><span class="radio-label"></span>  Я ознакомился с правилами</label>
                                                 </div>
-                                                <input class="margin-top-15 button full-width button-sliding-icon ripple-effect"
+                                                <input id="choose-executor" class="margin-top-15 button full-width button-sliding-icon ripple-effect"
                                                        type="submit" value="Принять" />
                                             }
                                         </div>
@@ -589,7 +589,7 @@
                         </form>
 
                         <!-- Button -->
-                        <a href="@Url.Action("Accept", "Custom", new { id = Model.Id })" class="margin-top-15 button full-width button-sliding-icon ripple-effect" type="submit" form="terms">Принять <i class="icon-material-outline-arrow-right-alt"></i></a>
+                        <a id="close-custom" href="@Url.Action("Accept", "Custom", new { id = Model.Id })" class="margin-top-15 button full-width button-sliding-icon ripple-effect" type="submit" form="terms">Принять <i class="icon-material-outline-arrow-right-alt"></i></a>
                     </div>
                 </div>
             </div>
@@ -618,7 +618,7 @@
                 }
                 else if (Model.Status == HelpMe.Models.CustomStatus.Close)
                 {
-                    <a href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
+                    <a id="send-for-revision" href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
                 }
                 @*else if (Model.Status == HelpMe.Models.CustomStatus.Revision)
                     {
@@ -757,10 +757,27 @@
             $("#boxed-list-ul > li:odd").css("background-color", "#fafafa");
         });
 
+        function ChangeStatusSpan() {
+            $.ajax({
+                url: '@Url.Action("GetCustomStatus", "Custom")',
+                success: function (data) {
+                    $('#custom-status > span').text(data);
+                    //console.log('status: '+ data);
+                    return data;
+                },
+                error: function (data) {
+                    console.log('Custom/GetCustomStatus is gone bad!');
+                }
+            });
+        }
+
         function ConfirmDone() {
             return confirm("Вы уверены, что хотите удалить вложение?");
-            $('#custom-status span').text('Выполняется исполнителем');
         }
+
+        $('#choose-executor, #send-for-revision, #accept-custom').on('click', function (e) {
+            ChangeStatusSpan()
+        });
 
         $('a[name=deleteAt]').on('click', function (e) {
             var ItemId = $('a[name=deleteAt]').prop('id').replace('buyElement1-', '');
@@ -781,16 +798,12 @@
 
         function OnSuccess() {
             $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id=' +@Model.Id);
-            $('#custom-status span').text('Проверяется заказчиком');
+            ChangeStatusSpan();
         }
-
-        //function OnSuccessBuy() {
-
-        //}
 
         var progressBar = $('#progressbar');
 
-        $('#submit').on('click', function (e) {
+        $('#add-solution').on('click', function (e) {
             e.preventDefault();
             var c = document.getElementById('CustomViewModelId').value;
             var d = document.getElementById('ExecutorPrice').value;
@@ -835,6 +848,7 @@
                         processData: false,
                         data: data,
                         success: function (result) {
+                            ChangeStatusSpan();
                             $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id=' +@Model.Id);
                             var votes = $("#attaches");
                             var num = $("#attaches").text();
