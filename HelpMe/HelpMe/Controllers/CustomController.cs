@@ -408,7 +408,7 @@ namespace HelpMe.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public JsonResult GetMyAttachments(int id)
         {
-            var model = db.Customs.Where(i => i.Id == id).SingleOrDefault();
+            var model = db.Customs.Include(d => d.MyAttachments).Where(i => i.Id == id).SingleOrDefault();
             var results = model.MyAttachments.Select(e => new
             {
                e.AttachFilePath
