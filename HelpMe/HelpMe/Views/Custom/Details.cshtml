@@ -54,7 +54,10 @@
 
             <div style="margin-bottom: 30px;" class="single-page-section">
                 <h3>Вложения заказчика</h3>
-                <button style="margin-bottom:20px" id="getArch" class="button gray ripple-effect button-sliding-icon">Скачать все архивом <i class="icon-feather-arrow-down"></i></button>                 <div id="Uploaded_Results_My" class="attachments-container">
+                <a style="margin-bottom:20px" id="getArch" 
+                   class="button gray ripple-effect button-sliding-icon" 
+                   href="@Url.Action("GetArchive", "Custom", new { id = Model.Id })">Скачать все архивом <i class="icon-feather-arrow-down"></i></a>                 
+                <div id="Uploaded_Results_My" class="attachments-container">
                     <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = Model.AttachFilePath })"><span>Файл задания</span><i>PDF</i></a>
 
                     @foreach (var i in Model.MyAttachments)
@@ -780,10 +783,12 @@
             ChangeStatusSpan()
         });
 
-        $('#getArch').click(function () {
-           $.ajax({
-                url: '@Url.Action("GetMyAttachments", "Custom")?id=' +'@Model.Id',
+        @*$('#getArch').on('click', function () {
+            $.ajax({
+                url: '@Url.Action("GetMyAttachments", "Custom")?id=' + '@Model.Id',
                 type: 'GET',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
                 success: function (result) {
                     $.ajax({
                         url: '@Url.Action("GetArchive", "Custom")',
@@ -802,7 +807,7 @@
                 }
             }); 
            
-        });
+        });*@
 
         $('a[name=deleteAt]').on('click', function (e) {
             var ItemId = $('a[name=deleteAt]').prop('id').replace('buyElement1-', '');
