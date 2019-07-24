@@ -225,6 +225,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\NoteController.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
+    <Compile Include="Controllers\TransactionsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
@@ -297,6 +298,14 @@
     <Compile Include="Migrations\201907060844463_CommentCreationDateMigra.cs" />
     <Compile Include="Migrations\201907060844463_CommentCreationDateMigra.Designer.cs">
       <DependentUpon>201907060844463_CommentCreationDateMigra.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907241155289_TransactionProperties.cs" />
+    <Compile Include="Migrations\201907241155289_TransactionProperties.Designer.cs">
+      <DependentUpon>201907241155289_TransactionProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907241305510_TransactionProperties2.cs" />
+    <Compile Include="Migrations\201907241305510_TransactionProperties2.Designer.cs">
+      <DependentUpon>201907241305510_TransactionProperties2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -613,6 +622,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907060844463_CommentCreationDateMigra.resx">
       <DependentUpon>201907060844463_CommentCreationDateMigra.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907241155289_TransactionProperties.resx">
+      <DependentUpon>201907241155289_TransactionProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907241305510_TransactionProperties2.resx">
+      <DependentUpon>201907241305510_TransactionProperties2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -165,7 +165,7 @@
                                                 "<i class='icon-feather-trash-2'></i>", "DeleteAttach","Custom",
                                                 new{ id = i.Id},
                                                 new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
-                                                new { @class = "button gray ripple-effect ico", @style = "margin-bottom:50px;", title = "Удалить", data_tippy_placement = "top" }
+                                                new { id="delete-attach", @class = "button gray ripple-effect ico", @style = "margin-bottom:50px;", title = "Удалить", data_tippy_placement = "top" }
                                                 )
                                         }
                                         @if (Model.UserId == User.Identity.GetUserId())
@@ -176,7 +176,7 @@
                                                "<i class='icon-material-outline-monetization-on'></i>Купить","Buy", "Custom",
                                                new{id = i.Id},
                                                new AjaxOptions{ OnSuccess = "OnSuccess",HttpMethod = "POST" },
-                                               new { @class = "button ripple-effect margin-bottom-50", @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:" : "") }
+                                               new { id = "buy-solution", @class = "button ripple-effect margin-bottom-50", @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:" : "") }
                                                )
                                             }
                                             else

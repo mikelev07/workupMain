@@ -11,6 +11,8 @@ namespace HelpMe.Models
     {
         public int Id { get; set; }
 
+        public int CustomId { get; set; }
+
         public string FromUserId { get; set; }
         public virtual User FromUser { get; set; }
 
@@ -18,10 +20,24 @@ namespace HelpMe.Models
         public virtual User ToUser { get; set; }
 
         public int Price { get; set; }
-        
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime Date { get; set; }
+
         public int AttachId { get; set; }
 
-        public string Status { get; set; }
+        public TransactionStatus Status { get; set; }
 
+    }
+
+    public enum TransactionStatus
+    {
+        [Display(Name = "В ожидании")]
+        Waiting,
+        [Display(Name = "Успешная транзакция")]
+        Success,
+        [Display(Name = "Ошибка транзакции")]
+        Error
     }
 }

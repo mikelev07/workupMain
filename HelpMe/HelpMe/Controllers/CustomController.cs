@@ -265,14 +265,23 @@ namespace HelpMe.Controllers
 
                 string myId = User.Identity.GetUserId();
                 Wallet wallet = db.Wallets.Where(x => x.UserId == myId).FirstOrDefault();
-                Transaction transaction = new Transaction();
-                transaction.Id = 1;
                 if (wallet.Summ - attachViewModel.ExecutorPrice > 0)
                 {
+                    Transaction transaction = new Transaction()
+                    {
+                        Date = DateTime.Now,
+                        CustomId = (int)attachViewModel.CustomViewModelId,
+                        AttachId = attachViewModel.Id,
+                        Status = TransactionStatus.Waiting
+                    };
+                    transaction.Id = 1;
+
                     wallet.Summ -= attachViewModel.ExecutorPrice;
+
                     transaction.Price = attachViewModel.ExecutorPrice;
                     transaction.FromUserId = myId;
                     transaction.ToUserId = attachViewModel.CustomViewModel.ExecutorId;
+
                     db.Transactions.Add(transaction);
                     await db.SaveChangesAsync();
                 }
@@ -646,6 +655,16 @@ namespace HelpMe.Controllers
         // GET: Custom/Create
         public async Task<ActionResult> Accept(int? id)
         {
+            var transactions = await db.Transactions.Where(t => t.CustomId == id).ToListAsync();
+            var executorId = await db.Customs.Where(c=>c.Id==id).Select(c=>c.ExecutorId).FirstOrDefaultAsync();
+            var wallet = await db.Wallets.Where(w => w.UserId == executorId).FirstOrDefaultAsync();
+            
+            foreach(var t in transactions)
+            {
+                t.Status = TransactionStatus.Success;
+                wallet.Summ += t.Price;
+            }
+
             // optimaize
             CustomViewModel customViewModel = await db.Customs.Include(c => c.Comments)
                                                               .Include(c => c.CategoryTask)
