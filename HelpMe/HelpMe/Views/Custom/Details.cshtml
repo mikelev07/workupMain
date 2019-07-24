@@ -53,13 +53,12 @@
             </div>
 
             <div style="margin-bottom: 30px;" class="single-page-section">
-                <h3>Вложения заказчика</h3>
-                <a style="margin-bottom:20px" id="getArch" 
-                   class="button gray ripple-effect button-sliding-icon" 
-                   href="@Url.Action("GetArchive", "Custom", new { id = Model.Id })">Скачать все архивом <i class="icon-feather-arrow-down"></i></a>                 
+                <h3>Вложения заказчика <span style="color: white" class="nav-tag" id="Myattaches">@Model.MyAttachments.Count </span></h3>
+                <a style="margin-bottom:20px" id="getArch"
+                   class="button gray ripple-effect button-sliding-icon"
+                   href="@Url.Action("GetArchive", "Custom", new { id = Model.Id })">Скачать все архивом<i class="icon-feather-arrow-down"></i></a>
                 <div id="Uploaded_Results_My" class="attachments-container">
-                    <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = Model.AttachFilePath })"><span>Файл задания</span><i>PDF</i></a>
-
+                    
                     @foreach (var i in Model.MyAttachments)
                     {
                         <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = i.AttachFilePath })"><span>Файл задания</span><i>PDF</i></a>
@@ -176,7 +175,7 @@
                                                 @Ajax.RawActionLink(
                                                "<i class='icon-material-outline-monetization-on'></i>Купить","Buy", "Custom",
                                                new{id = i.Id},
-                                               new AjaxOptions{ OnSuccess = "OnSuccess",HttpMethod = "POST"},
+                                               new AjaxOptions{ OnSuccess = "OnSuccess",HttpMethod = "POST" },
                                                new { @class = "button ripple-effect margin-bottom-50", @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:" : "") }
                                                )
                                             }
@@ -200,6 +199,7 @@
 
                 </div>
             }
+
             @*<div class="single-page-section">
                     <h3>Необходимые навыки</h3>
                     <div class="task-tags">
@@ -938,8 +938,8 @@
                         data: data,
                         success: function (result) {
                             $('#Uploaded_Results_My').load('@Url.Action("LoadMyAttaches", "Custom")?id=' +@Model.Id);
-                            var votes = $("#attaches");
-                            var num = $("#attaches").text();
+                            var votes = $("#Myattaches");
+                            var num = $("#Myattaches").text();
                             votes.text(parseInt(num) + 1);
                         },
                         error: function (xhr, status, p3) {

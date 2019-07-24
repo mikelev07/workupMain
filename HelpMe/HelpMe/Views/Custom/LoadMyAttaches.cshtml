@@ -1,12 +1,13 @@
 ﻿@using HelpMe.Helpers
 @using Microsoft.AspNet.Identity
 
-@foreach (var i in Model)
-{
-    <div class="attachments-container">
-        <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = i.AttachFilePath })"><span>Файл вложения</span><i>PDF</i></a>
 
-        </div>
+<div class="attachments-container">
+    @foreach (var i in Model)
+    {
+        <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = i.AttachFilePath })"><span>Файл вложения</span><i>PDF</i></a>
+    }
+</div>
         <br />
 
-        }
+       
