@@ -12,12 +12,7 @@
             <h3>Мои заказы</h3>
 
             <!-- Breadcrumbs -->
-            <nav id="breadcrumbs" class="dark">
-                <ul>
-                    <li><a href="#">Главная</a></li>
-                    <li><a href="#">Досква</a></li>
-                </ul>
-            </nav>
+            
         </div>
 
         <!-- Row -->
@@ -29,7 +24,7 @@
 
                     <!-- Headline -->
                     <div class="headline">
-                        <h3><i class="icon-material-outline-assignment"></i>Мои задачи</h3>
+                        <h3><i class="icon-material-outline-assignment"></i>Мои заказы</h3>
                     </div>
 
                     <div class="content">
@@ -46,12 +41,13 @@
 
                                         <!-- Details -->
                                         <div class="job-listing-description">
-                                            <h3 class="job-listing-title"><a href="#">@i.Name</a> <span class="dashboard-status-button yellow">Открыто</span></h3>
+                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })">@i.Name</a> <span class="dashboard-status-button yellow">Открыто</span></h3>
 
                                             <!-- Job Listing Footer -->
                                             <div class="job-listing-footer">
                                                 <ul>
-                                                    <li><i class="icon-material-outline-access-time"></i>@i.StartDate</li>
+                                                    <li><i class="icon-material-outline-access-time"></i>Создано @i.StartDate</li>
+                                                    <li><i class="icon-material-outline-access-time"></i>Сдать до @i.EndingDate</li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -60,14 +56,15 @@
 
                                 <!-- Task Details -->
                                 <ul class="dashboard-task-info">
-                                    <li><strong>3</strong><span>Цена</span></li>
-                                    <li><strong>$22</strong><span>Сред. цена</span></li>
-                                    <li><strong>$15 - $30</strong><span>Рейтинг</span></li>
+                                    <li><strong>@i.Price рубля</strong><span>Вы указали цену</span></li>
+                                    <li><strong>@i.CategoryTask.Name</strong><span>Дисциплина</span></li>
+                                    
+                                    <li><strong>@i.TypeTask.Name</strong><span>Тип работы</span></li>
                                 </ul>
 
                                 <!-- Buttons -->
                                 <div class="buttons-to-right always-visible">
-                                    <a href="dashboard-manage-bidders.html" class="button ripple-effect"><i class="icon-material-outline-supervisor-account"></i> Управление <span class="button-info">3</span></a>
+                                    <a href="@Url.Action("Bidders", "Custom", new { id = i.Id })" class="button ripple-effect"><i class="icon-material-outline-supervisor-account"></i> Управление предложениями <span class="button-info">3</span></a>
                                     <a href="#" class="button gray ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
                                     <a href="#" class="button gray ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
                                 </div>
