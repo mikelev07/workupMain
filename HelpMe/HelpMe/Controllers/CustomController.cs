@@ -137,6 +137,21 @@ namespace HelpMe.Controllers
             return View(tasksModel);
         }
 
+        public ActionResult TasksExec()
+        {
+            string userId = User.Identity.GetUserId();
+
+            var tasksModel = db.Customs.Include(c => c.TypeTask)
+                .Include(c => c.CategoryTask)
+                .Include(c => c.Executor)
+                .Include(c => c.Skill)
+                .Include(c => c.User).Include(c => c.MyAttachments)
+                   .Include(c => c.Comments)
+                .Where(t => t.ExecutorId == userId).ToList();
+
+            return View(tasksModel);
+        }
+
         public ActionResult Bidders(int? id)
         {
             var customViewModels = db.Customs.Include(c => c.Comments)
@@ -144,6 +159,15 @@ namespace HelpMe.Controllers
                                             .Include(c => c.User).Include(c => c.Executor).FirstOrDefault();
 
             var comms = customViewModels.Comments.ToList();
+
+            return View(comms);
+        }
+
+        public ActionResult MyActiveBids()
+        {
+            string userId = User.Identity.GetUserId();
+
+            var comms = db.Comments.Include(u => u.User).Include(u => u.CustomViewModel).Where(u => u.UserId == userId);
 
             return View(comms);
         }

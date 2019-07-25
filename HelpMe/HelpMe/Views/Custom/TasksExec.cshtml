@@ -4,7 +4,6 @@
     Layout = "~/Views/Shared/_LayoutDash.cshtml";
 }
 
-
 @model IEnumerable<HelpMe.Models.CustomViewModel>
 
 <div class="dashboard-content-container" data-simplebar>
@@ -12,7 +11,9 @@
 
         <!-- Dashboard Headline -->
         <div class="dashboard-headline">
-            <h3>Мои заказы</h3>
+            <h3>Мои задачи</h3>
+
+            <!-- Breadcrumbs -->
 
         </div>
 
@@ -25,10 +26,8 @@
 
                     <!-- Headline -->
                     <div class="headline">
-                        <h3><i class="icon-material-outline-assignment"></i>Мои заказы</h3>
+                        <h3><i class="icon-material-outline-assignment"></i>Мои задачи</h3>
                     </div>
-
-                    <!-- Tabs Container -->
                     <div class="tabs">
                         <div class="tabs-header">
                             <ul>
@@ -68,23 +67,26 @@
                                                                     <li><i class="icon-material-outline-access-time"></i>Сдать до @i.EndingDate</li>
                                                                 </ul>
                                                             </div>
+
+                                                            <h4><a href="#">Заказчик: @i.User.UserName </a></h4>
+                                                            <div class="freelancer-rating">
+                                                                <div class="star-rating" data-rating="5.0"></div>
+                                                            </div>
+
                                                         </div>
                                                     </div>
                                                 </div>
 
                                                 <!-- Task Details -->
                                                 <ul style="padding: 13px; margin-top:5px; margin-bottom:5px" class="dashboard-task-info">
-                                                    <li><strong>@i.Price рубля</strong><span>Вы указали цену</span></li>
+                                                    <li><strong>@i.Price рубля</strong><span>Бюджет</span></li>
                                                     <li><strong>@i.CategoryTask.Name</strong><span>Дисциплина</span></li>
-
                                                     <li><strong>@i.TypeTask.Name</strong><span>Тип работы</span></li>
                                                 </ul>
 
                                                 <!-- Buttons -->
                                                 <div class="buttons-to-right always-visible">
-                                                    <a href="@Url.Action("Bidders", "Custom", new { id = i.Id })" class="button ripple-effect"><i class="icon-material-outline-supervisor-account"></i> Управление предложениями <span class="button-info">3</span></a>
-                                                    <a href="#" class="button gray ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
-                                                    <a href="#" class="button gray ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
+                                                    <a href="#small-dialog-2" class="popup-with-zoom-anim button  ripple-effect"><i class="icon-feather-mail"></i> Отправить сообщение заказчику</a>
                                                 </div>
                                             </li>
 
@@ -97,10 +99,9 @@
                             </div>
                             <div class="tab" data-tab-id="3">
                                 <p>Воцап мэн.</p>
-                            </div>
+                                                           </div>
                         </div>
                     </div>
-
 
                 </div>
             </div>
@@ -144,7 +145,6 @@
 <!-- Dashboard Content / End -->
 </div>
 <!-- Dashboard Container / End -->
-
 
 @section Scripts {
     <script>
@@ -209,6 +209,6 @@
             S_tst("h");
         }
 
-    </script>
+        </script>
 
 }
