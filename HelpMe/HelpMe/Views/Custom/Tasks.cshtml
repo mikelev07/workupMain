@@ -82,7 +82,7 @@
 
                                                 <!-- Buttons -->
                                                 <div class="buttons-to-right always-visible">
-                                                    <a href="@Url.Action("Bidders", "Custom", new { id = i.Id })" class="button ripple-effect"><i class="icon-material-outline-supervisor-account"></i> Управление предложениями <span class="button-info">3</span></a>
+                                                    <a href="@Url.Action("Bidders", "Custom", new { id = i.Id })" class="button ripple-effect"><i class="icon-material-outline-supervisor-account"></i> Управление предложениями <span class="button-info">@i.Comments.Count()</span></a>
                                                     <a href="#" class="button gray ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
                                                     <a href="#" class="button gray ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
                                                 </div>
