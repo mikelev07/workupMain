@@ -58,10 +58,11 @@
                    class="button gray ripple-effect button-sliding-icon"
                    href="@Url.Action("GetArchive", "Custom", new { id = Model.Id })">Скачать все архивом<i class="icon-feather-arrow-down"></i></a>
                 <div id="Uploaded_Results_My" class="attachments-container">
-                    
+                    @{ var id = 1; }
                     @foreach (var i in Model.MyAttachments)
                     {
-                        <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = i.AttachFilePath })"><span>Файл задания</span><i>PDF</i></a>
+                        <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = i.AttachFilePath })"><span>Файл задания №@id </span><i>PDF</i></a>
+                        id = id + 1;
                     }
                 </div>
                 <br />
@@ -72,7 +73,10 @@
 
                         <!-- Accordion Item -->
                         <div class="accordion__item js-accordion-item">
-                            <div class="accordion-header js-accordion-header">Добавить вложение</div>
+                            <div class="accordion-header js-accordion-header">
+                                <span id="textAttach">Добавить вложение</span>
+                                <div style="left:50%" class="lds-ring" id="lds-ring-load-more"><div></div><div></div><div></div><div></div></div>
+                            </div>
 
                             <!-- Accordtion Body -->
                             <div class="accordion-body js-accordion-body">
@@ -111,7 +115,7 @@
                         <div class="accordion-header js-accordion-header">Добавить решение</div>
 
                         <!-- Accordtion Body -->
-                        <div class="accordion-body js-accordion-body">
+                        <div id="accordBody" class="accordion-body js-accordion-body">
 
                             <!-- Accordion Content -->
                             <div class="accordion-body__contents">
@@ -895,6 +899,8 @@
         });
 
         $('#submitAttach').on('click', function (e) {
+            $("#textAttach").hide();
+            $(".lds-ring").children().css('border-color','#ffffff transparent transparent transparent')
             e.preventDefault();
             var c = document.getElementById('CustomViewModelId').value;
             var files = document.getElementById('uploadFile').files;
@@ -941,6 +947,11 @@
                             var votes = $("#Myattaches");
                             var num = $("#Myattaches").text();
                             votes.text(parseInt(num) + 1);
+                            document.getElementById("uploadFile").value = "";
+                            $('.uploadButton-file-name').text("Загрузите файл вложения любого формата")
+                            $('.accordion-body').hide();
+                            $("#textAttach").show();
+                            $(".lds-ring").children().hide();
                         },
                         error: function (xhr, status, p3) {
                             alert(xhr.responseText);

@@ -131,9 +131,10 @@ namespace HelpMe.Controllers
                 .Include(c => c.CategoryTask)
                 .Include(c => c.Executor)
                 .Include(c => c.Skill)
-                .Include(c => c.User).Include(c => c.MyAttachments)
-                   .Include(c => c.Comments)
-                .Where(t => t.UserId == userId).ToList();
+                .Include(c => c.User)
+                .Include(c => c.MyAttachments)
+                .Include(c => c.Comments)
+                .Where(t => t.UserId == userId).OrderByDescending(m => m.Id).ToList();
             return View(tasksModel);
         }
 
