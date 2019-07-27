@@ -112,11 +112,7 @@
 
                     <!-- Accordion Item -->
                     <div class="accordion__item js-accordion-item">
-                        <div class="accordion-header js-accordion-header">
-                            <span id="textAttach">Добавить решение</span>
-                            <div style="left:50%" class="lds-ring" id="lds-ring-load-more"><div></div><div></div><div></div><div></div></div>
-
-                        </div>
+                        <div class="accordion-header js-accordion-header">Добавить решение</div>
 
                         <!-- Accordtion Body -->
                         <div id="accordBody" class="accordion-body js-accordion-body">
@@ -160,13 +156,12 @@
                     <div id="Uploaded_Results">
                         <div style=" margin-bottom:35px;" id="itemAttach">
                             <div class="attachments-container">
-                                @{ var idnew = 1; }
                                 @foreach (var i in Model.Attachments)
                                 {
                                     <div>
                                         <a style='@(i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased && Model.ExecutorId != User.Identity.GetUserId() ? "pointer-events: none;" : "")'
                                            href="@Url.Action("GetFileAttach", "Custom", new { path = i.AttachFilePath, id = i.Id })"
-                                           class="attachment-box ripple-effect "><span>Файл решения №@idnew</span><i>@(i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased && Model.ExecutorId != User.Identity.GetUserId() ? @i.ExecutorPrice + "руб." : "Zip")</i></a>
+                                           class="attachment-box ripple-effect "><span>Файл исполнителя</span><i>Скачать</i></a>
 
                                         @if (Model.ExecutorId == User.Identity.GetUserId() && i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
                                         {
@@ -174,7 +169,7 @@
                                                 "<i class='icon-feather-trash-2'></i>", "DeleteAttach","Custom",
                                                 new{ id = i.Id},
                                                 new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
-                                                new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }
+                                                new { id="delete-attach", @class = "button gray ripple-effect ico", @style = "margin-bottom:50px;", title = "Удалить", data_tippy_placement = "top" }
                                                 )
                                         }
                                         @if (Model.UserId == User.Identity.GetUserId())
@@ -182,15 +177,15 @@
                                             if (i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
                                             {
                                                 @Ajax.RawActionLink(
-                                               "<i id='fbuy' style='margin-top: -10px;' class='icon-material-outline-monetization-on'></i><span id='textAttachBuy'>Купить</span><div style = 'left:40%' class='lds-ring' id='lds-ring-load-more'><div></div><div></div><div></div><div></div></div>", "Buy", "Custom",
+                                               "<i class='icon-material-outline-monetization-on'></i>Купить","Buy", "Custom",
                                                new{id = i.Id},
                                                new AjaxOptions{ OnSuccess = "OnSuccess",HttpMethod = "POST" },
-                                               new { id = "buy-solution", @class = "button ripple-effect margin-bottom-50", @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "margin-top: -10px;display:" : "margin-top: -10px;") }
+                                               new { id = "buy-solution", @class = "button ripple-effect margin-bottom-50", @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:" : "") }
                                                )
                                             }
                                             else
                                             {
-                                                <div style='margin-top: -10px;' class="task-tags margin-bottom-20">
+                                                <div class="task-tags margin-bottom-50">
                                                     <span>Работа куплена</span>
                                                 </div>
 
@@ -198,7 +193,6 @@
 
                                         }
                                     </div>
-                                    idnew = idnew + 1;
                                 }
                             </div>
                         </div>
@@ -837,9 +831,6 @@
         });
 
         function OnSuccess() {
-            $("#fbuy").hide();
-            $("#textAttachBuy").hide();
-            $("#itemAttach .lds-ring").children().css('border-color', '#ffffff transparent transparent transparent')
             $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id=' +@Model.Id);
             ChangeStatusSpan();
         }
@@ -847,8 +838,6 @@
         var progressBar = $('#progressbar');
 
         $('#add-solution').on('click', function (e) {
-            $("#textAttach").hide();
-            $(".lds-ring").children().css('border-color', '#ffffff transparent transparent transparent')
             e.preventDefault();
             var c = document.getElementById('CustomViewModelId').value;
             var d = document.getElementById('ExecutorPrice').value;
@@ -898,12 +887,6 @@
                             var votes = $("#attaches");
                             var num = $("#attaches").text();
                             votes.text(parseInt(num) + 1);
-                            $('.accordion-body').hide();
-                            $("#textAttach").show();
-                            $(".lds-ring").children().hide();
-                            document.getElementById("uploadFile").value = "";
-                            $('.uploadButton-file-name').text("Загрузите файл решения для исполнителя любого формата")
-                            location.hash = "#" + 'Uploaded_Results';
                         },
                         error: function (xhr, status, p3) {
                             alert(xhr.responseText);
