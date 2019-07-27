@@ -168,7 +168,7 @@
                                             @Ajax.RawActionLink(
                                                 "<i class='icon-feather-trash-2'></i>", "DeleteAttach","Custom",
                                                 new{ id = i.Id},
-                                                new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
+                                                new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach"},
                                                 new { id="delete-attach", @class = "button gray ripple-effect ico", @style = "margin-bottom:50px;", title = "Удалить", data_tippy_placement = "top" }
                                                 )
                                         }
@@ -179,7 +179,7 @@
                                                 @Ajax.RawActionLink(
                                                "<i class='icon-material-outline-monetization-on'></i>Купить","Buy", "Custom",
                                                new{id = i.Id},
-                                               new AjaxOptions{ OnSuccess = "OnSuccess",HttpMethod = "POST" },
+                                               new AjaxOptions{ OnSuccess = "OnSuccessBuyAttach",HttpMethod = "POST" },
                                                new { id = "buy-solution", @class = "button ripple-effect margin-bottom-50", @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:" : "") }
                                                )
                                             }
@@ -621,8 +621,10 @@
                 <div class="countdown green margin-bottom-35">До завершения: @totalDays дней и @totalHours часов </div>
                 @if (Model.UserId == User.Identity.GetUserId() && Model.Status == HelpMe.Models.CustomStatus.CheckCustom)
                 {
+                <div class="buttons-container">
                     <a style="margin-bottom:20px" href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim">Подтвердить выполнение <i class="icon-material-outline-check"></i></a>
                     <a href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
+                </div>
                 }
                 else if (Model.Status == HelpMe.Models.CustomStatus.Close)
                 {
@@ -767,7 +769,7 @@
 
         function ChangeStatusSpan() {
             $.ajax({
-                url: '@Url.Action("GetCustomStatus", "Custom")',
+                url: '@Url.Action("GetCustomStatus", "Custom")?id=' + @Model.Id,
                 success: function (data) {
                     $('#custom-status > span').text(data);
                     //console.log('status: '+ data);
@@ -830,9 +832,26 @@
             });
         });
 
-        function OnSuccess() {
+        function OnSuccessDeleteAttach() {
             $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id=' +@Model.Id);
             ChangeStatusSpan();
+        }
+
+        function OnSuccessBuyAttach() {
+            $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id=' +@Model.Id);
+            ChangeStatusSpan();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("NotPurchasedAttaches", "Custom")?id=' +@Model.Id,
+                success: function (data) {
+                    if (data == 0) {
+                        $('.buttons-container').load('@Url.Action("LoadButtons", "Custom")?id=' +@Model.Id);
+                    }
+                },
+                error: function (data) {
+                    alert('Custom/NotPurchasedAttaches is gone bad!');
+                }
+            });
         }
 
         var progressBar = $('#progressbar');

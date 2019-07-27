@@ -49,6 +49,8 @@ namespace HelpMe.Models
 
         public int ExecutorPrice { get; set; }
 
+        public bool IsRevision { get; set; }
+
         public ICollection<CommentViewModel> Comments { get; set; }
         public ICollection<AttachModel> Attachments { get; set; }
         public ICollection<MyAttachModel> MyAttachments { get; set; }

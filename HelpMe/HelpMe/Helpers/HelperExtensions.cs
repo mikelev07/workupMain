@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -12,14 +13,22 @@ namespace HelpMe.Helpers
 {
     public static class HtmlExtensions
     {
+        public static string GetDisplayName(this Enum enumValue)
+        {
+            return enumValue.GetType()?
+                            .GetMember(enumValue.ToString())?
+                            .First()?
+                            .GetCustomAttribute<DisplayAttribute>()?
+                            .Name;
+        }
 
-       
-            public static MvcHtmlString RawActionLink(this AjaxHelper ajaxHelper, string linkText, string actionName, string controllerName, object routeValues, AjaxOptions ajaxOptions, object htmlAttributes)
-            {
-                var repID = Guid.NewGuid().ToString();
-                var lnk = ajaxHelper.ActionLink(repID, actionName, controllerName, routeValues, ajaxOptions, htmlAttributes);
-                return MvcHtmlString.Create(lnk.ToString().Replace(repID, linkText));
-            }
+
+        public static MvcHtmlString RawActionLink(this AjaxHelper ajaxHelper, string linkText, string actionName, string controllerName, object routeValues, AjaxOptions ajaxOptions, object htmlAttributes)
+        {
+            var repID = Guid.NewGuid().ToString();
+            var lnk = ajaxHelper.ActionLink(repID, actionName, controllerName, routeValues, ajaxOptions, htmlAttributes);
+            return MvcHtmlString.Create(lnk.ToString().Replace(repID, linkText));
+        }
         
 
 

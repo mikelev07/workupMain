@@ -13,6 +13,7 @@ using HelpMe.Hubs;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
 using ICSharpCode.SharpZipLib.Core;
+using HelpMe.Helpers;
 
 namespace HelpMe.Controllers
 {
@@ -173,10 +174,10 @@ namespace HelpMe.Controllers
             return View(comms);
         }
 
-        public string GetCustomStatus()
+        public async Task<string> GetCustomStatus(int? id)
         {
-            string status = (string)Session["CustomStatus"];
-            return status;
+            var status = await db.Customs.Where(c=>c.Id==id).Select(c=>c.Status).FirstOrDefaultAsync();
+            return status.GetDisplayName();
         }
 
         public ActionResult LoadAttaches(int? id)
@@ -185,17 +186,26 @@ namespace HelpMe.Controllers
             return PartialView(allAttaches);
         }
 
+        public ActionResult LoadButtons(int? id)
+        {
+            var customViewModel = db.Customs.Where(c => c.Id == id);
+            return PartialView(customViewModel);
+        }
+
+        public async Task<int> NotPurchasedAttaches(int? id)
+        {
+            return await db.Attachments.Where(a => a.CustomViewModelId == id).CountAsync(a=>a.AttachStatus==AttachStatus.NotPurchased);
+        }
+
 
         public async Task<JsonResult> DeleteAttach(int? id)
         {
-
             AttachModel attach = await db.Attachments.FindAsync(id);
             var customId = attach.CustomViewModelId;
 
             var customViewModel = await db.Customs.FirstOrDefaultAsync(c=> c.Id==customId);
             db.Entry(customViewModel).State = EntityState.Modified;
             customViewModel.Status = CustomStatus.Check;//выполняется исполнителем
-            Session["CustomStatus"] = "Выполняется исполнителем";
 
             db.Attachments.Remove(attach);
             await db.SaveChangesAsync();
@@ -277,7 +287,6 @@ namespace HelpMe.Controllers
                         SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
                         db.Entry(customViewModel).State = EntityState.Modified;
                         customViewModel.Status = CustomStatus.NeedBuy;//ожидает покупки
-                        Session["CustomStatus"] = "Ожидает покупки";
                         await db.SaveChangesAsync();
                     }
                 }
@@ -293,8 +302,11 @@ namespace HelpMe.Controllers
             }
 
             // optimaize
-            AttachModel attachViewModel = await db.Attachments.Include(c => c.User).Include(c => c.CustomViewModel)
-                                                              .FirstOrDefaultAsync(c => c.Id == id);
+            AttachModel attachViewModel = await db.Attachments
+                .Include(c => c.User)
+                .Include(c => c.CustomViewModel)
+                .Include(c=>c.CustomViewModel.Attachments)
+                .FirstOrDefaultAsync(c => c.Id == id);
 
             if (attachViewModel.AttachStatus != AttachStatus.Purchased)
             {
@@ -329,7 +341,6 @@ namespace HelpMe.Controllers
                 if (attachViewModel.CustomViewModel.Attachments.Where(c => c.AttachStatus == AttachStatus.NotPurchased).Count() == 0)
                 {
                     attachViewModel.CustomViewModel.Status = CustomStatus.CheckCustom;//проверяется заказчиком
-                    Session["CustomStatus"] = "Проверяется заказчиком";
                 }
                 db.Entry(wallet).State = EntityState.Modified;
                 await db.SaveChangesAsync();
@@ -369,7 +380,6 @@ namespace HelpMe.Controllers
                 db.Entry(customViewModel).State = EntityState.Modified;
                 customViewModel.ExecutorPrice = comment.OfferPrice;
                 customViewModel.Status = CustomStatus.Check; // заявка выполняется
-                Session["CustomStatus"] = "Выполняется исполнителем";
             }
             string uName = db.Users.Where(c => c.Id == customViewModel.UserId).FirstOrDefault().UserName;
             string exName = db.Users.Where(c => c.Id == customViewModel.ExecutorId).FirstOrDefault().UserName;
@@ -427,7 +437,6 @@ namespace HelpMe.Controllers
                     db.Entry(customViewModel).State = EntityState.Modified;
                     customViewModel.FilePath = path;
                     customViewModel.Status = CustomStatus.NeedBuy; // вложения требует покупки
-                    Session["CustomStatus"] = "Ожидает покупки";
                     //  customViewModel.AttachStatus = AttachStatus.NotPurchased; // решение не куплено
                     await db.SaveChangesAsync();
                 }
@@ -711,7 +720,6 @@ namespace HelpMe.Controllers
 
             db.Entry(customViewModel).State = EntityState.Modified;
             customViewModel.Status = CustomStatus.Close;
-            Session["CustomStatus"] = "Закрытая заявка";
             await db.SaveChangesAsync();
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
         }
@@ -728,7 +736,6 @@ namespace HelpMe.Controllers
 
             db.Entry(customViewModel).State = EntityState.Modified;
             customViewModel.Status = CustomStatus.Revision; // на доработку
-            Session["CustomStatus"] = "На доработке";
             await db.SaveChangesAsync();
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
         }
