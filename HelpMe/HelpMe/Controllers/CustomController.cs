@@ -188,7 +188,7 @@ namespace HelpMe.Controllers
 
         public ActionResult LoadButtons(int? id)
         {
-            var customViewModel = db.Customs.Where(c => c.Id == id);
+            var customViewModel = db.Customs.Where(c => c.Id == id).SingleOrDefault();
             return PartialView(customViewModel);
         }
 
