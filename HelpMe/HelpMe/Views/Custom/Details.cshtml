@@ -67,7 +67,7 @@
                 </div>
                 <br />
 
-                @if (Request.IsAuthenticated && Model.UserId == User.Identity.GetUserId())
+                @if (Request.IsAuthenticated && Model.UserId == User.Identity.GetUserId() && Model.Status!=HelpMe.Models.CustomStatus.Close)
                 {
                     <div class="accordion js-accordion">
 
@@ -106,7 +106,7 @@
                     </div>
                 }
             </div>
-            @if (Request.IsAuthenticated && Model.ExecutorId == User.Identity.GetUserId())
+            @if (Request.IsAuthenticated && Model.ExecutorId == User.Identity.GetUserId() && Model.Status != HelpMe.Models.CustomStatus.Close)
             {
                 <div class="accordion js-accordion">
 
@@ -869,7 +869,7 @@
                 type: "GET",
                 url: '@Url.Action("NotPurchasedAttaches", "Custom")?id=' +@Model.Id,
                 success: function (data) {
-                    alert(data)
+                    //alert(data)
                     if (data == 0) {
                         $('.buttons-container').load('@Url.Action("LoadButtons", "Custom")?id=' +@Model.Id);
                     }
