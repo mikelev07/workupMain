@@ -203,11 +203,14 @@ namespace HelpMe.Controllers
             AttachModel attach = await db.Attachments.FindAsync(id);
             var customId = attach.CustomViewModelId;
 
-            var customViewModel = await db.Customs.FirstOrDefaultAsync(c=> c.Id==customId);
-            db.Entry(customViewModel).State = EntityState.Modified;
-            customViewModel.Status = CustomStatus.Check;//выполняется исполнителем
-
+            var customViewModel = await db.Customs.Include(c=>c.Attachments).FirstOrDefaultAsync(c=> c.Id==customId);
+            
             db.Attachments.Remove(attach);
+            if (customViewModel.Attachments.Where(a => a.AttachStatus == AttachStatus.NotPurchased).Count() == 0)
+            {
+                db.Entry(customViewModel).State = EntityState.Modified;
+                customViewModel.Status = CustomStatus.Check;//выполняется исполнителем
+            }
             await db.SaveChangesAsync();
             return Json(true);
         }
@@ -292,6 +295,17 @@ namespace HelpMe.Controllers
                 }
             }
             return Json("Файл загружен");
+        }
+
+        public async Task<bool> EnoughMoneyForBuying(int? id)
+        {
+            var attachment = await db.Attachments.Include(a=>a.CustomViewModel).SingleOrDefaultAsync(a => a.Id == id);
+            var attachPrice = attachment.ExecutorPrice;
+            var userId = attachment.CustomViewModel.UserId;
+            var wallet = await db.Wallets.SingleOrDefaultAsync(w => w.UserId == userId);
+            var walletSum = wallet.Summ;
+
+            return walletSum >= attachPrice;
         }
 
         public async Task<ActionResult> Buy(int? id)
@@ -536,7 +550,7 @@ namespace HelpMe.Controllers
         /// <param name="Hours"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult People(string Description, int CustomViewModelId, int OfferPrice, int Days, int Hours)
+        public JsonResult ShowExecutors(string Description, int CustomViewModelId, int OfferPrice, int Days, int Hours)
         {
             var comment = new CommentViewModel {
                 Description = Description,
@@ -566,7 +580,7 @@ namespace HelpMe.Controllers
                 {
                     Id = comment.Id,
                     Description = comment.Description,
-                    CreationDate = comment.CreationDate,
+                    CreationDate = comment.CreationDate.ToShortDateString(),
                     OfferPrice = comment.OfferPrice,
                     CustomViewModelId = comment.CustomViewModelId,
                     UserId = comment.UserId,
@@ -721,6 +735,7 @@ namespace HelpMe.Controllers
             db.Entry(customViewModel).State = EntityState.Modified;
             customViewModel.Status = CustomStatus.Close;
             await db.SaveChangesAsync();
+            SendMessage("Вы закрыли заказ", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, customViewModel.User.UserName + "подтвердил выполнение заказа");
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
         }
 
@@ -737,6 +752,7 @@ namespace HelpMe.Controllers
             db.Entry(customViewModel).State = EntityState.Modified;
             customViewModel.Status = CustomStatus.Revision; // на доработку
             await db.SaveChangesAsync();
+            SendMessage("Вы отправили заказ на доработку", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, customViewModel.User.UserName + "отправил заказ на доработку");
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
         }
 
