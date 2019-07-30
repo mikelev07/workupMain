@@ -14,44 +14,34 @@
             @if (i.CustomViewModel.ExecutorId == User.Identity.GetUserId() && i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
             {
                 @Ajax.RawActionLink(
-                          "<i class='icon-feather-trash-2'></i>", "DeleteAttach", "Custom",
-                           new
-                           {
-                               id = i.Id,
-                           },
-                           new AjaxOptions
-                           {
-                               OnBegin = "return ConfirmDone()",
-                               HttpMethod = "POST",
-                               OnSuccess = "OnSuccess"
-                           },
-                           new
-                           {
-                               @class = "button green ripple-effect ico",
-                               @style = "margin-bottom:20px;padding: 4px 9px;margin-top: -10px;",
-                               title = "Удалить",
-                               data_tippy_placement = "top"
-                           }
-                       )
+               "<i class='icon-feather-trash-2'></i>", "DeleteAttach","Custom",
+               new{ id = i.Id},
+               new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach"},
+               new {
+                   id ="delete-attach",
+                   @class = "button green ripple-effect ico",
+                   @style = "margin-bottom:20px;padding: 4px 9px;margin-top: -10px;",
+                   title = "Удалить решение",
+                   data_tippy_placement = "top"
+               }
+               )
             }
             @if (i.CustomViewModel.UserId == User.Identity.GetUserId())
             {
                 if (i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
                 {
                     @Ajax.RawActionLink(
-                                      "<i class='icon-material-outline-monetization-on'></i>Купить",
-                                       "Buy",
-                                       "Custom",
-                                       new
-                                       {
-                                           id = i.Id,
-                                       },
-                                       new AjaxOptions
-                                       {
-                                           OnSuccess = "OnSuccess",
-                                           HttpMethod = "POST"
-                                       }, new { @class = "button ripple-effect margin-top-18", @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:" : ""), title = "Удалить", data_tippy_placement = "top" }
-                                   )
+                   "<i id='fbuy' style='margin-top: -10px;' class='icon-material-outline-monetization-on'></i><span id='textAttachBuy'>Купить</span><div style = 'left:40%' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "Buy", "Custom",
+                   new{id = i.Id},
+                   new AjaxOptions{ OnBegin= "return OnBeginBuyAttach('"+@i.Id+"')", OnSuccess = "OnSuccessBuyAttach", HttpMethod = "POST" },
+                   new {
+                       id = "buy-solution",
+                       @class = "button ripple-effect margin-top-18",
+                       @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:" : ""),
+                       title = "Купить решение",
+                       data_tippy_placement = "top"
+                   }
+                   )
                 }
                 else
                 {
@@ -67,7 +57,7 @@
 
 </div>
 
-        <br />
+<br />
 
-   
+
 

@@ -181,7 +181,13 @@
                                                 new{ id = i.Id},
 
                                                 new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach"},
-                                                new { id="delete-attach", @class = "button gray ripple-effect ico", @style = "margin-bottom:50px;", title = "Удалить", data_tippy_placement = "top" }
+                                                new {
+                                                    id ="delete-attach",
+                                                    @class = "button green ripple-effect ico",
+                                                    @style = "margin-bottom:20px;padding: 4px 9px;margin-top: -10px;",
+                                                    title = "Удалить решение",
+                                                    data_tippy_placement = "top"
+                                                }
 
                                                @* new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
                                                 new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
@@ -199,12 +205,11 @@
                                                new AjaxOptions{ OnBegin= "return OnBeginBuyAttach('"+@i.Id+"')", OnSuccess = "OnSuccessBuyAttach", HttpMethod = "POST" },
                                                new {
                                                    id = "buy-solution",
-                                                   @class = "button ripple-effect margin-bottom-50",
-                                                   @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:" : "") }
-
-                                               @*new AjaxOptions{ OnSuccess = "OnSuccess",HttpMethod = "POST" },
-                                               new { id = "buy-solution", @class = "button ripple-effect margin-bottom-50", @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "margin-top: -10px;display:" : "margin-top: -10px;") }*@
-
+                                                   @class = "button ripple-effect margin-top-18",
+                                                   @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:" : ""),
+                                                   title = "Купить решение",
+                                                   data_tippy_placement = "top"
+                                               }
                                                )
                                             }
                                             else
@@ -761,7 +766,7 @@
                                 <div class="bidding-value"><span id="biddingVal"></span> руб.</div>
                                 <input id="slider-price" class="bidding-slider" type="text" value="@Model.Price"
                                        data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
-                                       data-slider-max="25000" data-slider-value="@Model.Price" data-slider-step="50"
+                                       data-slider-max="25000" data-slider-value="@Model.Price" data-slider-step="1"
                                        data-slider-tooltip="hide" />
 
                                 <!-- Headline -->
@@ -925,8 +930,10 @@
             $("#fbuy").hide();
             $("#textAttachBuy").hide();
             $("#itemAttach .lds-ring").children().css('border-color', '#ffffff transparent transparent transparent');
+
             $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id=' +@Model.Id);
             ChangeStatusSpan();
+
             $.ajax({
                 type: "GET",
                 url: '@Url.Action("NotPurchasedAttaches", "Custom")?id=' +@Model.Id,
