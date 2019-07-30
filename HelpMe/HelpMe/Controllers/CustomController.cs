@@ -593,7 +593,7 @@ namespace HelpMe.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> EditComment([Bind(Include = "Id,Name,Description,UserId,OfferPrice,Days,Hours,CustomViewModelId")] CommentViewModel commentViewModel)
+        public async Task<JsonResult> EditComment([Bind(Include = "Id,Name,Description,UserId,OfferPrice, CreationDate, Days,Hours,CustomViewModelId")] CommentViewModel commentViewModel)
         {
             if (ModelState.IsValid)
             {

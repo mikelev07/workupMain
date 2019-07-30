@@ -373,6 +373,7 @@
                                                         @*@Html.Hidden("Id", c.Id.ToString())*@
                                                         @Html.Hidden("UserId", c.UserId.ToString())
                                                         @Html.Hidden("CustomViewModelId", c.CustomViewModelId.ToString())
+                                                        @Html.Hidden("CreationDate",c.CreationDate.ToString())
                                                         @Html.Hidden("Description", c.Description.ToString())
 
                                                         var timeCount = c.Days;
@@ -1128,13 +1129,14 @@
                     executorsRating = data.ExecutorRating;
                     executorImagePath = data.ExecutorImagePath;
 
-                    var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li class="active"><a href="#tab">Редактировать предложение ' + data.Id + '</a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab">'
+                    var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li class="active"><a href="#tab">Редактировать предложение </a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab">'
                         + '<form method="post" action="/Custom/EditComment/'
                         + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="OnSuccessEditComment" data-ajax-update="#user-comment-bid-rate-' + data.Id + '">'
                         + '@Html.AntiForgeryToken() <input type="hidden" value="'
                         + data.UserId + '" name="UserId" /><input type="hidden" value="'
                         + data.CustomViewModelId + '" name="CustomViewModelId" /><input type="hidden" value="'
-                        + data.Description + '" name="Description" />'
+                        + data.Description + '" name="Description" /><input type="hidden" value = "'
+                        + data.CreationDate +'" name="CreationDate" />'
                         + '<div class="bidding-widget"><span class="bidding-detail margin-top-30">Укажите время выполнения</span>'
                         + '<div class="bidding-fields"><div class="bidding-field"><div class="qtyButtons with-border"><div class="qtyDec"></div>';
 
