@@ -580,7 +580,7 @@ namespace HelpMe.Controllers
                 {
                     Id = comment.Id,
                     Description = comment.Description,
-                    CreationDate = comment.CreationDate.ToShortDateString(),
+                    CreationDate = comment.CreationDate.ToString("dd MMMM yyyy HH:mm:ss"),
                     OfferPrice = comment.OfferPrice,
                     CustomViewModelId = comment.CustomViewModelId,
                     UserId = comment.UserId,

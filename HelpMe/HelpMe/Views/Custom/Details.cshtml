@@ -283,7 +283,7 @@
                                         <div class="freelancer-name">
                                             <h4>
                                                 <a href="@Url.Action("Details", "User", new { userName = c.User.UserName })">
-                                                    @c.User.UserName  <h6 class="custom-comments">@c.CreationDate</h6>@*| @c.Id*@
+                                                    @c.User.UserName  <h6 class="custom-comments">@c.CreationDate.ToString("dd MMMM yyyy HH:mm:ss")</h6>@*| @c.Id*@
                                                     @*<img class="flag" src="images/flags/gb.svg" alt="" title="United Kingdom" data-tippy-placement="top">*@
                                                 </a>
                                             </h4>
@@ -394,7 +394,7 @@
                                                                     <!-- Quantity Buttons -->
                                                                     <div class="qtyButtons with-border">
                                                                         <div class="qtyDec"></div>
-                                                                        <input id="Days" type="text" name="@nameTime" value="@timeCount">
+                                                                        <input id="Days" class="no-spinners" type="number" min="1" max="100" name="@nameTime" value="@timeCount">
                                                                         <div class="qtyInc"></div>
                                                                     </div>
                                                                 </div>
@@ -419,7 +419,7 @@
                                                             <div class="bidding-value"><span id="biddingVal1"></span> руб.</div>
                                                             <input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text"
                                                                    value="" data-slider-handle="custom" data-slider-currency="$"
-                                                                   data-slider-min="0" data-slider-max="5000" data-slider-value="@c.OfferPrice"
+                                                                   data-slider-min="0" data-slider-max="25000" data-slider-value="@c.OfferPrice"
                                                                    data-slider-step="50" data-slider-tooltip="hide" />
                                                         </div>
 
@@ -735,7 +735,7 @@
                                         }
                                         <i class="icon-material-outline-access-time"></i>
                                         <h5>Выполнит заказ к:</h5>
-                                        <span> @executorDeadLine</span>
+                                        <span> @executorDeadLine.ToString("dd MMMM yyyy HH:mm:ss")</span>
                                     </li>
                                 </ul>
                             </div>
@@ -757,7 +757,7 @@
                                 <div class="bidding-value"><span id="biddingVal"></span> руб.</div>
                                 <input id="slider-price" class="bidding-slider" type="text" value="@Model.Price"
                                        data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
-                                       data-slider-max="5000" data-slider-value="@Model.Price" data-slider-step="50"
+                                       data-slider-max="25000" data-slider-value="@Model.Price" data-slider-step="50"
                                        data-slider-tooltip="hide" />
 
                                 <!-- Headline -->
@@ -769,7 +769,7 @@
                                         <!-- Quantity Buttons -->
                                         <div class="qtyButtons">
                                             <div class="qtyDec"></div>
-                                            <input id="time" type="text" name="qtyInput" value="1">
+                                            <input id="time" class="no-spinners" min="1" max="100" type="number" name="qtyInput" value="1">
                                             <div class="qtyInc"></div>
                                         </div>
                                     </div>
@@ -808,7 +808,8 @@
 
 @section Scripts {
 <script>
-
+    var minValue = 1;
+    var maxValue = 100;
         $(document).ready(function () {
             $("#executors-offers .lds-ring").hide();
             $("#boxed-list-ul > li:odd").css("background-color", "#fafafa");
@@ -1073,8 +1074,6 @@
 
         var countUserComment = 0;
         $(document).on('click', '#snackbar-place-bid', function () {
-            $('#votes').hide();
-            $("#executors-offers .lds-ring").show();
             var decription = $("textarea#desсription").val();
             var slider = $("#slider-price").val();
             var time = $("#time").val();
@@ -1098,12 +1097,14 @@
                 });
                 return;
             }
-            if (time < 1) {
+            if (time < minValue || time > maxValue) {
                 Snackbar.show({
-                    text: 'Введите положительное число часов/дней!',
+                    text: 'Введите число в диапазоне от ' + minValue + ' до ' + maxValue + '!',
                 });
                 return;
             }
+            $('#votes').hide();
+            $("#executors-offers .lds-ring").show();
 
             var hours = 0;
             var days = time;    //default
@@ -1138,13 +1139,13 @@
                         + '<div class="bidding-fields"><div class="bidding-field"><div class="qtyButtons with-border"><div class="qtyDec"></div>';
 
                     if (days > 0) {
-                        modalEdit += '<input id="Days" type="text" name="Days" value="' + days + '">'
+                        modalEdit += '<input id="Days" type="number" class="no-spinners" min="1" max="100" name="Days" value="' + days + '">'
                             + '<div class="qtyInc"></div></div></div>'
                             + '<div class="bidding-field"><select class="selectpicker default with-border" id="edit-time-units">'
                             + '<option selected value="1">дней</option><option value="2">часов</option>';
                     }
                     else {
-                        modalEdit += '<input id="Days" type="text" name="Hours" value="' + hours + '">'
+                        modalEdit += '<input id="Days" type="number" class="no-spinners" min="1" max="100" name="Hours" value="' + hours + '">'
                             + '<div class="qtyInc"></div></div></div>'
                             + '<div class="bidding-field"><select class="selectpicker default with-border" id="edit-time-units">'
                             + '<option value="1">дней</option><option selected value="2">часов</option>';
@@ -1153,7 +1154,7 @@
                         + '<span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>'
                         + '<div class="bidding-value"><span id="biddingVal1"></span> руб.</div>'
                         + '<input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text" value="'
-                        + '" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="5000" data-slider-value="'
+                        + '" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="25000" data-slider-value="'
                         + data.OfferPrice + '" data-slider-step="50" data-slider-tooltip="hide"/>'
                         + '</div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>';
 
@@ -1198,6 +1199,8 @@
                         + person.Description + "</p></div></li>";
 
                     if (HasComments(@Model.Id) || countUserComment >= 1) {
+                        $(".lds-ring").children().hide();
+                        $('#votes').show();
                         Snackbar.show({
                             text: 'Вы не можете добавлять более 1 предложения!',
                         });
@@ -1262,18 +1265,26 @@
 
             var events = $._data(this, "events");
             if (events == null) {
+                //var minValue = 1;
+                //var maxValue = 100;
                 var $button = $(this);
+                var buttonHasClassInc = $button.hasClass('qtyInc');
                 var oldValue = $button.parent().find("input").val();
 
-                if ($button.hasClass('qtyInc')) {
-                    $button.parent().find("input").val(parseFloat(oldValue) + 1);
+                if (oldValue < minValue || (oldValue == minValue && !buttonHasClassInc)) {
+                    $button.parent().find("input").val(minValue);
                 }
                 else {
-                    if (oldValue > 1) {
-                        $button.parent().find("input").val(parseFloat(oldValue) - 1);
+                    if (oldValue > maxValue || (oldValue == maxValue && buttonHasClassInc)) {
+                        $button.parent().find("input").val(maxValue);
                     }
                     else {
-                        $button.parent().find("input").val(1);
+                        if (buttonHasClassInc) {
+                            $button.parent().find("input").val(parseFloat(oldValue) + 1);
+                        }
+                        else {
+                            $button.parent().find("input").val(parseFloat(oldValue) - 1);
+                        }
                     }
                 }
 
@@ -1383,11 +1394,11 @@
                 + '<div class="bidding-value"><span id="biddingVal"></span> руб.</div>'
                 + '<input id="slider-price" class="bidding-slider" type="text" value="@Model.Price" '
                 + 'data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" '
-                + 'data-slider-max="5000" data-slider-value="@Model.Price" data-slider-step="50" '
+                + 'data-slider-max="25000" data-slider-value="@Model.Price" data-slider-step="50" '
                 + 'data-slider-tooltip="hide"/><span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>'
                 + '<div class="bidding-fields"><div class="bidding-field">'
                 + '<div class="qtyButtons">'
-                + '<div class="qtyDec"></div><input id="time" type="text" name="qtyInput" value="1">'
+                + '<div class="qtyDec"></div><input id="time" type="number" class="no-spinners" min="1" max="100" name="qtyInput" value="1">'
                 + '<div class="qtyInc"></div></div></div><div class="bidding-field">'
                 + '<select class="selectpicker default" id="time-unit-select">'
                 + '<option value="1" selected>Дней</option><option value="2">Часов</option></select></div>'

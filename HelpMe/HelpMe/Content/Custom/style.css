@@ -115,6 +115,17 @@
 /* ---------------------------------- */
 /* Forms Reset & Styles
 ------------------------------------- */
+
+.no-spinners::-webkit-outer-spin-button,
+.no-spinners::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.no-spinners {
+    -moz-appearance: textfield;
+}
+
 input, input[type="text"], input[type="password"], input[type="email"], input[type="number"], textarea, select {
 	height: 48px;
 	line-height: 48px;
