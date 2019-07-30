@@ -144,7 +144,9 @@
                                             </div>
                                             <div class="input-with-icon-left no-border">
                                                 <i class="icon-material-outline-local-atm"></i>
-                                                <input style="width:250px" name="ExecutorPrice" id="ExecutorPrice" type="text" class="input-text" placeholder="Цена">
+                                                <input style="width:250px" name="ExecutorPrice" id="ExecutorPrice" 
+                                                       type="number" min="0" max="25000" step="1" class="input-text no-spinners" 
+                                                       oninput="validity.valid||(value='');" placeholder="Цена">
                                             </div>
                                             <input id="add-solution" type="submit" value="Загрузить" class="button ripple-effect margin-top-10" />
                                         </div>
@@ -160,7 +162,7 @@
             @if (Model.ExecutorId != null && (Model.ExecutorId == User.Identity.GetUserId() || Model.UserId == User.Identity.GetUserId()))
             {
                 <div class="single-page-section">
-                    <h3>Вложения исполнителя <span style="color: white" class="nav-tag" id="attaches">@Model.Attachments.Count </span></h3>
+                    <h3>Вложения исполнителя <span style="color: white" class="nav-tag" id="attachments">@Model.Attachments.Count </span></h3>
                     <div id="Uploaded_Results">
                         <div style=" margin-bottom:35px;" id="itemAttach">
                             <div class="attachments-container">
@@ -395,7 +397,8 @@
                                                                     <!-- Quantity Buttons -->
                                                                     <div class="qtyButtons with-border">
                                                                         <div class="qtyDec"></div>
-                                                                        <input id="Days" class="no-spinners" type="number" min="1" max="100" name="@nameTime" value="@timeCount">
+                                                                        <input id="Days" class="no-spinners" type="number" min="1" max="100" 
+                                                                               step="1" name="@nameTime" value="@timeCount" oninput="validity.valid||(value='');">
                                                                         <div class="qtyInc"></div>
                                                                     </div>
                                                                 </div>
@@ -770,7 +773,8 @@
                                         <!-- Quantity Buttons -->
                                         <div class="qtyButtons">
                                             <div class="qtyDec"></div>
-                                            <input id="time" class="no-spinners" min="1" max="100" type="number" name="qtyInput" value="1">
+                                            <input id="time" class="no-spinners" min="1" max="100" type="number" name="qtyInput" 
+                                                   step="1" value="1" oninput="validity.valid||(value='');">
                                             <div class="qtyInc"></div>
                                         </div>
                                     </div>
@@ -884,6 +888,10 @@
 
         function OnSuccessDeleteAttach() {
             $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id=' +@Model.Id);
+            $('#attachments').text(function (i, txt) {
+                return (parseInt(txt, 10) - 1);
+            });
+
             ChangeStatusSpan();
         }
 
@@ -917,17 +925,19 @@
             $("#fbuy").hide();
             $("#textAttachBuy").hide();
             $("#itemAttach .lds-ring").children().css('border-color', '#ffffff transparent transparent transparent');
-
             $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id=' +@Model.Id);
             ChangeStatusSpan();
             $.ajax({
                 type: "GET",
                 url: '@Url.Action("NotPurchasedAttaches", "Custom")?id=' +@Model.Id,
                 success: function (data) {
-                    //alert(data)
+                    //alert(data);
                     if (data == 0) {
                         $('.buttons-container').load('@Url.Action("LoadButtons", "Custom")?id=' +@Model.Id);
                     }
+                    $('#attachments').text(function (i, txt) {
+                        return (parseInt(txt, 10) + 1);
+                    });
                 },
                 error: function (data) {
                     alert('Custom/NotPurchasedAttaches is gone bad!');
@@ -986,8 +996,8 @@
                         success: function (result) {
                             ChangeStatusSpan();
                             $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id=' +@Model.Id);
-                            var votes = $("#attaches");
-                            var num = $("#attaches").text();
+                            var votes = $("#attachments");
+                            var num = $("#attachments").text();
                             votes.text(parseInt(num) + 1);
                             $('.accordion-body').hide();
                             $("#textAttach").show();
@@ -995,6 +1005,7 @@
                             document.getElementById("uploadFile").value = "";
                             $('.uploadButton-file-name').text("Загрузите файл решения для исполнителя любого формата")
                             location.hash = "#" + 'Uploaded_Results';
+                            $('#ExecutorPrice').val('');
                         },
                         error: function (xhr, status, p3) {
                             alert(xhr.responseText);
@@ -1141,13 +1152,15 @@
                         + '<div class="bidding-fields"><div class="bidding-field"><div class="qtyButtons with-border"><div class="qtyDec"></div>';
 
                     if (days > 0) {
-                        modalEdit += '<input id="Days" type="number" class="no-spinners" min="1" max="100" name="Days" value="' + days + '">'
+                        modalEdit += '<input id="Days" type="number" class="no-spinners" min="' + minValue + '" max="' + maxValue
+                            + '" name="Days" value="' + days+ '" step="1" oninput="validity.valid||(value=\'\');">'
                             + '<div class="qtyInc"></div></div></div>'
                             + '<div class="bidding-field"><select class="selectpicker default with-border" id="edit-time-units">'
                             + '<option selected value="1">дней</option><option value="2">часов</option>';
                     }
                     else {
-                        modalEdit += '<input id="Days" type="number" class="no-spinners" min="1" max="100" name="Hours" value="' + hours + '">'
+                        modalEdit += '<input id="Days" type="number" class="no-spinners" min="' + minValue + '" max="' + maxValue
+                            + '" name="Hours" value="' + hours + '" step="1" oninput="validity.valid||(value=\'\');">'
                             + '<div class="qtyInc"></div></div></div>'
                             + '<div class="bidding-field"><select class="selectpicker default with-border" id="edit-time-units">'
                             + '<option value="1">дней</option><option selected value="2">часов</option>';
