@@ -54,13 +54,13 @@
 
             <div style="margin-bottom: 30px;" class="single-page-section">
                 <h3>Вложения заказчика <span style="color: white" class="nav-tag" id="Myattaches">@Model.MyAttachments.Count </span></h3>
-                @if(Request.IsAuthenticated && Model.MyAttachments.Count()>0)
+                @if (Request.IsAuthenticated && Model.MyAttachments.Count() > 0)
                 {
                     <a style="margin-bottom:20px" id="getArch"
                        class="button gray ripple-effect button-sliding-icon"
                        href="@Url.Action("GetArchive", "Custom", new { id = Model.Id })">Скачать все архивом<i class="icon-feather-arrow-down"></i></a>
                 }
-                
+
                 <div id="Uploaded_Results_My" class="attachments-container">
                     @{ var id = 1; }
                     @foreach (var i in Model.MyAttachments)
@@ -71,7 +71,7 @@
                 </div>
                 <br />
 
-                @if (Request.IsAuthenticated && Model.UserId == User.Identity.GetUserId() && Model.Status!=HelpMe.Models.CustomStatus.Close)
+                @if (Request.IsAuthenticated && Model.UserId == User.Identity.GetUserId() && Model.Status != HelpMe.Models.CustomStatus.Close)
                 {
                     <div class="accordion js-accordion">
 
@@ -144,8 +144,8 @@
                                             </div>
                                             <div class="input-with-icon-left no-border">
                                                 <i class="icon-material-outline-local-atm"></i>
-                                                <input style="width:250px" name="ExecutorPrice" id="ExecutorPrice" 
-                                                       type="number" min="0" max="25000" step="1" class="input-text no-spinners" 
+                                                <input style="width:250px" name="ExecutorPrice" id="ExecutorPrice"
+                                                       type="number" min="0" max="25000" step="1" class="input-text no-spinners"
                                                        oninput="validity.valid||(value='');" placeholder="Цена">
                                             </div>
                                             <input id="add-solution" type="submit" value="Загрузить" class="button ripple-effect margin-top-10" />
@@ -189,10 +189,10 @@
                                                     data_tippy_placement = "top"
                                                 }
 
-                                               @* new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
-                                                new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
+                                                    @* new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
+                                                        new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
 
-                                                )
+                                                    )
                                         }
                                         @if (Model.UserId == User.Identity.GetUserId())
                                         {
@@ -380,7 +380,7 @@
                                                         @*@Html.Hidden("Id", c.Id.ToString())*@
                                                         @Html.Hidden("UserId", c.UserId.ToString())
                                                         @Html.Hidden("CustomViewModelId", c.CustomViewModelId.ToString())
-                                                        @Html.Hidden("CreationDate",c.CreationDate.ToString())
+                                                        @Html.Hidden("CreationDate", c.CreationDate.ToString())
                                                         @Html.Hidden("Description", c.Description.ToString())
 
                                                         var timeCount = c.Days;
@@ -402,7 +402,7 @@
                                                                     <!-- Quantity Buttons -->
                                                                     <div class="qtyButtons with-border">
                                                                         <div class="qtyDec"></div>
-                                                                        <input id="Days" class="no-spinners" type="number" min="1" max="100" 
+                                                                        <input id="Days" class="no-spinners" type="number" min="1" max="100"
                                                                                step="1" name="@nameTime" value="@timeCount" oninput="validity.valid||(value='');">
                                                                         <div class="qtyInc"></div>
                                                                     </div>
@@ -624,7 +624,7 @@
 
                         </div>
 
-                        @using (Html.BeginForm("Accept", "Custom", new { id = Model.Id}))
+                        @using (Html.BeginForm("Accept", "Custom", new { id = Model.Id }))
                         {
                             <div class="radio">
                                 <input id="radio-accept-executor" name="radio" type="radio" required autocomplete="off"
@@ -637,16 +637,16 @@
                         }
 
                         @*<form id="terms">
-                            <div class="radio">
-                                <input id="radio-1" name="radio" type="radio" required>
-                                <label for="radio-1"><span class="radio-label"></span>  Я ознакомился с правилами</label>
-                            </div>
-                        </form>
+                                <div class="radio">
+                                    <input id="radio-1" name="radio" type="radio" required>
+                                    <label for="radio-1"><span class="radio-label"></span>  Я ознакомился с правилами</label>
+                                </div>
+                            </form>
 
-                        <a id="close-custom" href="@Url.Action("Accept", "Custom", new { id = Model.Id })" 
-                           class="margin-top-15 button full-width button-sliding-icon ripple-effect" 
-                           type="submit" form="terms">Принять <i class="icon-material-outline-arrow-right-alt"></i>
-                        </a>*@
+                            <a id="close-custom" href="@Url.Action("Accept", "Custom", new { id = Model.Id })"
+                               class="margin-top-15 button full-width button-sliding-icon ripple-effect"
+                               type="submit" form="terms">Принять <i class="icon-material-outline-arrow-right-alt"></i>
+                            </a>*@
                     </div>
                 </div>
             </div>
@@ -684,9 +684,9 @@
                         <a id="send-for-revision" href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
                     }
                     @*else if (Model.Status == HelpMe.Models.CustomStatus.Revision)
-                    {
-                        <a style="margin-bottom:20px" href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim">Подтвердить выполнение <i class="icon-material-outline-check"></i></a>
-                    }*@
+                        {
+                            <a style="margin-bottom:20px" href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim">Подтвердить выполнение <i class="icon-material-outline-check"></i></a>
+                        }*@
                 }
 
                 <div class="js-accordion sidebar-widget">
@@ -778,7 +778,7 @@
                                         <!-- Quantity Buttons -->
                                         <div class="qtyButtons">
                                             <div class="qtyDec"></div>
-                                            <input id="time" class="no-spinners" min="1" max="100" type="number" name="qtyInput" 
+                                            <input id="time" class="no-spinners" min="1" max="100" type="number" name="qtyInput"
                                                    step="1" value="1" oninput="validity.valid||(value='');">
                                             <div class="qtyInc"></div>
                                         </div>
@@ -806,7 +806,7 @@
 
 
             </div>
-            </div>
+        </div>
 
     </div>
 </div>
@@ -817,7 +817,7 @@
 
 
 @section Scripts {
-<script>
+    <script>
     var minValue = 1;
     var maxValue = 100;
         $(document).ready(function () {
@@ -1360,6 +1360,28 @@
             });
         });
 
+        $('#buttonsCont').on('click', 'a[href="#small-dialog-4"]', function () {
+        //alert('delete');
+        var el = $('#small-dialog-4');
+        $.magnificPopup.open({
+            items: {
+                src: el,
+            },
+            type: 'inline',
+            fixedContentPos: false,
+            fixedBgPos: true,
+
+            overflowY: 'auto',
+
+            closeBtnInside: true,
+            preloader: false,
+
+            midClick: true,
+            removalDelay: 300,
+            mainClass: 'my-mfp-zoom-in'
+        });
+    });
+
 
         $("#edit-time-units").change(function () {
             if ($(this).val() == 1) {
@@ -1562,6 +1584,6 @@
                 text: 'Copied to clipboard!',
             });
         });
-</script>
+    </script>
 }
 

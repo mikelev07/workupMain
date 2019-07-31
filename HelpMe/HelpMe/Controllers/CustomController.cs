@@ -206,11 +206,32 @@ namespace HelpMe.Controllers
             var customViewModel = await db.Customs.Include(c=>c.Attachments).FirstOrDefaultAsync(c=> c.Id==customId);
             
             db.Attachments.Remove(attach);
-            if (customViewModel.Attachments.Where(a => a.AttachStatus == AttachStatus.NotPurchased).Count() == 0)
+
+            var attachments = customViewModel.Attachments;
+            var revisions = attachments.Where(a => a.IsRevision == true);
+            if (attachments.Where(a=>a.AttachStatus==AttachStatus.NotPurchased).Count()==0)
             {
                 db.Entry(customViewModel).State = EntityState.Modified;
-                customViewModel.Status = CustomStatus.Check;//выполняется исполнителем
+                if (attachments.Where(a => a.AttachStatus == AttachStatus.Purchased).Count() == 0)
+                {
+                    customViewModel.Status = CustomStatus.Check;//выполняется исполнителем
+                }
+                else
+                {
+                    if(!customViewModel.IsRevision)
+                    {
+                        customViewModel.Status = CustomStatus.CheckCustom;//проверяется заказчиком
+                    }
+                    else
+                    {
+                        if(revisions.Count()==0)
+                        {
+                            customViewModel.Status = CustomStatus.Revision;//на доработке
+                        }
+                    }
+                }
             }
+
             await db.SaveChangesAsync();
             return Json(true);
         }
@@ -285,6 +306,12 @@ namespace HelpMe.Controllers
                         attach.CustomViewModelId = Convert.ToInt32(Request.Form["CustomViewModelId"]);
                         attach.AttachFilePath = path;
                         attach.AttachStatus = AttachStatus.NotPurchased;
+
+                        if(customViewModel.IsRevision)//см. коммент в методе Accept
+                        {
+                            attach.IsRevision = true;
+                        }
+
                         attach.UserId = User.Identity.GetUserId();
                         db.Attachments.Add(attach);
                         SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
@@ -718,7 +745,7 @@ namespace HelpMe.Controllers
             var executorId = await db.Customs.Where(c=>c.Id==id).Select(c=>c.ExecutorId).FirstOrDefaultAsync();
             var wallet = await db.Wallets.Where(w => w.UserId == executorId).FirstOrDefaultAsync();
             
-            foreach(var t in transactions)
+            foreach(var t in transactions.Where(t=>t.Status==TransactionStatus.Waiting))
             {
                 t.Status = TransactionStatus.Success;
                 wallet.Summ += t.Price;
@@ -732,8 +759,29 @@ namespace HelpMe.Controllers
                                                               .Include(c => c.Attachments)
                                                               .FirstOrDefaultAsync(c => c.Id == id);
 
+            /*
+             Мысль такая: когда мы отправили заказ на доработку (метод Revision), то:
+                    -в заказ проставляется атрибут IsRevision = true
+                    -все новые прикрепленные решения (в заказе с таким флагом) также получают атрибут IsRevision = true
+             Когда мы закрываем заказ (метод Accept), то:
+                    -снимаем атрибут IsRevision в заказе
+                    -снимаем атрибут IsRevision со всех решений, являвшихся доработками
+             Логика в следующем: чтобы отличать новую доработку от старой. То есть когда цикл доработки завершен, 
+             то считаем все купленные доработки уже обычными решениями. А если откроется еще одна доработка, то мы 
+             сразу сможем отличить новые прикрепленные доработки от старых доработок. Как-то так. 
+             */
+            if (customViewModel.IsRevision)
+            {
+                var revisions = customViewModel.Attachments.Where(a => a.IsRevision);
+                foreach(var rev in revisions)
+                {
+                    rev.IsRevision = false;
+                }
+            }
+            
             db.Entry(customViewModel).State = EntityState.Modified;
             customViewModel.Status = CustomStatus.Close;
+            customViewModel.IsRevision = false;
             await db.SaveChangesAsync();
             SendMessage("Вы закрыли заказ", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, customViewModel.User.UserName + "подтвердил выполнение заказа");
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
@@ -750,6 +798,9 @@ namespace HelpMe.Controllers
                                                               .FirstOrDefaultAsync(c => c.Id == id);
 
             db.Entry(customViewModel).State = EntityState.Modified;
+
+            customViewModel.IsRevision = true;//см. коммент в методе Accept
+
             customViewModel.Status = CustomStatus.Revision; // на доработку
             await db.SaveChangesAsync();
             SendMessage("Вы отправили заказ на доработку", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, customViewModel.User.UserName + "отправил заказ на доработку");

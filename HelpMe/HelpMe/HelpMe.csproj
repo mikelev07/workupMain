@@ -311,6 +311,10 @@
     <Compile Include="Migrations\201907261244364_CustomViewModelIsRevision.Designer.cs">
       <DependentUpon>201907261244364_CustomViewModelIsRevision.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201907310719521_IsRevisionAttach.cs" />
+    <Compile Include="Migrations\201907310719521_IsRevisionAttach.Designer.cs">
+      <DependentUpon>201907310719521_IsRevisionAttach.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationRoleManager.cs" />
@@ -644,6 +648,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907261244364_CustomViewModelIsRevision.resx">
       <DependentUpon>201907261244364_CustomViewModelIsRevision.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907310719521_IsRevisionAttach.resx">
+      <DependentUpon>201907310719521_IsRevisionAttach.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
