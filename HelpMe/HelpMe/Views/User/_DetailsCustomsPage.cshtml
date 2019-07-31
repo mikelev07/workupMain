@@ -9,7 +9,7 @@
             <div class="item-content">
                 <h4>Заказ <span>@custom.Description</span></h4>
                 <div class="item-details margin-top-10">
-                    <div class="detail-item"><i class="icon-material-outline-date-range"></i> @custom.StartDate.ToShortDateString()</div>
+                    <div class="detail-item"><i class="icon-material-outline-date-range"></i> @custom.StartDate.ToString("dd MMMM yyyy HH:mm:ss")</div>
                 </div>
                 @{ 
                     string customResultText = "Сделано в срок";

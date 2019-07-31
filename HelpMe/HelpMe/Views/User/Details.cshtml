@@ -138,7 +138,7 @@
                                     @if (Model.Customs.Count() > 0)
                                     {
                                         Html.Partial("_DetailsCustomsPage", Model.Customs.Where(c => c.Status == HelpMe.Models.CustomStatus.Close).OrderByDescending(c => c.EndingDate).ToPagedList(
-                                            (int)ViewData["CustomsPage"], (int)ViewData["CustomsPageSize"]));
+                                            (int)Session["CustomsPage"], (int)Session["CustomsPageSize"]));
                                     }
                                     else
                                     {
@@ -210,12 +210,19 @@
                         <div class="accordion-body__contents">
                             <!-- Boxed List -->
                             <div class="boxed-list margin-bottom-60">
-
+                                <div class="sort-by">
+                                    <span>Сортировать по:</span>
+                                    <select class="selectpicker hide-tick" id="sortReviews" autocomplete="off">
+                                        <option value="1" selected>Новым</option>
+                                        <option value="2">Давним</option>
+                                        <option value="3">Рейтингу</option>
+                                    </select>
+                                </div>
                                 <ul id="rew" class="boxed-list-ul">
                                     @if (Model.Reviews.Count() > 0)
                                     {
                                         @Html.Partial("_DetailsReviewsPage", Model.Reviews.OrderByDescending(r => r.Date).ToPagedList(
-                                       (int)ViewData["ReviewsPage"], (int)ViewData["ReviewsPageSize"]));
+                                       (int)Session["ReviewsPage"], (int)Session["ReviewsPageSize"]));
                                     }
                                     else
                                     {
@@ -583,6 +590,27 @@
                 alert("Browser does not support HTML5.");
             }
         }
+
+        $('#sortReviews').on('change', function () {
+            var sortType = $(this).val();
+            //console.log('sortType = ' + sortType);
+            $("#rew").load('@Url.Action("Details", "User")?userName=@Model.UserName&reviewsSortSelected=true&reviewSortType=' + sortType);
+            @*$.ajax({
+                type: 'GET',
+                url: "/User/Details",
+                data: {
+                    'userName': '@Model.UserName',
+                    'reviewsSortSelected': true,
+                    'sortType': sortType
+                },
+                success: function (data) {
+
+                },
+                error: function (data) {
+                    console.log(data.responseText);
+                }
+            });*@
+        });
 
         $('body').on('click', '#customs-history .pagination a', function (event) {
             event.preventDefault();

@@ -183,9 +183,28 @@ namespace HelpMe.Controllers
             return Json(skills, JsonRequestBehavior.AllowGet);
         }
 
+        public IEnumerable<Review> SortUserReviews(IEnumerable<Review> reviews, int sortType)
+        {
+            switch (sortType)
+            {
+                case 2://по давним
+                    reviews = reviews.OrderBy(r => r.Date);
+                    break;
+                case 3://по рейтингу
+                    reviews = reviews.OrderByDescending(r => r.Rating);
+                    break;
+                default://по новым(по умолчанию)
+                    reviews = reviews.OrderByDescending(r => r.Date);
+                    break;
+            }
+            return reviews;
+        }
+
 
         // GET: User/Details/5
-        public async Task<ActionResult> Details(string userName, bool? customsPaginated, int? customsPage, bool? reviewsPaginated, int? reviewsPage)
+        public async Task<ActionResult> Details(string userName, 
+            bool? customsPaginated, int? customsPage, 
+            bool? reviewsSortSelected, int? reviewSortType, bool? reviewsPaginated, int? reviewsPage)
         {
             if (userName == null)
             {
@@ -204,22 +223,33 @@ namespace HelpMe.Controllers
                 return HttpNotFound();
             }
 
-            ViewData["ReviewsPage"] = reviewsPage ?? ViewData["ReviewsPage"] ?? 1;
-            ViewData["CustomsPage"] = customsPage ?? ViewData["CustomsPage"] ?? 1;
 
+            if (reviewSortType != null) // сбрасываем страницу отзывов на 1, если была выбрана новая сортировка
+            {
+                Session["ReviewsPage"] =  1;
+            }
+            else
+            {
+                Session["ReviewsPage"] = reviewsPage ?? Session["ReviewsPage"] ?? 1;
+            }
+
+            Session["CustomsPage"] = customsPage ?? Session["CustomsPage"] ?? 1;
+
+            Session["ReviewsSortType"] = reviewSortType ?? Session["ReviewsSortType"] ?? 1;
+            
             if (Request.IsAjaxRequest())
             {
                 if (customsPaginated == true)
                 {
                     return PartialView("_DetailsCustomsPage",
                         user.Customs?.OrderByDescending(c => c.EndingDate)
-                        .ToPagedList((int)ViewData["CustomsPage"], customsPageSize));
+                        .ToPagedList((int)Session["CustomsPage"], customsPageSize));
                 }
-                if (reviewsPaginated == true)
+                if (reviewsPaginated == true || reviewsSortSelected==true)
                 {
-                    return PartialView("_DetailsReviewsPage",
-                        user.Reviews?.OrderByDescending(r => r.Date)
-                        .ToPagedList((int)ViewData["ReviewsPage"], reviewsPageSize));
+                    var sortReviews = SortUserReviews(user.Reviews, (int)Session["ReviewsSortType"]);
+                    var pagedReviews = sortReviews.ToPagedList((int)Session["ReviewsPage"], reviewsPageSize);
+                    return PartialView("_DetailsReviewsPage", pagedReviews);
                 }
             }
 
@@ -227,15 +257,15 @@ namespace HelpMe.Controllers
             customsPage = null;
             reviewsPaginated = null;
             reviewsPage = null;
-            
 
-            ViewData["UserName"] = user.UserName;
 
-            ViewData["CustomsPage"] = 1;
-            ViewData["CustomsPageSize"] = customsPageSize;
+            Session["UserName"] = user.UserName;
 
-            ViewData["ReviewsPage"] = 1;
-            ViewData["ReviewsPageSize"] = reviewsPageSize;
+            Session["CustomsPage"] = 1;
+            Session["CustomsPageSize"] = customsPageSize;
+
+            Session["ReviewsPage"] = 1;
+            Session["ReviewsPageSize"] = reviewsPageSize;
 
             return View(user);
 
