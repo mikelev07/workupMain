@@ -292,7 +292,7 @@
                 @if (Request.IsAuthenticated && Model.Id != User.Identity.GetUserId())
                 {
                     <!-- Button -->
-                    <a href="#small-dialog-2" class="apply-now-button popup-with-zoom-anim margin-bottom-20">Привлечь к заданию <i class="icon-material-outline-arrow-right-alt"></i></a>
+                    <a href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim margin-bottom-20">Привлечь к заданию <i class="icon-material-outline-arrow-right-alt"></i></a>
 
                     <a href="#small-dialog-3" class="apply-now-button popup-with-zoom-anim margin-bottom-20">Написать сообщение <i class="icon-material-outline-arrow-right-alt"></i></a>
 
@@ -430,27 +430,6 @@
                             <div class="clearfix"></div>
                             <!-- Leave Rating / End-->
                         </div>
-                        @*<div class="row">
-                                <div class="col-xl-12">
-                                    <div class="input-with-icon-left" title="Ваш никнейм" data-tippy-placement="bottom">
-                                        <i class="icon-material-outline-account-circle"></i>
-                                        <input type="text" class="input-text with-border" name="name" id="name" readonly placeholder="@User.Identity.Name" />
-                                    </div>
-                                </div>
-
-                                <div class="col-xl-12">
-                                    <div class="input-with-icon-left">
-                                        <i class="icon-material-outline-rate-review"></i>
-                                        <input type="text" class="input-text with-border" name="reviewtitle" id="reviewtitle" placeholder="Описание" required />
-                                    </div>
-                                </div>
-                            </div>*@
-                        @*<div class="row">
-                                <div class="col-xl-12">
-                                    <i class="icon-material-outline-rate-review"></i>
-                                    <textarea class="with-border" rows="5" cols="7" placeholder="Оставьте отзыв об исполнителе" required></textarea>
-                                </div>
-                            </div>*@
                         @Html.TextArea("Description", "", new { rows = "5", cols = "7", @placeholder = "Оставьте развернутый отзыв...", @class = "with-border" })
                         @Html.Hidden("OwnerId", Model.Id)
                         <!-- Button -->
@@ -501,13 +480,13 @@
     </div>
     <!-- Make an Offer Popup
     ================================================== -->
-    <div id="small-dialog-2" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+    <div id="small-dialog-4" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
 
         <!--Tabs -->
         <div class="sign-in-form">
 
             <ul class="popup-tabs-nav">
-                <li><a href="#tab">Сделать предложение</a></li>
+                <li><a href="#tab">Привлечь к заказу</a></li>
             </ul>
 
             <div class="popup-tabs-container">
@@ -521,57 +500,53 @@
                     </div>
 
                     <!-- Form -->
-                    <form method="post">
-
-                        <select class="selectpicker" data-live-search="true">
-                            <option>Soda Poppin</option>
-
-                        </select>
+                    <form id="attract-to-custom" method="post">
+                        @Html.DropDownList("Ваши заказы", ViewData["CustomsList"] as SelectList,
+                   "Не выбрано", new { id = "CustomsList", @class = "selectpicker", data_live_search="true", autocomplete = "off"})
                         <br />
+                        @*<textarea name="textarea" cols="10" placeholder="Сообщение" class="with-border"></textarea>*@
 
-                        <textarea name="textarea" cols="10" placeholder="Сообщения" class="with-border"></textarea>
 
+                        <!-- Button -->
+                        <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Сделать предложение <i class="icon-material-outline-arrow-right-alt"></i></button>
                     </form>
-
-                    <!-- Button -->
-                    <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Сделать предложение <i class="icon-material-outline-arrow-right-alt"></i></button>
-
                 </div>
+
                 <!-- Login -->
-                <div class="popup-tab-content" id="loginn">
+                @*<div class="popup-tab-content" id="loginn">
 
-                    <!-- Welcome Text -->
-                    <div class="welcome-text">
-                        <h3>Discuss Your Project With Tom</h3>
-                    </div>
-
-                    <!-- Form -->
-                    <form method="post" id="make-an-offer-form">
-
-                        <div class="input-with-icon-left">
-                            <i class="icon-material-outline-account-circle"></i>
-                            <input type="text" class="input-text with-border" name="name2" id="name2" placeholder="First and Last Name" required />
+                        <!-- Welcome Text -->
+                        <div class="welcome-text">
+                            <h3>Discuss Your Project With Tom</h3>
                         </div>
 
-                        <div class="input-with-icon-left">
-                            <i class="icon-material-baseline-mail-outline"></i>
-                            <input type="text" class="input-text with-border" name="emailaddress2" id="emailaddress2" placeholder="Email Address" required />
-                        </div>
+                        <!-- Form -->
+                        <form method="post" id="make-an-offer-form">
 
-                        <textarea name="textarea" cols="10" placeholder="Message" class="with-border"></textarea>
+                            <div class="input-with-icon-left">
+                                <i class="icon-material-outline-account-circle"></i>
+                                <input type="text" class="input-text with-border" name="name2" id="name2" placeholder="First and Last Name" required />
+                            </div>
 
-                        <div class="uploadButton margin-top-25">
-                            <input class="uploadButton-input" type="file" accept="image/*, application/pdf" id="upload-cv" multiple />
-                            <label class="uploadButton-button" for="upload-cv">Add Attachments</label>
-                            <span class="uploadButton-file-name">Allowed file types: zip, pdf, png, jpg <br> Max. files size: 50 MB.</span>
-                        </div>
+                            <div class="input-with-icon-left">
+                                <i class="icon-material-baseline-mail-outline"></i>
+                                <input type="text" class="input-text with-border" name="emailaddress2" id="emailaddress2" placeholder="Email Address" required />
+                            </div>
 
-                    </form>
+                            <textarea name="textarea" cols="10" placeholder="Message" class="with-border"></textarea>
 
-                    <!-- Button -->
-                    <button class="button full-width button-sliding-icon ripple-effect" type="submit" form="make-an-offer-form">Make an Offer <i class="icon-material-outline-arrow-right-alt"></i></button>
+                            <div class="uploadButton margin-top-25">
+                                <input class="uploadButton-input" type="file" accept="image/*, application/pdf" id="upload-cv" multiple />
+                                <label class="uploadButton-button" for="upload-cv">Add Attachments</label>
+                                <span class="uploadButton-file-name">Allowed file types: zip, pdf, png, jpg <br> Max. files size: 50 MB.</span>
+                            </div>
 
-                </div>
+                        </form>
+
+                        <!-- Button -->
+                        <button class="button full-width button-sliding-icon ripple-effect" type="submit" form="make-an-offer-form">Make an Offer <i class="icon-material-outline-arrow-right-alt"></i></button>
+
+                    </div>*@
 
             </div>
         </div>
@@ -581,6 +556,38 @@
 @section scripts{
     <script type="text/javascript">
 
+        $('#attract-to-custom').submit( function (e) {
+            var customsListId = $("#CustomsList").val();
+            //alert('zbs');
+            if (customsListId) {
+                $.ajax({
+                    url: "/User/AttractToCustom",
+                    data: {
+                        'yourMessage': 'Вы предложили заказ исполнителю ' + '@Model.UserName',
+                        'customId': customsListId,
+                        'userFromName': '@User.Identity.Name',
+                        'userToName': '@Model.UserName',
+                        'sentMessage': "предложил вам выполнить заказ"
+                    },
+                    success: function (data) {
+                        if (data == 'False') {
+                            Snackbar.show({
+                                text: 'Вы уже привлекали этого исполнителя к текущему заказу!',
+                            });
+                        }
+                    },
+                    error: function (data) {
+                        console.log('SendMessage is gone bad');
+                    }
+                });
+            }
+            else {
+                Snackbar.show({
+                    text: 'Сперва выберите заказ!',
+                });
+            }
+            e.preventDefault();
+        });
 
         function ChangeUrl(page, url) {
             if (typeof (history.pushState) != "undefined") {
@@ -595,22 +602,9 @@
             var sortType = $(this).val();
             //console.log('sortType = ' + sortType);
             $("#rew").load('@Url.Action("Details", "User")?userName=@Model.UserName&reviewsSortSelected=true&reviewSortType=' + sortType);
-            @*$.ajax({
-                type: 'GET',
-                url: "/User/Details",
-                data: {
-                    'userName': '@Model.UserName',
-                    'reviewsSortSelected': true,
-                    'sortType': sortType
-                },
-                success: function (data) {
 
-                },
-                error: function (data) {
-                    console.log(data.responseText);
-                }
-            });*@
         });
+
 
         $('body').on('click', '#customs-history .pagination a', function (event) {
             event.preventDefault();
@@ -648,5 +642,6 @@
                 }
             });
         });
+        
     </script>
 }
