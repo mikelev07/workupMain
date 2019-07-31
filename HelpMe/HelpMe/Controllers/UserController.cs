@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using PagedList;
+using HelpMe.Hubs;
 
 namespace HelpMe.Controllers
 {
@@ -183,9 +184,28 @@ namespace HelpMe.Controllers
             return Json(skills, JsonRequestBehavior.AllowGet);
         }
 
+        public IEnumerable<Review> SortUserReviews(IEnumerable<Review> reviews, int sortType)
+        {
+            switch (sortType)
+            {
+                case 2://по давним
+                    reviews = reviews.OrderBy(r => r.Date);
+                    break;
+                case 3://по рейтингу
+                    reviews = reviews.OrderByDescending(r => r.Rating);
+                    break;
+                default://по новым(по умолчанию)
+                    reviews = reviews.OrderByDescending(r => r.Date);
+                    break;
+            }
+            return reviews;
+        }
+
 
         // GET: User/Details/5
-        public async Task<ActionResult> Details(string userName, bool? customsPaginated, int? customsPage, bool? reviewsPaginated, int? reviewsPage)
+        public async Task<ActionResult> Details(string userName, 
+            bool? customsPaginated, int? customsPage, 
+            bool? reviewsSortSelected, int? reviewSortType, bool? reviewsPaginated, int? reviewsPage)
         {
             if (userName == null)
             {
@@ -204,94 +224,108 @@ namespace HelpMe.Controllers
                 return HttpNotFound();
             }
 
-            ViewData["ReviewsPage"] = reviewsPage ?? ViewData["ReviewsPage"] ?? 1;
-            ViewData["CustomsPage"] = customsPage ?? ViewData["CustomsPage"] ?? 1;
 
+            if (reviewSortType != null) // сбрасываем страницу отзывов на 1, если была выбрана новая сортировка
+            {
+                Session["ReviewsPage"] =  1;
+            }
+            else
+            {
+                Session["ReviewsPage"] = reviewsPage ?? Session["ReviewsPage"] ?? 1;
+            }
+
+            Session["CustomsPage"] = customsPage ?? Session["CustomsPage"] ?? 1;
+
+            Session["ReviewsSortType"] = reviewSortType ?? Session["ReviewsSortType"] ?? 1;
+            
             if (Request.IsAjaxRequest())
             {
                 if (customsPaginated == true)
                 {
                     return PartialView("_DetailsCustomsPage",
                         user.Customs?.OrderByDescending(c => c.EndingDate)
-                        .ToPagedList((int)ViewData["CustomsPage"], customsPageSize));
+                        .ToPagedList((int)Session["CustomsPage"], customsPageSize));
                 }
-                if (reviewsPaginated == true)
+                if (reviewsPaginated == true || reviewsSortSelected==true)
                 {
-                    return PartialView("_DetailsReviewsPage",
-                        user.Reviews?.OrderByDescending(r => r.Date)
-                        .ToPagedList((int)ViewData["ReviewsPage"], reviewsPageSize));
+                    var sortReviews = SortUserReviews(user.Reviews, (int)Session["ReviewsSortType"]);
+                    var pagedReviews = sortReviews.ToPagedList((int)Session["ReviewsPage"], reviewsPageSize);
+                    return PartialView("_DetailsReviewsPage", pagedReviews);
                 }
             }
 
             customsPaginated = null;
             customsPage = null;
+            reviewsSortSelected = null;
+            reviewSortType = null;
             reviewsPaginated = null;
             reviewsPage = null;
-            
 
-            ViewData["UserName"] = user.UserName;
 
-            ViewData["CustomsPage"] = 1;
-            ViewData["CustomsPageSize"] = customsPageSize;
+            Session["UserName"] = user.UserName;
 
-            ViewData["ReviewsPage"] = 1;
-            ViewData["ReviewsPageSize"] = reviewsPageSize;
+            Session["CustomsPage"] = 1;
+            Session["CustomsPageSize"] = customsPageSize;
+
+            Session["ReviewsPage"] = 1;
+            Session["ReviewsPageSize"] = reviewsPageSize;
+
+            //Если данный пользователь - заказчик, то подгрузим его заказы
+            var customerId = User.Identity.GetUserId();
+            if(customerId != null)
+            {
+                var customsList = await db.Customs.Where(c => c.UserId == customerId).ToListAsync();
+                ViewData["CustomsList"] = new SelectList(customsList, "Id", "Name");
+            }
 
             return View(user);
 
         }
 
-        //private IEnumerable<UserViewModel> GetReviewsPage(IEnumerable<UserViewModel> usersWithRoles, int page)
-        //{
+        public async Task<bool> AttractToCustom(string yourMessage, int customId, string userFromName, string userToName, string sentMessage)
+        {
+            bool hasAlreadyNotification = await db.Notifications.AnyAsync(n => n.Url == ("/Custom/Details/" + customId));
+            if (hasAlreadyNotification)
+            {
+                return false;
+            }
 
-        //    var usersToSkip = page * pageSize;
-        //    var users = usersWithRoles.Skip(usersToSkip).Take(pageSize);
-        //    return users.ToList();
-        //}
+            var userFrom = await db.Users.FirstOrDefaultAsync(x => x.UserName == userFromName);
+            var userFromId = userFrom.Id;
+            var userTo = await db.Users.FirstOrDefaultAsync(x => x.UserName == userToName);
+            var userToId = userTo.Id;
+            string url = "/Custom/Details/" + customId;
+            var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
 
-        /*
-           // POST: ApplicationUser/Edit/5
-           // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-           // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-           [HttpPost]
-           [ValidateAntiForgeryToken]
-           public async Task<ActionResult> Edit([Bind(Include = "Id,Age,Description,Email,EmailConfirmed,PasswordHash,SecurityStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEndDateUtc,LockoutEnabled,AccessFailedCount,UserName")] ApplicationUser applicationUser)
-           {
-               if (ModelState.IsValid)
-               {
-                   db.Entry(applicationUser).State = EntityState.Modified;
-                   await db.SaveChangesAsync();
-                   return RedirectToAction("Index");
-               }
-               return View(applicationUser);
-           }
+            Notification notification = new Notification {
+                Id = 1,
+                Title = yourMessage,
+                Status = NotificationStatus.Unreading,
+                Url = url,
+                UserName = userFromName,
+                ExUserName = userToName,
+                UserId = userToId,
+                Description = sentMessage
+            };
+            Notification notification2 = new Notification {
+                Id = 2,
+                Title = yourMessage,
+                Status = NotificationStatus.Unreading,
+                Url = url,
+                UserName = userFromName,
+                ExUserName = userToName,
+                UserId = userFromId,
+                Description = sentMessage
+            };
 
-           // GET: ApplicationUser/Delete/5
-           /*
-           public async Task<ActionResult> Delete(string id)
-           {
-               if (id == null)
-               {
-                   return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-               }
-              // ApplicationUser applicationUser = await db.Users.FindAsync(id);
-             //  if (applicationUser == null)
-               {
-                   return HttpNotFound();
-               }
-              // return View(applicationUser);
-           }
+            db.Notifications.Add(notification);
+            db.Notifications.Add(notification2);
+            db.SaveChanges();
+            context.Clients.User(userFromId).displayMessage(yourMessage);
+            context.Clients.User(userToId).displayMessage(yourMessage);
 
-           // POST: ApplicationUser/Delete/5
-           [HttpPost, ActionName("Delete")]
-           [ValidateAntiForgeryToken]
-           public async Task<ActionResult> DeleteConfirmed(string id)
-           {
-              // ApplicationUser applicationUser = await db.Users.FindAsync(id);
-             //  db.Users.Remove(applicationUser);
-               await db.SaveChangesAsync();
-               return RedirectToAction("Index");
-           } */
+            return true;
+        }
 
         protected override void Dispose(bool disposing)
         {
