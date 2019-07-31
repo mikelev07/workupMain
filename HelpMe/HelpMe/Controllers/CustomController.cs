@@ -192,6 +192,12 @@ namespace HelpMe.Controllers
             return PartialView(customViewModel);
         }
 
+        public ActionResult LoadButtonArch(int? id)
+        {
+            var customViewModel = db.Customs.Where(c => c.Id == id).SingleOrDefault();
+            return PartialView(customViewModel);
+        }
+
         public async Task<int> NotPurchasedAttaches(int? id)
         {
             return await db.Attachments.Where(a => a.CustomViewModelId == id).CountAsync(a=>a.AttachStatus==AttachStatus.NotPurchased);

@@ -31,8 +31,9 @@
                     </div>
                     <div class="right-side">
                         <div class="salary-box">
+                           
                             <div class="salary-type">Бюджет задания</div>
-                            <div class="salary-amount">@Model.Price руб.</div>
+                            <div style="@(Model.Price != 0 ? "" : "font-size: 20px;")" class="salary-amount">@(Model.Price != 0 ? Model.Price + "руб." : "По договоренности")</div>
                         </div>
 
                     </div>
@@ -54,6 +55,7 @@
 
             <div style="margin-bottom: 30px;" class="single-page-section">
                 <h3>Вложения заказчика <span style="color: white" class="nav-tag" id="Myattaches">@Model.MyAttachments.Count </span></h3>
+                <div id="getAr"></div>
                 @if (Request.IsAuthenticated && Model.MyAttachments.Count() > 0)
                 {
                     <a style="margin-bottom:20px" id="getArch"
@@ -77,7 +79,7 @@
 
                         <!-- Accordion Item -->
                         <div class="accordion__item js-accordion-item">
-                            <div class="accordion-header js-accordion-header">
+                            <div id="attbank" class="accordion-header js-accordion-header">
                                 <span id="textAttach">Добавить вложение</span>
                                 <div style="left:50%" class="lds-ring"><div></div><div></div><div></div><div></div></div>
                             </div>
@@ -140,13 +142,17 @@
                                             </div>
                                             <div class="progress"></div>
                                             <div class="section-headline margin-top-25 margin-bottom-12">
-                                                <h5>Укажите цену для вложения</h5>
+                                                <h5>Укажите цену решения</h5>
                                             </div>
                                             <div class="input-with-icon-left no-border">
                                                 <i class="icon-material-outline-local-atm"></i>
                                                 <input style="width:250px" name="ExecutorPrice" id="ExecutorPrice"
                                                        type="number" min="0" max="25000" step="1" class="input-text no-spinners"
                                                        oninput="validity.valid||(value='');" placeholder="Цена">
+                                                <div class="checkbox">
+                                                    <input type="checkbox" id="chekcbox1">
+                                                    <label for="chekcbox1"><span class="checkbox-icon"></span>Бесплатная доработка</label>
+                                                </div>
                                             </div>
                                             <input id="add-solution" type="submit" value="Загрузить" class="button ripple-effect margin-top-10" />
                                         </div>
@@ -164,17 +170,17 @@
                 <div class="single-page-section">
                     <h3>Вложения исполнителя <span style="color: white" class="nav-tag" id="attachments">@Model.Attachments.Count </span></h3>
                     <div id="Uploaded_Results">
-                        <div style=" margin-bottom:35px;" id="itemAttach">
+                        <div style="margin-bottom:35px;" id="itemAttach">
                             <div class="attachments-container">
                                 @{ var idnew = 1; }
                                 @foreach (var i in Model.Attachments)
                                 {
-                                    <div>
+                                   
                                         <a style='@(i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased && Model.ExecutorId != User.Identity.GetUserId() ? "pointer-events: none;" : "")'
                                            href="@Url.Action("GetFileAttach", "Custom", new { path = i.AttachFilePath, id = i.Id })"
-                                           class="attachment-box ripple-effect "><span>Файл решения №@idnew</span><i>@(i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased && Model.ExecutorId != User.Identity.GetUserId() ? @i.ExecutorPrice + "руб." : "Zip")</i></a>
+                                           class="attachment-box ripple-effect "><span>Файл решения №@idnew</span><i>@(i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased ? @i.ExecutorPrice + " руб." : "Zip")</i></a>
 
-                                        @if (Model.ExecutorId == User.Identity.GetUserId() && i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
+                                        if (Model.ExecutorId == User.Identity.GetUserId() && i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
                                         {
                                             @Ajax.RawActionLink(
                                                 "<i class='icon-feather-trash-2'></i>", "DeleteAttach","Custom",
@@ -184,7 +190,7 @@
                                                 new {
                                                     id ="delete-attach",
                                                     @class = "button green ripple-effect ico",
-                                                    @style = "margin-bottom:20px;padding: 4px 9px;margin-top: -10px;",
+                                                    @style = "    margin-bottom: 67px;margin-top: 0px;padding: 3px 5px 0px 3px;margin-right: 20px; ",
                                                     title = "Удалить решение",
                                                     data_tippy_placement = "top"
                                                 }
@@ -194,7 +200,7 @@
 
                                                     )
                                         }
-                                        @if (Model.UserId == User.Identity.GetUserId())
+                                        if (Model.UserId == User.Identity.GetUserId())
                                         {
                                             if (i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
                                             {
@@ -221,7 +227,7 @@
                                             }
 
                                         }
-                                    </div>
+                                  
                                     idnew = idnew + 1;
                                 }
                             </div>
@@ -667,7 +673,7 @@
                         totalHours = 0;
                     }
                 }
-                <div class="countdown green margin-bottom-35">До завершения: @totalDays дней и @totalHours часов </div>
+                <div style="@(totalDays < 3 ? "color:#de5959; background-color:#ffe9e9" : "")" class="countdown green margin-bottom-35">@(totalDays != 0 && totalHours != 0 ? "До завершения: "+ totalDays + " дней и " + totalHours + " часов" : "Время вышло")</div>
                 <div id="buttonsCont" class="buttons-container">
                 </div>
                 @if (Model.UserId == User.Identity.GetUserId())
@@ -760,14 +766,18 @@
                             <div class="bidding-headline"><h3>Добавить предложение</h3></div>
                             <div class="bidding-inner">
                                 <!-- Headline -->
-                                <span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>
+                                <span class="bidding-detail">Укажите <strong>стоимость работы</strong> </span>
 
                                 <!-- Price Slider -->
-                                <div class="bidding-value"><span id="biddingVal"></span> руб.</div>
-                                <input id="slider-price" class="bidding-slider" type="text" value="@Model.Price"
+                                <div class="bidding-value">
+                                    <span id="biddingVal" ></span> руб. <button id="hideshow"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button>
+                                </div>
+                                <input id="amount" style="margin-bottom:5px; display:none" placeholder="Укажите цену" type="number" value="" onKeyPress="if(this.value.length>4) return false;" min="0" max="99999" />
+                                
+                                <input id="sliderPrice" class="bidding-slider" type="text" value="@Model.Price"
                                        data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
                                        data-slider-max="25000" data-slider-value="@Model.Price" data-slider-step="1"
-                                       data-slider-tooltip="hide" />
+                                       data-slider-tooltip="hide"/>
 
                                 <!-- Headline -->
                                 <span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>
@@ -799,7 +809,7 @@
                                 <button id="snackbar-place-bid" class="button ripple-effect move-on-hover full-width margin-top-30"><span>Разместить предложение</span></button>
 
                             </div>
-                            <div class="bidding-signup">Еще нет аккаунта? <a href="#sign-in-dialog" class="register-tab sign-in popup-with-zoom-anim">Регистрация</a></div>
+                            
                         </div>
                     </div>
                 }
@@ -818,8 +828,38 @@
 
 @section Scripts {
     <script>
-    var minValue = 1;
-    var maxValue = 100;
+
+        $("#chekcbox1").click(function () {
+            if ($(this).is(':checked')) {
+                $("#ExecutorPrice").prop("disabled", true);
+                $("#ExecutorPrice").css("background-color", "#f2f2f2");
+                $("#ExecutorPrice").attr("placeholder", "Бесплатно");
+            } else {
+                $("#ExecutorPrice").prop("disabled", false);
+                $("#ExecutorPrice").css("background-color", "#ffffff");
+                $("#ExecutorPrice").attr("placeholder", "Цена");
+            }
+        });
+       
+
+        var sliderMy = document.getElementById('sliderPrice');
+        var box = document.getElementById("amount");
+
+        jQuery(document).ready(function () {
+            jQuery('#hideshow').on('click', function (event) {
+                jQuery('#amount').toggle('show');
+            });
+        });
+
+        $(box).keyup(function (event) { // задаем функцию при отпускании после нажатия любой клавиши клавиатуры на элементе
+            sliderMy.value = box.value;
+            $("#biddingVal").text(box.value);
+            $("#sliderPrice").slider('setValue', box.value);
+        });
+
+        var minValue = 1;
+        var maxValue = 100;
+       // $(".lds-ring").hide();
         $(document).ready(function () {
             $("#executors-offers .lds-ring").hide();
             $("#boxed-list-ul > li:odd").css("background-color", "#fafafa");
@@ -956,10 +996,14 @@
 
         $('#add-solution').on('click', function (e) {
             $("#textAttach").hide();
+            $("#textAttach .lds-ring").children().show()
             $(".lds-ring").children().css('border-color', '#ffffff transparent transparent transparent');
             e.preventDefault();
             var c = document.getElementById('CustomViewModelId').value;
             var d = document.getElementById('ExecutorPrice').value;
+            if (document.getElementById('ExecutorPrice').value == '') {
+                d = 0;
+            }
             var files = document.getElementById('uploadFile').files;
             if (files.length > 0) {
                 if (window.FormData !== undefined) {
@@ -1025,7 +1069,9 @@
         });
 
         $('#submitAttach').on('click', function (e) {
+            $("#attbank .lds-ring").children().show();
             $("#textAttach").hide();
+           // $(".lds-ring").children().css('display', '');
             $(".lds-ring").children().css('border-color', '#ffffff transparent transparent transparent');
             e.preventDefault();
             var c = document.getElementById('CustomViewModelId').value;
@@ -1072,11 +1118,15 @@
                             $('#Uploaded_Results_My').load('@Url.Action("LoadMyAttaches", "Custom")?id=' +@Model.Id);
                             var votes = $("#Myattaches");
                             var num = $("#Myattaches").text();
+                            if (votes.text() == 0) {
+                                 $('#getAr').load('@Url.Action("LoadButtonArch", "Custom")?id=' +@Model.Id);
+                            }
                             votes.text(parseInt(num) + 1);
                             document.getElementById("uploadFile").value = "";
                             $('.uploadButton-file-name').text("Загрузите файл вложения любого формата")
                             $('.accordion-body').hide();
                             $("#textAttach").show();
+                           
                             $(".lds-ring").children().hide();
                         },
                         error: function (xhr, status, p3) {
@@ -1094,7 +1144,7 @@
         var countUserComment = 0;
         $(document).on('click', '#snackbar-place-bid', function () {
             var decription = $("textarea#desсription").val();
-            var slider = $("#slider-price").val();
+            var slider = $("#sliderPrice").val();
             var time = $("#time").val();
             var timeUnit = $("#time-unit-select").val();
 
@@ -1123,7 +1173,7 @@
                 return;
             }
             $('#votes').hide();
-            $("#executors-offers .lds-ring").show();
+           // $("#executors-offers .lds-ring").show();
 
             var hours = 0;
             var days = time;    //default
@@ -1221,7 +1271,7 @@
                         + person.Description + "</p></div></li>";
 
                     if (HasComments(@Model.Id) || countUserComment >= 1) {
-                        $(".lds-ring").children().hide();
+                        //$(".lds-ring").children().hide();
                         $('#votes').show();
                         Snackbar.show({
                             text: 'Вы не можете добавлять более 1 предложения!',
@@ -1269,7 +1319,7 @@
                     $("#add-offer-container").hide(500);
                     $("#add-offer-container").empty();
                     RangeSlider();
-                    $(".lds-ring").children().hide();
+                    //$(".lds-ring").children().hide();
                     $('#votes').show();
                     Snackbar.show({
                         text: 'Предложение успешно добавлено!',
@@ -1436,7 +1486,7 @@
                 + '<div class="bidding-headline"><h3>Добавить предложение</h3></div>'
                 + '<div class="bidding-inner"><span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>'
                 + '<div class="bidding-value"><span id="biddingVal"></span> руб.</div>'
-                + '<input id="slider-price" class="bidding-slider" type="text" value="@Model.Price" '
+                + '<input id="sliderPrice" class="bidding-slider" type="text" value="@Model.Price" '
                 + 'data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" '
                 + 'data-slider-max="25000" data-slider-value="@Model.Price" data-slider-step="50" '
                 + 'data-slider-tooltip="hide"/><span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>'

@@ -1,0 +1,11 @@
+﻿@model HelpMe.Models.CustomViewModel
+@using Microsoft.AspNet.Identity
+
+@if (Model.UserId == User.Identity.GetUserId())
+{
+
+    <a style="margin-bottom:20px" id="getArch"
+       class="button gray ripple-effect button-sliding-icon"
+       href="@Url.Action("GetArchive", "Custom", new { id = Model.Id })">Скачать все архивом<i class="icon-feather-arrow-down"></i></a>
+
+}
