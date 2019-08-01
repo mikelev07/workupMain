@@ -315,6 +315,14 @@
     <Compile Include="Migrations\201907310719521_IsRevisionAttach.Designer.cs">
       <DependentUpon>201907310719521_IsRevisionAttach.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908010641401_addAttach.cs" />
+    <Compile Include="Migrations\201908010641401_addAttach.Designer.cs">
+      <DependentUpon>201908010641401_addAttach.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908010744198_addAttachExt.cs" />
+    <Compile Include="Migrations\201908010744198_addAttachExt.Designer.cs">
+      <DependentUpon>201908010744198_addAttachExt.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationRoleManager.cs" />
@@ -652,6 +660,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907310719521_IsRevisionAttach.resx">
       <DependentUpon>201907310719521_IsRevisionAttach.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908010641401_addAttach.resx">
+      <DependentUpon>201908010641401_addAttach.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908010744198_addAttachExt.resx">
+      <DependentUpon>201908010744198_addAttachExt.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

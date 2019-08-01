@@ -94,6 +94,8 @@ namespace HelpMe.Models
         public CustomViewModel CustomViewModel { get; set; }
         public string UserId { get; set; }
         public virtual User User { get; set; }
+        public string AttachFileName { get; set; }
+        public string AttachFileExtens { get; set; }
         public string AttachFilePath { get; set; }
         [NotMapped]
         public HttpPostedFileBase AttachFile { get; set; }

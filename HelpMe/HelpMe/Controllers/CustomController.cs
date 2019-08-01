@@ -273,7 +273,7 @@ namespace HelpMe.Controllers
                        
                         attach.CustomViewModelId = Convert.ToInt32(Request.Form["CustomViewModelId"]);
                         attach.AttachFilePath = path;
-                       
+
                         attach.UserId = User.Identity.GetUserId();
                         db.MyAttachments.Add(attach);
                        // SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
@@ -302,15 +302,31 @@ namespace HelpMe.Controllers
                     {
                         // получаем имя файла
                         string fileName = System.IO.Path.GetFileName(upload.FileName);
+                      
                         // сохраняем файл в папку Files в проекте
                         upload.SaveAs(Server.MapPath("~/Files/" + fileName));
                         string path = Server.MapPath("~/Files/" + fileName);
+                        FileInfo fil = new FileInfo(path);
+                        var fileNameNew = fil.Name;
+                        int index = fileNameNew.LastIndexOf(".");
+                        if (index > 0)
+                            fileNameNew = fileNameNew.Substring(0, index); // or index + 1 to keep slash
+                        
                         // сохраняем файл в папку Files в проекте
                         upload.SaveAs(path);
                         attach.Id = 1;
                         attach.ExecutorPrice = Convert.ToInt32(Request.Form["ExecutorPrice"]);
                         attach.CustomViewModelId = Convert.ToInt32(Request.Form["CustomViewModelId"]);
                         attach.AttachFilePath = path;
+                        attach.AttachFileExtens = fil.Extension;
+                        if (fileNameNew.Length > 10)
+                        {
+                            attach.AttachFileName = fileNameNew.Substring(0, 20);
+                        }
+                        else
+                        {
+                            attach.AttachFileName = fileNameNew.PadRight(20);
+                        }
                         attach.AttachStatus = AttachStatus.NotPurchased;
 
                         if(customViewModel.IsRevision)//см. коммент в методе Accept
@@ -658,10 +674,19 @@ namespace HelpMe.Controllers
         public async Task<JsonResult> DeleteComment(int? id)
         {
             CommentViewModel commentViewModel = await db.Comments.FindAsync(id);
-            var userId = commentViewModel.CustomViewModelId;
-            db.Comments.Remove(commentViewModel);
-            await db.SaveChangesAsync();
-            return Json("");
+            CustomViewModel currentCustom = await db.Customs.Include(u => u.Executor).Where(u => u.Id == commentViewModel.CustomViewModelId).SingleOrDefaultAsync();
+            bool isExec = currentCustom.ExecutorId == User.Identity.GetUserId();
+            if (!isExec)
+            {
+                var userId = commentViewModel.CustomViewModelId;
+                db.Comments.Remove(commentViewModel);
+                await db.SaveChangesAsync();
+                return Json("");
+            }
+            else
+            {
+                return null;
+            }
             //return RedirectToAction("Index");
         }
 
@@ -670,6 +695,13 @@ namespace HelpMe.Controllers
             CustomViewModel currentCustom = await db.Customs.FindAsync(id);
             bool hasComments = currentCustom.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() >= 1;
             return Json(hasComments);
+        }
+
+        public async Task<JsonResult> IsExecutor(int id)
+        {
+            CustomViewModel currentCustom = await db.Customs.Include(u => u.Executor).Where(u => u.Id == id).SingleOrDefaultAsync();
+            bool isExec = currentCustom.ExecutorId == User.Identity.GetUserId();
+            return Json(isExec);
         }
 
 
