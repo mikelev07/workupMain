@@ -180,67 +180,84 @@
                             @{ var idnew = 1; }
                             @foreach (var i in Model.Attachments)
                             {
-                                <div style="margin-bottom:20px; margin-right:18px">
-                                    <a style='@(i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased && Model.ExecutorId != User.Identity.GetUserId() ? "pointer-events: none;" : "")'
-                                       href="@Url.Action("GetFileAttach", "Custom", new { path = i.AttachFilePath, id = i.Id })"
-                                       class="attachment-box ripple-effect "><span style="width:150px">@i.AttachFileName</span><i style="margin-left:40px">@i.ExecutorPrice руб.</i><i style="">@i.AttachFileExtens.TrimStart('.')</i></a>
+                            <div style="margin-bottom:20px; margin-right:16px">
+                                <a style='@(i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased && Model.ExecutorId != User.Identity.GetUserId() ? "pointer-events: none;" : "")'
+                                   href="@Url.Action("GetFileAttach", "Custom", new { path = i.AttachFilePath, id = i.Id })"
+                                   class="attachment-box ripple-effect "><span style="width:152px">@i.AttachFileName</span><i style="margin-left:40px">@i.ExecutorPrice руб.</i><i style="">@i.AttachFileExtens.TrimStart('.')</i></a>
 
-                                    @if (Model.ExecutorId == User.Identity.GetUserId() && i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
-                                    {
-                                        @Ajax.RawActionLink(
-                                            "<i class='icon-feather-trash-2'></i>", "DeleteAttach","Custom",
-                                            new{ id = i.Id},
+                                @if (Model.ExecutorId == User.Identity.GetUserId() && i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
+                                {
+                                    @Ajax.RawActionLink(
+                                        "<i id='fDelbuy"+ i.Id + "' class='icon-feather-trash-2'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach","Custom",
+                                        new{ id = i.Id},
 
-                                            new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach"},
-                                            new {
-                                                id ="delete-attach",
-                                                @class = "button green ripple-effect ico",
-                                                @style = "    padding: 3px 5px 3px 3px; ",
-                                                title = "Удалить решение",
-                                                data_tippy_placement = "top"
-                                            }
+                                        new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
+                                        new {
+                                            id ="delete-attach",
+                                            @class = "button green ripple-effect ico",
+                                            @style = "    padding: 3px 5px 3px 3px; ",
+                                            title = "Удалить решение",
+                                            data_tippy_placement = "top"
+                                        }
 
                                                 @* new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
-                                        new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
+                        new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
 
                                                 )
-                                    }
-                                    @if (Model.UserId == User.Identity.GetUserId())
-                                    {
-                                        if (i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
-                                        {
-                                            @Ajax.RawActionLink(
-                                           "<i id='fbuy' style='margin-top: -10px;' class='icon-material-outline-monetization-on'></i><span id='textAttachBuy'>Купить</span><div style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "Buy", "Custom",
-                                           new{id = i.Id},
+                                    @Ajax.RawActionLink(
+                                      "<i  id='fDelbuy"+ i.Id + "' class='icon-feather-edit'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach","Custom",
+                                      new{ id = i.Id},
 
-                                           new AjaxOptions{ OnBegin= "return OnBeginBuyAttach('"+@i.Id+"')",OnFailure="IsGone", OnSuccess = "OnSuccessBuyAttach", HttpMethod = "POST" },
-                                           new {
-                                               id = "buy-solution",
-                                               @class = "button ripple-effect",
-                                               @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:; margin-top: -5px;" : "    margin-top: -5px;"),
-                                               title = "Купить решение",
-                                               data_tippy_placement = "top"
-                                           }
-                                           )
-                                        }
-                                        else
-                                        {
-                                            <div style='margin-top: -10px;' class="task-tags margin-bottom-20">
-                                                <span>Работа куплена</span>
-                                            </div>
+                                      new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
+                                      new {
+                                          id ="delete-attach",
+                                          @class = "button  ripple-effect ico",
+                                          @style = "  margin-left:5px;  padding: 3px 5px 3px 3px; ",
+                                          title = "Удалить решение",
+                                          data_tippy_placement = "top"
+                                      }
 
-                                        }
-                                    }
-                                    @if (Model.ExecutorId == User.Identity.GetUserId())
+                                            @* new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
+                    new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
+
+                                            )
+                                }
+                                @if (Model.UserId == User.Identity.GetUserId())
+                                {
+                                    if (i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
                                     {
-                                        if (i.AttachStatus != HelpMe.Models.AttachStatus.NotPurchased)
-                                        {
-                                            <div style='margin-top: -10px;' class="task-tags ">
-                                                <span>Работа куплена</span>
-                                            </div>
-                                        }
+                                        @Ajax.RawActionLink(
+                                       "<i id='fbuy" + i.Id + "' style='margin-top: -10px;' class='icon-material-outline-monetization-on'></i><span id='textAttachBuy" + i.Id + "'>Купить</span><div id='ldsAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "Buy", "Custom",
+                                       new{id = i.Id},
+
+                                       new AjaxOptions{ OnBegin= "return OnBeginBuyAttach('"+@i.Id+"')",OnFailure="IsGone", OnSuccess = "OnSuccessBuyAttach", HttpMethod = "POST" },
+                                       new {
+                                           id = "buy-solution",
+                                           @class = "button ripple-effect",
+                                           @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:; margin-top: -5px;" : "    margin-top: -5px;"),
+                                           title = "Купить решение",
+                                           data_tippy_placement = "top"
+                                       }
+                                       )
                                     }
-                                </div>
+                                    else
+                                    {
+                                        <div style='margin-top: -10px;' class="task-tags margin-bottom-20">
+                                            <span>Работа куплена</span>
+                                        </div>
+
+                                    }
+                                }
+                                @if (Model.ExecutorId == User.Identity.GetUserId())
+                                {
+                                    if (i.AttachStatus != HelpMe.Models.AttachStatus.NotPurchased)
+                                    {
+                                        <div style='margin-top: -10px;' class="task-tags ">
+                                            <span>Работа куплена</span>
+                                        </div>
+                                    }
+                                }
+                            </div>
                                 idnew = idnew + 1;
                             }
                         </div>
@@ -785,7 +802,10 @@
                                 <div class="bidding-value">
                                     <span id="biddingVal" ></span> руб. <button id="hideshow"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button>
                                 </div>
-                                <input id="amount" style="margin-bottom:5px; display:none" placeholder="Укажите цену" type="number" value="" onKeyPress="if(this.value.length>4) return false;" min="0" max="99999" />
+                                <input id="amount" class="no-spinners" style="margin-bottom:5px; display:none"
+                                       placeholder="Укажите стоимость" type="number" value="0"
+                                       oninput="validity.valid||(value='');" min="0" max="25000"
+                                       data-tippy-placement="top" />
                                 
                                 <input id="sliderPrice" class="bidding-slider" type="text" value="@Model.Price"
                                        data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
@@ -887,6 +907,7 @@
                     return data;
                 },
                 error: function (data) {
+                   
                     console.log('Custom/GetCustomStatus is gone bad!');
                 }
             });
@@ -944,7 +965,11 @@
         });
 
 
-        function OnSuccessDeleteAttach() {
+        function OnSuccessDeleteAttach(attachId) {
+            $("#ldsDelAttach" + attachId).show()
+            $("#ldsDelAttach" + attachId).children().show()
+            $("#fDelbuy" + attachId).hide();
+            $("#ldsDelAttach" + attachId).children().css('border-color', '#ffffff transparent transparent transparent');
             $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id=' +@Model.Id);
             $('#attachments').text(function (i, txt) {
                 return (parseInt(txt, 10) - 1);
@@ -955,11 +980,11 @@
 
         function OnBeginBuyAttach(attachId) {
             //alert('attachId = ' + attachId);
-            $("#itemAttach .lds-ring").show()
-            $("#itemAttach .lds-ring").children().show()
-            $("#fbuy").hide();
-            $("#textAttachBuy").hide();
-            $("#itemAttach .lds-ring").children().css('border-color', '#ffffff transparent transparent transparent');
+            $("#ldsAttach" + attachId).show()
+            $("#ldsAttach" + attachId).children().show()
+            $("#fbuy" + attachId).hide();
+            $("#textAttachBuy" + attachId).hide();
+            $("#ldsAttach" + attachId).children().css('border-color', '#ffffff transparent transparent transparent');
             $.ajax({
                 type: "GET",
                 url: '@Url.Action("EnoughMoneyForBuying", "Custom")',
@@ -974,15 +999,21 @@
                         Snackbar.show({
                             text: 'Недостаточно средств на счету!',
                         });
-                        $("#fbuy").show();
-                        $("#textAttachBuy").show();
-                        $("#itemAttach .lds-ring").children().hide();
+                        $("#fbuy" + attachId).show();
+                        $("#textAttachBuy" + attachId).show();
+                        $("#ldsAttach" + attachId).children().hide();
                         return false;
                     }
                 },
                 error: function (data) {
-                    alert('Custom/EnoughMoneyForBuying is gone bad!');
-                    return false;
+                    Snackbar.show({
+                        text: 'Исполнитель удалил это решение! Перезагрузите страницу',
+                    });
+                    $("#fbuy" + attachId).show();
+                    $("#textAttachBuy" + attachId).show();
+                    $("#ldsAttach" + attachId).children().hide();
+                   // alert('Custom/EnoughMoneyForBuying is gone bad!');
+                    //return false;
                 }
             });
         }
@@ -1071,14 +1102,28 @@
                             $('#Uploaded_Results').load('@Url.Action("LoadAttaches", "Custom")?id=' +@Model.Id);
                             var votes = $("#attachments");
                             var num = $("#attachments").text();
-                            votes.text(parseInt(num) + 1);
-                            $('.accordion-body').hide();
-                            $("#textAttach").show();
-                            $(".lds-ring").children().hide();
-                            document.getElementById("uploadFile").value = "";
-                            $('.uploadButton-file-name').text("Загрузите файл решения для исполнителя любого формата")
-                            location.hash = "#" + 'Uploaded_Results';
-                            $('#ExecutorPrice').val('');
+                            if (parseInt(num) < 10) {
+                                votes.text(parseInt(num) + 1);
+                                $('.accordion-body').hide();
+                                $("#textAttach").show();
+                                $(".lds-ring").children().hide();
+                                document.getElementById("uploadFile").value = "";
+                                $('.uploadButton-file-name').text("Загрузите файл решения для исполнителя любого формата")
+                                location.hash = "#" + 'Uploaded_Results';
+                                $('#ExecutorPrice').val('');
+                            } else {
+                                Snackbar.show({
+                                    text: 'Максимум 10 файлов решений!',
+                                });
+                                $('.accordion-body').hide();
+                                $("#textAttach").show();
+                                $(".lds-ring").children().hide();
+                                document.getElementById("uploadFile").value = "";
+                                $('.uploadButton-file-name').text("Загрузите файл решения для исполнителя любого формата")
+                                location.hash = "#" + 'Uploaded_Results';
+                                $('#ExecutorPrice').val('');
+                                return;
+                            }
                         },
                         error: function (xhr, status, p3) {
                             alert(xhr.responseText);
@@ -1143,13 +1188,23 @@
                             if (votes.text() == 0) {
                                  $('#getAr').load('@Url.Action("LoadButtonArch", "Custom")?id=' +@Model.Id);
                             }
-                            votes.text(parseInt(num) + 1);
-                            document.getElementById("uploadFile").value = "";
-                            $('.uploadButton-file-name').text("Загрузите файл вложения любого формата")
-                            $('.accordion-body').hide();
-                            $("#textAttach").show();
-                           
-                            $(".lds-ring").children().hide();
+                            if (num < 10) {
+                                votes.text(parseInt(num) + 1);
+                                document.getElementById("uploadFile").value = "";
+                                $('.uploadButton-file-name').text("Загрузите файл вложения любого формата")
+                                $('.accordion-body').hide();
+                                $("#textAttach").show();
+                                $(".lds-ring").children().hide();
+                            } else {
+                                Snackbar.show({
+                                    text: 'Максимум 10 файлов решений!',
+                                });
+                                document.getElementById("uploadFile").value = "";
+                                $('.uploadButton-file-name').text("Загрузите файл вложения любого формата")
+                                $('.accordion-body').hide();
+                                $("#textAttach").show();
+                                $(".lds-ring").children().hide();
+                            }
                         },
                         error: function (xhr, status, p3) {
                             alert(xhr.responseText);
@@ -1623,6 +1678,7 @@
                 while (rgx.test(x1)) {
                     x1 = x1.replace(rgx, '$1' + ',' + '$2');
                 }
+                
                 return x1 + x2;
             }
 
@@ -1654,6 +1710,9 @@
             });
 
             $(".range-slider-single").slider();
+
+            alert($("#biddingVal").text())
+            $("#amount").val = parseInt($("#biddingVal").text());
         }
 
         // Snackbar for user status switcher

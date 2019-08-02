@@ -251,9 +251,11 @@ namespace HelpMe.Controllers
         public async Task<JsonResult> UploadAttach()
         {
             var idCustom = Convert.ToInt32(Request.Form["CustomViewModelId"]);
-            CustomViewModel customViewModel = await db.Customs.Include(c => c.User).Include(a => a.Attachments).FirstOrDefaultAsync(c => c.Id == idCustom);
-            //var count = customViewModel.MyAttachments.Count;
-            
+            CustomViewModel customViewModel = await db.Customs.Include(c => c.User).Include(a => a.Attachments).Include(a => a.MyAttachments).FirstOrDefaultAsync(c => c.Id == idCustom);
+            var count = customViewModel.MyAttachments.Count;
+
+            if (count < 10)
+            {
                 MyAttachModel attach = new MyAttachModel();
 
                 foreach (string file in Request.Files)
@@ -270,17 +272,17 @@ namespace HelpMe.Controllers
                         // сохраняем файл в папку Files в проекте
                         upload.SaveAs(path);
                         attach.Id = 1;
-                       
+
                         attach.CustomViewModelId = Convert.ToInt32(Request.Form["CustomViewModelId"]);
                         attach.AttachFilePath = path;
 
                         attach.UserId = User.Identity.GetUserId();
                         db.MyAttachments.Add(attach);
-                       // SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
+                        // SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
                         await db.SaveChangesAsync();
                     }
                 }
-            
+            }
             return Json("Файл загружен");
         }
 

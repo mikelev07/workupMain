@@ -861,6 +861,7 @@
             while (rgx.test(x1)) {
                 x1 = x1.replace(rgx, '$1' + ',' + '$2');
             }
+           
             return x1 + x2;
         }
 
@@ -886,13 +887,18 @@
         var currencyAttr = $(".range-slider").attr('data-slider-currency');
 
         $(".range-slider").slider({
+
             formatter: function (value) {
                 return currencyAttr + ThousandSeparator(parseInt(value[0])) + " - " + currencyAttr + ThousandSeparator(parseInt(value[1]));
             }
         });
-
+   
         $(".range-slider-single").slider();
 
+       
+        $('#sliderPrice').change(function () {
+            $("#amount").val($("#sliderPrice").val())
+        });
 
         /*----------------------------------------------------*/
         /*  Payment Accordion
