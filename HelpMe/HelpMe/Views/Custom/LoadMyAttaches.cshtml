@@ -5,9 +5,9 @@
 <div class="attachments-container">
     @foreach (var i in Model)
     {
-        <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = i.AttachFilePath })"><span>Файл вложения</span><i>PDF</i></a>
+        <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = i.AttachFilePath })"><span>@i.AttachFileName</span><i>@i.AttachFileExtens.TrimStart('.')</i></a>
     }
 </div>
-        <br />
+<br />
 
        

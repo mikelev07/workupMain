@@ -247,6 +247,12 @@ namespace HelpMe.Controllers
             return PartialView(allAttaches);
         }
 
+        public ActionResult LoadMainAttaches(int? id)
+        {
+            var allAttaches = db.MainAttachments.Include(c => c.CustomViewModel).Where(c => c.CustomViewModelId == id).ToList();
+            return PartialView(allAttaches);
+        }
+
         [HttpPost]
         public async Task<JsonResult> UploadAttach()
         {
@@ -699,6 +705,63 @@ namespace HelpMe.Controllers
             return Json(hasComments);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> UploadTestMultiAttach(int? id)
+        {
+            CustomViewModel customViewModel = await db.Customs.Include(c => c.User).Include(a => a.MainAttachments).Include(a => a.Attachments).FirstOrDefaultAsync(c => c.Id == id);
+            var count = customViewModel.MainAttachments.Count;
+            if (customViewModel.ExecutorId == User.Identity.GetUserId() && count < 10)
+            {
+                for (var i = 0; i < Request.Files.Count; i++)
+                {
+                    if (count < 10)
+                    {
+                        MainAttachModel attach = new MainAttachModel();
+
+                        var upload = Request.Files.Get(i);
+
+                        if (Request.Files.Get(i).FileName == "") continue;
+
+                        if (upload != null)
+                        {
+                            // получаем имя файла
+                            string fileName = System.IO.Path.GetFileName(upload.FileName);
+                            // сохраняем файл в папку Files в проекте
+                            upload.SaveAs(Server.MapPath("~/Files/" + fileName));
+                            string path = Server.MapPath("~/Files/" + fileName);
+
+                            FileInfo fil = new FileInfo(path);
+                            var fileNameNew = fil.Name;
+                            int index = fileNameNew.LastIndexOf(".");
+                            if (index > 0)
+                                fileNameNew = fileNameNew.Substring(0, index);
+                            // сохраняем файл в папку Files в проекте
+                            upload.SaveAs(path);
+                            attach.Id = 1;
+                            attach.CustomViewModelId = id;
+                            attach.AttachFilePath = path;
+                            attach.AttachFileExtens = fil.Extension;
+                            if (fileNameNew.Length > 10)
+                            {
+                                attach.AttachFileName = fileNameNew.Substring(0, 18);
+                            }
+                            else
+                            {
+                                attach.AttachFileName = fileNameNew;
+                            }
+
+                            attach.UserId = User.Identity.GetUserId();
+                            db.MainAttachments.Add(attach);
+                            // SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
+                            await db.SaveChangesAsync();
+                            count = customViewModel.MainAttachments.Count;
+                        }
+                    }
+                }
+            }
+            return Json("Файл загружен");
+        }
+
         public async Task<JsonResult> IsExecutor(int id)
         {
             CustomViewModel currentCustom = await db.Customs.Include(u => u.Executor).Where(u => u.Id == id).SingleOrDefaultAsync();
@@ -758,6 +821,7 @@ namespace HelpMe.Controllers
                                                               .Include(c => c.User)
                                                               .Include(c => c.Attachments)
                                                               .Include(c=>c.MyAttachments)
+                                                              .Include(c => c.MainAttachments)
                                                               .FirstOrDefaultAsync(c => c.Id == id);
 
             if (customViewModel == null)

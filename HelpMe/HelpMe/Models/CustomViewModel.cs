@@ -54,6 +54,7 @@ namespace HelpMe.Models
         public ICollection<CommentViewModel> Comments { get; set; }
         public ICollection<AttachModel> Attachments { get; set; }
         public ICollection<MyAttachModel> MyAttachments { get; set; }
+        public ICollection<MainAttachModel> MainAttachments { get; set; }
 
         [NotMapped]
         public TimeSpan TotalHrs
@@ -69,8 +70,25 @@ namespace HelpMe.Models
             Comments = new List<CommentViewModel>();
             Attachments = new List<AttachModel>();
             MyAttachments = new List<MyAttachModel>();
+            MainAttachments = new List<MainAttachModel>();
         } 
     }
+
+    public class MainAttachModel
+    {
+        public int Id { get; set; }
+        public int? CustomViewModelId { get; set; }
+        public CustomViewModel CustomViewModel { get; set; }
+        public string UserId { get; set; }
+        public virtual User User { get; set; }
+        public string AttachFileName { get; set; }
+        public string AttachFileExtens { get; set; }
+        public string AttachFilePath { get; set; }
+        [NotMapped]
+        public HttpPostedFileBase AttachFile { get; set; }
+        public AttachStatus AttachStatus { get; set; }
+    }
+
 
     public class MyAttachModel
     {
@@ -79,6 +97,8 @@ namespace HelpMe.Models
         public CustomViewModel CustomViewModel { get; set; }
         public string UserId { get; set; }
         public virtual User User { get; set; }
+        public string AttachFileName { get; set; }
+        public string AttachFileExtens { get; set; }
         public string AttachFilePath { get; set; }
         [NotMapped]
         public HttpPostedFileBase AttachFile { get; set; }
