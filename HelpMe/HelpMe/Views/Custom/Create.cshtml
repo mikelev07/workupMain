@@ -116,59 +116,87 @@
                                     <div class="col-xl-4">
                                         <div class="submit-field">
                                             <h5>Дисциплина</h5>
-                                            @Html.DropDownListFor(model => model.CategoryTaskId, ViewBag.Categories as SelectList, new { @class = "selectpicker with-border" })
+                                            @Html.DropDownList("Все дисциплины",  ViewBag.Tasks as SelectList,
+                                            "Все дисциплины", new { @class = "selectpicker with-border", @id ="TaskList", autocomplete = "off"})
                                         </div>
                                     </div>
 
                                     <div class="col-xl-4">
                                         <div class="submit-field">
-                                            <h5>Тип задачи</h5>
-                                            @Html.DropDownListFor(model => model.TypeTaskId, ViewBag.Types as SelectList, new { @class = "selectpicker with-border" })
+                                            <h5>Предмет</h5>
+                                            @Html.DropDownList("Все предметы", Enumerable.Empty<SelectListItem>(),
+                                                "Все предметы", new { @class = "selectpicker with-border", id ="SkillList", @disabled = "disabled", autocomplete = "off"})
                                         </div>
                                     </div>
 
-                                    <div class="col-xl-6">
+                                    <div class="col-xl-4">
+                                        <div class="submit-field">
+                                            <div class="col-xl-12">
+                                                <h5>Тип задачи</h5>
+                                                @Html.DropDownListFor(model => model.TypeTaskId, ViewBag.Types as SelectList, new { @class = "selectpicker with-border" })
+                                            </div>
+                                            </div>
+                                        </div>
+
+                                    <div class="col-xl-4">
                                         <div class="submit-field">
                                             <h5>Хотите указать свой бюджет?</h5>
 
                                             <div class="row">
-                                                <div class="col-xl-6">
+                                                <div class="col-xl-8">
                                                     <div class="input-with-icon">
                                                         @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @id = "min", @min = "0", @max = "25000", @class = "with-border disabled no-spinners", @placeholder = "Цена", @oninput = "validity.valid||(value = '');" } })
                                                         <i class="currency">Руб.</i>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="feedback-yes-no margin-top-0">
-                                                <div class="radio">
-                                                    <input onclick="document.getElementById('min').disabled = false;document.getElementById('max').disabled = false; document.getElementById('budj').disabled = true;" id="radio-1" name="radio" type="radio" checked>
-                                                    <label for="radio-1"><span class="radio-label"></span> Указать бюджет </label>
-                                                </div>
-
-                                                <div class="radio">
-                                                    <input onclick="document.getElementById('min').disabled = true;document.getElementById('max').disabled = true; document.getElementById('budj').disabled = false;" id="radio-2" name="radio" type="radio">
-                                                    <label for="radio-2"><span class="radio-label"></span> По договоренности </label>
-                                                </div>
+                                            <div class="checkbox">
+                                                <input type="checkbox" id="checkboxNew">
+                                                <label for="checkboxNew"><span class="checkbox-icon"></span>По договоренности</label>
                                             </div>
+
                                         </div>
                                     </div>
 
                                     <div class="col-xl-4">
                                         <div class="submit-field">
-                                            <h5>Укажите дату сдачи</h5>
-
-                                            <div class="input-group date" data-provide="datepicker">
-                                                <div class="input-with-icon-left no-border">
-                                                    <i class="icon-material-outline-date-range"></i>
-                                                    <input id="EndingDate" name="EndingDate" type="text" class="form-control">
-                                                </div>
+                                            <div class="col-xl-10">
+                                                <h5>Укажите дату сдачи</h5>
+                                                <div class="input-group date" data-provide="datepicker">
+                                                    <div class="input-with-icon-left no-border">
+                                                        <i class="icon-material-outline-date-range"></i>
+                                                        <input id="EndingDate" placeholder="Дата сдачи" name="EndingDate" type="text" class="form-control">
+                                                    </div>
                                                     <div class="input-group-addon">
                                                         <span class="glyphicon glyphicon-th"></span>
                                                     </div>
                                                 </div>
-                                            
+                                                <div class="checkbox">
+                                                    <input type="checkbox" id="checkboxDate">
+                                                    <label for="checkboxDate"><span class="checkbox-icon"></span>Срок неизвестен</label>
+                                                </div>
+                                            </div>
+                                            </div>
                                         </div>
+                                    <div class="col-xl-4">
+                                        <div class="submit-field">
+                                            <h5>Укажите время сдачи</h5>
+
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input id="datetimepicker3" type="text" class="form-control" />
+                                                    <span class="input-group-addon">
+                                                        <i class="glyphicon glyphicon-calendar"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
                                     </div>
+                                    
+                                
+
                                     <div class="col-xl-12">
                                         <div class="submit-field">
                                             <h5>Опишите ваш проект</h5>
@@ -237,15 +265,80 @@
     @Scripts.Render("~/bundles/jqueryval")
 
     <script>
-    $(function () { // will trigger when the document is ready
+        $('.selectpicker').selectpicker({
+            liveSearch: true
+        });
+
+        $(function () { // will trigger when the document is ready
+
+            $('#datetimepicker3').datetimepicker(
+                { format: 'HH:mm', locale: 'ru' }
+            );
+
+            $('#TaskList').change(function () {
+                GetSkills();
+            });
+
+            function GetSkills() {
+                var id = $('#TaskList').val();
+                if (!id) {
+                    id = 0;
+                }
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetSkills", "User")/' + id,
+                    dataType: 'JSON',
+                    success: function (data) {
+                        $('#SkillList').empty();
+                        if (id != 0) {
+                            $('#SkillList').attr('disabled',false);
+                            $('#SkillList').append("<option value=''>Все предметы</option>");
+                            $.each(data, function (i, item) {
+                                $('#SkillList').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                            });
+                        }
+                        else {
+                            $('#SkillList').append("<option value=''>Все предметы</option>");
+                            $('#SkillList').attr("disabled", true);
+                        }
+                        $('#SkillList').selectpicker("refresh");
+                    },
+                    error: function (data) {
+                        alert(data.responseText);
+                    }
+                });
+            }
+
+
+           $("#checkboxNew").click(function () {
+            if ($(this).is(':checked')) {
+                $("#min").prop("disabled", true);
+                $("#min").css("background-color", "#f2f2f2");
+                $("#min").attr("placeholder", "");
+            } else {
+                $("#min").prop("disabled", false);
+                $("#min").css("background-color", "#ffffff");
+                $("#min").attr("placeholder", "Цена");
+            }
+           });
+
+        $("#checkboxDate").click(function () {
+            if ($(this).is(':checked')) {
+                $("#EndingDate").prop("disabled", true);
+                $("#EndingDate").css("background-color", "#f2f2f2");
+                $("#EndingDate").attr("placeholder", "");
+            } else {
+                $("#EndingDate").prop("disabled", false);
+                $("#EndingDate").css("background-color", "#ffffff");
+                $("#EndingDate").attr("placeholder", "Дата сдачи");
+            }
+        });
+
 
         $('#EndingDate').datepicker({
             language: 'ru',
             autoclose: true,
-            format: "dd M yyyy",
-
-
-
+            format: "dd M yyyy"
         }); //Initialise any date pickers
         
 
