@@ -122,8 +122,8 @@
             <div class="accordion js-accordion" id="customs-history">
                 <!-- Accordion Item -->
                 <div class="accordion__item js-accordion-item">
-                    <div style="color:#333; font-size: 18px;  background-color: #f2f2f2; border-radius: 4px; padding: 20px 35px" class="accordion-header js-accordion-header">
-                        <i class="icon-material-outline-library-books"></i> История выполнения работ
+                    <div id="acHe" style="color:#333; font-size: 18px;  background-color: #f2f2f2; border-radius: 4px; padding: 20px 35px" class="accordion-header js-accordion-header">
+                        <i style="transform: rotate(180deg);" class="icon-material-outline-library-books"></i> История выполнения работ
                     </div>
 
                     <!-- Accordtion Body -->
@@ -198,13 +198,13 @@
             <br />
             <div class="accordion js-accordion" id="reviews-history">
                 <!-- Accordion Item -->
-                <div class="accordion__item js-accordion-item">
+                <div class="accordion__item js-accordion-item active">
                     <div style="color:#333; font-size: 18px;  background-color: #f2f2f2; border-radius: 4px; padding: 20px 35px" class="accordion-header js-accordion-header">
                         <i class="icon-material-outline-thumb-up"></i> Отзывы
                     </div>
 
                     <!-- Accordtion Body -->
-                    <div class="accordion-body js-accordion-body" style="display:block">
+                    <div class="accordion-body js-accordion-body" >
 
                         <!-- Accordion Content -->
                         <div class="accordion-body__contents">
@@ -494,7 +494,7 @@
                 <li><a href="#tab">Привлечь к заказу</a></li>
             </ul>
 
-            <div class="popup-tabs-container">
+            <div style="overflow:unset" class="popup-tabs-container">
 
                 <!-- Tab -->
                 <div class="popup-tab-content" id="tab">
@@ -575,6 +575,7 @@
                         'sentMessage': "предложил вам выполнить заказ"
                     },
                     success: function (data) {
+                        $(".mfp-close").trigger('click');
                         if (data == 'False') {
                             Snackbar.show({
                                 text: 'Вы уже привлекали этого исполнителя к текущему заказу!',
