@@ -165,526 +165,536 @@
 
                         }
                     </div>
-                        </div>
-                        }
-                <br />
-                @if (Model.ExecutorId != null && (Model.ExecutorId == User.Identity.GetUserId() || Model.UserId == User.Identity.GetUserId()))
-                {
-                    <div class="single-page-section" style="margin-bottom:0">
-                        <h3>Вложения исполнителя <span style="color: white" class="nav-tag" id="attachments">@Model.Attachments.Count </span></h3>
-                        @if (Request.IsAuthenticated && Model.ExecutorId == User.Identity.GetUserId() && Model.Status != HelpMe.Models.CustomStatus.Close)
-                        {
-                            <div class="accordion js-accordion">
+                </div>
+            }
+            <br />
+            @if (Model.ExecutorId != null && (Model.ExecutorId == User.Identity.GetUserId() || Model.UserId == User.Identity.GetUserId()))
+            {
+                <div class="single-page-section" style="margin-bottom:0">
+                    <h3>Вложения исполнителя <span style="color: white" class="nav-tag" id="attachments">@Model.Attachments.Count </span></h3>
+                    @if (Request.IsAuthenticated && Model.ExecutorId == User.Identity.GetUserId() && Model.Status != HelpMe.Models.CustomStatus.Close)
+                    {
+                        <div class="accordion js-accordion">
 
-                                <!-- Accordion Item -->
-                                <div class="accordion__item js-accordion-item">
-                                    <div class="accordion-header js-accordion-header">
-                                        <span id="textAttach">Добавить решение</span>
-                                        <div style="left:50%" class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                            <!-- Accordion Item -->
+                            <div class="accordion__item js-accordion-item">
+                                <div class="accordion-header js-accordion-header">
+                                    <span id="textAttach">Добавить решение</span>
+                                    <div style="left:50%" class="lds-ring"><div></div><div></div><div></div><div></div></div>
 
-                                    </div>
+                                </div>
 
-                                    <!-- Accordtion Body -->
-                                    <div id="accordBody" class="accordion-body js-accordion-body">
+                                <!-- Accordtion Body -->
+                                <div id="accordBody" class="accordion-body js-accordion-body">
 
-                                        <!-- Accordion Content -->
-                                        <div class="accordion-body__contents">
-                                            <div style="margin-bottom:0px;" class="single-page-section">
-                                                @if (Model.ExecutorId == User.Identity.GetUserId() && Request.IsAuthenticated)
-                                                {
-                                                    <h3>Добавление решения</h3>
-                                                    <div>
-                                                        <div class="uploadButton margin-top-30">
-                                                            <input type="hidden" name="CustomViewModelId" id="CustomViewModelId" value="@Model.Id" />
-                                                            <input class="uploadButton-input" type="file" name="upload" id="uploadFile" /><br />
-                                                            <label class="uploadButton-button ripple-effect" for="uploadFile">Прикрепить решение</label>
-                                                            <span class="uploadButton-file-name">Загрузите файл решения для исполнителя любого формата</span>
-                                                        </div>
-                                                        <div class="progress"></div>
-                                                        <div class="section-headline margin-top-25 margin-bottom-12">
-                                                            <h5>Укажите цену решения</h5>
-                                                        </div>
-                                                        <div class="input-with-icon-left no-border">
-                                                            <i class="icon-material-outline-local-atm"></i>
-                                                            <input style="width:250px" name="ExecutorPrice" id="ExecutorPrice"
-                                                                   type="number" min="0" max="25000" step="1" class="input-text no-spinners"
-                                                                   oninput="validity.valid||(value='');" placeholder="Цена">
-                                                            <div class="checkbox">
-                                                                <input type="checkbox" id="chekcbox1">
-                                                                <label for="chekcbox1"><span class="checkbox-icon"></span>Бесплатная доработка</label>
-                                                            </div>
-                                                        </div>
-                                                        <input id="add-solution" type="submit" value="Загрузить" class="button ripple-effect margin-top-10" />
+                                    <!-- Accordion Content -->
+                                    <div class="accordion-body__contents">
+                                        <div style="margin-bottom:0px;" class="single-page-section">
+                                            @if (Model.ExecutorId == User.Identity.GetUserId() && Request.IsAuthenticated)
+                                            {
+                                                <h3>Добавление решения</h3>
+                                                <div>
+                                                    <div class="uploadButton margin-top-30">
+                                                        <input type="hidden" name="CustomViewModelId" id="CustomViewModelId" value="@Model.Id" />
+                                                        <input class="uploadButton-input" type="file" name="upload" id="uploadFile" /><br />
+                                                        <label class="uploadButton-button ripple-effect" for="uploadFile">Прикрепить решение</label>
+                                                        <span class="uploadButton-file-name">Загрузите файл решения для исполнителя любого формата</span>
                                                     </div>
-                                                }
+                                                    <div class="progress"></div>
+                                                    <div class="section-headline margin-top-25 margin-bottom-12">
+                                                        <h5>Укажите цену решения</h5>
+                                                    </div>
+                                                    <div class="input-with-icon-left no-border">
+                                                        <i class="icon-material-outline-local-atm"></i>
+                                                        <input style="width:250px" name="ExecutorPrice" id="ExecutorPrice"
+                                                               type="number" min="0" max="50000" step="1" class="input-text no-spinners"
+                                                               oninput="validity.valid||(value='');" placeholder="Цена">
+                                                        <div class="checkbox">
+                                                            <input type="checkbox" id="checkbox1">
+                                                            <label for="checkbox1"><span class="checkbox-icon"></span>Бесплатная доработка</label>
+                                                        </div>
+                                                    </div>
+                                                    <input id="add-solution" type="submit" value="Загрузить" class="button ripple-effect margin-top-10" />
+                                                </div>
+                                            }
 
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        }
-                        <br />
-                        <div id="Uploaded_Results">
-                            <div style="margin-bottom:35px;" id="itemAttach">
-                                <div class="attachments-container">
-                                    @{ var idnew = 1; }
-                                    @foreach (var i in Model.Attachments)
-                                    {
-                                        <div style="margin-bottom:20px; margin-right:16px">
-                                            <a style='@(i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased && Model.ExecutorId != User.Identity.GetUserId() ? "pointer-events: none;" : "")'
-                                               href="@Url.Action("GetFileAttach", "Custom", new { path = i.AttachFilePath, id = i.Id })"
-                                               class="attachment-box ripple-effect "><span style="width:152px">@i.AttachFileName</span><i style="margin-left:40px">@i.ExecutorPrice руб.</i><i style="">@i.AttachFileExtens.TrimStart('.')</i></a>
+                        </div>
+                    }
+                    <br />
+                    <div id="Uploaded_Results">
+                        <div style="margin-bottom:35px;" id="itemAttach">
+                            <div class="attachments-container">
+                                @{ var idnew = 1; }
+                                @foreach (var i in Model.Attachments)
+                                {
+                                    <div style="margin-bottom:20px; margin-right:16px">
+                                        <a style='@(i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased && Model.ExecutorId != User.Identity.GetUserId() ? "pointer-events: none;" : "")'
+                                           href="@Url.Action("GetFileAttach", "Custom", new { path = i.AttachFilePath, id = i.Id })"
+                                           class="attachment-box ripple-effect "><span style="width:152px">@i.AttachFileName</span><i style="margin-left:40px">@i.ExecutorPrice руб.</i><i style="">@i.AttachFileExtens.TrimStart('.')</i></a>
 
-                                            @if (Model.ExecutorId == User.Identity.GetUserId() && i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
-                                            {
-                                                @Ajax.RawActionLink(
-                                                    "<i id='fDelbuy"+ i.Id + "' class='icon-feather-trash-2'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach","Custom",
-                                                    new{ id = i.Id},
+                                        @if (Model.ExecutorId == User.Identity.GetUserId() && i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
+                                        {
+                                            @Ajax.RawActionLink(
+                                                "<i id='fDelbuy"+ i.Id + "' class='icon-feather-trash-2'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach","Custom",
+                                                new{ id = i.Id},
 
-                                                    new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
-                                                    new {
-                                                        id ="delete-attach",
-                                                        @class = "button green ripple-effect ico",
-                                                        @style = "    padding: 3px 5px 3px 3px; ",
-                                                        title = "Удалить решение",
-                                                        data_tippy_placement = "top"
-                                                    }
+                                                new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
+                                                new {
+                                                    id ="delete-attach",
+                                                    @class = "button green ripple-effect ico",
+                                                    @style = "    padding: 3px 5px 3px 3px; ",
+                                                    title = "Удалить решение",
+                                                    data_tippy_placement = "top"
+                                                }
 
                                                         @* new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
-                                                    new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
+                                                            new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
 
                                                         )
-                                                @Ajax.RawActionLink(
-                                                  "<i  id='fDelbuy"+ i.Id + "' class='icon-feather-edit'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach","Custom",
-                                                  new{ id = i.Id},
+                                            @Ajax.RawActionLink(
+                                              "<i  id='fDelbuy"+ i.Id + "' class='icon-feather-edit'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach","Custom",
+                                              new{ id = i.Id},
 
-                                                  new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
-                                                  new {
-                                                      id ="delete-attach",
-                                                      @class = "button  ripple-effect ico",
-                                                      @style = "  margin-left:5px;  padding: 3px 5px 3px 3px; ",
-                                                      title = "Удалить решение",
-                                                      data_tippy_placement = "top"
-                                                  }
+                                              new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
+                                              new {
+                                                  id ="delete-attach",
+                                                  @class = "button  ripple-effect ico",
+                                                  @style = "  margin-left:5px;  padding: 3px 5px 3px 3px; ",
+                                                  title = "Удалить решение",
+                                                  data_tippy_placement = "top"
+                                              }
 
                                                     @* new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
-                                                new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
+                                                        new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
 
                                                     )
-                                            }
-                                            @if (Model.UserId == User.Identity.GetUserId())
+                                        }
+                                        @if (Model.UserId == User.Identity.GetUserId())
+                                        {
+                                            if (i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
                                             {
-                                                if (i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
-                                                {
-                                                    @Ajax.RawActionLink(
-                                                   "<i id='fbuy" + i.Id + "' style='margin-top: -10px;' class='icon-material-outline-monetization-on'></i><span id='textAttachBuy" + i.Id + "'>Купить</span><div id='ldsAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "Buy", "Custom",
-                                                   new{id = i.Id},
+                                                @Ajax.RawActionLink(
+                                               "<i id='fbuy" + i.Id + "' style='margin-top: -10px;' class='icon-material-outline-monetization-on'></i><span id='textAttachBuy" + i.Id + "'>Купить</span><div id='ldsAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "Buy", "Custom",
+                                               new{id = i.Id},
 
-                                                   new AjaxOptions{ OnBegin= "return OnBeginBuyAttach('"+@i.Id+"')",OnFailure="IsGone", OnSuccess = "OnSuccessBuyAttach", HttpMethod = "POST" },
-                                                   new {
-                                                       id = "buy-solution",
-                                                       @class = "button ripple-effect",
-                                                       @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:; margin-top: -5px;" : "    margin-top: -5px;"),
-                                                       title = "Купить решение",
-                                                       data_tippy_placement = "top"
-                                                   }
-                                                   )
-                                                }
-                                                else
-                                                {
-                                                    <div style='margin-top: -10px;' class="task-tags margin-bottom-20">
-                                                        <span>Работа куплена</span>
-                                                    </div>
-
-                                                }
+                                               new AjaxOptions{ OnBegin= "return OnBeginBuyAttach('"+@i.Id+"')",OnFailure="IsGone", OnSuccess = "OnSuccessBuyAttach", HttpMethod = "POST" },
+                                               new {
+                                                   id = "buy-solution",
+                                                   @class = "button ripple-effect",
+                                                   @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:; margin-top: -5px;" : "    margin-top: -5px;"),
+                                                   title = "Купить решение",
+                                                   data_tippy_placement = "top"
+                                               }
+                                               )
                                             }
-                                            @if (Model.ExecutorId == User.Identity.GetUserId())
+                                            else
                                             {
-                                                if (i.AttachStatus != HelpMe.Models.AttachStatus.NotPurchased)
-                                                {
-                                                    <div style='margin-top: -10px;' class="task-tags ">
-                                                        <span>Работа куплена</span>
-                                                    </div>
-                                                }
+                                                <div style='margin-top: -10px;' class="task-tags margin-bottom-20">
+                                                    <span>Работа куплена</span>
+                                                </div>
+
                                             }
-                                        </div>
-                                        idnew = idnew + 1;
-                                    }
-                                </div>
+                                        }
+                                        @if (Model.ExecutorId == User.Identity.GetUserId())
+                                        {
+                                            if (i.AttachStatus != HelpMe.Models.AttachStatus.NotPurchased)
+                                            {
+                                                <div style='margin-top: -10px;' class="task-tags ">
+                                                    <span>Работа куплена</span>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                    idnew = idnew + 1;
+                                }
                             </div>
-
-
                         </div>
 
 
                     </div>
-                }
 
-                @*<div class="single-page-section">
-                <h3>Необходимые навыки</h3>
-                <div class="task-tags">
-                    <span>iOS</span>
-                    <span>Android</span>
-                    <span>mobile apps</span>
-                    <span>design</span>
+
                 </div>
-            </div>*@
-                <div class="clearfix"></div>
+            }
 
-                <div class="boxed-list margin-bottom-60">
-                    <div class="boxed-list-headline" id="executors-offers">
-                        <h3>
-                            <i class="icon-material-outline-group"></i>
-                            <span>Предложения исполнителей  </span>
-                            <span style="color:white" class="nav-tag" id="votes">@Model.Comments.Count </span>
-                            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-                            @if (Model.UserId == User.Identity.GetUserId())
-                            {
-                                <div class="sort-by">
-                                    <span>Сортировать по:</span>
-                                    <select class="selectpicker hide-tick" id="sortComments" autocomplete="off">
-                                        <option value="1" selected>Новым</option>
-                                        <option value="2">Давним</option>
-                                        <option value="3">Рейтингу</option>
-                                        <option value="4">Дешевым</option>
-                                        <option value="5">Дорогим</option>
-                                    </select>
-                                </div>
-                            }
-                        </h3>
+            @*<div class="single-page-section">
+                    <h3>Необходимые навыки</h3>
+                    <div class="task-tags">
+                        <span>iOS</span>
+                        <span>Android</span>
+                        <span>mobile apps</span>
+                        <span>design</span>
                     </div>
+                </div>*@
+            <div class="clearfix"></div>
 
-
-                    <ul class="boxed-list-ul" id="boxed-list-ul">
-                        @foreach (var c in Model.Comments.Reverse())
+            <div class="boxed-list margin-bottom-60">
+                <div class="boxed-list-headline" id="executors-offers">
+                    <h3>
+                        <i class="icon-material-outline-group"></i>
+                        <span>Предложения исполнителей  </span>
+                        <span style="color:white" class="nav-tag" id="votes">@Model.Comments.Count </span>
+                        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                        @if (Model.UserId == User.Identity.GetUserId())
                         {
-                            if (Model.UserId == User.Identity.GetUserId() || c.UserId == User.Identity.GetUserId())
-                            {
-                                <li id="user-comment-@c.Id" class="comments">
-                                    <div class="bid">
-                                        <div class="bids-avatar">
-                                            <div class="freelancer-avatar">
-                                                @*<div class="verified-badge"></div>*@
+                            <div class="sort-by">
+                                <span>Сортировать по:</span>
+                                <select class="selectpicker hide-tick" id="sortComments" autocomplete="off">
+                                    <option value="1" selected>Новым</option>
+                                    <option value="2">Давним</option>
+                                    <option value="3">Рейтингу</option>
+                                    <option value="4">Дешевым</option>
+                                    <option value="5">Дорогим</option>
+                                </select>
+                            </div>
+                        }
+                    </h3>
+                </div>
+
+
+                <ul class="boxed-list-ul" id="boxed-list-ul">
+                    @foreach (var c in Model.Comments.Reverse())
+                    {
+                        if (Model.UserId == User.Identity.GetUserId() || c.UserId == User.Identity.GetUserId())
+                        {
+                            <li id="user-comment-@c.Id" class="comments">
+                                <div class="bid">
+                                    <div class="bids-avatar">
+                                        <div class="freelancer-avatar">
+                                            @*<div class="verified-badge"></div>*@
+                                            <a href="@Url.Action("Details", "User", new { userName = c.User.UserName })">
+                                                <img src="@(Url.Content(c.User.ImagePath ?? "~/Content/Custom/images/user-avatar-big-01.jpg"))" alt="аватар">
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="bids-content">
+                                        <!-- Name -->
+                                        <div class="freelancer-name">
+                                            <h4 style="margin-bottom:0">
                                                 <a href="@Url.Action("Details", "User", new { userName = c.User.UserName })">
-                                                    <img src="@(Url.Content(c.User.ImagePath ?? "~/Content/Custom/images/user-avatar-big-01.jpg"))" alt="аватар">
+                                                    @c.User.UserName  <h6 class="custom-comments">@c.CreationDate.ToString("dd MMMM yyyy HH:mm:ss")</h6>@*| @c.Id*@
+                                                    @*<img class="flag" src="images/flags/gb.svg" alt="" title="United Kingdom" data-tippy-placement="top">*@
                                                 </a>
-                                            </div>
-                                        </div>
-
-                                        <div class="bids-content">
-                                            <!-- Name -->
-                                            <div class="freelancer-name">
-                                                <h4 style="margin-bottom:0">
-                                                    <a href="@Url.Action("Details", "User", new { userName = c.User.UserName })">
-                                                        @c.User.UserName  <h6 class="custom-comments">@c.CreationDate.ToString("dd MMMM yyyy HH:mm:ss")</h6>@*| @c.Id*@
-                                                        @*<img class="flag" src="images/flags/gb.svg" alt="" title="United Kingdom" data-tippy-placement="top">*@
-                                                    </a>
-                                                </h4>
-                                                @{
-                                                    var likes = c.User.PositiveThumbs;
-                                                    var dislikes = c.User.NegativeThumbs;
-                                                    var rate = "0.0";
-                                                    if (likes + dislikes > 0)
-                                                    {
-                                                        rate = Math.Round((double)likes / (likes + dislikes) * 5, 1).ToString().Replace(',', '.');
-                                                    }
-                                                    if (rate.Length == 1)
-                                                    {
-                                                        rate = rate + ".0";
-                                                    }
-                                                }
-                                                <div class="star-rating" data-rating="@rate"></div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Bid -->
-                                        <div class="bids-bid">
-                                            <div class="bid-rate" id="user-comment-bid-rate-@c.Id">
-                                                <div class="rate">@c.OfferPrice рублей</div>
-                                                @if (c.Days > 0)
+                                            </h4>
+                                            @{
+                                                var likes = c.User.PositiveThumbs;
+                                                var dislikes = c.User.NegativeThumbs;
+                                                var rate = "0.0";
+                                                if (likes + dislikes > 0)
                                                 {
-                                                    <span>за @c.Days дней</span>
+                                                    rate = Math.Round((double)likes / (likes + dislikes) * 5, 1).ToString().Replace(',', '.');
                                                 }
-                                                else
+                                                if (rate.Length == 1)
                                                 {
-                                                    <span>за @c.Hours часов</span>
+                                                    rate = rate + ".0";
                                                 }
-                                            </div>
-                                            @if (Model.ExecutorId != User.Identity.GetUserId() && Model.UserId != User.Identity.GetUserId() && Model.ExecutorId == null)
+                                            }
+                                            <div class="star-rating" data-rating="@rate"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Bid -->
+                                    <div class="bids-bid">
+                                        <div class="bid-rate" id="user-comment-bid-rate-@c.Id">
+                                            <div class="rate">@c.OfferPrice рублей</div>
+                                            @if (c.Days > 0)
                                             {
-                                                <div style="margin-left: 23px;" class="buttons-to - right always - visible">
-                                                    <a href="#small-dialog" class="popup-with-zoom-anim button dark ripple-effect ico" title="Редактировать" data-tippy-placement="top">
-                                                        <i class="icon-feather-edit"></i>
-                                                    </a>
-                                                    <a href="#small-dialog-3" id="checkEx" class="popup-with-zoom-anim button red ripple-effect ico" title="Удалить" data-tippy-placement="top">
-                                                        <i class="icon-feather-trash-2"></i>
-                                                    </a>
-                                                </div>
+                                                <span>за @c.Days дней</span>
+                                            }
+                                            else
+                                            {
+                                                <span>за @c.Hours часов</span>
                                             }
                                         </div>
-                                    </div>
-                                    @if (Model.UserId == User.Identity.GetUserId() && Model.ExecutorId == null)
-                                    {
-                                        <div class="margin-top-30">
-                                            <a href="#small-dialog-1-@c.Id" style="box-shadow: 0 12px 12px rgba(0,0,0,0.1);border-radius: 25px;" class="popup-with-zoom-anim button ripple-effect"><i class="icon-material-outline-check"></i> Принять предложение</a>
-                                            <a href="#small-dialog-2-@c.Id" style="background-color: #f4f4f4;box-shadow: 0 12px 12px rgba(0,0,0,0.1);color: #333;border-radius: 25px;" class="popup-with-zoom-anim button dark ripple-effect"><i class="icon-feather-mail"></i> Отправить сообщение</a>
-                                        </div>
-                                    }
-                                    <div class="item-description margin-top-20">
-                                        <p style="word-break:break-word;"> @c.Description</p>
-                                    </div>
-                                </li>
-
-                                {
-                                    if (Model.Comments.Where(m => m.UserId == User.Identity.GetUserId()).Count() > 0)
-                                    {
-                                        var updateTargetIdEdit = "user-comment-bid-rate-" + c.Id;
-                                        var updateTargetIdDelete = "user-comment-" + c.Id;
-
-                                        <div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
-
-
-                                            <div class="sign-in-form">
-
-                                                <ul class="popup-tabs-nav">
-                                                    <li><a href="#tab">Редактировать предложение</a></li>
-                                                </ul>
-                                                <div class="popup-tabs-container">
-
-                                                    <!-- Tab -->
-                                                    <div class="popup-tab-content" id="tab">
-
-                                                        @using (Ajax.BeginForm("EditComment", new { Id = c.Id }, new AjaxOptions
-                                                        {
-                                                            UpdateTargetId = updateTargetIdEdit,
-                                                            InsertionMode = InsertionMode.Replace,
-                                                            OnSuccess = "OnSuccessEditComment"
-                                                        }))
-                                                        {
-                                                            @Html.AntiForgeryToken()
-
-                                                            @*@Html.Hidden("Id", c.Id.ToString())*@
-                                                            @Html.Hidden("UserId", c.UserId.ToString())
-                                                            @Html.Hidden("CustomViewModelId", c.CustomViewModelId.ToString())
-                                                            @Html.Hidden("CreationDate", c.CreationDate.ToString())
-                                                            @Html.Hidden("Description", c.Description.ToString())
-
-                                                            var timeCount = c.Days;
-                                                            string nameTime = "Days";
-                                                            if (timeCount == 0)
-                                                            {
-                                                                nameTime = "Hours";
-                                                                timeCount = c.Hours;
-                                                            }
-
-                                                            <!-- Bidding -->
-                                                            <div class="bidding-widget">
-                                                                <!-- Headline -->
-                                                                <span class="bidding-detail margin-top-30">Укажите время выполнения</span>
-
-                                                                <!-- Fields -->
-                                                                <div class="bidding-fields">
-                                                                    <div class="bidding-field">
-                                                                        <!-- Quantity Buttons -->
-                                                                        <div class="qtyButtons with-border">
-                                                                            <div class="qtyDec"></div>
-                                                                            <input id="Days" class="no-spinners" type="number" min="1" max="100"
-                                                                                   step="1" name="@nameTime" value="@timeCount" oninput="validity.valid||(value='');">
-                                                                            <div class="qtyInc"></div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="bidding-field">
-                                                                        <select class="selectpicker default with-border" id="edit-time-units">
-                                                                            @if (nameTime == "Days")
-                                                                            {
-                                                                                <option selected value="1">дней</option>
-                                                                                <option value="2">часов</option>
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                <option value="1">дней</option>
-                                                                                <option selected value="2">часов</option>
-                                                                            }
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <br />
-                                                                <span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>
-
-                                                                <div class="bidding-value"><span id="biddingVal1"></span> руб.</div>
-                                                                <input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text"
-                                                                       value="" data-slider-handle="custom" data-slider-currency="$"
-                                                                       data-slider-min="0" data-slider-max="25000" data-slider-value="@c.OfferPrice"
-                                                                       data-slider-step="50" data-slider-tooltip="hide" />
-                                                            </div>
-
-                                                            //Для проверки
-                                                            @*<div>commentId=@c.Id</div>
-                                                        <div>description=@c.Description</div>*@
-
-
-                                                            <!-- Button -->
-                                                            <button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button>
-                                                        }
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
-                                            <div class="sign-in-form">
-                                                <ul class="popup-tabs-nav">
-                                                    <li><a href="#tab">Удалить предложение</a></li>
-                                                </ul>
-
-                                                <div class="popup-tabs-container">
-
-                                                    <!-- Tab -->
-                                                    <div class="popup-tab-content" id="tab">
-                                                        @using (Ajax.BeginForm("DeleteComment", "Custom", new { Id = c.Id }, new AjaxOptions
-                                                        {
-                                                            UpdateTargetId = updateTargetIdDelete,
-                                                            InsertionMode = InsertionMode.Replace,
-                                                            OnSuccess = "OnSuccessDeleteComment"
-                                                        }))
-                                                        {
-                                                            @Html.AntiForgeryToken()
-                                                            <div class="bidding-widget">
-                                                                <!-- Headline -->
-                                                                <div class="form-actions no-color">
-                                                                    <span class="bidding-detail margin-top-30">Действительно хотите удалить предложение?</span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Button -->
-                                                            <button class="button full-width button-sliding-icon ripple-effect" type="submit">Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i></button>
-                                                        }
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                }
-
-                                <div id="small-dialog-1-@c.Id" class="small-dialog-1 zoom-anim-dialog mfp-hide dialog-with-tabs">
-
-                                    <!--Tabs -->
-                                    <div class="sign-in-form">
-
-                                        <ul class="popup-tabs-nav">
-                                            <li><a href="#tab1">Принять предложение</a></li>
-                                        </ul>
-
-                                        <div class="popup-tabs-container">
-
-                                            <!-- Tab -->
-                                            <div class="popup-tab-content" id="tab">
-
-                                                <!-- Welcome Text -->
-                                                <div class="welcome-text">
-                                                    <h3>Принять предложение от @c.User.UserName?</h3>
-                                                    <div class="bid-acceptance margin-top-15">
-                                                        <div class="bid-rate" id="user-comment-bid-rate-@c.Id">
-                                                            <div class="rate">@c.OfferPrice рублей</div>
-                                                            @if (c.Days > 0)
-                                                            {
-                                                                <span>за @c.Days дней</span>
-                                                            }
-                                                            else
-                                                            {
-                                                                <span>за @c.Hours часов</span>
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                @using (Html.BeginForm("ChooseExecutor", "Custom", new { id = Model.Id, userId = c.UserId }))
-                                                {
-                                                    <div class="radio">
-                                                        <input id="radio-accept-executor" name="radio" type="radio" required autocomplete="off"
-                                                               oninvalid="setCustomValidity('Сперва нужно ознакомиться с правилами!')"
-                                                               oninput="setCustomValidity('')" />
-                                                        <label for="radio-accept-executor"><span class="radio-label"></span>  Я ознакомился с правилами</label>
-                                                    </div>
-                                                    <input id="choose-executor" class="margin-top-15 button full-width button-sliding-icon ripple-effect"
-                                                           type="submit" value="Принять" />
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Bid Acceptance Popup / End -->
-
-
-                                <div id="small-dialog-2-@c.Id" class="small-dialog-2 zoom-anim-dialog mfp-hide dialog-with-tabs">
-
-                                    <ul class="popup-tabs-nav">
-                                        <li><a href="#tab2">Отправка сообщения</a></li>
-                                    </ul>
-                                    <div class="popup-tabs-container">
-                                        @using (Html.BeginForm("AddMessage", "Chat", FormMethod.Post))
+                                        @if (Model.ExecutorId != User.Identity.GetUserId() && Model.UserId != User.Identity.GetUserId() && Model.ExecutorId == null)
                                         {
-                                            @Html.AntiForgeryToken();
-                                            <!-- Tab -->
-
-                                            <div class="popup-tab-content" id="tab2">
-
-                                                <!-- Welcome Text -->
-                                                <div class="welcome-text">
-                                                    <h3>Отправьте сообщение @c.User.UserName</h3>
-                                                </div>
-                                                @Html.Hidden("UserFromId", User.Identity.GetUserId())
-                                                @Html.Hidden("UserToId", c.UserId)
-
-                                                <textarea name="Description" id="Description" cols="10" placeholder="Сообщение" class="with-border"></textarea>
-                                                <!-- Button -->
-                                                <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Отправить <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                            <div style="margin-left: 23px;" class="buttons-to - right always - visible">
+                                                <a href="#small-dialog" class="popup-with-zoom-anim button dark ripple-effect ico" title="Редактировать" data-tippy-placement="top">
+                                                    <i class="icon-feather-edit"></i>
+                                                </a>
+                                                <a href="#small-dialog-3" id="checkEx" class="popup-with-zoom-anim button red ripple-effect ico" title="Удалить" data-tippy-placement="top">
+                                                    <i class="icon-feather-trash-2"></i>
+                                                </a>
                                             </div>
                                         }
+                                    </div>
+                                </div>
+                                @if (Model.UserId == User.Identity.GetUserId() && Model.ExecutorId == null)
+                                {
+                                    <div class="margin-top-30">
+                                        <a href="#small-dialog-1-@c.Id" style="box-shadow: 0 12px 12px rgba(0,0,0,0.1);border-radius: 25px;" class="popup-with-zoom-anim button ripple-effect"><i class="icon-material-outline-check"></i> Принять предложение</a>
+                                        <a href="#small-dialog-2-@c.Id" style="background-color: #f4f4f4;box-shadow: 0 12px 12px rgba(0,0,0,0.1);color: #333;border-radius: 25px;" class="popup-with-zoom-anim button dark ripple-effect"><i class="icon-feather-mail"></i> Отправить сообщение</a>
+                                    </div>
+                                }
+                                <div class="item-description margin-top-20">
+                                    <p style="word-break:break-word;"> @c.Description</p>
+                                </div>
+                            </li>
 
+                            {
+                                if (Model.Comments.Where(m => m.UserId == User.Identity.GetUserId()).Count() > 0)
+                                {
+                                    var updateTargetIdEdit = "user-comment-bid-rate-" + c.Id;
+                                    var updateTargetIdDelete = "user-comment-" + c.Id;
+
+                                    <div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+
+                                        <div class="sign-in-form">
+
+                                            <ul class="popup-tabs-nav">
+                                                <li><a href="#tab">Редактировать предложение</a></li>
+                                            </ul>
+                                            <div class="popup-tabs-container">
+
+                                                <!-- Tab -->
+                                                <div class="popup-tab-content" id="tab">
+
+                                                    @using (Ajax.BeginForm("EditComment", new { Id = c.Id }, new AjaxOptions
+                                                    {
+                                                        UpdateTargetId = updateTargetIdEdit,
+                                                        InsertionMode = InsertionMode.Replace,
+                                                        OnSuccess = "OnSuccessEditComment"
+                                                    }))
+                                                    {
+                                                        @Html.AntiForgeryToken()
+
+                                                        @*@Html.Hidden("Id", c.Id.ToString())*@
+                                                        @Html.Hidden("UserId", c.UserId.ToString())
+                                                        @Html.Hidden("CustomViewModelId", c.CustomViewModelId.ToString())
+                                                        @Html.Hidden("CreationDate", c.CreationDate.ToString())
+                                                        @Html.Hidden("Description", c.Description.ToString(), new { id = "edit-comment-description" })
+
+                                                        var timeCount = c.Days;
+                                                        string nameTime = "Days";
+                                                        if (timeCount == 0)
+                                                        {
+                                                            nameTime = "Hours";
+                                                            timeCount = c.Hours;
+                                                        }
+
+                                                        <!-- Bidding -->
+                                                        <div class="bidding-widget">
+                                                            <!-- Headline -->
+                                                            <span class="bidding-detail">Укажите <strong>стоимость работы</strong> </span>
+
+                                                            <!-- Price Slider -->
+                                                            <div class="bidding-value">
+                                                                <span id="biddingVal"></span> руб. <button id="hideshow"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button>
+                                                            </div>
+                                                            <input id="amount" class="no-spinners" style="margin-bottom:5px; display:none"
+                                                                   placeholder="Укажите стоимость" type="number" value="0"
+                                                                   oninput="validity.valid||(value='');" min="0" max="50000"
+                                                                   data-tippy-placement="top" />
+
+                                                            <input id="sliderPrice" class="bidding-slider" type="text" value="@Model.Price"
+                                                                   data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
+                                                                   data-slider-max="50000" data-slider-value="@Model.Price" data-slider-step="50"
+                                                                   data-slider-tooltip="hide" />
+
+                                                            <!-- Headline -->
+                                                            <span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>
+
+                                                            <!-- Fields -->
+                                                            <div class="bidding-fields">
+                                                                <div class="bidding-field">
+
+                                                                    <!-- Quantity Buttons -->
+                                                                    <div class="qtyButtons with-border">
+                                                                        <div class="qtyDec"></div>
+                                                                        <input id="Days" class="no-spinners" type="number" min="1" max="100"
+                                                                               step="1" name="@nameTime" value="@timeCount" oninput="validity.valid||(value='');">
+                                                                        <div class="qtyInc"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="bidding-field">
+                                                                    <select class="selectpicker default with-border" id="edit-time-units">
+                                                                        @if (nameTime == "Days")
+                                                                        {
+                                                                            <option selected value="1">дней</option>
+                                                                            <option value="2">часов</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="1">дней</option>
+                                                                            <option selected value="2">часов</option>
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        //Для проверки
+                                                        @*<div>commentId=@c.Id</div>
+                                                            <div>description=@c.Description</div>*@
+
+
+                                                        <!-- Button -->
+                                                        <button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                                    }
+                                                </div>
+
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    @*<!--Tabs -->
+                                    <div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+                                        <div class="sign-in-form">
+                                            <ul class="popup-tabs-nav">
+                                                <li><a href="#tab">Удалить предложение</a></li>
+                                            </ul>
+
+                                            <div class="popup-tabs-container">
+
+                                                <!-- Tab -->
+                                                <div class="popup-tab-content" id="tab">
+                                                    @using (Ajax.BeginForm("DeleteComment", "Custom", new { Id = c.Id }, new AjaxOptions
+                                                    {
+                                                        UpdateTargetId = updateTargetIdDelete,
+                                                        InsertionMode = InsertionMode.Replace,
+                                                        OnSuccess = "OnSuccessDeleteComment"
+                                                    }))
+                                                    {
+                                                        @Html.AntiForgeryToken()
+                                                        <div class="bidding-widget">
+                                                            <!-- Headline -->
+                                                            <div class="form-actions no-color">
+                                                                <span class="bidding-detail margin-top-30">Действительно хотите удалить предложение?</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Button -->
+                                                        <button class="button full-width button-sliding-icon ripple-effect" type="submit">Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                                    }
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+
+                            <div id="small-dialog-1-@c.Id" class="small-dialog-1 zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+                                <!--Tabs -->
                                 <div class="sign-in-form">
 
                                     <ul class="popup-tabs-nav">
-                                        <li><a href="#tab2">Отправка сообщения</a></li>
+                                        <li><a href="#tab1">Принять предложение</a></li>
                                     </ul>
 
                                     <div class="popup-tabs-container">
 
                                         <!-- Tab -->
+                                        <div class="popup-tab-content" id="tab">
+
+                                            <!-- Welcome Text -->
+                                            <div class="welcome-text">
+                                                <h3>Принять предложение от @c.User.UserName?</h3>
+                                                <div class="bid-acceptance margin-top-15">
+                                                    <div class="bid-rate" id="user-comment-bid-rate-@c.Id">
+                                                        <div class="rate">@c.OfferPrice рублей</div>
+                                                        @if (c.Days > 0)
+                                                        {
+                                                            <span>за @c.Days дней</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>за @c.Hours часов</span>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @using (Html.BeginForm("ChooseExecutor", "Custom", new { id = Model.Id, userId = c.UserId }))
+                                            {
+                                                <div class="radio">
+                                                    <input id="radio-choose-executor-@c.UserId" name="radio" type="radio" required autocomplete="off"
+                                                           oninvalid="setCustomValidity('Сперва нужно ознакомиться с правилами!')"
+                                                           oninput="setCustomValidity('')" />
+                                                    <label for="radio-choose-executor-@c.UserId"><span class="radio-label"></span>  Я ознакомился с правилами</label>
+                                                </div>
+                                                <input id="choose-executor-@c.UserId" class="margin-top-15 button full-width button-sliding-icon ripple-effect"
+                                                       type="submit" value="Принять" />
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Bid Acceptance Popup / End -->
+
+
+                            <div id="small-dialog-2-@c.Id" class="small-dialog-2 zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+                                <ul class="popup-tabs-nav">
+                                    <li><a href="#tab2">Отправка сообщения</a></li>
+                                </ul>
+                                <div class="popup-tabs-container">
+                                    @using (Html.BeginForm("AddMessage", "Chat", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken();
+                                        <!-- Tab -->
+
                                         <div class="popup-tab-content" id="tab2">
 
                                             <!-- Welcome Text -->
                                             <div class="welcome-text">
-                                                <h3>Отправить сообщение @c.User.UserName</h3>
+                                                <h3>Отправьте сообщение @c.User.UserName</h3>
                                             </div>
+                                            @Html.Hidden("UserFromId", User.Identity.GetUserId(), new { id = "userFromId-" + c.UserId })
+                                            @Html.Hidden("UserToId", c.UserId, new { id = "userToId-" + c.UserId })
 
-                                            <!-- Form -->
-                                            <form method="post" id="send-pm">
-                                                <textarea name="textarea" cols="10" placeholder="Оставьте сообщение..." class="with-border" required></textarea>
-                                            </form>
-
+                                            <textarea name="Description" id="add-message-description-@c.UserId" cols="10" placeholder="Сообщение" class="with-border"></textarea>
                                             <!-- Button -->
-                                            <a class="button full-width button-sliding-icon ripple-effect" type="submit" form="send-pm" target="_blank">Отправить <i class="icon-material-outline-arrow-right-alt"></i></a>
-
+                                            <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Отправить <i class="icon-material-outline-arrow-right-alt"></i></button>
                                         </div>
+                                    }
 
-                                    </div>
-                                </div>*@
                                 </div>
 
-                            }
-                        }
-                        <!--End of foreach-->
+                                @*<!--Tabs -->
+                                    <div class="sign-in-form">
 
-                    </ul>
-                </div>
+                                        <ul class="popup-tabs-nav">
+                                            <li><a href="#tab2">Отправка сообщения</a></li>
+                                        </ul>
+
+                                        <div class="popup-tabs-container">
+
+                                            <!-- Tab -->
+                                            <div class="popup-tab-content" id="tab2">
+
+                                                <!-- Welcome Text -->
+                                                <div class="welcome-text">
+                                                    <h3>Отправить сообщение @c.User.UserName</h3>
+                                                </div>
+
+                                                <!-- Form -->
+                                                <form method="post" id="send-pm">
+                                                    <textarea name="textarea" cols="10" placeholder="Оставьте сообщение..." class="with-border" required></textarea>
+                                                </form>
+
+                                                <!-- Button -->
+                                                <a class="button full-width button-sliding-icon ripple-effect" type="submit" form="send-pm" target="_blank">Отправить <i class="icon-material-outline-arrow-right-alt"></i></a>
+
+                                            </div>
+
+                                        </div>
+                                    </div>*@
+                            </div>
+
+                        }
+                    }
+                    <!--End of foreach-->
+
+                </ul>
             </div>
+        </div>
 
 
 
@@ -787,7 +797,7 @@
                                 <li>
                                     <i class="icon-material-outline-date-range"></i>
                                     <h5>Дата создания</h5>
-                                    <span>@Model.StartDate.ToShortDateString()</span>
+                                    <span>@Model.StartDate.ToString("dd MMMM yyyy HH:mm:ss")</span>
                                 </li>
                                 <li>
                                     <i class="icon-material-outline-business-center"></i>
@@ -797,7 +807,7 @@
                                 <li>
                                     <i class="icon-material-outline-access-time"></i>
                                     <h5>Выполнить до</h5>
-                                    <span>@Model.EndingDate.ToShortDateString()</span>
+                                    <span>@Model.EndingDate.ToString("dd MMMM yyyy HH:mm:ss")</span>
                                 </li>
                             </ul>
                         </div>
@@ -860,7 +870,7 @@
 
                                 <input id="sliderPrice" class="bidding-slider" type="text" value="@Model.Price"
                                        data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
-                                       data-slider-max="25000" data-slider-value="@Model.Price" data-slider-step="1"
+                                       data-slider-max="50000" data-slider-value="@Model.Price" data-slider-step="50"
                                        data-slider-tooltip="hide" />
 
                                 <!-- Headline -->
@@ -974,7 +984,7 @@
                     ['dragleave', 'dragend', 'drop'].forEach(function (event) {
                         form.addEventListener(event, function () {
                             form.classList.remove('is-dragover');
-                           
+
                         });
                     });
                     form.addEventListener('drop', function (e) {
@@ -986,7 +996,7 @@
                 }
                 // если форма была отправлена
                 form.addEventListener('submit', function (e) {
-                    // убираем дубликаты 
+                    // убираем дубликаты
                     if (form.classList.contains('is-uploading')) return false;
 
                     form.classList.add('is-uploading');
@@ -1054,7 +1064,7 @@
                         form.setAttribute('target', iframeName);
 
                         iframe.addEventListener('load', function () {
-                            
+
                             if (parseInt(num + droppedFiles.length) < 10) {
                                 votes.text(parseInt(parseInt(num) + parseInt(globFiles.length)));
                             } else {
@@ -1068,7 +1078,7 @@
                             form.classList.remove('is-uploading')
                             form.classList.add(data.success == true ? 'is-success' : 'is-error')
                             form.removeAttribute('target');
-                            
+
                             if (!data.success) errorMsg.textContent = data.error;
                             iframe.parentNode.removeChild(iframe);
                         });
@@ -1095,11 +1105,12 @@
 
     <script>
 
-        $("#chekcbox1").click(function () {
+        $("#checkbox1").click(function () {
             if ($(this).is(':checked')) {
                 $("#ExecutorPrice").prop("disabled", true);
                 $("#ExecutorPrice").css("background-color", "#f2f2f2");
                 $("#ExecutorPrice").attr("placeholder", "Бесплатно");
+                $("#ExecutorPrice").val('0');
             } else {
                 $("#ExecutorPrice").prop("disabled", false);
                 $("#ExecutorPrice").css("background-color", "#ffffff");
@@ -1150,7 +1161,7 @@
             return confirm("Вы уверены, что хотите удалить вложение?");
         }
 
-        $('#choose-executor, #send-for-revision, #accept-custom, #close-custom').on('click', function (e) {
+        $('input[id^="choose-executor"], #send-for-revision, #accept-custom, #close-custom').on('click', function (e) {
             ChangeStatusSpan()
         });
 
@@ -1182,7 +1193,7 @@
 
         $('a[name=deleteAt]').on('click', function (e) {
             var ItemId = $('a[name=deleteAt]').prop('id').replace('buyElement1-', '');
-           
+
             $.ajax({
                 cache: false,
                 url: '@Url.Action("DeleteAttach", "Custom")',
@@ -1347,6 +1358,7 @@
                                 $('.uploadButton-file-name').text("Загрузите файл решения для исполнителя любого формата")
                                 location.hash = "#" + 'Uploaded_Results';
                                 $('#ExecutorPrice').val('');
+
                             } else {
                                 Snackbar.show({
                                     text: 'Максимум 10 файлов решений!',
@@ -1358,6 +1370,11 @@
                                 $('.uploadButton-file-name').text("Загрузите файл решения для исполнителя любого формата")
                                 location.hash = "#" + 'Uploaded_Results';
                                 $('#ExecutorPrice').val('');
+
+                                $('#checkbox1').prop('checked', false);
+                                $("#ExecutorPrice").prop("disabled", false);
+                                $("#ExecutorPrice").css("background-color", "#ffffff");
+                                $("#ExecutorPrice").attr("placeholder", "Цена");
                                 return;
                             }
                         },
@@ -1368,6 +1385,13 @@
                 } else {
                     alert("Браузер не поддерживает загрузку файлов HTML5!");
                 }
+            }
+            else {
+                $("#textAttach").show();
+                $(".lds-ring").children().hide();
+                Snackbar.show({
+                    text: 'Прикрепите хотя бы одно решение!',
+                });
             }
         });
 
@@ -1516,7 +1540,7 @@
                         + '@Html.AntiForgeryToken() <input type="hidden" value="'
                         + data.UserId + '" name="UserId" /><input type="hidden" value="'
                         + data.CustomViewModelId + '" name="CustomViewModelId" /><input type="hidden" value="'
-                        + data.Description + '" name="Description" /><input type="hidden" value = "'
+                        + data.Description + '" name="Description" /><input type="hidden" id="edit-comment-description" value = "'
                         + data.CreationDate +'" name="CreationDate" />'
                         + '<div class="bidding-widget"><span class="bidding-detail margin-top-30">Укажите время выполнения</span>'
                         + '<div class="bidding-fields"><div class="bidding-field"><div class="qtyButtons with-border"><div class="qtyDec"></div>';
@@ -1539,7 +1563,7 @@
                         + '<span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>'
                         + '<div class="bidding-value"><span id="biddingVal1"></span> руб.</div>'
                         + '<input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text" value="'
-                        + '" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="25000" data-slider-value="'
+                        + '" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="50000" data-slider-value="'
                         + data.OfferPrice + '" data-slider-step="50" data-slider-tooltip="hide"/>'
                         + '</div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>';
 
@@ -1821,7 +1845,7 @@
                             + '<div class="bidding-value"><span id="biddingVal"></span> руб.</div>'
                             + '<input id="sliderPrice" class="bidding-slider" type="text" value="@Model.Price" '
                             + 'data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" '
-                            + 'data-slider-max="25000" data-slider-value="@Model.Price" data-slider-step="50" '
+                            + 'data-slider-max="50000" data-slider-value="@Model.Price" data-slider-step="50" '
                             + 'data-slider-tooltip="hide"/><span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>'
                             + '<div class="bidding-fields"><div class="bidding-field">'
                             + '<div class="qtyButtons">'
@@ -1865,35 +1889,45 @@
                 case '2'://по давним
                     //console.log('sortComments = по давним');
                     sortedComments = initialComments.sort(function (a, b) {
-                        return $(a).find('h6').text() > $(b).find('h6').text();
+                        var firstDiv = $(a).find('h6').text();
+                        var secondDiv = $(b).find('h6').text();
+                        return (firstDiv > secondDiv) ? 1 : (firstDiv < secondDiv) ? -1: 0;
                     });
                     break;
 
                 case '3'://по рейтингу
                     //console.log('sortComments = по рейтингу');
                     sortedComments = initialComments.sort(function (a, b) {
-                        return $(a).find('.star-rating').data('rating') < $(b).find('.star-rating').data('rating');
+                        var firstDiv = $(a).find('.star-rating').data('rating');
+                        var secondDiv = $(b).find('.star-rating').data('rating');
+                        return (firstDiv > secondDiv) ? -1 : (firstDiv < secondDiv) ? 1 : 0;
                     });
                     break;
 
                 case '4'://по дешевым
                     //console.log('sortComments = по дешевым');
                     sortedComments = initialComments.sort(function (a, b) {
-                        return parseInt($(a).find('.rate').text()) > parseInt($(b).find('.rate').text());
+                        var firstDiv = parseInt($(a).find('.rate').text());
+                        var secondDiv = parseInt($(b).find('.rate').text());
+                        return (firstDiv > secondDiv) ? 1 : (firstDiv < secondDiv) ? -1 : 0;
                     });
                     break;
 
                 case '5'://по дорогим
                     //console.log('sortComments = по дорогим');
                     sortedComments = initialComments.sort(function (a, b) {
-                        return parseInt($(a).find('.rate').text()) < parseInt($(b).find('.rate').text());
+                        var firstDiv = parseInt($(a).find('.rate').text());
+                        var secondDiv = parseInt($(b).find('.rate').text());
+                        return (firstDiv > secondDiv) ? -1 : (firstDiv < secondDiv) ? 1 : 0;
                     });
                     break;
 
                 default://по новым (по умолчанию)
                     //console.log('sortComments = по новым');
                     sortedComments = initialComments.sort(function (a, b) {
-                        return $(a).find('h6').text() < $(b).find('h6').text();
+                        var firstDiv = $(a).find('h6').text();
+                        var secondDiv = $(b).find('h6').text();
+                        return (firstDiv > secondDiv) ? -1 : (firstDiv < secondDiv) ? 1 : 0;
                     });
                     break;
             }
