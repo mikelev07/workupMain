@@ -270,11 +270,11 @@ namespace HelpMe.Controllers
             Session["ReviewsPage"] = 1;
             Session["ReviewsPageSize"] = reviewsPageSize;
 
-            //Если данный пользователь - заказчик, то подгрузим его заказы
+            //Если данный пользователь - заказчик, то подгрузим его ОТКРЫТЫЕ заказы
             var customerId = User.Identity.GetUserId();
             if(customerId != null)
             {
-                var customsList = await db.Customs.Where(c => c.UserId == customerId).ToListAsync();
+                var customsList = await db.Customs.Where(c => c.UserId == customerId && c.Status==CustomStatus.Open).ToListAsync();
                 ViewData["CustomsList"] = new SelectList(customsList, "Id", "Name");
             }
 
@@ -284,7 +284,7 @@ namespace HelpMe.Controllers
 
         public async Task<bool> AttractToCustom(string yourMessage, int customId, string userFromName, string userToName, string sentMessage)
         {
-            bool hasAlreadyNotification = await db.Notifications.AnyAsync(n => n.Url == ("/Custom/Details/" + customId));
+            bool hasAlreadyNotification = await db.Notifications.AnyAsync(n => n.Url == ("/Custom/Details/" + customId) && n.ExUserName==userToName);
             if (hasAlreadyNotification)
             {
                 return false;

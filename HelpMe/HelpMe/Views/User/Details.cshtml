@@ -430,7 +430,12 @@
                             <div class="clearfix"></div>
                             <!-- Leave Rating / End-->
                         </div>
-                        @Html.TextArea("Description", "", new { rows = "5", cols = "7", @placeholder = "Оставьте развернутый отзыв...", @class = "with-border" })
+                        @Html.TextArea("Description", "",
+                       new {
+                           rows = "5", cols = "7",
+                           @placeholder = "Оставьте развернутый отзыв...",
+                           id ="create-review-description",
+                           @class = "with-border" })
                         @Html.Hidden("OwnerId", Model.Id)
                         <!-- Button -->
                         <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Оставить отзыв <i class="icon-material-outline-arrow-right-alt"></i></button>
@@ -469,7 +474,7 @@
                         @Html.Hidden("UserFromId", User.Identity.GetUserId())
                         @Html.Hidden("UserToId", Model.Id)
 
-                        <textarea name="Description" id="Description" cols="10" placeholder="Сообщение" class="with-border"></textarea>
+                        <textarea name="Description" id="add-message-description" cols="10" placeholder="Сообщение" class="with-border"></textarea>
                         <!-- Button -->
                         <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Отправить <i class="icon-material-outline-arrow-right-alt"></i></button>
                     </div>
@@ -502,13 +507,13 @@
                     <!-- Form -->
                     <form id="attract-to-custom" method="post">
                         @Html.DropDownList("Ваши заказы", ViewData["CustomsList"] as SelectList,
-                   "Не выбрано", new { id = "CustomsList", @class = "selectpicker", data_live_search="true", autocomplete = "off"})
+                   "Выберите заказ:", new { id = "CustomsList", @class = "selectpicker", data_live_search="true", autocomplete = "off"})
                         <br />
                         @*<textarea name="textarea" cols="10" placeholder="Сообщение" class="with-border"></textarea>*@
 
 
                         <!-- Button -->
-                        <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Сделать предложение <i class="icon-material-outline-arrow-right-alt"></i></button>
+                        <button class="button margin-top-35 margin-bottom-15 full-width button-sliding-icon ripple-effect" type="submit">Сделать предложение <i class="icon-material-outline-arrow-right-alt"></i></button>
                     </form>
                 </div>
 
