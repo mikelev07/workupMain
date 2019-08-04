@@ -251,10 +251,10 @@
                                                     data_tippy_placement = "top"
                                                 }
 
-                                                        @* new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
-                                                            new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
+                                                    @* new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
+                                                        new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
 
-                                                        )
+                                                    )
                                             @Ajax.RawActionLink(
                                               "<i  id='fDelbuy"+ i.Id + "' class='icon-feather-edit'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach","Custom",
                                               new{ id = i.Id},
@@ -268,10 +268,10 @@
                                                   data_tippy_placement = "top"
                                               }
 
-                                                    @* new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
-                                                        new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
+                                                @* new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
+                                                    new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
 
-                                                    )
+                                                )
                                         }
                                         @if (Model.UserId == User.Identity.GetUserId())
                                         {
@@ -440,7 +440,7 @@
                                 if (Model.Comments.Where(m => m.UserId == User.Identity.GetUserId()).Count() > 0)
                                 {
                                     var updateTargetIdEdit = "user-comment-bid-rate-" + c.Id;
-                                    var updateTargetIdDelete = "user-comment-" + c.Id;
+                                    //var updateTargetIdDelete = "user-comment-" + c.Id;
 
                                     <div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
 
@@ -459,6 +459,7 @@
                                                     {
                                                         UpdateTargetId = updateTargetIdEdit,
                                                         InsertionMode = InsertionMode.Replace,
+                                                        OnBegin = "return OnBeginEditComment()",
                                                         OnSuccess = "OnSuccessEditComment"
                                                     }))
                                                     {
@@ -468,7 +469,6 @@
                                                         @Html.Hidden("UserId", c.UserId.ToString())
                                                         @Html.Hidden("CustomViewModelId", c.CustomViewModelId.ToString())
                                                         @Html.Hidden("CreationDate", c.CreationDate.ToString())
-                                                        @Html.Hidden("Description", c.Description.ToString(), new { id = "edit-comment-description" })
 
                                                         var timeCount = c.Days;
                                                         string nameTime = "Days";
@@ -481,24 +481,24 @@
                                                         <!-- Bidding -->
                                                         <div class="bidding-widget">
                                                             <!-- Headline -->
-                                                            <span class="bidding-detail">Укажите <strong>стоимость работы</strong> </span>
+                                                            <span class="bidding-detail">Укажите <strong>стоимость работы:</strong> </span>
 
                                                             <!-- Price Slider -->
                                                             <div class="bidding-value">
-                                                                <span id="biddingVal"></span> руб. <button id="hideshow"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button>
+                                                                <span id="edit-comment-bidding-value"></span> руб. <button type="button" id="edit-comment-show-price"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button>
                                                             </div>
-                                                            <input id="amount" class="no-spinners" style="margin-bottom:5px; display:none"
+                                                            <input id="edit-comment-price-value" name="OfferPrice" class="no-spinners" style="margin-bottom:5px; display:none"
                                                                    placeholder="Укажите стоимость" type="number" value="0"
                                                                    oninput="validity.valid||(value='');" min="0" max="50000"
                                                                    data-tippy-placement="top" />
 
-                                                            <input id="sliderPrice" class="bidding-slider" type="text" value="@Model.Price"
+                                                            <input id="edit-comment-slider-price" class="bidding-slider" type="text" value="@Model.Price"
                                                                    data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
                                                                    data-slider-max="50000" data-slider-value="@Model.Price" data-slider-step="50"
                                                                    data-slider-tooltip="hide" />
 
                                                             <!-- Headline -->
-                                                            <span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>
+                                                            <span class="bidding-detail margin-top-10">Укажите <strong>срок выполнения:</strong></span>
 
                                                             <!-- Fields -->
                                                             <div class="bidding-fields">
@@ -507,7 +507,7 @@
                                                                     <!-- Quantity Buttons -->
                                                                     <div class="qtyButtons with-border">
                                                                         <div class="qtyDec"></div>
-                                                                        <input id="Days" class="no-spinners" type="number" min="1" max="100"
+                                                                        <input id="edit-comment-time" class="no-spinners" type="number" min="1" max="100"
                                                                                step="1" name="@nameTime" value="@timeCount" oninput="validity.valid||(value='');">
                                                                         <div class="qtyInc"></div>
                                                                     </div>
@@ -528,7 +528,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <!-- Headline -->
+                                                        <span class="bidding-detail margin-top-10">Добавьте <strong>комментарий:</strong></span>
 
+                                                        <textarea id="edit-comment-desсription" name="Description" cols="30" rows="5" class="with-border" maxlength="200" placeholder="Оставьте своё предложение для заказчика...">@c.Description</textarea>
                                                         //Для проверки
                                                         @*<div>commentId=@c.Id</div>
                                                             <div>description=@c.Description</div>*@
@@ -553,14 +556,8 @@
 
                                                 <!-- Tab -->
                                                 <div class="popup-tab-content" id="tab">
-                                                    @using (Ajax.BeginForm("DeleteComment", "Custom", new { Id = c.Id }, new AjaxOptions
-                                                    {
-                                                        UpdateTargetId = updateTargetIdDelete,
-                                                        InsertionMode = InsertionMode.Replace,
-                                                        OnSuccess = "OnSuccessDeleteComment"
-                                                    }))
-                                                    {
-                                                        @Html.AntiForgeryToken()
+                                                    
+                                                        @*@Html.AntiForgeryToken()*@
                                                         <div class="bidding-widget">
                                                             <!-- Headline -->
                                                             <div class="form-actions no-color">
@@ -569,8 +566,8 @@
                                                         </div>
 
                                                         <!-- Button -->
-                                                        <button class="button full-width button-sliding-icon ripple-effect" type="submit">Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i></button>
-                                                    }
+                                                        <button id="delete-comment-button" class="button full-width button-sliding-icon ripple-effect" 
+                                                                type="submit" onclick="return OnClickDeleteComment('@c.Id')">Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i></button>
                                                 </div>
 
                                             </div>
@@ -861,20 +858,20 @@
 
                                 <!-- Price Slider -->
                                 <div class="bidding-value">
-                                    <span id="biddingVal"></span> руб. <button id="hideshow"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button>
+                                    <span id="add-offer-bidding-value"></span> руб. <button id="add-offer-show-price"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button>
                                 </div>
-                                <input id="amount" class="no-spinners" style="margin-bottom:5px; display:none"
+                                <input id="add-offer-price-value" class="no-spinners" style="margin-bottom:5px; display:none"
                                        placeholder="Укажите стоимость" type="number" value="0"
                                        oninput="validity.valid||(value='');" min="0" max="25000"
                                        data-tippy-placement="top" />
 
-                                <input id="sliderPrice" class="bidding-slider" type="text" value="@Model.Price"
+                                <input id="add-offer-slider-price" class="bidding-slider" type="text" value="@Model.Price"
                                        data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
                                        data-slider-max="50000" data-slider-value="@Model.Price" data-slider-step="50"
                                        data-slider-tooltip="hide" />
 
                                 <!-- Headline -->
-                                <span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>
+                                <span class="bidding-detail">Укажите <strong>срок выполнения</strong></span>
 
                                 <!-- Fields -->
                                 <div class="bidding-fields">
@@ -882,25 +879,25 @@
                                         <!-- Quantity Buttons -->
                                         <div class="qtyButtons">
                                             <div class="qtyDec"></div>
-                                            <input id="time" class="no-spinners" min="1" max="100" type="number" name="qtyInput"
+                                            <input id="add-offer-time" class="no-spinners" min="1" max="100" type="number" name="qtyInput"
                                                    step="1" value="1" oninput="validity.valid||(value='');">
                                             <div class="qtyInc"></div>
                                         </div>
                                     </div>
                                     <div class="bidding-field">
-                                        <select class="selectpicker default" id="time-unit-select">
+                                        <select class="selectpicker default" id="add-offer-time-units">
                                             <option value="1" selected>Дней</option>
                                             <option value="2">Часов</option>
                                         </select>
                                     </div>
                                 </div>
                                 <!-- Headline -->
-                                <span class="bidding-detail margin-top-30">Добавьте <strong>комментарий</strong></span>
+                                <span class="bidding-detail">Добавьте <strong>комментарий</strong></span>
 
-                                <textarea id="desсription" cols="30" rows="5" class="with-border" maxlength="200" placeholder="Оставьте своё предложение для заказчика..."></textarea>
+                                <textarea id="add-offer-description" cols="30" rows="5" class="with-border" maxlength="200" placeholder="Оставьте своё предложение для заказчика..."></textarea>
 
                                 <!-- Button -->
-                                <button id="snackbar-place-bid" class="button ripple-effect move-on-hover full-width margin-top-30"><span>Разместить предложение</span></button>
+                                <button id="snackbar-place-bid" class="button ripple-effect move-on-hover full-width margin-top-15"><span>Разместить предложение</span></button>
 
                             </div>
 
@@ -1105,6 +1102,9 @@
 
     <script>
 
+        var minValue = 1;   //min days
+        var maxValue = 100; //max days
+
         $("#checkbox1").click(function () {
             if ($(this).is(':checked')) {
                 $("#ExecutorPrice").prop("disabled", true);
@@ -1119,28 +1119,36 @@
         });
 
 
-        var sliderMy = document.getElementById('sliderPrice');
-        var box = document.getElementById("amount");
+        var addOfferSliderValue = document.getElementById('add-offer-slider-price');
+        var addOfferBox = document.getElementById('add-offer-price-value');
 
-        jQuery(document).ready(function () {
-            jQuery('#hideshow').on('click', function (event) {
-                jQuery('#amount').toggle('show');
-            });
-        });
+        var editCommentSliderValue = document.getElementById('edit-comment-slider-price');
+        var editCommentBox = document.getElementById('edit-comment-price-value');
 
-        $(box).keyup(function (event) { // задаем функцию при отпускании после нажатия любой клавиши клавиатуры на элементе
-            sliderMy.value = box.value;
-            $("#biddingVal").text(box.value);
-            $("#sliderPrice").slider('setValue', box.value);
-        });
-
-        var minValue = 1;
-        var maxValue = 100;
-       // $(".lds-ring").hide();
         $(document).ready(function () {
+            $('#add-offer-show-price').on('click', function (event) {
+                $('#add-offer-price-value').toggle('show');
+            });
+            $('#edit-comment-show-price').on('click', function (event) {
+                $('#edit-comment-price-value').toggle('show');
+            });
             $("#executors-offers .lds-ring").hide();
             $("#boxed-list-ul > li:odd").css("background-color", "#fafafa");
         });
+
+        $(addOfferBox).keyup(function (event) { // задаем функцию при отпускании после нажатия любой клавиши клавиатуры на элементе
+            addOfferSliderValue.value = addOfferBox.value;
+            $("#add-offer-bidding-value").text(addOfferBox.value);
+            $("#add-offer-slider-price").slider('setValue', addOfferBox.value);
+        });
+
+        $(editCommentBox).keyup(function (event) {
+            editCommentSliderValue.value = editCommentBox.value;
+            $("#edit-comment-bidding-value").text(editCommentBox.value);
+            $("#edit-comment-slider-price").slider('setValue', editCommentBox.value);
+        });
+
+       // $(".lds-ring").hide();
 
         function ChangeStatusSpan() {
             $.ajax({
@@ -1375,7 +1383,7 @@
                                 $("#ExecutorPrice").prop("disabled", false);
                                 $("#ExecutorPrice").css("background-color", "#ffffff");
                                 $("#ExecutorPrice").attr("placeholder", "Цена");
-                                return;
+                                //return;
                             }
                         },
                         error: function (xhr, status, p3) {
@@ -1480,12 +1488,12 @@
 
         var countUserComment = 0;
         $(document).on('click', '#snackbar-place-bid', function () {
-            var decription = $("textarea#desсription").val();
-            var slider = $("#sliderPrice").val();
-            var time = $("#time").val();
-            var timeUnit = $("#time-unit-select").val();
+            var description = $("textarea#desсription").val();
+            var slider = $("#add-offer-slider-price").val();
+            var time = $("#add-offer-time").val();
+            var timeUnit = $("#add-offer-time-units").val();
 
-            if (decription == "") {
+            if (description == "") {
                 Snackbar.show({
                     text: 'Добавьте комментарий!',
                 });
@@ -1519,7 +1527,7 @@
                 hours = time;
                 days = 0;
             }
-            var person = { Description: decription, OfferPrice: slider, Days: days, Hours: hours, CustomViewModelId: @Model.Id };
+            var person = { Description: description, OfferPrice: slider, Days: days, Hours: hours, CustomViewModelId: @Model.Id };
 
             var executorsRating;
             var executorImagePath;
@@ -1536,7 +1544,7 @@
 
                     var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li class="active"><a href="#tab">Редактировать предложение </a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab">'
                         + '<form method="post" action="/Custom/EditComment/'
-                        + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="OnSuccessEditComment" data-ajax-update="#user-comment-bid-rate-' + data.Id + '">'
+                        + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="OnSuccessEditComment" data-ajax-begin="return OnBeginEditComment()" data-ajax-update="#user-comment-bid-rate-' + data.Id + '">'
                         + '@Html.AntiForgeryToken() <input type="hidden" value="'
                         + data.UserId + '" name="UserId" /><input type="hidden" value="'
                         + data.CustomViewModelId + '" name="CustomViewModelId" /><input type="hidden" value="'
@@ -1546,14 +1554,14 @@
                         + '<div class="bidding-fields"><div class="bidding-field"><div class="qtyButtons with-border"><div class="qtyDec"></div>';
 
                     if (days > 0) {
-                        modalEdit += '<input id="Days" type="number" class="no-spinners" min="' + minValue + '" max="' + maxValue
+                        modalEdit += '<input id="edit-comment-time" type="number" class="no-spinners" min="' + minValue + '" max="' + maxValue
                             + '" name="Days" value="' + days+ '" step="1" oninput="validity.valid||(value=\'\');">'
                             + '<div class="qtyInc"></div></div></div>'
                             + '<div class="bidding-field"><select class="selectpicker default with-border" id="edit-time-units">'
                             + '<option selected value="1">дней</option><option value="2">часов</option>';
                     }
                     else {
-                        modalEdit += '<input id="Days" type="number" class="no-spinners" min="' + minValue + '" max="' + maxValue
+                        modalEdit += '<input id="edit-comment-time" type="number" class="no-spinners" min="' + minValue + '" max="' + maxValue
                             + '" name="Hours" value="' + hours + '" step="1" oninput="validity.valid||(value=\'\');">'
                             + '<div class="qtyInc"></div></div></div>'
                             + '<div class="bidding-field"><select class="selectpicker default with-border" id="edit-time-units">'
@@ -1561,8 +1569,8 @@
                     }
                     modalEdit += '</select></div></div><br />'
                         + '<span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>'
-                        + '<div class="bidding-value"><span id="biddingVal1"></span> руб.</div>'
-                        + '<input id="OfferPrice" name="OfferPrice" class="bidding-slider" type="text" value="'
+                        + '<div class="bidding-value"><span id="edit-comment-bidding-value"></span> руб.</div>'
+                        + '<input id="edit-comment-slider-price" name="OfferPrice" class="bidding-slider" type="text" value="'
                         + '" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="50000" data-slider-value="'
                         + data.OfferPrice + '" data-slider-step="50" data-slider-tooltip="hide"/>'
                         + '</div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>';
@@ -1574,7 +1582,7 @@
                         + '</ul><div class="popup-tabs-container">'
                         + '<div class="popup-tab-content" id="tab">'
                         + '<form method="post" action="/Custom/DeleteComment/'
-                        + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="OnSuccessDeleteComment" data-ajax-update="#user-comment-' + data.Id + '">'
+                        + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="OnSuccessDeleteComment" data-ajax-begin="OnBeginDeleteComment" data-ajax-update="#user-comment-' + data.Id + '">'
                         + '@Html.AntiForgeryToken() <div class="bidding-widget">'
                         + '<div class="form-actions no-color"><span class="bidding-detail margin-top-30">Действительно хотите удалить предложение?</span>'
                         + '</div></div>'
@@ -1789,10 +1797,10 @@
 
         $("#edit-time-units").change(function () {
             if ($(this).val() == 1) {
-                $('#Days').attr('name', 'Days');
+                $('#edit-comment-days').attr('name', 'Days');
             }
             else {
-                $('#Days').attr('name', 'Hours');
+                $('#edit-comment-days').attr('name', 'Hours');
             }
         });
 
@@ -1811,7 +1819,38 @@
         }
 
 
+        function OnBeginEditComment() {
+            var description = $("#edit-comment-desсription").val();
+            var slider = $("#edit-comment-slider-price").val();
+            var time = $("#edit-comment-time").val();
+            var timeUnit = $("#edit-time-units").val();
+            if (description == "") {
+                Snackbar.show({
+                    text: 'Добавьте комментарий!',
+                });
+                return false;
+            }
+            if (slider == "") {
+                Snackbar.show({
+                    text: 'Добавьте стоимость выполнения!',
+                });
+                return false;
+            }
+            if (time == "") {
+                Snackbar.show({
+                    text: 'Добавьте срок выполнения!',
+                });
+                return false;
+            }
+            if (time < minValue || time > maxValue) {
+                Snackbar.show({
+                    text: 'Введите число в диапазоне от ' + minValue + ' до ' + maxValue + '!',
+                });
+                return false;
+            }
+            return true;
 
+        }
 
         function OnSuccessEditComment() {
             $(".mfp-close").trigger('click');
@@ -1820,63 +1859,92 @@
             });
         }
 
-        function OnSuccessDeleteComment() {
-            //CheckIsExecutor();
-
-                         if (countUserComment > 0) countUserComment--;
-                        $(".mfp-close").trigger('click');
-                        var votes = $("#votes");
-                        var num = $("#votes").text();
-                        votes.text(parseInt(num) - 1);
-                        //удаляем модальные окна,
-                        //а то косяк с редактированием после удаления
-                        if($('#small-dialog').length) {
-                            //alert('remove EDIT');
-                            $('#small-dialog').remove();
-                        }
-                        if($('#small-dialog-3').length) {
-                            //alert('remove DELETE');
-                            $('#small-dialog-3').remove();
-                        }
-
-                        var addOfferContainer = '<div class="bidding-widget">'
-                            + '<div class="bidding-headline"><h3>Добавить предложение</h3></div>'
-                            + '<div class="bidding-inner"><span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>'
-                            + '<div class="bidding-value"><span id="biddingVal"></span> руб.</div>'
-                            + '<input id="sliderPrice" class="bidding-slider" type="text" value="@Model.Price" '
-                            + 'data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" '
-                            + 'data-slider-max="50000" data-slider-value="@Model.Price" data-slider-step="50" '
-                            + 'data-slider-tooltip="hide"/><span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>'
-                            + '<div class="bidding-fields"><div class="bidding-field">'
-                            + '<div class="qtyButtons">'
-                            + '<div class="qtyDec"></div><input id="time" type="number" class="no-spinners" min="1" max="100" name="qtyInput" value="1">'
-                            + '<div class="qtyInc"></div></div></div><div class="bidding-field">'
-                            + '<select class="selectpicker default" id="time-unit-select">'
-                            + '<option value="1" selected>Дней</option><option value="2">Часов</option></select></div>'
-                            + '</div><span class="bidding-detail margin-top-30">Добавьте <strong>комментарий</strong></span>'
-                            + '<textarea id="desсription" cols="30" rows="5" class="with-border" maxlength="200" placeholder="Оставьте своё предложение для заказчика..."></textarea>'
-                            + '<button id="snackbar-place-bid" class="button ripple-effect move-on-hover full-width margin-top-30"><span>Разместить предложение</span></button>'
-                            + '</div><div class="bidding-signup">Еще нет аккаунта? <a href="#sign-in-dialog" class="register-tab sign-in popup-with-zoom-anim">Регистрация</a></div></div>';
-
-                        if ($('#add-offer-container').length) {
-                            $("#add-offer-container").append(addOfferContainer);
-                        }
-                        else {
-                            addOfferContainer = '<div class="sidebar-widget" id="add-offer-container">'
-                                + addOfferContainer
-                                + '</div>';
-                            $('.sidebar-container').append(addOfferContainer);
-                        }
-
-                        $('.selectpicker').selectpicker();
-                        RangeSlider();
-
-                        $("#add-offer-container").show(500);
-                        jQuery._data($('#snackbar-place-bid'), "events");
+        function OnClickDeleteComment(commentId) {
+            //alert('aaaa');
+            $.ajax({
+                type: 'GET',
+                url: "/Custom/IsExecutor/",
+                data: 'commentId',
+                dataType: JSON,
+                success: function (isExec) {
+                    alert('isExec = ' + isExec);
+                    if (isExec) {
                         Snackbar.show({
-                            text: 'Предложение успешно удалено!',
+                            text: 'Вы не можете удалять предложение, вас уже выбрали исполнителем!',
+                        });
+                        return;
+                    }
+                    else {
+                        //alert('commentId =' + commentId);
+                        $.ajax({
+                            type: 'GET',
+                            url: "/Custom/DeleteComment/",
+                            data: 'commentId',
+                            success: function () {
+                                if (countUserComment > 0) countUserComment--;
+                                var divId = "user-comment-bid-rate-" + commentId;
+                                $(divId).empty();
+                                $(".mfp-close").trigger('click');
+                                var votes = $("#votes");
+                                var num = $("#votes").text();
+                                votes.text(parseInt(num) - 1);
+                                //удаляем модальные окна,
+                                //а то косяк с редактированием после удаления
+                                if ($('#small-dialog').length) {
+                                    //alert('remove EDIT');
+                                    $('#small-dialog').remove();
+                                }
+                                if ($('#small-dialog-3').length) {
+                                    //alert('remove DELETE');
+                                    $('#small-dialog-3').remove();
+                                }
+
+                                var addOfferContainer = '<div class="bidding-widget">'
+                                    + '<div class="bidding-headline"><h3>Добавить предложение</h3></div>'
+                                    + '<div class="bidding-inner"><span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>'
+                                    + '<div class="bidding-value"><span id="add-offer-bidding-value"></span> руб.</div>'
+                                    + '<input id="add-offer-slider-price" class="bidding-slider" type="text" value="@Model.Price" '
+                                    + 'data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" '
+                                    + 'data-slider-max="50000" data-slider-value="@Model.Price" data-slider-step="50" '
+                                    + 'data-slider-tooltip="hide"/><span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>'
+                                    + '<div class="bidding-fields"><div class="bidding-field">'
+                                    + '<div class="qtyButtons">'
+                                    + '<div class="qtyDec"></div><input id="add-offer-time" type="number" class="no-spinners" min="1" max="100" name="qtyInput" value="1">'
+                                    + '<div class="qtyInc"></div></div></div><div class="bidding-field">'
+                                    + '<select class="selectpicker default" id="add-offer-time-units">'
+                                    + '<option value="1" selected>Дней</option><option value="2">Часов</option></select></div>'
+                                    + '</div><span class="bidding-detail margin-top-30">Добавьте <strong>комментарий</strong></span>'
+                                    + '<textarea id="add-offer-description" cols="30" rows="5" class="with-border" maxlength="200" placeholder="Оставьте своё предложение для заказчика..."></textarea>'
+                                    + '<button id="snackbar-place-bid" class="button ripple-effect move-on-hover full-width margin-top-30"><span>Разместить предложение</span></button>'
+                                    + '</div><div class="bidding-signup">Еще нет аккаунта? <a href="#sign-in-dialog" class="register-tab sign-in popup-with-zoom-anim">Регистрация</a></div></div>';
+
+                                if ($('#add-offer-container').length) {
+                                    $("#add-offer-container").append(addOfferContainer);
+                                }
+                                else {
+                                    addOfferContainer = '<div class="sidebar-widget" id="add-offer-container">'
+                                        + addOfferContainer
+                                        + '</div>';
+                                    $('.sidebar-container').append(addOfferContainer);
+                                }
+
+                                $('.selectpicker').selectpicker();
+                                RangeSlider();
+
+                                $("#add-offer-container").show(500);
+                                $._data($('#snackbar-place-bid'), "events");
+                                Snackbar.show({
+                                    text: 'Предложение успешно удалено!',
+                                });
+                            },
+                            error: function () {
+                                console.log('Custom/DeleteComment is gone bad!')
+                            }
                         });
                     }
+                }
+            });
+        }
 
 
         $('#sortComments').on('change', function () {
@@ -1963,14 +2031,14 @@
             $('.bidding-slider').slider();
 
             $(".bidding-slider").on("slide", function (slideEvt) {
-                $("#biddingVal").text(ThousandSeparator(parseInt(slideEvt.value)));
+                $("#add-offer-bidding-value").text(ThousandSeparator(parseInt(slideEvt.value)));
             });
             $(".bidding-slider").on("slide", function (slideEvt) {
-                $("#biddingVal1").text(ThousandSeparator(parseInt(slideEvt.value)));
+                $("#edit-comment-bidding-value").text(ThousandSeparator(parseInt(slideEvt.value)));
             });
-            $("#biddingVal").text(ThousandSeparator(parseInt($('.bidding-slider').val())));
+            $("#add-offer-bidding-value").text(ThousandSeparator(parseInt($('.bidding-slider').val())));
 
-            $("#biddingVal1").text(ThousandSeparator(parseInt($('.bidding-slider').val())));
+            $("#edit-comment-bidding-value").text(ThousandSeparator(parseInt($('.bidding-slider').val())));
             // Default Bootstrap Range Slider
             var currencyAttr = $(".range-slider").attr('data-slider-currency');
 
@@ -1982,8 +2050,9 @@
 
             $(".range-slider-single").slider();
 
-            alert($("#biddingVal").text())
-            $("#amount").val = parseInt($("#biddingVal").text());
+            //alert($("#biddingVal").text())
+            $("#add-offer-price-value").val = parseInt($("#edit-comment-bidding-value").text());
+            $("#edit-comment-price-value").val = parseInt($("#add-offer-bidding-value").text());
         }
 
         // Snackbar for user status switcher

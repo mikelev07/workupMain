@@ -333,7 +333,7 @@ namespace HelpMe.Controllers
                         }
                         else
                         {
-                            attach.AttachFileName = fileNameNew.PadRight(20);
+                            attach.AttachFileName = fileNameNew;
                         }
                         attach.AttachStatus = AttachStatus.NotPurchased;
 
@@ -676,25 +676,26 @@ namespace HelpMe.Controllers
             //ViewBag.CustomViewModelId = new SelectList(db.Customs, "Id", "Name", commentViewModel.CustomViewModelId);
             return Json(true);
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<JsonResult> DeleteComment(int? id)
+        
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async void DeleteComment(int? id)
         {
-            CommentViewModel commentViewModel = await db.Comments.FindAsync(id);
-            CustomViewModel currentCustom = await db.Customs.Include(u => u.Executor).Where(u => u.Id == commentViewModel.CustomViewModelId).SingleOrDefaultAsync();
-            bool isExec = currentCustom.ExecutorId == User.Identity.GetUserId();
-            if (!isExec)
-            {
-                var userId = commentViewModel.CustomViewModelId;
-                db.Comments.Remove(commentViewModel);
-                await db.SaveChangesAsync();
-                return Json("");
-            }
-            else
-            {
-                return null;
-            }
+            var commentViewModel = await db.Comments.FindAsync(id);
+            //var customId = commentViewModel.CustomViewModelId;
+            db.Comments.Remove(commentViewModel);
+            await db.SaveChangesAsync();
+            return;
+            //var currentCustom = await db.Customs.FindAsync(customId);
+            //var executorId = currentCustom.ExecutorId;
+            //bool isExec = executorId == User.Identity.GetUserId();
+            //if (!isExec)
+            //{
+            //    db.Comments.Remove(commentViewModel);
+            //    await db.SaveChangesAsync();
+            //    return 
+            //}
+            //return;
             //return RedirectToAction("Index");
         }
 
@@ -764,8 +765,12 @@ namespace HelpMe.Controllers
 
         public async Task<JsonResult> IsExecutor(int id)
         {
-            CustomViewModel currentCustom = await db.Customs.Include(u => u.Executor).Where(u => u.Id == id).SingleOrDefaultAsync();
-            bool isExec = currentCustom.ExecutorId == User.Identity.GetUserId();
+
+            var commentViewModel = await db.Comments.FindAsync(id);
+            var customId = commentViewModel.CustomViewModelId;
+            var currentCustom = await db.Customs.FindAsync(customId);
+            var executorId = currentCustom.ExecutorId;
+            bool isExec = executorId == User.Identity.GetUserId();
             return Json(isExec);
         }
 
@@ -839,6 +844,7 @@ namespace HelpMe.Controllers
             ViewBag.Types = types;
             SelectList categories = new SelectList(db.TaskCategories, "Id", "Name"); // выбор типа задачи
             ViewBag.Categories = categories;
+            ViewBag.Tasks = new SelectList(db.TaskCategories, "Id", "Name");
             return View();
         }
 
