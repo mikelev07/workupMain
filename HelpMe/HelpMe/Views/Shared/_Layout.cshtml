@@ -8,10 +8,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>@ViewBag.Title – приложение ASP.NET</title>
-
+    <link rel="stylesheet" type="text/css" href="~/Content/Custom/datepicker.css">
     @Styles.Render("~/Content/Custom/css")
     @Scripts.Render("~/bundles/modernizr")
- 
+
     <style>
 
         .nav-tag {
@@ -21,7 +21,6 @@
             width: 25px;
             line-height: 22px;
             text-align: center;
-        
             font-size: 18px;
             background-color: #28b661;
             border-radius: 50%;
@@ -40,6 +39,7 @@
             text-decoration: none;
             color: black;
         }
+
         .progress {
             display: block;
             text-align: center;
@@ -100,7 +100,7 @@
                                 <!-- Notifications -->
                                 <div class="header-notifications" id="not-trigger">
                                     <!-- Trigger -->
-                                    <div class="header-notifications-trigger" >
+                                    <div class="header-notifications-trigger">
                                         <a id="notCl" href="#"><i class="icon-feather-bell"></i><span style="@(ViewBag.Count >= 1 ? "display:none" : "")" class="ncount" id="notific">@ViewBag.Count</span></a>
                                     </div>
                                     <!-- Dropdown -->
@@ -132,7 +132,7 @@
                                                 <i class="icon-feather-check-square"></i>
                                             </button>
                                         </div>
-                                        <div  class="header-notifications-content">
+                                        <div class="header-notifications-content">
                                             <div class="header-notifications-scroll" data-simplebar>
                                                 <ul>
                                                     <!-- Notification -->
@@ -362,11 +362,14 @@
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/Custom/bootstrap-datepicker.js"></script>
+    <script src="~/Scripts/Custom/locale/bootstrap-datepicker.ru.js" charset="UTF-8"></script>
     <script src="~/signalr/hubs"></script>
     <script src="~/Scripts/util.js"></script>
     <script src="~/Scripts/iwc-all.min.js"></script>
     <script src="~/Scripts/signalr-patch.js"></script>
     <script src="~/Scripts/iwc-signalr.js"></script>
+   
 
 
     @Scripts.Render("~/bundles/Scripts/Custom/js")
@@ -389,7 +392,7 @@
     <!-- Google Autocomplete -->
     <script>
       /*  $('#loginButton').click(function () {
-        
+
             var dataForm = {
                 "userid": $("#emailField").val(),
                 "password": $("#passwordField").val(),

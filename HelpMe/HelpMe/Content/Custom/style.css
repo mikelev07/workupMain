@@ -116,6 +116,10 @@
 /* Forms Reset & Styles
 ------------------------------------- */
 
+.datepicker th .next {
+    background-color: green;
+}
+
 .box {
     font-size: 1.25rem; /* 20 */
     background-color: #f2f2f2;
@@ -7333,6 +7337,7 @@ table.basic-table {
 	border-bottom: 1px solid transparent;
 }
 
+
 .accordion__item > .accordion-header:after {
 	content: "\e957";
 	font-family: Material-Icons;
@@ -7344,8 +7349,9 @@ table.basic-table {
 	transform: rotate(0deg);
 }
 
+
 .accordion__item.active > .accordion-header:after {
-	transform: rotate(-180deg);
+    transform: rotate(-180deg);
 }
 
 .accordion__item.active .accordion .accordion-header:before {
