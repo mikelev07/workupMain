@@ -67,6 +67,7 @@ namespace HelpMe.Models
         public ICollection<Wallet> Wallets { get; set; } // создаем универсальную коллекцию
         public ICollection<AttachModel> Attachments { get; set; }
         public ICollection<MyAttachModel> MyAttachments { get; set; }
+        public ICollection<MainAttachModel> MainAttachments { get; set; }
 
         public User()
         {
@@ -81,6 +82,7 @@ namespace HelpMe.Models
             Notes = new List<Note>();
             Attachments = new List<AttachModel>();
             MyAttachments = new List<MyAttachModel>();
+            MainAttachments = new List<MainAttachModel>();
             Wallets = new List<Wallet>(); // добавляем список кошельков
         }
 
@@ -122,6 +124,7 @@ namespace HelpMe.Models
         public DbSet<CustomViewModel> Customs { get; set; }
         public DbSet<AttachModel> Attachments { get; set; }
         public DbSet<MyAttachModel> MyAttachments { get; set; }
+        public DbSet<MainAttachModel> MainAttachments { get; set; }
         public DbSet<CommentViewModel> Comments { get; set; }
         public DbSet<MessageStoreViewModel> Messages { get; set; }
         public DbSet<TypeCustomViewModel> CustomTypes { get; set; }
