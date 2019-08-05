@@ -176,7 +176,7 @@ namespace HelpMe.Controllers
 
         public async Task<string> GetCustomStatus(int? id)
         {
-            var status = await db.Customs.Where(c=>c.Id==id).Select(c=>c.Status).FirstOrDefaultAsync();
+            var status = await db.Customs.Where(c => c.Id == id).Select(c => c.Status).FirstOrDefaultAsync();
             return status.GetDisplayName();
         }
 
@@ -200,7 +200,7 @@ namespace HelpMe.Controllers
 
         public async Task<int> NotPurchasedAttaches(int? id)
         {
-            return await db.Attachments.Where(a => a.CustomViewModelId == id).CountAsync(a=>a.AttachStatus==AttachStatus.NotPurchased);
+            return await db.Attachments.Where(a => a.CustomViewModelId == id).CountAsync(a => a.AttachStatus == AttachStatus.NotPurchased);
         }
 
 
@@ -209,13 +209,13 @@ namespace HelpMe.Controllers
             AttachModel attach = await db.Attachments.FindAsync(id);
             var customId = attach.CustomViewModelId;
 
-            var customViewModel = await db.Customs.Include(c=>c.Attachments).FirstOrDefaultAsync(c=> c.Id==customId);
-            
+            var customViewModel = await db.Customs.Include(c => c.Attachments).FirstOrDefaultAsync(c => c.Id == customId);
+
             db.Attachments.Remove(attach);
 
             var attachments = customViewModel.Attachments;
             var revisions = attachments.Where(a => a.IsRevision == true);
-            if (attachments.Where(a=>a.AttachStatus==AttachStatus.NotPurchased).Count()==0)
+            if (attachments.Where(a => a.AttachStatus == AttachStatus.NotPurchased).Count() == 0)
             {
                 db.Entry(customViewModel).State = EntityState.Modified;
                 if (attachments.Where(a => a.AttachStatus == AttachStatus.Purchased).Count() == 0)
@@ -224,13 +224,13 @@ namespace HelpMe.Controllers
                 }
                 else
                 {
-                    if(!customViewModel.IsRevision)
+                    if (!customViewModel.IsRevision)
                     {
                         customViewModel.Status = CustomStatus.CheckCustom;//проверяется заказчиком
                     }
                     else
                     {
-                        if(revisions.Count()==0)
+                        if (revisions.Count() == 0)
                         {
                             customViewModel.Status = CustomStatus.Revision;//на доработке
                         }
@@ -310,7 +310,7 @@ namespace HelpMe.Controllers
                     {
                         // получаем имя файла
                         string fileName = System.IO.Path.GetFileName(upload.FileName);
-                      
+
                         // сохраняем файл в папку Files в проекте
                         upload.SaveAs(Server.MapPath("~/Files/" + fileName));
                         string path = Server.MapPath("~/Files/" + fileName);
@@ -319,7 +319,7 @@ namespace HelpMe.Controllers
                         int index = fileNameNew.LastIndexOf(".");
                         if (index > 0)
                             fileNameNew = fileNameNew.Substring(0, index); // or index + 1 to keep slash
-                        
+
                         // сохраняем файл в папку Files в проекте
                         upload.SaveAs(path);
                         attach.Id = 1;
@@ -337,7 +337,7 @@ namespace HelpMe.Controllers
                         }
                         attach.AttachStatus = AttachStatus.NotPurchased;
 
-                        if(customViewModel.IsRevision)//см. коммент в методе Accept
+                        if (customViewModel.IsRevision)//см. коммент в методе Accept
                         {
                             attach.IsRevision = true;
                         }
@@ -356,7 +356,7 @@ namespace HelpMe.Controllers
 
         public async Task<bool> EnoughMoneyForBuying(int? id)
         {
-            var attachment = await db.Attachments.Include(a=>a.CustomViewModel).SingleOrDefaultAsync(a => a.Id == id);
+            var attachment = await db.Attachments.Include(a => a.CustomViewModel).SingleOrDefaultAsync(a => a.Id == id);
             var attachPrice = attachment.ExecutorPrice;
             var userId = attachment.CustomViewModel.UserId;
             var wallet = await db.Wallets.SingleOrDefaultAsync(w => w.UserId == userId);
@@ -376,7 +376,7 @@ namespace HelpMe.Controllers
             AttachModel attachViewModel = await db.Attachments
                 .Include(c => c.User)
                 .Include(c => c.CustomViewModel)
-                .Include(c=>c.CustomViewModel.Attachments)
+                .Include(c => c.CustomViewModel.Attachments)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (attachViewModel.AttachStatus != AttachStatus.Purchased)
@@ -609,7 +609,8 @@ namespace HelpMe.Controllers
         [HttpPost]
         public JsonResult ShowExecutors(string Description, int CustomViewModelId, int OfferPrice, int Days, int Hours)
         {
-            var comment = new CommentViewModel {
+            var comment = new CommentViewModel
+            {
                 Description = Description,
                 CreationDate = DateTime.Now,
                 OfferPrice = OfferPrice,
@@ -668,7 +669,7 @@ namespace HelpMe.Controllers
                 }
                 else
                 {
-                    htmlResult += "<span> за "+ commentViewModel.Hours+ " часов</span>";
+                    htmlResult += "<span> за " + commentViewModel.Hours + " часов</span>";
                 }
                 return Json(htmlResult);
                 // return RedirectToAction("Details", "Custom", new { id = commentViewModel.CustomViewModelId }); ;
@@ -676,16 +677,16 @@ namespace HelpMe.Controllers
             //ViewBag.CustomViewModelId = new SelectList(db.Customs, "Id", "Name", commentViewModel.CustomViewModelId);
             return Json(true);
         }
-        
+
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        public async void DeleteComment(int? id)
+        public async Task<bool> DeleteComment(int? id)
         {
             var commentViewModel = await db.Comments.FindAsync(id);
             //var customId = commentViewModel.CustomViewModelId;
             db.Comments.Remove(commentViewModel);
             await db.SaveChangesAsync();
-            return;
+            return true;
             //var currentCustom = await db.Customs.FindAsync(customId);
             //var executorId = currentCustom.ExecutorId;
             //bool isExec = executorId == User.Identity.GetUserId();
@@ -763,15 +764,14 @@ namespace HelpMe.Controllers
             return Json("Файл загружен");
         }
 
-        public async Task<JsonResult> IsExecutor(int id)
+        public async Task<bool> IsExecutor(int id)
         {
-
             var commentViewModel = await db.Comments.FindAsync(id);
             var customId = commentViewModel.CustomViewModelId;
             var currentCustom = await db.Customs.FindAsync(customId);
             var executorId = currentCustom.ExecutorId;
             bool isExec = executorId == User.Identity.GetUserId();
-            return Json(isExec);
+            return isExec;
         }
 
 
@@ -825,7 +825,7 @@ namespace HelpMe.Controllers
                                                               .Include(c => c.TypeTask)
                                                               .Include(c => c.User)
                                                               .Include(c => c.Attachments)
-                                                              .Include(c=>c.MyAttachments)
+                                                              .Include(c => c.MyAttachments)
                                                               .Include(c => c.MainAttachments)
                                                               .FirstOrDefaultAsync(c => c.Id == id);
 
@@ -848,14 +848,90 @@ namespace HelpMe.Controllers
             return View();
         }
 
+
+        // POST: Custom/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,AttachFilePath,AttachFile,UserId,TypeTaskId,CategoryTaskId,SkillId,EndingDate,Price")] CustomViewModel customViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                customViewModel.Status = CustomStatus.Open; // открытая заявка
+                customViewModel.UserId = User.Identity.GetUserId();
+                customViewModel.StartDate = DateTime.Now;
+                customViewModel.ExecutorStartDate = DateTime.Now;
+                db.Customs.Add(customViewModel);
+                await db.SaveChangesAsync();
+
+                var count = customViewModel.MyAttachments.Count;
+                if (count < 10)
+                {
+                    for (var i = 0; i < Request.Files.Count; i++)
+                    {
+                        if (count < 10)
+                        {
+                            MyAttachModel attach = new MyAttachModel();
+
+                            var upload = Request.Files.Get(i);
+
+                            if (Request.Files.Get(i).FileName == "") continue;
+
+                            if (upload != null)
+                            {
+                                // получаем имя файла
+                                string fileName = System.IO.Path.GetFileName(upload.FileName);
+                                // сохраняем файл в папку Files в проекте
+                                upload.SaveAs(Server.MapPath("~/Files/" + fileName));
+                                string path = Server.MapPath("~/Files/" + fileName);
+
+                                FileInfo fil = new FileInfo(path);
+                                var fileNameNew = fil.Name;
+                                int index = fileNameNew.LastIndexOf(".");
+                                if (index > 0)
+                                    fileNameNew = fileNameNew.Substring(0, index);
+                                // сохраняем файл в папку Files в проекте
+                                upload.SaveAs(path);
+                                attach.Id = 1;
+                                attach.CustomViewModelId = customViewModel.Id;
+                                attach.AttachFilePath = path;
+                                attach.AttachFileExtens = fil.Extension;
+                                if (fileNameNew.Length > 10)
+                                {
+                                    attach.AttachFileName = fileNameNew.Substring(0, 18);
+                                }
+                                else
+                                {
+                                    attach.AttachFileName = fileNameNew;
+                                }
+
+                                attach.UserId = User.Identity.GetUserId();
+                                db.MyAttachments.Add(attach);
+                                // SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
+                                await db.SaveChangesAsync();
+                                count = customViewModel.MyAttachments.Count;
+                            }
+                        }
+                    }
+                }
+                //string uName = db.Users.Where(c => c.Id == customViewModel.UserId).FirstOrDefault().UserName;
+                // SendMessage("Добавлен новый заказ", customViewModel.Id, uName);
+                return RedirectToAction("Index");
+            }
+
+            return View(customViewModel);
+        }
+
+
         // GET: Custom/Create
         public async Task<ActionResult> Accept(int? id)
         {
             var transactions = await db.Transactions.Where(t => t.CustomId == id).ToListAsync();
-            var executorId = await db.Customs.Where(c=>c.Id==id).Select(c=>c.ExecutorId).FirstOrDefaultAsync();
+            var executorId = await db.Customs.Where(c => c.Id == id).Select(c => c.ExecutorId).FirstOrDefaultAsync();
             var wallet = await db.Wallets.Where(w => w.UserId == executorId).FirstOrDefaultAsync();
-            
-            foreach(var t in transactions.Where(t=>t.Status==TransactionStatus.Waiting))
+
+            foreach (var t in transactions.Where(t => t.Status == TransactionStatus.Waiting))
             {
                 t.Status = TransactionStatus.Success;
                 wallet.Summ += t.Price;
@@ -883,12 +959,12 @@ namespace HelpMe.Controllers
             if (customViewModel.IsRevision)
             {
                 var revisions = customViewModel.Attachments.Where(a => a.IsRevision);
-                foreach(var rev in revisions)
+                foreach (var rev in revisions)
                 {
                     rev.IsRevision = false;
                 }
             }
-            
+
             db.Entry(customViewModel).State = EntityState.Modified;
             customViewModel.Status = CustomStatus.Close;
             customViewModel.IsRevision = false;
@@ -917,33 +993,6 @@ namespace HelpMe.Controllers
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
         }
 
-        // POST: Custom/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,AttachFilePath,AttachFile,UserId,TypeTaskId,CategoryTaskId,EndingDate,Price")] CustomViewModel customViewModel)
-        {
-            if (ModelState.IsValid)
-            {
-                string fileName = Path.GetFileName(customViewModel.AttachFile.FileName);
-                string path = Server.MapPath("~/Files/" + fileName);
-                // сохраняем файл в папку Files в проекте
-                customViewModel.AttachFile.SaveAs(path);
-                customViewModel.AttachFilePath = "~/Files/" + fileName;
-                customViewModel.Status = CustomStatus.Open; // открытая заявка
-                customViewModel.UserId = User.Identity.GetUserId();
-                customViewModel.StartDate = DateTime.Now;
-                customViewModel.ExecutorStartDate = DateTime.Now;
-                db.Customs.Add(customViewModel);
-                await db.SaveChangesAsync();
-                string uName = db.Users.Where(c => c.Id == customViewModel.UserId).FirstOrDefault().UserName;
-                // SendMessage("Добавлен новый заказ", customViewModel.Id, uName);
-                return RedirectToAction("Index");
-            }
-
-            return View(customViewModel);
-        }
 
         // GET: Custom/Edit/5
         public async Task<ActionResult> Edit(int? id)
