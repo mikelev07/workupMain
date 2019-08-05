@@ -82,8 +82,8 @@ namespace HelpMe.Controllers
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
-            var colls = db.TaskCategories.Include(s => s.Skills);
-            ViewBag.Tasks = new SelectList(colls, "Id", "Name", "Skills.Name", null, null);
+            var colls = db.Skills.Include(s => s.TaskCategory);
+            ViewBag.Tasks = new SelectList(colls, "Id", "Name", "TaskCategory.Name",1);
             return View(model);
         }
 

@@ -116,6 +116,48 @@
 /* Forms Reset & Styles
 ------------------------------------- */
 
+.taby {
+    float: left;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    width: 35%;
+    
+}
+
+/* Style the buttons that are used to open the tab content */
+    .taby button {
+        display: block;
+        background-color: inherit;
+        color: black;
+        padding: 10px 15px;
+        width: 100%;
+        border: none;
+        outline: none;
+        text-align: left;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    /* Change background color of buttons on hover */
+    .taby button:hover {
+        background-color: #ddd;
+    }
+
+    /* Create an active/current "tab button" class */
+    .taby button.active {
+        background-color: #ccc;
+    }
+
+/* Style the tab content */
+.tabycontent {
+    float: left;
+    padding: 0px 12px;
+    border: 1px solid #ccc;
+    width: 65%;
+    border-left: none;
+   
+}
+
 .datepicker th .next {
     background-color: green;
 }

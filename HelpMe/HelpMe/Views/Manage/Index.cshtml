@@ -128,9 +128,8 @@
                                     <div class="submit-field">
                                         <h5>Дисциплины</h5>
 
-                                        
-
-                                        @Html.DropDownList("Все дисциплины",  ViewBag.Tasks as SelectList,null, new { @class = "selectpicker", @id = "dicp", autocomplete = "off", multiple = "multiple" })
+                                       
+                                        <a href="#small-dialog" class="apply-now-button popup-with-zoom-anim margin-bottom-50">Привлечь к заданию <i class="icon-material-outline-arrow-right-alt"></i></a>
 
                                         <br />
                                         <div class="keywords-list">
@@ -273,10 +272,136 @@
 
     </div>
 </div>
+
+<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+    <!--Tabs -->
+    <div class="sign-in-form">
+
+        <ul class="popup-tabs-nav">
+            <li><a href="#tab">Хуйня</a></li>
+        </ul>
+
+        <div class="popup-tabs-container">
+
+            <!-- Tab -->
+            <div class="popup-tab-content" id="tab">
+
+                <!-- Welcome Text -->
+                <div class="welcome-text">
+                    <h3>Выберите специализацию</h3>
+                </div>
+
+                <!-- Form -->
+
+
+                <div class="taby">
+                    <button class="tablinks active" onclick="openCity(event, 'London')">Математические дисциплины</button>
+                    <button class="tablinks" onclick="openCity(event, 'Paris')">Естественные науки</button>
+                    <button class="tablinks" onclick="openCity(event, 'Tokyo')">Естественные ватуки</button>
+                    <button class="tablinks" onclick="openCity(event, 'London1')">Естественные уруки</button>
+                    <button class="tablinks" onclick="openCity(event, 'Paris1')">Естественные суки</button>
+                    <button class="tablinks" onclick="openCity(event, 'Tokyo1')">Естественные хуйуки</button>
+                    <button class="tablinks" onclick="openCity(event, 'London2')">Естественные тануки</button>
+                    <button class="tablinks" onclick="openCity(event, 'Paris2')">Естественные батуки</button>
+                    <button class="tablinks" onclick="openCity(event, 'Tokyo2')">
+                        Естественные шмуки
+                    </button>
+
+                </div>
+
+                <div id="London" class="tabycontent">
+
+                    <div class="checkbox">
+                        <input type="checkbox" id="chekcbox1" checked>
+                        <label for="chekcbox1"><span class="checkbox-icon"></span> Догги-стайл</label>
+                    </div> <br />
+                    <div class="checkbox">
+                        <input type="checkbox" id="chekcbox2" checked>
+                        <label for="chekcbox2"><span class="checkbox-icon"></span> Догги-станский</label>
+                    </div> <br />
+                    <div class="checkbox">
+                        <input type="checkbox" id="chekcbox3" checked>
+                        <label for="chekcbox3"><span class="checkbox-icon"></span> Чечно-залупский</label>
+                    </div>
+                   
+
+                </div>
+
+                <div style="display:none" id="Paris" class="tabycontent">
+                    <h3>Paris</h3>
+                    <p>Paris is the capital of France.</p>
+                </div>
+
+                <div style="display:none" id="Tokyo" class="tabycontent">
+                    <h3>Tokyo</h3>
+                    <p>Tokyo is the capital of Japan.</p>
+                </div>
+
+                <div style="display:none" id="London1" class="tabycontent">
+                    <h3>London</h3>
+                    <p>London is the capital city of England.</p>
+                </div>
+
+                <div style="display:none" id="Paris1" class="tabycontent">
+                    <h3>Paris</h3>
+                    <p>Paris is the capital of France.</p>
+                </div>
+
+                <div style="display:none" id="Tokyo1" class="tabycontent">
+                    <h3>Tokyo</h3>
+                    <p>Tokyo is the capital of Japan.</p>
+                </div>
+
+                <div style="display:none" id="London2" class="tabycontent">
+                    <h3>London</h3>
+                    <p>London is the capital city of England.</p>
+                </div>
+
+                <div style="display:none" id="Paris2" class="tabycontent">
+                    <h3>Paris</h3>
+                    <p>Paris is the capital of France.</p>
+                </div>
+
+                <div style="display:none" id="Tokyo2" class="tabycontent">
+                    <h3>Tokyo</h3>
+                    <p>Tokyo is the capital of Japan.</p>
+                </div>
+
+                
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
 <!-- Dashboard Content / End -->
 @section Scripts {
     <script>
-      
+
+        function openCity(evt, cityName) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
+
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("tabycontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab, and add an "active" class to the link that opened the tab
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+
         var keywordsList = $(".keywords-list");
         function addKeywordSub(str, i) {
 			var $newKeyword = $("<span id='"+ i +"' class='keyword'><span class='keyword-remove'></span><span class='keyword-text'>"+ str +"</span></span>");
