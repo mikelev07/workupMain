@@ -567,7 +567,7 @@
 
                                                         <!-- Button -->
                                                         <button id="delete-comment-button" class="button full-width button-sliding-icon ripple-effect" 
-                                                                type="submit" onclick="return OnClickDeleteComment('@c.Id')">Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                                                type="submit" onclick="return OnClickDeleteComment(@c.Id)">Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i></button>
                                                 </div>
 
                                             </div>
@@ -860,18 +860,18 @@
                                 <div class="bidding-value">
                                     <span id="add-offer-bidding-value"></span> руб. <button id="add-offer-show-price"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button>
                                 </div>
-                                <input id="add-offer-price-value" class="no-spinners" style="margin-bottom:5px; display:none"
-                                       placeholder="Укажите стоимость" type="number" value="0"
-                                       oninput="validity.valid||(value='');" min="0" max="25000"
+                                <input id="add-offer-price-value" class="no-spinners" style="margin-bottom:5px; display:none" 
+                                       placeholder="Укажите стоимость" type="number" value="@Model.Price" 
+                                       oninput="validity.valid||(value='');" min="0" max="50000" 
                                        data-tippy-placement="top" />
 
-                                <input id="add-offer-slider-price" class="bidding-slider" type="text" value="@Model.Price"
-                                       data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
-                                       data-slider-max="50000" data-slider-value="@Model.Price" data-slider-step="50"
+                                <input id="add-offer-slider-price" class="bidding-slider" type="text" value="@Model.Price" 
+                                       data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" 
+                                       data-slider-max="50000" data-slider-value="@Model.Price" data-slider-step="50" 
                                        data-slider-tooltip="hide" />
 
                                 <!-- Headline -->
-                                <span class="bidding-detail">Укажите <strong>срок выполнения</strong></span>
+                                <span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>
 
                                 <!-- Fields -->
                                 <div class="bidding-fields">
@@ -892,12 +892,12 @@
                                     </div>
                                 </div>
                                 <!-- Headline -->
-                                <span class="bidding-detail">Добавьте <strong>комментарий</strong></span>
+                                <span class="bidding-detail margin-top-30">Добавьте <strong>комментарий</strong></span>
 
                                 <textarea id="add-offer-description" cols="30" rows="5" class="with-border" maxlength="200" placeholder="Оставьте своё предложение для заказчика..."></textarea>
 
                                 <!-- Button -->
-                                <button id="snackbar-place-bid" class="button ripple-effect move-on-hover full-width margin-top-15"><span>Разместить предложение</span></button>
+                                <button id="snackbar-place-bid" class="button ripple-effect move-on-hover full-width margin-top-30"><span>Разместить предложение</span></button>
 
                             </div>
 
@@ -1119,33 +1119,36 @@
         });
 
 
-        var addOfferSliderValue = document.getElementById('add-offer-slider-price');
-        var addOfferBox = document.getElementById('add-offer-price-value');
-
-        var editCommentSliderValue = document.getElementById('edit-comment-slider-price');
-        var editCommentBox = document.getElementById('edit-comment-price-value');
 
         $(document).ready(function () {
-            $('#add-offer-show-price').on('click', function (event) {
+            RangeSlider();
+
+            $(document).on('click', '#add-offer-show-price', function (event) {
                 $('#add-offer-price-value').toggle('show');
             });
-            $('#edit-comment-show-price').on('click', function (event) {
+
+            $(document).on('click', '#edit-comment-show-price', function (event) {
                 $('#edit-comment-price-value').toggle('show');
             });
+
+            $(document).on('keyup', addOfferBox, function (event) { // задаем функцию при отпускании после нажатия любой клавиши клавиатуры на элементе
+                var addOfferBox = document.getElementById('add-offer-price-value');
+                var addOfferSliderValue = document.getElementById('add-offer-slider-price');
+                addOfferSliderValue.value = addOfferBox.value;
+                $("#add-offer-bidding-value").text(addOfferBox.value);
+                $("#add-offer-slider-price").slider('setValue', addOfferBox.value);
+            });
+
+            $(document).on('keyup', editCommentBox,function (event) {
+                var editCommentBox = document.getElementById('edit-comment-price-value');
+                var editCommentSliderValue = document.getElementById('edit-comment-slider-price');
+                editCommentSliderValue.value = editCommentBox.value;
+                $("#edit-comment-bidding-value").text(editCommentBox.value);
+                $("#edit-comment-slider-price").slider('setValue', editCommentBox.value);
+            });
+
             $("#executors-offers .lds-ring").hide();
             $("#boxed-list-ul > li:odd").css("background-color", "#fafafa");
-        });
-
-        $(addOfferBox).keyup(function (event) { // задаем функцию при отпускании после нажатия любой клавиши клавиатуры на элементе
-            addOfferSliderValue.value = addOfferBox.value;
-            $("#add-offer-bidding-value").text(addOfferBox.value);
-            $("#add-offer-slider-price").slider('setValue', addOfferBox.value);
-        });
-
-        $(editCommentBox).keyup(function (event) {
-            editCommentSliderValue.value = editCommentBox.value;
-            $("#edit-comment-bidding-value").text(editCommentBox.value);
-            $("#edit-comment-slider-price").slider('setValue', editCommentBox.value);
         });
 
        // $(".lds-ring").hide();
@@ -1170,7 +1173,7 @@
         }
 
         $('input[id^="choose-executor"], #send-for-revision, #accept-custom, #close-custom').on('click', function (e) {
-            ChangeStatusSpan()
+            ChangeStatusSpan();
         });
 
         @*$('#getArch').on('click', function () {
@@ -1488,7 +1491,7 @@
 
         var countUserComment = 0;
         $(document).on('click', '#snackbar-place-bid', function () {
-            var description = $("textarea#desсription").val();
+            var description = $("#add-offer-description").val();
             var slider = $("#add-offer-slider-price").val();
             var time = $("#add-offer-time").val();
             var timeUnit = $("#add-offer-time-units").val();
@@ -1570,24 +1573,24 @@
                     modalEdit += '</select></div></div><br />'
                         + '<span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>'
                         + '<div class="bidding-value"><span id="edit-comment-bidding-value"></span> руб.</div>'
+
                         + '<input id="edit-comment-slider-price" name="OfferPrice" class="bidding-slider" type="text" value="'
                         + '" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="50000" data-slider-value="'
                         + data.OfferPrice + '" data-slider-step="50" data-slider-tooltip="hide"/>'
+
                         + '</div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>';
 
 
                     var modalRemove = '<div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">'
                         + '<div class="sign-in-form"><ul class="popup-tabs-nav">'
-                        + '<li class="active"><a href="#tab">Удалить предложение ' + data.Id + '</a></li>'
+                        + '<li class="active"><a href="#tab">Удалить предложение</a></li>'
                         + '</ul><div class="popup-tabs-container">'
                         + '<div class="popup-tab-content" id="tab">'
-                        + '<form method="post" action="/Custom/DeleteComment/'
-                        + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="OnSuccessDeleteComment" data-ajax-begin="OnBeginDeleteComment" data-ajax-update="#user-comment-' + data.Id + '">'
-                        + '@Html.AntiForgeryToken() <div class="bidding-widget">'
+                        + '<div class="bidding-widget">'
                         + '<div class="form-actions no-color"><span class="bidding-detail margin-top-30">Действительно хотите удалить предложение?</span>'
                         + '</div></div>'
-                        + '<button class="button full-width button-sliding-icon ripple-effect" type="submit">Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i></button>'
-                        + '</form></div></div></div></div>';
+                        + '<button class="button full-width button-sliding-icon ripple-effect" onclick="return OnClickDeleteComment(' + data.Id + ')" type="submit">Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i></button>'
+                        + '</div></div></div></div>';
 
                     var votes = $("#votes");
                     var num = $("#votes").text();
@@ -1863,27 +1866,25 @@
             //alert('aaaa');
             $.ajax({
                 type: 'GET',
-                url: "/Custom/IsExecutor/",
-                data: 'commentId',
-                dataType: JSON,
+                url: '@Url.Action("IsExecutor", "Custom")',
+                data: { 'id': commentId },
                 success: function (isExec) {
-                    alert('isExec = ' + isExec);
-                    if (isExec) {
+                    //console.log('isExec = ' + isExec);
+                    if (isExec=="True") {
                         Snackbar.show({
                             text: 'Вы не можете удалять предложение, вас уже выбрали исполнителем!',
                         });
                         return;
                     }
                     else {
-                        //alert('commentId =' + commentId);
+                        //console.log('commentId =' + commentId);
                         $.ajax({
-                            type: 'GET',
-                            url: "/Custom/DeleteComment/",
-                            data: 'commentId',
-                            success: function () {
+                            type: "GET",
+                            url: '@Url.Action("DeleteComment", "Custom")',
+                            data: { 'id': commentId },
+                            success: function (data) {
                                 if (countUserComment > 0) countUserComment--;
-                                var divId = "user-comment-bid-rate-" + commentId;
-                                $(divId).empty();
+                                $("#user-comment-" + commentId).empty();
                                 $(".mfp-close").trigger('click');
                                 var votes = $("#votes");
                                 var num = $("#votes").text();
@@ -1902,21 +1903,31 @@
                                 var addOfferContainer = '<div class="bidding-widget">'
                                     + '<div class="bidding-headline"><h3>Добавить предложение</h3></div>'
                                     + '<div class="bidding-inner"><span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>'
-                                    + '<div class="bidding-value"><span id="add-offer-bidding-value"></span> руб.</div>'
+                                    + '<div class="bidding-value"><span id="add-offer-bidding-value"></span> руб. <button id="add-offer-show-price"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button></div>'
+
+                                    +'<input id="add-offer-price-value" class="no-spinners" style="margin-bottom:5px; display:none" '
+                                    +'placeholder="Укажите стоимость" type="number" value="@Model.Price" '
+                                    + ' min="0" max="50000" data-tippy-placement="top" '
+                                    + 'oninput="validity.valid||(value=\'\');"/>'
+
                                     + '<input id="add-offer-slider-price" class="bidding-slider" type="text" value="@Model.Price" '
                                     + 'data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" '
-                                    + 'data-slider-max="50000" data-slider-value="@Model.Price" data-slider-step="50" '
-                                    + 'data-slider-tooltip="hide"/><span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>'
+                                    + 'data-slider-max="50000" data-slider-value="@Model.Price" data-slider-step="50" data-slider-tooltip="hide"/>'
+
+                                    + '<span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>'
                                     + '<div class="bidding-fields"><div class="bidding-field">'
-                                    + '<div class="qtyButtons">'
-                                    + '<div class="qtyDec"></div><input id="add-offer-time" type="number" class="no-spinners" min="1" max="100" name="qtyInput" value="1">'
+                                    + '<div class="qtyButtons"><div class="qtyDec"></div>'
+
+                                    + '<input id="add-offer-time" type="number" class="no-spinners" min="' + minValue + '" max="' + maxValue + '" '
+                                    + 'name="qtyInput" step="1" value="@Model.Price" oninput="validity.valid||(value=\'\');"/>'
+
                                     + '<div class="qtyInc"></div></div></div><div class="bidding-field">'
                                     + '<select class="selectpicker default" id="add-offer-time-units">'
                                     + '<option value="1" selected>Дней</option><option value="2">Часов</option></select></div>'
                                     + '</div><span class="bidding-detail margin-top-30">Добавьте <strong>комментарий</strong></span>'
                                     + '<textarea id="add-offer-description" cols="30" rows="5" class="with-border" maxlength="200" placeholder="Оставьте своё предложение для заказчика..."></textarea>'
                                     + '<button id="snackbar-place-bid" class="button ripple-effect move-on-hover full-width margin-top-30"><span>Разместить предложение</span></button>'
-                                    + '</div><div class="bidding-signup">Еще нет аккаунта? <a href="#sign-in-dialog" class="register-tab sign-in popup-with-zoom-anim">Регистрация</a></div></div>';
+                                    + '</div></div>';
 
                                 if ($('#add-offer-container').length) {
                                     $("#add-offer-container").append(addOfferContainer);
@@ -1937,11 +1948,15 @@
                                     text: 'Предложение успешно удалено!',
                                 });
                             },
-                            error: function () {
-                                console.log('Custom/DeleteComment is gone bad!')
+                            error: function (data) {
+                                //console.log('data = ' + data);
+                                //console.log('Custom/DeleteComment is gone bad!');
                             }
                         });
                     }
+                },
+                error: function () {
+                    alert("Custom/IsExecutor is gone bad!");
                 }
             });
         }
@@ -2050,9 +2065,17 @@
 
             $(".range-slider-single").slider();
 
+            $('#add-offer-slider-price').on('change', function () {
+                $("#add-offer-price-value").val($("#add-offer-slider-price").val())
+            });
+
+            $('#edit-comment-slider-price').on('change', function () {
+                $("#edit-comment-price-value").val($("#edit-comment-slider-price").val())
+            });
+
             //alert($("#biddingVal").text())
-            $("#add-offer-price-value").val = parseInt($("#edit-comment-bidding-value").text());
-            $("#edit-comment-price-value").val = parseInt($("#add-offer-bidding-value").text());
+            $("#add-offer-price-value").val = parseInt($("#add-offer-bidding-value").text());
+            $("#edit-comment-price-value").val = parseInt($("#edit-comment-bidding-value").text());
         }
 
         // Snackbar for user status switcher
