@@ -460,7 +460,7 @@
                                                         UpdateTargetId = updateTargetIdEdit,
                                                         InsertionMode = InsertionMode.Replace,
                                                         OnBegin = "return OnBeginEditComment()",
-                                                        OnSuccess = "OnSuccessEditComment"
+                                                        OnSuccess = "return OnSuccessEditComment("+c.Id+")"
                                                     }))
                                                     {
                                                         @Html.AntiForgeryToken()
@@ -486,11 +486,11 @@
                                                             <!-- Price Slider -->
                                                             <div class="bidding-value">
                                                                 <span id="edit-comment-bidding-value"></span> руб. <button type="button" id="edit-comment-show-price"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button>
-                                                            </div>
-                                                            <input id="edit-comment-price-value" name="OfferPrice" class="no-spinners" style="margin-bottom:5px; display:none"
+                                                                <input id="edit-comment-price-value" name="OfferPrice" class="no-spinners" style="margin-bottom:5px; display:none"
                                                                    placeholder="Укажите стоимость" type="number" value="0"
                                                                    oninput="validity.valid||(value='');" min="0" max="50000"
-                                                                   data-tippy-placement="top" />
+                                                                   data-tippy-placement="top"/>
+                                                            </div>
 
                                                             <input id="edit-comment-slider-price" class="bidding-slider" type="text" value="@Model.Price"
                                                                    data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
@@ -1131,7 +1131,7 @@
                 $('#edit-comment-price-value').toggle('show');
             });
 
-            $(document).on('keyup', addOfferBox, function (event) { // задаем функцию при отпускании после нажатия любой клавиши клавиатуры на элементе
+            $(document).on('keyup', '#add-offer-price-value', function (event) { // задаем функцию при отпускании после нажатия любой клавиши клавиатуры на элементе
                 var addOfferBox = document.getElementById('add-offer-price-value');
                 var addOfferSliderValue = document.getElementById('add-offer-slider-price');
                 addOfferSliderValue.value = addOfferBox.value;
@@ -1139,7 +1139,7 @@
                 $("#add-offer-slider-price").slider('setValue', addOfferBox.value);
             });
 
-            $(document).on('keyup', editCommentBox,function (event) {
+            $(document).on('keyup', '#edit-comment-price-value',function (event) {
                 var editCommentBox = document.getElementById('edit-comment-price-value');
                 var editCommentSliderValue = document.getElementById('edit-comment-slider-price');
                 editCommentSliderValue.value = editCommentBox.value;
@@ -1547,12 +1547,25 @@
 
                     var modalEdit = '<div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs"><div class="sign-in-form"><ul class="popup-tabs-nav"><li class="active"><a href="#tab">Редактировать предложение </a></li></ul><div class="popup-tabs-container"><div class="popup-tab-content" id="tab">'
                         + '<form method="post" action="/Custom/EditComment/'
-                        + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="OnSuccessEditComment" data-ajax-begin="return OnBeginEditComment()" data-ajax-update="#user-comment-bid-rate-' + data.Id + '">'
-                        + '@Html.AntiForgeryToken() <input type="hidden" value="'
-                        + data.UserId + '" name="UserId" /><input type="hidden" value="'
-                        + data.CustomViewModelId + '" name="CustomViewModelId" /><input type="hidden" value="'
-                        + data.Description + '" name="Description" /><input type="hidden" id="edit-comment-description" value = "'
-                        + data.CreationDate +'" name="CreationDate" />'
+                        + data.Id + '" data-ajax="true" data-ajax-mode="replace" data-ajax-success="return OnSuccessEditComment('+data.Id+')" data-ajax-begin="return OnBeginEditComment()" data-ajax-update="#user-comment-bid-rate-' + data.Id + '">'
+                        + '@Html.AntiForgeryToken() '
+                        + '<input type="hidden" value="' + data.UserId + '" name="UserId" />'
+                        + '<input type="hidden" value="' + data.CustomViewModelId + '" name="CustomViewModelId" />'
+                        + '<input type="hidden" value="' + data.Description + '" name="Description" />'
+                        + '<input type="hidden" id="edit-comment-description" value = "' + data.CreationDate + '" name="CreationDate" />'
+
+                        + '<span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>'
+                        + '<div class="bidding-value"><span id="edit-comment-bidding-value"></span> руб. <button type="button" id="edit-comment-show-price"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button>'
+
+                        +'<input id="edit-comment-price-value" name="OfferPrice" class="no-spinners" style="margin-bottom:5px; display:none"'
+                        +'placeholder="Укажите стоимость" type="number" value="0"'
+                        +'oninput="validity.valid||(value=\'\');" min="0" max="50000"'
+                        +'data-tippy-placement="top"/></div>'
+
+                        + '<input id="edit-comment-slider-price" name="OfferPrice" class="bidding-slider" type="text" value="'
+                        + '" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="50000" data-slider-value="'
+                        + data.OfferPrice + '" data-slider-step="50" data-slider-tooltip="hide"/>'
+
                         + '<div class="bidding-widget"><span class="bidding-detail margin-top-30">Укажите время выполнения</span>'
                         + '<div class="bidding-fields"><div class="bidding-field"><div class="qtyButtons with-border"><div class="qtyDec"></div>';
 
@@ -1570,15 +1583,12 @@
                             + '<div class="bidding-field"><select class="selectpicker default with-border" id="edit-time-units">'
                             + '<option value="1">дней</option><option selected value="2">часов</option>';
                     }
-                    modalEdit += '</select></div></div><br />'
-                        + '<span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>'
-                        + '<div class="bidding-value"><span id="edit-comment-bidding-value"></span> руб.</div>'
+                    modalEdit += '</select></div></div><br/>'
 
-                        + '<input id="edit-comment-slider-price" name="OfferPrice" class="bidding-slider" type="text" value="'
-                        + '" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="50000" data-slider-value="'
-                        + data.OfferPrice + '" data-slider-step="50" data-slider-tooltip="hide"/>'
-
-                        + '</div><button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div>';
+                        + '</div><span class="bidding-detail margin-top-10">Добавьте <strong>комментарий:</strong></span>'
+                        + '<textarea id="edit-comment-desсription" name="Description" cols="30" rows="5" '
+                        + 'class="with-border" maxlength="200" placeholder="Оставьте своё предложение для заказчика..." >'
+                        + data.Description+'</textarea> <button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button></form></div></div></div></div> ';
 
 
                     var modalRemove = '<div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">'
@@ -1725,6 +1735,15 @@
                     }
                 }
 
+                function qtySum() {
+                    var arr = document.getElementsByName('qtyInput');
+                    var tot = 0;
+                    for (var i = 0; i < arr.length; i++) {
+                        if (parseInt(arr[i].value)) {
+                            tot += parseInt(arr[i].value);
+                        }
+                    }
+                }
                 qtySum();
                 $(".qtyTotal").addClass("rotate-x");}
 
@@ -1798,12 +1817,12 @@
     });
 
 
-        $("#edit-time-units").change(function () {
+        $("#edit-time-units").on('change', function () {
             if ($(this).val() == 1) {
-                $('#edit-comment-days').attr('name', 'Days');
+                $('#edit-comment-time').attr('name', 'Days');
             }
             else {
-                $('#edit-comment-days').attr('name', 'Hours');
+                $('#edit-comment-time').attr('name', 'Hours');
             }
         });
 
@@ -1855,7 +1874,12 @@
 
         }
 
-        function OnSuccessEditComment() {
+        function OnSuccessEditComment(commentId) {
+            var userDescriptionId = '#user-comment-' + commentId + " .item-description";
+            var newDescription = $('#edit-comment-desсription').val();
+            //console.log('userDescriptionId = ' + userDescriptionId);
+            //console.log('newDescription = ' + newDescription);
+            $(userDescriptionId).text(newDescription);
             $(".mfp-close").trigger('click');
             Snackbar.show({
                 text: 'Предложение успешно изменено!',
