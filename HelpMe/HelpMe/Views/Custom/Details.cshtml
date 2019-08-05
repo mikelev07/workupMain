@@ -1908,7 +1908,7 @@
                             data: { 'id': commentId },
                             success: function (data) {
                                 if (countUserComment > 0) countUserComment--;
-                                $("#user-comment-" + commentId).empty();
+                                $("#user-comment-" + commentId).remove();
                                 $(".mfp-close").trigger('click');
                                 var votes = $("#votes");
                                 var num = $("#votes").text();
@@ -1943,7 +1943,7 @@
                                     + '<div class="qtyButtons"><div class="qtyDec"></div>'
 
                                     + '<input id="add-offer-time" type="number" class="no-spinners" min="' + minValue + '" max="' + maxValue + '" '
-                                    + 'name="qtyInput" step="1" value="@Model.Price" oninput="validity.valid||(value=\'\');"/>'
+                                    + 'name="qtyInput" step="1" value="1" oninput="validity.valid||(value=\'\');"/>'
 
                                     + '<div class="qtyInc"></div></div></div><div class="bidding-field">'
                                     + '<select class="selectpicker default" id="add-offer-time-units">'
