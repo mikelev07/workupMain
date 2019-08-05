@@ -243,86 +243,6 @@
     </Compile>
     <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Hubs\NotificationHub.cs" />
-    <Compile Include="Migrations\201905181121513_newMigra.cs" />
-    <Compile Include="Migrations\201905181121513_newMigra.Designer.cs">
-      <DependentUpon>201905181121513_newMigra.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905221549424_propsToUserMigra.cs" />
-    <Compile Include="Migrations\201905221549424_propsToUserMigra.Designer.cs">
-      <DependentUpon>201905221549424_propsToUserMigra.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905230853572_UserViewModelMigra.cs" />
-    <Compile Include="Migrations\201905230853572_UserViewModelMigra.Designer.cs">
-      <DependentUpon>201905230853572_UserViewModelMigra.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905240857352_NotBusyUserViewModel.cs" />
-    <Compile Include="Migrations\201905240857352_NotBusyUserViewModel.Designer.cs">
-      <DependentUpon>201905240857352_NotBusyUserViewModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905241337450_RegDateUserMigration.cs" />
-    <Compile Include="Migrations\201905241337450_RegDateUserMigration.Designer.cs">
-      <DependentUpon>201905241337450_RegDateUserMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905271421529_CustomViewModelMigra.cs" />
-    <Compile Include="Migrations\201905271421529_CustomViewModelMigra.Designer.cs">
-      <DependentUpon>201905271421529_CustomViewModelMigra.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906110907343_newMigra1.cs" />
-    <Compile Include="Migrations\201906110907343_newMigra1.Designer.cs">
-      <DependentUpon>201906110907343_newMigra1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906111419045_StartDateNullable.cs" />
-    <Compile Include="Migrations\201906111419045_StartDateNullable.Designer.cs">
-      <DependentUpon>201906111419045_StartDateNullable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906111427316_StartDateBackUp.cs" />
-    <Compile Include="Migrations\201906111427316_StartDateBackUp.Designer.cs">
-      <DependentUpon>201906111427316_StartDateBackUp.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906151345415_ReviewCustomChanges.cs" />
-    <Compile Include="Migrations\201906151345415_ReviewCustomChanges.Designer.cs">
-      <DependentUpon>201906151345415_ReviewCustomChanges.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906180800285_UserViewModelRevCust.cs" />
-    <Compile Include="Migrations\201906180800285_UserViewModelRevCust.Designer.cs">
-      <DependentUpon>201906180800285_UserViewModelRevCust.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906191204401_Comment&amp;CustomMigration.cs" />
-    <Compile Include="Migrations\201906191204401_Comment&amp;CustomMigration.Designer.cs">
-      <DependentUpon>201906191204401_Comment&amp;CustomMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906191258462_Comment&amp;CustomMigration2.cs" />
-    <Compile Include="Migrations\201906191258462_Comment&amp;CustomMigration2.Designer.cs">
-      <DependentUpon>201906191258462_Comment&amp;CustomMigration2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907060844463_CommentCreationDateMigra.cs" />
-    <Compile Include="Migrations\201907060844463_CommentCreationDateMigra.Designer.cs">
-      <DependentUpon>201907060844463_CommentCreationDateMigra.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907241155289_TransactionProperties.cs" />
-    <Compile Include="Migrations\201907241155289_TransactionProperties.Designer.cs">
-      <DependentUpon>201907241155289_TransactionProperties.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907241305510_TransactionProperties2.cs" />
-    <Compile Include="Migrations\201907241305510_TransactionProperties2.Designer.cs">
-      <DependentUpon>201907241305510_TransactionProperties2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907261244364_CustomViewModelIsRevision.cs" />
-    <Compile Include="Migrations\201907261244364_CustomViewModelIsRevision.Designer.cs">
-      <DependentUpon>201907261244364_CustomViewModelIsRevision.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907310719521_IsRevisionAttach.cs" />
-    <Compile Include="Migrations\201907310719521_IsRevisionAttach.Designer.cs">
-      <DependentUpon>201907310719521_IsRevisionAttach.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201908010641401_addAttach.cs" />
-    <Compile Include="Migrations\201908010641401_addAttach.Designer.cs">
-      <DependentUpon>201908010641401_addAttach.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201908010744198_addAttachExt.cs" />
-    <Compile Include="Migrations\201908010744198_addAttachExt.Designer.cs">
-      <DependentUpon>201908010744198_addAttachExt.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationRoleManager.cs" />
@@ -348,6 +268,9 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Custom\bootstrap-datetimepicker-standalone.css" />
+    <Content Include="Content\Custom\bootstrap-datetimepicker.css" />
+    <Content Include="Content\Custom\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\Custom\bootstrap-grid.css" />
     <Content Include="Content\Custom\colors\blue.css" />
     <Content Include="Content\Custom\colors\green.css" />
@@ -438,6 +361,8 @@
     <Content Include="Content\Custom\fonts\Material-Icons.woff" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\Custom\bootstrap-datatimepicker.ru.js" />
+    <Content Include="Scripts\Custom\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\Custom\bootstrap-select.min.js" />
     <Content Include="Scripts\Custom\bootstrap-slider.min.js" />
     <Content Include="Scripts\Custom\chart.min.js" />
@@ -452,6 +377,8 @@
     <Content Include="Scripts\Custom\maps.js" />
     <Content Include="Scripts\Custom\markerclusterer.js" />
     <Content Include="Scripts\Custom\mmenu.min.js" />
+    <Content Include="Scripts\Custom\moment-with-locales.js" />
+    <Content Include="Scripts\Custom\moment-with-locales.min.js" />
     <Content Include="Scripts\Custom\simplebar.min.js" />
     <Content Include="Scripts\Custom\slick.min.js" />
     <Content Include="Scripts\Custom\snackbar.js" />
@@ -605,68 +532,6 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201905181121513_newMigra.resx">
-      <DependentUpon>201905181121513_newMigra.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905221549424_propsToUserMigra.resx">
-      <DependentUpon>201905221549424_propsToUserMigra.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905230853572_UserViewModelMigra.resx">
-      <DependentUpon>201905230853572_UserViewModelMigra.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905240857352_NotBusyUserViewModel.resx">
-      <DependentUpon>201905240857352_NotBusyUserViewModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905241337450_RegDateUserMigration.resx">
-      <DependentUpon>201905241337450_RegDateUserMigration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905271421529_CustomViewModelMigra.resx">
-      <DependentUpon>201905271421529_CustomViewModelMigra.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906110907343_newMigra1.resx">
-      <DependentUpon>201906110907343_newMigra1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906111419045_StartDateNullable.resx">
-      <DependentUpon>201906111419045_StartDateNullable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906111427316_StartDateBackUp.resx">
-      <DependentUpon>201906111427316_StartDateBackUp.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906151345415_ReviewCustomChanges.resx">
-      <DependentUpon>201906151345415_ReviewCustomChanges.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906180800285_UserViewModelRevCust.resx">
-      <DependentUpon>201906180800285_UserViewModelRevCust.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906191204401_Comment&amp;CustomMigration.resx">
-      <DependentUpon>201906191204401_Comment&amp;CustomMigration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906191258462_Comment&amp;CustomMigration2.resx">
-      <DependentUpon>201906191258462_Comment&amp;CustomMigration2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907060844463_CommentCreationDateMigra.resx">
-      <DependentUpon>201907060844463_CommentCreationDateMigra.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907241155289_TransactionProperties.resx">
-      <DependentUpon>201907241155289_TransactionProperties.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907241305510_TransactionProperties2.resx">
-      <DependentUpon>201907241305510_TransactionProperties2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907261244364_CustomViewModelIsRevision.resx">
-      <DependentUpon>201907261244364_CustomViewModelIsRevision.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907310719521_IsRevisionAttach.resx">
-      <DependentUpon>201907310719521_IsRevisionAttach.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201908010641401_addAttach.resx">
-      <DependentUpon>201908010641401_addAttach.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201908010744198_addAttachExt.resx">
-      <DependentUpon>201908010744198_addAttachExt.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

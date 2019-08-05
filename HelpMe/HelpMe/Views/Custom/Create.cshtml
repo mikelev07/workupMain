@@ -116,59 +116,54 @@
                                     <div class="col-xl-4">
                                         <div class="submit-field">
                                             <h5>Дисциплина</h5>
-                                            @Html.DropDownList("Все дисциплины",  ViewBag.Tasks as SelectList,
-                                            "Все дисциплины", new { @class = "selectpicker with-border", @id ="TaskList", autocomplete = "off"})
+                                            @Html.DropDownListFor(model => model.CategoryTaskId,  ViewBag.Tasks as SelectList,
+                                            "Укажите дисциплину", new { @class = "selectpicker with-border", @id ="TaskList", autocomplete = "off"})
                                         </div>
                                     </div>
 
                                     <div class="col-xl-4">
                                         <div class="submit-field">
                                             <h5>Предмет</h5>
-                                            @Html.DropDownList("Все предметы", Enumerable.Empty<SelectListItem>(),
-                                                "Все предметы", new { @class = "selectpicker with-border", id ="SkillList", @disabled = "disabled", autocomplete = "off"})
+                                            @Html.DropDownListFor(model => model.SkillId, Enumerable.Empty<SelectListItem>(),
+                                                "Укажите предмет", new { @class = "selectpicker with-border", id ="SkillList", @disabled = "disabled", autocomplete = "off"})
                                         </div>
                                     </div>
 
                                     <div class="col-xl-4">
                                         <div class="submit-field">
+
+                                            <h5>Тип задачи</h5>
+                                            @Html.DropDownListFor(model => model.TypeTaskId, ViewBag.Types as SelectList, new { @class = "selectpicker with-border" })
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-4">
+                                        <div class="submit-field">
+                                            <h5>Укажите дату сдачи</h5>
                                             <div class="col-xl-12">
-                                                <h5>Тип задачи</h5>
-                                                @Html.DropDownListFor(model => model.TypeTaskId, ViewBag.Types as SelectList, new { @class = "selectpicker with-border" })
-                                            </div>
-                                            </div>
-                                        </div>
 
-                                    <div class="col-xl-4">
-                                        <div class="submit-field">
-                                            <h5>Хотите указать свой бюджет?</h5>
-
-                                            <div class="row">
-                                                <div class="col-xl-8">
-                                                    <div class="input-with-icon">
-                                                        @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @id = "min", @min = "0", @max = "25000", @class = "with-border disabled no-spinners", @placeholder = "Цена", @oninput = "validity.valid||(value = '');" } })
-                                                        <i class="currency">Руб.</i>
+                                                <div style="display:inline">
+                                                    <div class="input-group date" data-provide="datepicker">
+                                                        <div class="input-with-icon-left no-border">
+                                                            <i class="icon-material-outline-date-range"></i>
+                                                            <input id="EndingDate" placeholder="Дата сдачи" name="EndingDate" type="text" class="form-control">
+                                                        </div>
+                                                        <div class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-th"></span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="checkbox">
-                                                <input type="checkbox" id="checkboxNew">
-                                                <label for="checkboxNew"><span class="checkbox-icon"></span>По договоренности</label>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="col-xl-4">
-                                        <div class="submit-field">
-                                            <div class="col-xl-10">
-                                                <h5>Укажите дату сдачи</h5>
-                                                <div class="input-group date" data-provide="datepicker">
-                                                    <div class="input-with-icon-left no-border">
-                                                        <i class="icon-material-outline-date-range"></i>
-                                                        <input id="EndingDate" placeholder="Дата сдачи" name="EndingDate" type="text" class="form-control">
-                                                    </div>
-                                                    <div class="input-group-addon">
-                                                        <span class="glyphicon glyphicon-th"></span>
+                                                    <h5>Время сдачи</h5>
+                                                    <div class="form-group">
+                                                        <div class="input-group">
+                                                            <div class="input-with-icon-left no-border">
+                                                                <i class="icon-material-outline-access-time"></i>
+                                                                <input id="datetimepicker3" placeholder="Время сдачи" type="text" class="form-control" />
+                                                            </div>
+                                                            <span class="input-group-addon">
+                                                                <i class="glyphicon glyphicon-calendar"></i>
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="checkbox">
@@ -176,26 +171,57 @@
                                                     <label for="checkboxDate"><span class="checkbox-icon"></span>Срок неизвестен</label>
                                                 </div>
                                             </div>
-                                            </div>
                                         </div>
-                                    <div class="col-xl-4">
-                                        <div class="submit-field">
-                                            <h5>Укажите время сдачи</h5>
+                                    </div>
 
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <input id="datetimepicker3" type="text" class="form-control" />
-                                                    <span class="input-group-addon">
-                                                        <i class="glyphicon glyphicon-calendar"></i>
-                                                    </span>
+                                    <div class="col-xl-4">
+                                        <div class="col-xl-12">
+                                            <div class="submit-field">
+                                                <h5>Хотите указать свой бюджет?</h5>
+
+                                                <div class="row">
+                                                    <div class="col-xl-8">
+                                                        <div class="input-with-icon">
+                                                            @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @id = "min", @min = "0", @max = "25000", @class = "with-border disabled no-spinners", @placeholder = "Цена", @oninput = "validity.valid||(value = '');" } })
+                                                            <i class="currency">Руб.</i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <input type="checkbox" id="checkboxNew">
+                                                    <label for="checkboxNew"><span class="checkbox-icon"></span>По договоренности</label>
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </div>
-                                    
-                                
+                                    <div class="col-xl-4">
+                                        <div class="submit-field">
+                                            <h5>Срок блокировки оплаты</h5>
+                                            <select class="selectpicker-filter">
+                                                <option>5 дней</option>
+                                                <option>10 дней</option>
+                                                <option>15 дней</option>
+                                                <option>20 дней</option>
+                                                <option>30 дней</option>
+                                                <option>40 дней</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <div class="submit-field">
+                                            <h5>Проверка на плагиат</h5>
+                                            <div class="col-xl-6">
+                                                <select class="selectpicker-filter" >
+                                                    <option>40%</option>
+                                                    <option>50%</option>
+                                                    <option>60%</option>
+                                                    <option>70%</option>
+                                                    <option>80%</option>
+                                                    <option>90%</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <div class="col-xl-12">
                                         <div class="submit-field">
@@ -203,15 +229,35 @@
                                             @Html.TextAreaFor(model => model.Description, new { rows = "5", cols = "30", @class = "with-border" })
 
                                             <div class="uploadButton margin-top-30">
-                                                <input class="uploadButton-input" type="file" name="AttachFile" id="AttachFile" required />
-                                                <label class="uploadButton-button ripple-effect" for="AttachFile">Прикрепить задание</label>
-                                                <span class="uploadButton-file-name">Загрузите задание соотвествующего формата</span>
+                                                <input multiple="multiple" class="uploadButton-input" type="file" name="AttachFile" id="AttachFile" required />
+                                                <label class="uploadButton-button ripple-effect" for="AttachFile">Прикрепить задания</label>
+                                                <span style="padding-left:10px" class="uploadButton-file">Вы можете прикрепить несколько вложений</span>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <div id="fileUpCreate" style="border-bottom: 1px solid #e4e4e4;" class="col-xl-12">
+                                       
+                                    </div>
+                                    
+                                    <div style="margin-top:20px" class="col-xl-4">
+                                        <div class="submit-field">
+                                            <h5>Платные услуги</h5>
+                                            
+                                                <select class="selectpicker-filter">
+                                                    <option>40%</option>
+                                                    <option>50%</option>
+                                                    <option>60%</option>
+                                                    <option>70%</option>
+                                                    <option>80%</option>
+                                                    <option>90%</option>
+                                                </select>
+                                            
+                                        </div>
+                                    </div>
+
                                 </div>
-                            </div>
+                                </div>
                         </div>
                     </div>
 
@@ -264,12 +310,115 @@
 
     @Scripts.Render("~/bundles/jqueryval")
 
+
+
     <script>
+
+
+        $('#AttachFile').change(function () {
+            alert(countAttaches)
+            if (countAttaches < 10) {
+                var file;
+                var fileName;
+                var filesArray = $('#AttachFile')[0].files;
+                //alert(filesArray.length)
+                var arra = Array.prototype.slice.call(filesArray)
+                var cuttext = arra.slice(0, 10);
+                // var newArr = filesArray.slice(0, 5)
+                var fileBuffer = [];
+                Array.prototype.push.apply(fileBuffer, cuttext);
+                if (finalFileBuffer.length <= 0) {
+                    for (var i = 0; i < filesArray.length && i < 10; i++) {
+
+                        // if (i == 5) break;
+
+                        file = $('#AttachFile')[0].files[i].name;
+                        if (file.length > 3)
+                            fileName = file.substring(0, 10) + '...' + file.substring(file.lastIndexOf('.') + 1)
+    
+                        $('#fileUpCreate').append('<div id="' + i + '" class="notification notice closeable"><p>' + fileName + '</p><a class="close" ></a></div >');
+                       
+                        countAttaches++;
+                    }
+                    //  alert(countAttaches)
+                    finalFileBuffer = fileBuffer;
+                    lastIndexFile = fileBuffer.length //2
+                } else {
+                    finalFileBuffer = finalFileBuffer.concat(fileBuffer);
+
+                    for (var i = lastIndexFile; i < finalFileBuffer.length && i < 10; i++) {
+                        // if (i == 5) break;
+                       
+                        file = finalFileBuffer[i].name;
+                        if (file.length > 3)
+                            fileName = file.substring(0, 10) + '.' + file.substring(file.lastIndexOf('.') + 1)
+
+                        $('#fileUpCreate').append('<div id="' + i + '" class="notification notice closeable"><p>' + fileName + '</p><a class="close" ></a></div >');
+
+                        countAttaches++;
+                    }
+                    lastIndexFile = finalFileBuffer.length; //4
+                }
+
+                $('#fileUpCreate').show();
+                $('.message-reply').css('margin-top', "5px");
+
+            } else {
+                Snackbar.show({
+                    text: 'Вы не можете добавлять более 10 вложений!'
+                });
+            }
+        });
+
+        $(document).on('click',"a.close", function () {
+            function slideFade(elem) {
+                var fadeOut = { opacity: 0, transition: 'opacity 0.5s' };
+                elem.css(fadeOut).slideUp();
+                setTimeout(function () {
+                   elem.remove();
+                }, 500);
+            }
+            var idAttach = $(this).parent().attr('id');
+            var filesArray = $('#AttachFile')[0].files;
+            var fileBuffer = [];
+            Array.prototype.push.apply(fileBuffer, filesArray);
+
+            var newIndex = idAttach;/**/
+            $.each(idAttachArray, function (index, value) {/**/
+                if (value < idAttach) {/**/
+                    newIndex--;/**/
+                }/**/
+            });/**/
+
+            finalFileBuffer.splice(newIndex, 1);
+            idAttachArray.push(idAttach);/**/
+
+            countAttaches--;
+            lastIndexFile = finalFileBuffer.length;
+           
+            if (lastIndexFile == 0) {
+                finalFileBuffer = [];
+                fileBuffer = [];
+                document.getElementById("AttachFile").value = ""
+            }
+
+            //setTimeout(removeFromAttaches, 500);
+            slideFade($(this).parent());
+        });
+
+       
         $('.selectpicker').selectpicker({
             liveSearch: true
         });
 
+        $('.selectpicker-filter').selectpicker({
+            liveSearch: false
+        });
+
+
         $(function () { // will trigger when the document is ready
+
+
 
             $('#datetimepicker3').datetimepicker(
                 { format: 'HH:mm', locale: 'ru' }
@@ -321,16 +470,25 @@
                 $("#min").attr("placeholder", "Цена");
             }
            });
-
+            
         $("#checkboxDate").click(function () {
             if ($(this).is(':checked')) {
                 $("#EndingDate").prop("disabled", true);
+                $("#datetimepicker3").prop("disabled", true);
                 $("#EndingDate").css("background-color", "#f2f2f2");
+                $("#datetimepicker3").css("background-color", "#f2f2f2");
                 $("#EndingDate").attr("placeholder", "");
+                $("#EndingDate").val("");
+                $("#datetimepicker3").attr("placeholder", "");
+                $("#datetimepicker3").val("");
+
             } else {
                 $("#EndingDate").prop("disabled", false);
+                $("#datetimepicker3").prop("disabled", false);
                 $("#EndingDate").css("background-color", "#ffffff");
+                $("#datetimepicker3").css("background-color", "#ffffff");
                 $("#EndingDate").attr("placeholder", "Дата сдачи");
+                $("#datetimepicker3").attr("placeholder", "Время сдачи");
             }
         });
 

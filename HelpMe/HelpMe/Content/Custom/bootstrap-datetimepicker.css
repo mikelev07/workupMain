@@ -83,24 +83,27 @@
 .bootstrap-datetimepicker-widget .timepicker-hour,
 .bootstrap-datetimepicker-widget .timepicker-minute,
 .bootstrap-datetimepicker-widget .timepicker-second {
-  width: 54px;
-  font-weight: bold;
-  font-size: 1.2em;
-  margin: 0;
+    background-color: #28b661;
+    color: white;
+    width: 54px;
+    font-weight: bold;
+    font-size: 1.2em;
+    margin: 0;
 }
 .bootstrap-datetimepicker-widget button[data-action] {
   padding: 6px;
 }
 .bootstrap-datetimepicker-widget .btn[data-action="incrementHours"]::after {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-  content: "Increment Hours";
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    background-color: red;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+    content: "Увеличить часы";
 }
 .bootstrap-datetimepicker-widget .btn[data-action="incrementMinutes"]::after {
   position: absolute;
@@ -109,20 +112,22 @@
   margin: -1px;
   padding: 0;
   overflow: hidden;
+  background-color:red;
   clip: rect(0, 0, 0, 0);
   border: 0;
-  content: "Increment Minutes";
+  content: "Увеличить минуты";
 }
 .bootstrap-datetimepicker-widget .btn[data-action="decrementHours"]::after {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-  content: "Decrement Hours";
+    background-color: red;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+    content: "Уменьшить часы";
 }
 .bootstrap-datetimepicker-widget .btn[data-action="decrementMinutes"]::after {
   position: absolute;
@@ -133,7 +138,7 @@
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
-  content: "Decrement Minutes";
+  content: "Уменьшить минуты";
 }
 .bootstrap-datetimepicker-widget .btn[data-action="showHours"]::after {
   position: absolute;
@@ -144,7 +149,7 @@
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
-  content: "Show Hours";
+  content: "Показать часы";
 }
 .bootstrap-datetimepicker-widget .btn[data-action="showMinutes"]::after {
   position: absolute;
@@ -155,7 +160,7 @@
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
-  content: "Show Minutes";
+  content: "Показать минуты";
 }
 .bootstrap-datetimepicker-widget .btn[data-action="togglePeriod"]::after {
   position: absolute;
@@ -166,7 +171,7 @@
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
-  content: "Toggle AM/PM";
+  content: "Показать АП";
 }
 .bootstrap-datetimepicker-widget .btn[data-action="clear"]::after {
   position: absolute;
@@ -177,7 +182,7 @@
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
-  content: "Clear the picker";
+  content: "Очистить";
 }
 .bootstrap-datetimepicker-widget .btn[data-action="today"]::after {
   position: absolute;
@@ -188,7 +193,7 @@
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
-  content: "Set the date to today";
+  content: "Установить сегодня время";
 }
 .bootstrap-datetimepicker-widget .picker-switch {
   text-align: center;
@@ -202,7 +207,7 @@
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
-  content: "Toggle Date and Time Screens";
+  content: "Показать время виджета";
 }
 .bootstrap-datetimepicker-widget .picker-switch td {
   padding: 0;
@@ -259,7 +264,7 @@
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
-  content: "Next Month";
+  content: "Следующий месяц";
 }
 .bootstrap-datetimepicker-widget table thead tr:first-child th {
   cursor: pointer;

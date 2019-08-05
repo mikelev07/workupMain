@@ -127,23 +127,11 @@
                                 <div class="col-xl-6">
                                     <div class="submit-field">
                                         <h5>Дисциплины</h5>
+
                                         
-                                        <select id="dicp" title="Выберите специализацию" class="selectpicker" data-live-search="true" multiple>
-                                            <optgroup label="Гуманитарные науки">
-                                                <option value="1">Догестонский</option>
-                                                <option value="2" >Уебонский</option>
-                                                <option value="3">Вавилонский</option>
-                                                <option value="4">Шумерский</option>
-                                                <option value="5">Стопальский</option>
-                                            </optgroup>
-                                            <optgroup label="Пиздатые науки">
-                                                <option value="6">Нариковский</option>
-                                                <option value="7">Шульский</option>
-                                                <option value="8">Пердонски</option>
-                                                <option value="9">Батиковски</option>
-                                                <option value="10">Череповец</option>
-                                            </optgroup>
-                                        </select>
+
+                                        @Html.DropDownList("Все дисциплины",  ViewBag.Tasks as SelectList,null, new { @class = "selectpicker", @id = "dicp", autocomplete = "off", multiple = "multiple" })
+
                                         <br />
                                         <div class="keywords-list">
 
