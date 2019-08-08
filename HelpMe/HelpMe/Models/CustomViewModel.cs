@@ -165,7 +165,9 @@ namespace HelpMe.Models
         [Display(Name = "Проверяется заказчиком")]
         CheckCustom,
         [Display(Name = "На доработке")]
-        Revision
+        Revision,
+        [Display(Name = "Отменён")]
+        Cancelled
     }
 
   

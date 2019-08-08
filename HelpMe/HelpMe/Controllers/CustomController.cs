@@ -993,6 +993,43 @@ namespace HelpMe.Controllers
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
         }
 
+        public async Task<ActionResult> Cancel(int? id)
+        {
+            var customViewModel = await db.Customs.Include(c=>c.Comments).Include(c=>c.User).FirstOrDefaultAsync(c => c.Id == id);
+            var usersWithOffers = customViewModel.Comments.Select(c=>c.User);
+
+            db.Entry(customViewModel).State = EntityState.Modified;
+
+            var previousStatus = customViewModel.Status;
+            if(previousStatus==CustomStatus.Open)
+            {
+                customViewModel.Status = CustomStatus.Cancelled; // Отменён
+                SendMessage("Вы отменили заказ", customViewModel.Id, customViewModel.User.UserName, null, null);
+                if (usersWithOffers != null)
+                {
+                    foreach(var user in usersWithOffers)
+                    {
+                        SendMessage(null, customViewModel.Id, null, user.UserName, customViewModel.User.UserName + " отменил заказ");
+                    }
+                }
+            }
+            if(previousStatus==CustomStatus.Cancelled)
+            {
+                customViewModel.Status = CustomStatus.Open; // Открыт
+                SendMessage("Вы переоткрыли заказ", customViewModel.Id, customViewModel.User.UserName, null, null);
+                if (usersWithOffers != null)
+                {
+                    foreach (var user in usersWithOffers)
+                    {
+                        SendMessage(null, customViewModel.Id, null, user.UserName, customViewModel.User.UserName + " переоткрыл заказ");
+                    }
+                }
+            }
+            
+            await db.SaveChangesAsync();
+            return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
+        }
+
 
         // GET: Custom/Edit/5
         public async Task<ActionResult> Edit(int? id)

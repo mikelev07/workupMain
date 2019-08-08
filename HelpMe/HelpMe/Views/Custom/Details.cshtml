@@ -766,6 +766,14 @@
                 </div>
                 @if (Model.UserId == User.Identity.GetUserId())
                 {
+                    if (Model.Status == HelpMe.Models.CustomStatus.Open)
+                    {
+                        <a href="@Url.Action("Cancel", "Custom", new { id = Model.Id })" class="apply-now-button" title="Убрать заказ из списка видимых для исполнителей" data-tippy-placement="bottom">Отменить заказ <i class="icon-material-outline-undo"></i></a>
+                    }
+                    if (Model.Status == HelpMe.Models.CustomStatus.Cancelled)
+                    {
+                        <a href="@Url.Action("Cancel", "Custom", new { id = Model.Id })" class="apply-now-button" title="Вернуть заказ в список видимых для исполнителей" data-tippy-placement="bottom">Переоткрыть заказ <i class="icon-material-outline-redo"></i></a>
+                    }
                     if (Model.Status == HelpMe.Models.CustomStatus.CheckCustom)
                     {
                         <div id="buttonsCont" class="buttons-container">
@@ -778,9 +786,9 @@
                         <a id="send-for-revision" href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
                     }
                     @*else if (Model.Status == HelpMe.Models.CustomStatus.Revision)
-                        {
-                            <a style="margin-bottom:20px" href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim">Подтвердить выполнение <i class="icon-material-outline-check"></i></a>
-                        }*@
+            {
+                <a style="margin-bottom:20px" href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim">Подтвердить выполнение <i class="icon-material-outline-check"></i></a>
+            }*@
                 }
 
                 <div class="js-accordion sidebar-widget">
@@ -860,14 +868,14 @@
                                 <div class="bidding-value">
                                     <span id="add-offer-bidding-value"></span> руб. <button id="add-offer-show-price"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button>
                                 </div>
-                                <input id="add-offer-price-value" class="no-spinners" style="margin-bottom:5px; display:none" 
-                                       placeholder="Укажите стоимость" type="number" value="@Model.Price" 
-                                       oninput="validity.valid||(value='');" min="0" max="50000" 
+                                <input id="add-offer-price-value" class="no-spinners" style="margin-bottom:5px; display:none"
+                                       placeholder="Укажите стоимость" type="number" value="@Model.Price"
+                                       oninput="validity.valid||(value='');" min="0" max="50000"
                                        data-tippy-placement="top" />
 
-                                <input id="add-offer-slider-price" class="bidding-slider" type="text" value="@Model.Price" 
-                                       data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" 
-                                       data-slider-max="50000" data-slider-value="@Model.Price" data-slider-step="50" 
+                                <input id="add-offer-slider-price" class="bidding-slider" type="text" value="@Model.Price"
+                                       data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
+                                       data-slider-max="50000" data-slider-value="@Model.Price" data-slider-step="50"
                                        data-slider-tooltip="hide" />
 
                                 <!-- Headline -->
