@@ -1,27 +1,17 @@
 ﻿@model IEnumerable<HelpMe.Models.Transaction>
+@using HelpMe.Helpers
 
-@{
-    Layout = null;
-}
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
-    <p>
-        @Html.ActionLink("Создать новую", "Create")
-    </p>
-    <table class="table">
+<p style="margin-top:20px; margin-left: 20px">
+    <a href="/Transactions/Create" class="button gray ripple-effect button-sliding-icon">Создать новую транзакцию <i class="icon-feather-arrow-right"></i></a>
+</p>
+<div class="col-xl-6 col-md-6">
+    <table class="basic-table">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                Сумма по транзакции
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AttachId)
+                Номер заказа
             </th>
             <th>
                 От кого
@@ -41,43 +31,89 @@
             <th>
                 Дата окончания блокировки
             </th>
+            <th>
+                Таймер окончания блокировки
+            </th>
             <th></th>
         </tr>
-    
-    @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Price)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AttachId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FromUser.UserName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ToUser.UserName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Status)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Date)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TimeBlock)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateBlockEnd)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-        </td>
-    </tr>
-    }
-    
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price) руб.
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AttachId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FromUser.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ToUser.UserName)
+                </td>
+                <td>
+                    @HtmlExtensions.EnumDisplayNameFor(item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeBlock) дней
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateBlockEnd)
+                </td>
+                <td>
+                    @if (item.DateBlockEnd.Subtract(item.Date).TotalSeconds >= 0)
+                    {
+                        <p class="timeBl" id="demo-@item.DateBlockEnd.ToString("yyyy-MM-ddTHH:mm:ss")"></p>
+                    }
+                    else
+                    {
+                        <p> Время блокировки вышло </p>
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Изменить", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Детали", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
     </table>
-</body>
-</html>
+
+</div>
+
+@section Scripts {
+
+    <script>
+
+        $('.timeBl').each(function (index) {
+            var id = this.id;
+            var value = id.replace('demo-', '');
+            var countDownDate = new Date(value);
+
+            var x = setInterval(function () {
+                var now = new Date().getTime();
+                var distance = countDownDate - now;
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById(id).innerHTML = days + " дней " + hours + " часа "
+                    + minutes + " минут " + seconds + " секунд ";
+
+                if (distance < 0) {
+                    clearInterval(x);
+                    document.getElementById(id).innerHTML = "Время блокировки вышло";
+                }
+            }, 1000);
+
+        });
+
+    </script>
+
+}

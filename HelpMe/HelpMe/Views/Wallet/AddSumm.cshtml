@@ -32,7 +32,7 @@
     <div class="row">
       
         <div class="col-xl-8 col-lg-8 content-right-offset">
-            @using (Html.BeginForm())
+            @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
             {
                 @Html.AntiForgeryToken()
 
@@ -43,7 +43,7 @@
                 <!-- Billing Cycle Radios  -->
                 <div class="billing-cycle margin-top-25">
                     <div class="input-with-icon">
-                        <input id="Summ" name="Summ" class="with-border" type="text" placeholder="Сумма">
+                        <input id="Summ" name="Summ" value="@ViewBag.Summ" class="with-border" type="text" placeholder="Сумма">
                         <i class="currency">Руб</i>
                     </div>
                 </div>
@@ -133,7 +133,7 @@
                         <ul>
                             <li>Цена <span>49 рублей</span></li>
                             <li>Комиссия (20%) <span>9 рублей</span></li>
-                            <li class="total-costs">Итоговая сумма (руб.) <span id="itog"></span></li>
+                            <li class="total-costs">Итоговая сумма (руб.) <span id="itog">@ViewBag.Summ</span></li>
                         </ul>
                     </div>
                 </div>

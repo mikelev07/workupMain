@@ -434,23 +434,53 @@ namespace HelpMe.Controllers
         /// <param name="id"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<ActionResult> ChooseExecutor(int? id, string userId)
+        [HttpPost]
+        public async Task<ActionResult> ChooseExecutor(int? CustId)
         {
-            if (id == null && userId == null)
+            if (CustId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            CustomViewModel customViewModel = await db.Customs.Include(c => c.Comments).Include(c => c.User).FirstOrDefaultAsync(c => c.Id == id);
+            CommentViewModel commentViewModel = await db.Comments.Include(c => c.CustomViewModel).FirstOrDefaultAsync(c => c.Id == CustId);
+            CustomViewModel customViewModel =  db.Customs.Where(c => c.Id == commentViewModel.CustomViewModelId).FirstOrDefault();
 
-
+            string myId = User.Identity.GetUserId();
+            Wallet wallet = db.Wallets.Where(x => x.UserId == myId).FirstOrDefault();
             if (customViewModel.UserId != customViewModel.ExecutorId)
             {
-                customViewModel.ExecutorId = userId;
-                CommentViewModel comment = await db.Comments.Include(c => c.CustomViewModel).Include(c => User).FirstOrDefaultAsync(c => c.UserId == customViewModel.ExecutorId);
+                customViewModel.ExecutorId = commentViewModel.UserId;
+                
                 db.Entry(customViewModel).State = EntityState.Modified;
-                customViewModel.ExecutorPrice = comment.OfferPrice;
+                customViewModel.ExecutorPrice = commentViewModel.OfferPrice;
                 customViewModel.Status = CustomStatus.Check; // заявка выполняется
+
+                if (wallet.Summ - commentViewModel.OfferPrice > 0)
+                {
+
+                    Transaction transaction = new Transaction()
+                    {
+                        Date = DateTime.Now,
+                        CustomId = customViewModel.Id,
+                        Status = TransactionStatus.Waiting
+                    };
+                    transaction.Id = 1;
+                    wallet.Summ -= commentViewModel.OfferPrice;
+                    transaction.Price = commentViewModel.OfferPrice;
+                    transaction.FromUserId = myId;
+                    transaction.ToUserId = customViewModel.ExecutorId;
+                    transaction.TimeBlock = 1;
+                    transaction.DateBlockEnd = transaction.Date.AddDays(transaction.TimeBlock);
+                    db.Transactions.Add(transaction);
+                    await db.SaveChangesAsync();
+                }
+                else
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+               
+                db.Entry(wallet).State = EntityState.Modified;
+                await db.SaveChangesAsync();
             }
             string uName = db.Users.Where(c => c.Id == customViewModel.UserId).FirstOrDefault().UserName;
             string exName = db.Users.Where(c => c.Id == customViewModel.ExecutorId).FirstOrDefault().UserName;
@@ -819,7 +849,7 @@ namespace HelpMe.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
+            var reqId = User.Identity.GetUserId();
             // optimaize
             CustomViewModel customViewModel = await db.Customs.Include(c => c.Comments)
                                                               .Include(c => c.CategoryTask)
@@ -829,6 +859,9 @@ namespace HelpMe.Controllers
                                                               .Include(c => c.MyAttachments)
                                                               .Include(c => c.MainAttachments)
                                                               .FirstOrDefaultAsync(c => c.Id == id);
+
+            var wallet = db.Wallets.Where(c => c.UserId == reqId).FirstOrDefault();
+            ViewBag.WalletSumm = wallet.Summ;
 
             if (customViewModel == null)
             {

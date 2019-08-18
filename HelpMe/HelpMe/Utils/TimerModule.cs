@@ -12,7 +12,7 @@ namespace HelpMe.Utils
     public class TimerModule : IHttpModule
     {
         private static ApplicationDbContext db = new ApplicationDbContext();
-        private static List<Transaction> listNoBlock = db.Transactions.Where(t => t.Status == TransactionStatus.Waiting).ToList();
+       
         static Timer timer;
         long interval = 10000; //10 секунд
         static object synclock = new object();
@@ -25,13 +25,13 @@ namespace HelpMe.Utils
 
         private void CloseBlockedTransaction(object obj)
         {
-           
             lock (synclock)
             {
                 DateTime dd = DateTime.Now;
                 if (dd.Hour == 20 && dd.Minute == 16 && sent == false)
                 {
-                    
+                    List<Transaction> listNoBlock = db.Transactions.Where(t => t.Status == TransactionStatus.Waiting).ToList();
+
                     foreach (Transaction t in listNoBlock)
                     {
                         bool checkDays = t.DateBlockEnd.Subtract(t.Date).TotalDays >= 0;

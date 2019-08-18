@@ -239,39 +239,41 @@
                                         @if (Model.ExecutorId == User.Identity.GetUserId() && i.AttachStatus == HelpMe.Models.AttachStatus.NotPurchased)
                                         {
                                             @Ajax.RawActionLink(
-                                                "<i id='fDelbuy"+ i.Id + "' class='icon-feather-trash-2'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach","Custom",
-                                                new{ id = i.Id},
+                                                "<i id='fDelbuy" + i.Id + "' class='icon-feather-trash-2'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach", "Custom",
+                                                new { id = i.Id },
 
-                                                new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
-                                                new {
-                                                    id ="delete-attach",
+                                                new AjaxOptions { OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
+                                                new
+                                                     {
+                                                    id = "delete-attach",
                                                     @class = "button green ripple-effect ico",
                                                     @style = "    padding: 3px 5px 3px 3px; ",
                                                     title = "Удалить решение",
                                                     data_tippy_placement = "top"
                                                 }
 
-                                                    @* new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
-                                                        new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
+                                                        @* new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
+                                                            new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
 
-                                                    )
+)
                                             @Ajax.RawActionLink(
-                                              "<i  id='fDelbuy"+ i.Id + "' class='icon-feather-edit'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach","Custom",
-                                              new{ id = i.Id},
+                                              "<i  id='fDelbuy" + i.Id + "' class='icon-feather-edit'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach", "Custom",
+                                              new { id = i.Id },
 
-                                              new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
-                                              new {
-                                                  id ="delete-attach",
+                                              new AjaxOptions { OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
+                                              new
+                                                   {
+                                                  id = "delete-attach",
                                                   @class = "button  ripple-effect ico",
                                                   @style = "  margin-left:5px;  padding: 3px 5px 3px 3px; ",
                                                   title = "Удалить решение",
                                                   data_tippy_placement = "top"
                                               }
 
-                                                @* new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
-                                                    new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
+                                                    @* new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccess"},
+                                                        new { id="delete-attach", @class = "button green ripple-effect ico", @style = "padding: 3px 9px;margin-top: -10px;", title = "Удалить", data_tippy_placement = "top" }*@
 
-                                                )
+)
                                         }
                                         @if (Model.UserId == User.Identity.GetUserId())
                                         {
@@ -279,10 +281,11 @@
                                             {
                                                 @Ajax.RawActionLink(
                                                "<i id='fbuy" + i.Id + "' style='margin-top: -10px;' class='icon-material-outline-monetization-on'></i><span id='textAttachBuy" + i.Id + "'>Купить</span><div id='ldsAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "Buy", "Custom",
-                                               new{id = i.Id},
+                                               new { id = i.Id },
 
-                                               new AjaxOptions{ OnBegin= "return OnBeginBuyAttach('"+@i.Id+"')",OnFailure="IsGone", OnSuccess = "OnSuccessBuyAttach", HttpMethod = "POST" },
-                                               new {
+                                               new AjaxOptions { OnBegin = "return OnBeginBuyAttach('" + @i.Id + "')", OnFailure = "IsGone", OnSuccess = "OnSuccessBuyAttach", HttpMethod = "POST" },
+                                               new
+                                                    {
                                                    id = "buy-solution",
                                                    @class = "button ripple-effect",
                                                    @style = (i.AttachStatus == HelpMe.Models.AttachStatus.Purchased ? "display:; margin-top: -5px;" : "    margin-top: -5px;"),
@@ -460,7 +463,7 @@
                                                         UpdateTargetId = updateTargetIdEdit,
                                                         InsertionMode = InsertionMode.Replace,
                                                         OnBegin = "return OnBeginEditComment()",
-                                                        OnSuccess = "return OnSuccessEditComment("+c.Id+")"
+                                                        OnSuccess = "return OnSuccessEditComment(" + c.Id + ")"
                                                     }))
                                                     {
                                                         @Html.AntiForgeryToken()
@@ -487,9 +490,9 @@
                                                             <div class="bidding-value">
                                                                 <span id="edit-comment-bidding-value"></span> руб. <button type="button" id="edit-comment-show-price"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button>
                                                                 <input id="edit-comment-price-value" name="OfferPrice" class="no-spinners" style="margin-bottom:5px; display:none"
-                                                                   placeholder="Укажите стоимость" type="number" value="0"
-                                                                   oninput="validity.valid||(value='');" min="0" max="50000"
-                                                                   data-tippy-placement="top"/>
+                                                                       placeholder="Укажите стоимость" type="number" value="0"
+                                                                       oninput="validity.valid||(value='');" min="0" max="50000"
+                                                                       data-tippy-placement="top" />
                                                             </div>
 
                                                             <input id="edit-comment-slider-price" class="bidding-slider" type="text" value="@Model.Price"
@@ -556,18 +559,20 @@
 
                                                 <!-- Tab -->
                                                 <div class="popup-tab-content" id="tab">
-                                                    
-                                                        @*@Html.AntiForgeryToken()*@
-                                                        <div class="bidding-widget">
-                                                            <!-- Headline -->
-                                                            <div class="form-actions no-color">
-                                                                <span class="bidding-detail margin-top-30">Действительно хотите удалить предложение?</span>
-                                                            </div>
-                                                        </div>
 
-                                                        <!-- Button -->
-                                                        <button id="delete-comment-button" class="button full-width button-sliding-icon ripple-effect" 
-                                                                type="submit" onclick="return OnClickDeleteComment(@c.Id)">Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                                    @*@Html.AntiForgeryToken()*@
+                                                    <div class="bidding-widget">
+                                                        <!-- Headline -->
+                                                        <div class="form-actions no-color">
+                                                            <span class="bidding-detail margin-top-30">Действительно хотите удалить предложение?</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Button -->
+                                                    <button id="delete-comment-button" class="button full-width button-sliding-icon ripple-effect"
+                                                            type="submit" onclick="return OnClickDeleteComment(@c.Id)">
+                                                        Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i>
+                                                    </button>
                                                 </div>
 
                                             </div>
@@ -608,7 +613,7 @@
                                                 </div>
                                             </div>
 
-                                            @using (Html.BeginForm("ChooseExecutor", "Custom", new { id = Model.Id, userId = c.UserId }))
+                                            @using (Html.BeginForm("ChooseExecutor", "Custom", new { CustId = c.Id }))
                                             {
                                                 <div class="radio">
                                                     <input id="radio-choose-executor-@c.UserId" name="radio" type="radio" required autocomplete="off"
@@ -616,8 +621,18 @@
                                                            oninput="setCustomValidity('')" />
                                                     <label for="radio-choose-executor-@c.UserId"><span class="radio-label"></span>  Я ознакомился с правилами</label>
                                                 </div>
-                                                <input id="choose-executor-@c.UserId" class="margin-top-15 button full-width button-sliding-icon ripple-effect"
-                                                       type="submit" value="Принять" />
+                                                if (ViewBag.WalletSumm >= c.OfferPrice)
+                                                {
+                                                    <input id="choose-executor-@c.UserId" class="margin-top-15 button full-width button-sliding-icon ripple-effect"
+                                                           type="submit" value="Принять" /> 
+                                                            }
+                                                            else
+                                                            {
+                                                                int exSum = c.OfferPrice - ViewBag.WalletSumm;
+
+                                                              <a href="/Wallet/AddSumm?summ=@exSum&returnUrl=@Request.Url.ToString()" style="color:white" class="margin-top-15 button full-width button-sliding-icon ripple-effect">Пополнить счет на @exSum и принять</a>
+                                                }
+
                                             }
                                         </div>
                                     </div>
@@ -786,9 +801,9 @@
                         <a id="send-for-revision" href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
                     }
                     @*else if (Model.Status == HelpMe.Models.CustomStatus.Revision)
-            {
-                <a style="margin-bottom:20px" href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim">Подтвердить выполнение <i class="icon-material-outline-check"></i></a>
-            }*@
+                        {
+                            <a style="margin-bottom:20px" href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim">Подтвердить выполнение <i class="icon-material-outline-check"></i></a>
+                        }*@
                 }
 
                 <div class="js-accordion sidebar-widget">
@@ -1645,7 +1660,7 @@
                         return null;
                     }
                     else {
-                        //шоб не было отступа из-за <li></li>
+                        // не было отступа из-за <li></li>
                         //при добавлении нового комента(сразу же после удаления)
                         if ($('#boxed-list-ul>li[id*="user-comment"]').is(':empty')) {
                             $('#boxed-list-ul>li[id*="user-comment"]').remove();
@@ -1696,7 +1711,6 @@
                 }
             });
         });
-
 
         $('#checkEx').click(function () {
             $.ajax({
@@ -1754,7 +1768,6 @@
                 }
                 qtySum();
                 $(".qtyTotal").addClass("rotate-x");}
-
         });
 
 
@@ -1824,7 +1837,6 @@
         });
     });
 
-
         $("#edit-time-units").on('change', function () {
             if ($(this).val() == 1) {
                 $('#edit-comment-time').attr('name', 'Days');
@@ -1833,8 +1845,6 @@
                 $('#edit-comment-time').attr('name', 'Hours');
             }
         });
-
-
 
 
         function HasComments(customId) {

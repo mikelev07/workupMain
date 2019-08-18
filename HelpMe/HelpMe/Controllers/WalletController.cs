@@ -48,14 +48,16 @@ namespace HelpMe.Controllers
         }
 
         // GET: Wallet/AddSumm
-        public ActionResult AddSumm()
+        public ActionResult AddSumm(int? summ, string returnUrl)
         {
+            ViewBag.ReturnUrl = returnUrl;
+            ViewBag.Summ = summ;
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddSumm([Bind(Include = "Id,Summ")] Wallet wallet)
+        public async Task<ActionResult> AddSumm([Bind(Include = "Id,Summ")] Wallet wallet, string returnUrl)
         {
             string id = User.Identity.GetUserId();
             Wallet walletBalance = db.Wallets.Where(x => x.UserId == id).FirstOrDefault();
@@ -72,7 +74,11 @@ namespace HelpMe.Controllers
                 }
 
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+
+                if (!string.IsNullOrEmpty(returnUrl))
+                    return Redirect(returnUrl);
+                else
+                    return RedirectToAction("Index", "Home");
             }
 
             return View(wallet);
