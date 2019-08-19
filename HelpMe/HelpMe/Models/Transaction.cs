@@ -26,6 +26,11 @@ namespace HelpMe.Models
         public DateTime Date { get; set; }
 
         public int AttachId { get; set; }
+        public int TimeBlock { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime DateBlockEnd { get; set; }
 
         public TransactionStatus Status { get; set; }
 

@@ -13,7 +13,7 @@
 </head>
 <body>
     <p>
-        @Html.ActionLink("Create New", "Create")
+        @Html.ActionLink("Создать новую", "Create")
     </p>
     <table class="table">
         <tr>
@@ -24,7 +24,7 @@
                 @Html.DisplayNameFor(model => model.AttachId)
             </th>
             <th>
-               От кого
+                От кого
             </th>
             <th>
                 Кому
@@ -32,32 +32,50 @@
             <th>
                 @Html.DisplayNameFor(model => model.Status)
             </th>
+            <th>
+                Дата создания
+            </th>
+            <th>
+                Срок блокировки
+            </th>
+            <th>
+                Дата окончания блокировки
+            </th>
             <th></th>
         </tr>
     
     @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AttachId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FromUser.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ToUser.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
-        </tr>
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AttachId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FromUser.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ToUser.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TimeBlock)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateBlockEnd)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+        </td>
+    </tr>
     }
     
     </table>

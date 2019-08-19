@@ -64,7 +64,7 @@ namespace HelpMe.Models
         public ICollection<ChatDialog> ChatDialogs { get; set; }
         public ICollection<Review> Reviews { get; set; }
         public ICollection<Note> Notes { get; set; }
-        public ICollection<Wallet> Wallets { get; set; } // создаем универсальную коллекцию
+        public virtual ICollection<Wallet> Wallets { get; set; } // создаем универсальную коллекцию
         public ICollection<AttachModel> Attachments { get; set; }
         public ICollection<MyAttachModel> MyAttachments { get; set; }
         public ICollection<MainAttachModel> MainAttachments { get; set; }

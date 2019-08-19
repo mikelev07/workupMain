@@ -38,6 +38,13 @@ namespace HelpMe.Controllers
         // GET: Transactions/Create
         public ActionResult Create()
         {
+            SelectList users = new SelectList(db.Users, "Id", "UserName"); // выбор типа задачи
+            ViewBag.Users = users;
+
+            List<int> days = new List<int> { 0, 6, 12, 24, 36 };
+            var selectDays = new SelectList(days);
+            ViewBag.Days = selectDays;
+
             return View();
         }
 
@@ -46,10 +53,12 @@ namespace HelpMe.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Price,AttachId,Status")] Transaction transaction)
+        public ActionResult Create([Bind(Include = "Id,Price,FromUser,FromUserId,ToUser,ToUserId,AttachId,Status,Date,DateBlockEnd,TimeBlock")] Transaction transaction)
         {
             if (ModelState.IsValid)
             {
+                transaction.Date = DateTime.Now;
+                transaction.DateBlockEnd = transaction.Date.AddDays(transaction.TimeBlock);
                 db.Transactions.Add(transaction);
                 db.SaveChanges();
                 return RedirectToAction("Index");

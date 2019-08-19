@@ -455,6 +455,7 @@ namespace HelpMe.Controllers
             string uName = db.Users.Where(c => c.Id == customViewModel.UserId).FirstOrDefault().UserName;
             string exName = db.Users.Where(c => c.Id == customViewModel.ExecutorId).FirstOrDefault().UserName;
             SendMessage("Вы выбрали исполнителем " + exName, customViewModel.Id, uName, exName, "выбрал вас исполнителем");
+
             await db.SaveChangesAsync();
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
         }
