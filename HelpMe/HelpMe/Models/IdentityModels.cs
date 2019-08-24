@@ -40,6 +40,8 @@ namespace HelpMe.Models
     //    public ApplicationUser User { get; set; }
     //}
 
+    [System.Runtime.Serialization.KnownType(typeof(User))]
+    [System.Runtime.Serialization.KnownType(typeof(IdentityUser))]
     public class User : IdentityUser
     {
         public string ImagePath { get; set; }
@@ -117,6 +119,8 @@ namespace HelpMe.Models
                 .Map(m => m.MapLeftKey("UserId")
                 .MapRightKey("SkillId")
                 .ToTable("UserSkill"));
+
+            //modelBuilder.ProxyCreationEnabled = false;
 
         }
 

@@ -60,41 +60,40 @@
 
                 @if (Request.IsAuthenticated && Model.UserId == User.Identity.GetUserId() && Model.Status != HelpMe.Models.CustomStatus.Close)
                 {
-                    <div class="accordion js-accordion">
-
-                        <!-- Accordion Item -->
-                        <div class="accordion__item js-accordion-item">
-                            <div id="attbank" class="accordion-header js-accordion-header">
-                                <span id="textAttach">Добавить вложение</span>
-                                <div style="left:50%" class="lds-ring"><div></div><div></div><div></div><div></div></div>
-                            </div>
-
-                            <!-- Accordtion Body -->
-                            <div class="accordion-body js-accordion-body">
-
-                                <!-- Accordion Content -->
-                                <div class="accordion-body__contents">
-                                    <div style="margin-bottom:0px;" class="single-page-section">
-                                        @if (Model.UserId == User.Identity.GetUserId() && Request.IsAuthenticated)
+                
+                                        if (Model.UserId == User.Identity.GetUserId() && Request.IsAuthenticated)
                                         {
-                                            <div>
-                                                <div class="uploadButton margin-top-30">
-                                                    <input type="hidden" name="CustomViewModelId" id="CustomViewModelId" value="@Model.Id" />
-                                                    <input class="uploadButton-input" type="file" name="upload" id="uploadFile" /><br />
-                                                    <label class="uploadButton-button ripple-effect" for="uploadFile">Прикрепить вложение</label>
-                                                    <span class="uploadButton-file-name">Загрузите файл вложения любого формата</span>
-                                                </div>
-                                                <div class="progress"></div>
+                                            <form method="post" action="/Custom/UploadTestMultiMyAttach/@Model.Id" enctype="multipart/form-data" novalidate="" class="box has-advanced-upload">
+                                                <div class="box__input">
+                                                    <svg class="box__icon" xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43"><path d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z"></path></svg>
 
-                                                <input id="submitAttach" type="submit" value="Загрузить" class="button ripple-effect margin-top-10" />
-                                            </div>
+                                                    <div style="justify-content:center" class="uploadButton">
+                                                        <input class="uploadButton-input box__file" type="file" id="file" name="upload" data-multiple-caption="{count} файлов выбрано" multiple="multiple" /><br />
+                                                        <label id="textLab" class="uploadButton-button ripple-effect" for="file">Прикрепить вложения</label><span style="margin-left:15px;margin-top:6px; font-size:18px" class="box__dragndrop"> или перетащите файлы сюда</span>.
+                                                    </div>
+                                                    <button type="submit" class="box__button">Загрузить</button>
+                                                </div>
+                                                <div style="margin-bottom:40px" class="box__uploading"><p>Загружаем вложения</p><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>
+                                                <div class="box__success">Успешно! <a href="//?" class="box__restart" role="button">Загрузить еще?</a></div>
+                                                <div class="box__error">Ошибка загрузки! <span></span>. <a href="//?" class="box__restart" role="button">Попробовать снова!</a></div>
+                                                <input type="hidden" name="ajax" value="1">
+                                            </form>
+
+                                            @*
+            <div>
+                <div class="uploadButton margin-top-30">
+                    <input type="hidden" name="CustomViewModelId" id="CustomViewModelId" value="@Model.Id" />
+                    <input class="uploadButton-input" type="file" name="upload" id="uploadFile" /><br />
+                    <label class="uploadButton-button ripple-effect" for="uploadFile">Прикрепить вложение</label>
+                    <span class="uploadButton-file-name">Загрузите файл вложения любого формата</span>
+                </div>
+                <div class="progress"></div>
+
+                <input id="submitAttach" type="submit" value="Загрузить" class="button ripple-effect margin-top-10" />
+            </div>*@
                                         }
 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                          
                 }
                 <br />
                 <div id="getAr"></div>
@@ -105,14 +104,12 @@
                        href="@Url.Action("GetArchive", "Custom", new { id = Model.Id })">Скачать все архивом<i class="icon-feather-arrow-down"></i></a>
                 }
 
-                <div id="Uploaded_Results_My" class="attachments-container">
-                    @{ var id = 1; }
-                    @foreach (var i in Model.MyAttachments)
-                    {
-                        <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = i.AttachFilePath })"><span>Файл задания №@id </span><i>PDF</i></a>
-                        id = id + 1;
-                    }
-                </div>
+            <div id="Uploaded_Results_My" class="attachments-container">
+                @foreach (var i in Model.MyAttachments)
+                {
+                    <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = i.AttachFilePath })"><span>@i.AttachFileName</span><i>@i.AttachFileExtens.TrimStart('.')</i></a>
+                }
+            </div>
 
             </div>
             <br />
@@ -137,7 +134,8 @@
                             <div class="box__success">Успешно! <a href="//?" class="box__restart" role="button">Загрузить еще?</a></div>
                             <div class="box__error">Ошибка загрузки! <span></span>. <a href="//?" class="box__restart" role="button">Попробовать снова!</a></div>
                             <input type="hidden" name="ajax" value="1">
-                        </form>}
+                        </form>
+                    }
                     <br />
                     <div id="Uploaded_Results_Main" class="attachments-container">
 
@@ -171,8 +169,8 @@
             @if (Model.ExecutorId != null && (Model.ExecutorId == User.Identity.GetUserId() || Model.UserId == User.Identity.GetUserId()))
             {
                 <div class="single-page-section" style="margin-bottom:0">
-                    <h3>Вложения исполнителя <span style="color: white" class="nav-tag" id="attachments">@Model.Attachments.Count </span></h3>
-                    @if (Request.IsAuthenticated && Model.ExecutorId == User.Identity.GetUserId() && Model.Status != HelpMe.Models.CustomStatus.Close)
+                    <h3>Доработки исполнителя <span style="color: white" class="nav-tag" id="attachments">@Model.Attachments.Count </span></h3>
+                    @if (Request.IsAuthenticated && Model.ExecutorId == User.Identity.GetUserId() && Model.Status != HelpMe.Models.CustomStatus.Close && Model.Status == HelpMe.Models.CustomStatus.Revision)
                     {
                         <div class="accordion js-accordion">
 
@@ -1033,34 +1031,65 @@
                                // ajaxData.append(input.getAttribute('name'), file);
                         }
 
-                        // непосредственно запрос аякса
+                        // непосредственно запрос аякса Myattaches
                         var ajax = new XMLHttpRequest();
                         ajax.open(form.getAttribute('method'), form.getAttribute('action'), true);
 
-                        ajax.onload = function () {
-                            form.classList.remove('is-uploading');
-                            if (ajax.status >= 200 && ajax.status < 400) {
-                                var votes = $("#MainAttaches");
-                                var num = $("#MainAttaches").text();
-                               // alert(num + (droppedFiles.length))
-                                if (parseInt(parseInt(parseInt(num) + parseInt(globFiles.length))) < 11) {
-                                    votes.text(parseInt(parseInt(num) + parseInt(globFiles.length)));
-                                } else {
-                                    Snackbar.show({
-                                        text: 'Максимум 10 файлов решений!',
-                                    });
-                                    $("#textLab").text("Прикрепить решения");
-                                    return false;
-                                }
-                                $('#Uploaded_Results_Main').load('@Url.Action("LoadMainAttaches", "Custom")?id=' +@Model.Id);
 
-                                var data = JSON.parse(ajax.responseText);
-                                $("#textLab").text("Прикрепить решения");
-                                form.classList.add(data.success != true ? 'is-success' : 'is-error');
-                                if (!data.success) errorMsg.textContent = data.error;
-                            }
-                            else { alert('Ошибка! Дайте пизды создателю'); $("#textLab").text("Прикрепить решения"); }
-                        };
+                        if (form.getAttribute('action') == '/Custom/UploadTestMultiAttach/@Model.Id') {
+                            ajax.onload = function () {
+                                form.classList.remove('is-uploading');
+                                if (ajax.status >= 200 && ajax.status < 400) {
+
+                                   // alert("good")
+
+                                    var votes = $("#MainAttaches");
+                                    var num = $("#MainAttaches").text();
+                                    // alert(num + (droppedFiles.length))
+                                    if (parseInt(parseInt(parseInt(num) + parseInt(globFiles.length))) < 11) {
+                                        votes.text(parseInt(parseInt(num) + parseInt(globFiles.length)));
+                                    } else {
+                                        Snackbar.show({
+                                            text: 'Максимум 10 файлов решений!',
+                                        });
+                                        $("#textLab").text("Прикрепить решения");
+                                        return false;
+                                    }
+                                    $('#Uploaded_Results_Main').load('@Url.Action("LoadMainAttaches", "Custom")?id=' +@Model.Id);
+
+                                    var data = JSON.parse(ajax.responseText);
+                                    $("#textLab").text("Прикрепить решения");
+                                    form.classList.add(data.success != true ? 'is-success' : 'is-error');
+                                    if (!data.success) errorMsg.textContent = data.error;
+                                }
+                                else { alert('Ошибка! Дайте пизды создателю'); $("#textLab").text("Прикрепить решения"); }
+                            };
+                        } else {
+                             ajax.onload = function () {
+                                form.classList.remove('is-uploading');
+                                if (ajax.status >= 200 && ajax.status < 400) {
+                                    var votes = $("#Myattaches");
+                                    var num = $("#Myattaches").text();
+                                    // alert(num + (droppedFiles.length))
+                                    if (parseInt(parseInt(parseInt(num) + parseInt(globFiles.length))) < 11) {
+                                        votes.text(parseInt(parseInt(num) + parseInt(globFiles.length)));
+                                    } else {
+                                        Snackbar.show({
+                                            text: 'Максимум 10 файлов вложений!',
+                                        });
+                                        $("#textLab").text("Прикрепить вложение");
+                                        return false;
+                                    }
+                                    $('#Uploaded_Results_My').load('@Url.Action("LoadMyAttaches", "Custom")?id=' +@Model.Id);
+
+                                    var data = JSON.parse(ajax.responseText);
+                                    $("#textLab").text("Прикрепить вложения");
+                                    form.classList.add(data.success != true ? 'is-success' : 'is-error');
+                                    if (!data.success) errorMsg.textContent = data.error;
+                                }
+                                else { alert('Ошибка! Дайте пизды создателю'); $("#textLab").text("Прикрепить вложения"); }
+                            };
+                        }
 
                         ajax.onerror = function () {
                             form.classList.remove('is-uploading');

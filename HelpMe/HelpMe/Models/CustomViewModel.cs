@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,6 +12,9 @@ namespace HelpMe.Models
     /// <summary>
     /// класс заказов
     /// </summary>
+    [System.Runtime.Serialization.KnownType(typeof(UserViewModel))]
+    [System.Runtime.Serialization.KnownType(typeof(User))]
+    [System.Runtime.Serialization.KnownType(typeof(IdentityUser))]
     public class CustomViewModel
     {
         public int Id { get; set; }

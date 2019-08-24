@@ -17,7 +17,7 @@ namespace HelpMe
             GlobalHost.DependencyResolver.Register(typeof(IUserIdProvider), () => idProvider);
           
             ConfigureAuth(app);
-            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+           // GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 
             app.MapSignalR();
             GlobalHost.HubPipeline.RequireAuthentication();
