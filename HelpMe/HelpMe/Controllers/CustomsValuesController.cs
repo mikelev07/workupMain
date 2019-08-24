@@ -20,9 +20,36 @@ namespace HelpMe.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: api/CustomsValues
-        public IQueryable<CustomViewModel> GetCustomViewModels()
+        public IQueryable<CustomApiModel> GetCustomViewModels()
         {
-            return db.Customs;
+            IQueryable<CustomViewModel> customViewModels = db.Customs.Include(t => t.CategoryTask)
+                                                    .Include(c => c.TypeTask)
+                                                    .Include(c => c.Skill);
+
+
+
+            var items = from u in customViewModels
+                        select new CustomApiModel
+                        {
+                            Id = u.Id,
+                            Name = u.Name,
+                            Description = u.Description,
+                            Status = u.Status,
+                            DoneInTime = u.DoneInTime,
+                            StartDate = u.StartDate,
+                            EndingDate = u.EndingDate,
+                            ExecutorStartDate = u.ExecutorStartDate,
+                            ExecutorName = u.Executor.UserName,
+                            CategoryTaskName = u.CategoryTask.Name,
+                            SkillName = u.Skill.Name,
+                            TypeTaskName = u.TypeTask.Name,
+                            Price = u.Price,
+                            UserName = u.User.UserName,
+                            ExecutorPrice = u.ExecutorPrice,
+                            IsRevision = u.IsRevision
+                        };
+
+            return items;
         }
 
         // GET: api/CustomsValues/5
