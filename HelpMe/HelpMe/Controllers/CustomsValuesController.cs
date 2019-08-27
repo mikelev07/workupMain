@@ -136,15 +136,16 @@ namespace HelpMe.Controllers
 
             CustomViewModel custom = new CustomViewModel()
             {
-                Id = 1,
+               // Id = 1,
                 Name = customViewModel.Name,
-                Description = customViewModel.Description,
-                Status = customViewModel.Status,
-                DoneInTime = customViewModel.DoneInTime,
-                StartDate = customViewModel.StartDate,
-                EndingDate = customViewModel.EndingDate,
-                ExecutorStartDate = customViewModel.ExecutorStartDate,
+                Description = "",
+                Status = CustomStatus.Open,
+                DoneInTime = true,
+                StartDate = new DateTime(2019, 8, 28),
+                EndingDate = new DateTime(2019, 8, 28),
+                ExecutorStartDate = new DateTime(2019, 8, 28),
                 TypeTaskId = 1,
+                IsRevision = false,
                 CategoryTaskId = 1,
                 Price = 100,
                 UserId = "32418b6e-111e-47c5-8e1e-cc3ab59b2fe0"

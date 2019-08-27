@@ -4,6 +4,11 @@
 <p style="margin-top:20px; margin-left: 20px">
     <a href="/Transactions/Create" class="button gray ripple-effect button-sliding-icon">Создать новую транзакцию <i class="icon-feather-arrow-right"></i></a>
 </p>
+
+<p style="margin-top:20px; margin-left: 20px">
+    <button id="postReq" >Проверка ПОСТ запроса </button>
+</p>
+
 <div class="col-xl-6 col-md-6">
     <table class="basic-table">
         <tr>
@@ -89,6 +94,23 @@
 @section Scripts {
 
     <script>
+
+        $("#postReq").click(function () {
+
+                 $.ajax({
+                     url: '/api/CustomsValues/',
+                     data: JSON.stringify({ "Name": "dasd" }),
+                     type: 'POST',
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                   alert(data)
+                },
+                error: function (error) {
+                    alert(error);
+                }
+            });
+        });
+
 
         $('.timeBl').each(function (index) {
             var id = this.id;
