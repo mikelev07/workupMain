@@ -245,6 +245,14 @@
     </Compile>
     <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Hubs\NotificationHub.cs" />
+    <Compile Include="Migrations\201908261441087_MainAttachmentMigra.cs" />
+    <Compile Include="Migrations\201908261441087_MainAttachmentMigra.Designer.cs">
+      <DependentUpon>201908261441087_MainAttachmentMigra.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908270915016_DateTimeNullableMigra.cs" />
+    <Compile Include="Migrations\201908270915016_DateTimeNullableMigra.Designer.cs">
+      <DependentUpon>201908270915016_DateTimeNullableMigra.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\API\CustomApiModel.cs" />
@@ -536,6 +544,14 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201908261441087_MainAttachmentMigra.resx">
+      <DependentUpon>201908261441087_MainAttachmentMigra.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908270915016_DateTimeNullableMigra.resx">
+      <DependentUpon>201908270915016_DateTimeNullableMigra.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

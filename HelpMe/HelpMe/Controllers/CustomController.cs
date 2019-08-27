@@ -455,7 +455,7 @@ namespace HelpMe.Controllers
                 customViewModel.ExecutorPrice = commentViewModel.OfferPrice;
                 customViewModel.Status = CustomStatus.Check; // заявка выполняется
 
-                if (wallet.Summ - commentViewModel.OfferPrice > 0)
+                if (wallet.Summ - commentViewModel.OfferPrice >= 0)
                 {
 
                     Transaction transaction = new Transaction()
@@ -900,6 +900,46 @@ namespace HelpMe.Controllers
             return File(path, file_type, file_name);
         }
 
+        //действие для скачки готового решения заказчиком 
+        //осуществляется следующая проверка: остались ли еще решения для скачивания
+        public FileResult DowloadMainAttachment(int fileId, int customId)
+        {
+            var currentCustom = db.Customs.Include(c => c.MainAttachments).FirstOrDefaultAsync(c => c.Id == customId).Result;
+            var mainAttachments = currentCustom.MainAttachments;
+
+            string currentFilePath = "";
+            bool allFilesDownloaded = true;
+            foreach (var attach in mainAttachments)
+            {
+                if (attach.Id == fileId)
+                {
+                    currentFilePath = attach.AttachFilePath;
+                    if (!attach.IsDownloaded)
+                    {
+                        //для скачиваемого в данный момент готового решения (которое ранее не скачивалось) проставляем необходимые атрибуты
+                        attach.IsDownloaded = true;
+                        attach.DownloadDate = DateTime.Now;
+                        db.Entry(attach).State = EntityState.Modified;
+                    }
+
+                }
+                if (!attach.IsDownloaded)
+                {
+                    allFilesDownloaded = false;
+                }
+            }
+
+            if (allFilesDownloaded)
+            {
+                currentCustom.Status = CustomStatus.CheckCustom;
+                db.Entry(currentCustom).State = EntityState.Modified;
+            }
+            
+            db.SaveChangesAsync();
+
+            return GetFile(currentFilePath);
+        }
+
         // GET: Custom/Details/5
         public async Task<ActionResult> Details(int? id)
         {
@@ -919,8 +959,8 @@ namespace HelpMe.Controllers
                                                               .Include(c => c.MainAttachments)
                                                               .FirstOrDefaultAsync(c => c.Id == id);
 
-            var wallet = db.Wallets.Where(c => c.UserId == reqId).FirstOrDefault();
-            ViewBag.WalletSumm = wallet.Summ;
+            var wallet = db.Wallets.Where(w => w.UserId == reqId).FirstOrDefault();
+            ViewBag.WalletSumm = wallet?.Summ;
 
             if (customViewModel == null)
             {

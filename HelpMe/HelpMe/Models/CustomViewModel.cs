@@ -85,6 +85,10 @@ namespace HelpMe.Models
         public CustomViewModel CustomViewModel { get; set; }
         public string UserId { get; set; }
         public virtual User User { get; set; }
+        public bool IsDownloaded { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime? DownloadDate { get; set; }
         public string AttachFileName { get; set; }
         public string AttachFileExtens { get; set; }
         public string AttachFilePath { get; set; }
