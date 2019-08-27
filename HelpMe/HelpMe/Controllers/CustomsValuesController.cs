@@ -126,18 +126,34 @@ namespace HelpMe.Controllers
         }
 
         // POST: api/CustomsValues
-        [ResponseType(typeof(CustomViewModel))]
-        public async Task<IHttpActionResult> PostCustomViewModel(CustomViewModel customViewModel)
+        [ResponseType(typeof(CustomApiModel))]
+        public async Task<IHttpActionResult> PostCustomViewModel(CustomApiModel customViewModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Customs.Add(customViewModel);
+            CustomViewModel custom = new CustomViewModel()
+            {
+                Id = 1,
+                Name = customViewModel.Name,
+                Description = customViewModel.Description,
+                Status = customViewModel.Status,
+                DoneInTime = customViewModel.DoneInTime,
+                StartDate = customViewModel.StartDate,
+                EndingDate = customViewModel.EndingDate,
+                ExecutorStartDate = customViewModel.ExecutorStartDate,
+                TypeTaskId = 1,
+                CategoryTaskId = 1,
+                Price = 100,
+                UserId = "32418b6e-111e-47c5-8e1e-cc3ab59b2fe0"
+            };
+
+            db.Customs.Add(custom);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = customViewModel.Id }, customViewModel);
+            return CreatedAtRoute("DefaultApi", new { id = custom.Id }, customViewModel);
         }
 
         // DELETE: api/CustomsValues/5
