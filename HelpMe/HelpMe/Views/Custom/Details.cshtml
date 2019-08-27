@@ -148,7 +148,7 @@
                                 }
                                 else
                                 {
-                                    <a id="download-main-by-customer" class="attachment-box ripple-effect" href="@Url.Action("DowloadMainAttachment", "Custom", new { fileId=i.Id, customId = Model.Id})"><span style="width:152px">@i.AttachFileName</span><i>@i.AttachFileExtens.TrimStart('.')   @i.IsDownloaded</i></a>
+                                    <a id="download-main-by-customer" class="attachment-box ripple-effect" onclick="DownloadMainAttachmentByCustomer(@i.Id,@Model.Id, @i.AttachFilePath)"><span style="width:152px">@i.AttachFileName</span><i>@i.AttachFileExtens.TrimStart('.')</i></a>
                                 }
                                 @if (i.CustomViewModel.ExecutorId == User.Identity.GetUserId())
                                 {
@@ -1232,9 +1232,29 @@
         }
 
 
-        $('input[id^="choose-executor"], #send-for-revision, #accept-custom, #close-custom', '#download-main-by-customer').on('click', function (e) {
+        $('input[id^="choose-executor"], #send-for-revision, #accept-custom, #close-custom'/*, '#download-main-by-customer'*/).on('click', function (e) {
             ChangeStatusSpan();
         });
+
+        function DownloadMainAttachmentByCustomer(fileId, customId, path) {
+            $.ajax({
+                url: '@Url.Action("GetFile", "Custom")?path=' + path,
+                //data: {
+                //    'path': path
+                //},
+                 //contentType: 'application/json; charset=utf-8',
+                 //datatype: 'json',
+                 type: "GET",
+                 success: function () {
+                     alert('sukkess');
+                     window.location = '@Url.Action("GetFile", "Custom")?path=' + path;
+                     ChangeStatusSpan();
+                },
+                error: function () {
+                    alert('pisos');
+                }
+            }); 
+        }
 
         @*$('#getArch').on('click', function () {
             $.ajax({

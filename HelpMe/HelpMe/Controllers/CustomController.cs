@@ -902,9 +902,9 @@ namespace HelpMe.Controllers
 
         //действие для скачки готового решения заказчиком 
         //осуществляется следующая проверка: остались ли еще решения для скачивания
-        public FileResult DowloadMainAttachment(int fileId, int customId)
+        public FileResult DownloadMainAttachment(int fileId, int customId)
         {
-            var currentCustom = db.Customs.Include(c => c.MainAttachments).FirstOrDefaultAsync(c => c.Id == customId).Result;
+            var currentCustom = db.Customs.Include(c => c.MainAttachments).FirstOrDefault(c => c.Id == customId);
             var mainAttachments = currentCustom.MainAttachments;
 
             string currentFilePath = "";
@@ -916,10 +916,12 @@ namespace HelpMe.Controllers
                     currentFilePath = attach.AttachFilePath;
                     if (!attach.IsDownloaded)
                     {
+                        db.MainAttachments.Attach(attach);
                         //для скачиваемого в данный момент готового решения (которое ранее не скачивалось) проставляем необходимые атрибуты
                         attach.IsDownloaded = true;
                         attach.DownloadDate = DateTime.Now;
                         db.Entry(attach).State = EntityState.Modified;
+                        //db.SaveChangesAsync();
                     }
 
                 }
@@ -934,9 +936,7 @@ namespace HelpMe.Controllers
                 currentCustom.Status = CustomStatus.CheckCustom;
                 db.Entry(currentCustom).State = EntityState.Modified;
             }
-            
-            db.SaveChangesAsync();
-
+            db.SaveChanges();
             return GetFile(currentFilePath);
         }
 
