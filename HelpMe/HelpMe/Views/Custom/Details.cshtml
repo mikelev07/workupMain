@@ -148,7 +148,8 @@
                                 }
                                 else
                                 {
-                                    <a id="download-main-by-customer" class="attachment-box ripple-effect" onclick="DownloadMainAttachmentByCustomer(@i.Id,@Model.Id, @i.AttachFilePath)"><span style="width:152px">@i.AttachFileName</span><i>@i.AttachFileExtens.TrimStart('.')</i></a>
+                                    string attachPath = i.AttachFilePath.Replace("\\","\\\\");
+                                    <a id="download-main-by-customer" class="attachment-box ripple-effect" onclick="DownloadMainAttachmentByCustomer(@i.Id,@Model.Id, '@attachPath')"><span style="width:152px">@i.AttachFileName</span><i>@i.AttachFileExtens.TrimStart('.')</i></a>
                                 }
                                 @if (i.CustomViewModel.ExecutorId == User.Identity.GetUserId())
                                 {
@@ -1237,21 +1238,24 @@
         });
 
         function DownloadMainAttachmentByCustomer(fileId, customId, path) {
+            //alert('path = ' + path);
             $.ajax({
-                url: '@Url.Action("GetFile", "Custom")?path=' + path,
-                //data: {
-                //    'path': path
-                //},
+                url: '@Url.Action("DownloadMainAttachment", "Custom")',
+                data: {
+                    'fileId': fileId,
+                    'customId': customId
+                },
                  //contentType: 'application/json; charset=utf-8',
                  //datatype: 'json',
                  type: "GET",
                  success: function () {
-                     alert('sukkess');
                      window.location = '@Url.Action("GetFile", "Custom")?path=' + path;
                      ChangeStatusSpan();
+                     return true;
                 },
                 error: function () {
                     alert('pisos');
+                    return false;
                 }
             }); 
         }
