@@ -23,7 +23,7 @@
                data_tippy_placement = "top"
            }
            )
-            @Ajax.RawActionLink("<i id='fDelbuy"+@i.Id+"' class='icon-feather-edit'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach","Custom",
+            @*@Ajax.RawActionLink("<i id='fDelbuy"+@i.Id+"' class='icon-feather-edit'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach","Custom",
           new{ id = i.Id},
           new AjaxOptions{ OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
           new {
@@ -33,7 +33,7 @@
               title = "Удалить решение",
               data_tippy_placement = "top"
           }
-          )
+          )*@
         }
         @if (i.CustomViewModel.UserId == User.Identity.GetUserId())
         {
@@ -42,7 +42,7 @@
                 @Ajax.RawActionLink(
                "<i id='fbuy' style='margin-top: -10px;' class='icon-material-outline-monetization-on'></i><span id='textAttachBuy'>Купить</span><div style = 'left:40%' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "Buy", "Custom",
                new{id = i.Id},
-               new AjaxOptions{ OnBegin= "return OnBeginBuyAttach('"+@i.Id+"')", OnSuccess = "OnSuccessBuyAttach", HttpMethod = "POST" },
+               new AjaxOptions{ OnBegin= "return OnBeginBuyAttach('"+@i.Id+"')", OnSuccess = "return OnSuccessBuyAttach('" + @i.Id + "')", HttpMethod = "POST" },
                new {
                    id = "buy-solution",
                    @class = "button ripple-effect",

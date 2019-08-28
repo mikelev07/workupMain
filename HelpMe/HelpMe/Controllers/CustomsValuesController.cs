@@ -141,7 +141,7 @@ namespace HelpMe.Controllers
                 Description = "",
                 Status = CustomStatus.Open,
                 DoneInTime = true,
-                StartDate = new DateTime(2019, 8, 28),
+                StartDate = DateTime.Now,
                 EndingDate = new DateTime(2019, 8, 28),
                 ExecutorStartDate = new DateTime(2019, 8, 28),
                 TypeTaskId = 1,

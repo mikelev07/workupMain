@@ -198,6 +198,19 @@ namespace HelpMe.Controllers
             return PartialView(customViewModel);
         }
 
+        public async Task<int> NotDownloadedMainAttaches(int? id)
+        {
+            var custom = await db.Customs.FirstOrDefaultAsync(c => c.Id == id);
+            var count = await db.MainAttachments.Where(a => a.CustomViewModelId == id).CountAsync(m => m.IsDownloaded == false);
+            if (count==0)
+            {
+                custom.Status = CustomStatus.CheckCustom;
+                db.Entry(custom).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+            }
+            return count;
+        }
+
         public async Task<int> NotPurchasedAttaches(int? id)
         {
             return await db.Attachments.Where(a => a.CustomViewModelId == id).CountAsync(a => a.AttachStatus == AttachStatus.NotPurchased);
@@ -293,7 +306,7 @@ namespace HelpMe.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> Upload()
+        public async Task<JsonResult> UploadRevision()
         {
             var idCustom = Convert.ToInt32(Request.Form["CustomViewModelId"]);
             CustomViewModel customViewModel = await db.Customs.Include(c => c.User).Include(a => a.Attachments).FirstOrDefaultAsync(c => c.Id == idCustom);
@@ -327,7 +340,7 @@ namespace HelpMe.Controllers
                         attach.CustomViewModelId = Convert.ToInt32(Request.Form["CustomViewModelId"]);
                         attach.AttachFilePath = path;
                         attach.AttachFileExtens = fil.Extension;
-                        if (fileNameNew.Length > 10)
+                        if (fileNameNew.Length > 20)
                         {
                             attach.AttachFileName = fileNameNew.Substring(0, 20);
                         }
@@ -384,7 +397,7 @@ namespace HelpMe.Controllers
 
                 string myId = User.Identity.GetUserId();
                 Wallet wallet = db.Wallets.Where(x => x.UserId == myId).FirstOrDefault();
-                if (wallet.Summ - attachViewModel.ExecutorPrice > 0)
+                if (wallet.Summ - attachViewModel.ExecutorPrice >= 0)
                 {
                     Transaction transaction = new Transaction()
                     {
@@ -400,6 +413,8 @@ namespace HelpMe.Controllers
                     transaction.Price = attachViewModel.ExecutorPrice;
                     transaction.FromUserId = myId;
                     transaction.ToUserId = attachViewModel.CustomViewModel.ExecutorId;
+                    transaction.TimeBlock = attachViewModel.CustomViewModel.TimeBlock;
+                    transaction.DateBlockEnd = transaction.Date.AddDays(transaction.TimeBlock);
 
                     db.Transactions.Add(transaction);
                     await db.SaveChangesAsync();
@@ -869,8 +884,12 @@ namespace HelpMe.Controllers
         {
             AttachModel attachViewModel = db.Attachments.Include(c => c.User).Include(c => c.CustomViewModel)
                                                             .FirstOrDefault(c => c.Id == id);
+
             // Тип файла - content-type
-            if (attachViewModel.AttachStatus == AttachStatus.Purchased && attachViewModel.CustomViewModel.ExecutorId != User.Identity.GetUserId())
+            if (
+                (attachViewModel.CustomViewModel.UserId == User.Identity.GetUserId() && attachViewModel.AttachStatus == AttachStatus.Purchased) ||
+                attachViewModel.CustomViewModel.ExecutorId==User.Identity.GetUserId()
+                )
             {
                 string file_type = "application/" + Path.GetExtension(path);
                 string file_name = Path.GetFileName(path);
@@ -908,7 +927,7 @@ namespace HelpMe.Controllers
             var mainAttachments = currentCustom.MainAttachments;
 
             string currentFilePath = "";
-            bool allFilesDownloaded = true;
+            //bool allFilesDownloaded = true;
             foreach (var attach in mainAttachments)
             {
                 if (attach.Id == fileId)
@@ -925,17 +944,17 @@ namespace HelpMe.Controllers
                     }
 
                 }
-                if (!attach.IsDownloaded)
-                {
-                    allFilesDownloaded = false;
-                }
+                //if (!attach.IsDownloaded)
+                //{
+                //    allFilesDownloaded = false;
+                //}
             }
 
-            if (allFilesDownloaded)
-            {
-                currentCustom.Status = CustomStatus.CheckCustom;
-                db.Entry(currentCustom).State = EntityState.Modified;
-            }
+            //if (allFilesDownloaded)
+            //{
+            //    currentCustom.Status = CustomStatus.CheckCustom;
+            //    db.Entry(currentCustom).State = EntityState.Modified;
+            //}
             db.SaveChanges();
             return GetFile(currentFilePath);
         }

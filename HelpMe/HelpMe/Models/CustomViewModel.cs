@@ -39,6 +39,7 @@ namespace HelpMe.Models
         public int? SkillId { get; set; }
         public Skill Skill { get; set; }
         public int Price { get; set; }
+        public int TimeBlock { get; set; }
         public string AttachFilePath { get; set; }
 
         [NotMapped]
