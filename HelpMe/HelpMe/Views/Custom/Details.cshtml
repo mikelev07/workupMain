@@ -91,17 +91,17 @@
                         </form>
 
                         @*
-                        <div>
-                            <div class="uploadButton margin-top-30">
-                                <input type="hidden" name="CustomViewModelId" id="CustomViewModelId" value="@Model.Id" />
-                                <input class="uploadButton-input" type="file" name="upload" id="uploadFile" /><br />
-                                <label class="uploadButton-button ripple-effect" for="uploadFile">Прикрепить вложение</label>
-                                <span class="uploadButton-file-name">Загрузите файл вложения любого формата</span>
-                            </div>
-                            <div class="progress"></div>
+                            <div>
+                                <div class="uploadButton margin-top-30">
+                                    <input type="hidden" name="CustomViewModelId" id="CustomViewModelId" value="@Model.Id" />
+                                    <input class="uploadButton-input" type="file" name="upload" id="uploadFile" /><br />
+                                    <label class="uploadButton-button ripple-effect" for="uploadFile">Прикрепить вложение</label>
+                                    <span class="uploadButton-file-name">Загрузите файл вложения любого формата</span>
+                                </div>
+                                <div class="progress"></div>
 
-                            <input id="submitAttach" type="submit" value="Загрузить" class="button ripple-effect margin-top-10" />
-                        </div>*@
+                                <input id="submitAttach" type="submit" value="Загрузить" class="button ripple-effect margin-top-10" />
+                            </div>*@
                     }
 
 
@@ -270,17 +270,17 @@
                                                 })
 
                                             @*@Ajax.RawActionLink(
-                                            "<i  id='fDelbuy" + i.Id + "' class='icon-feather-edit'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach", "Custom",
-                                            new { id = i.Id },
-                                            new AjaxOptions { OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
-                                            new
-                                                 {
-                                                id = "delete-attach",
-                                                @class = "button  ripple-effect ico",
-                                                @style = "  margin-left:5px;  padding: 3px 5px 3px 3px; ",
-                                                title = "Удалить решение",
-                                                data_tippy_placement = "top"
-                                            })*@
+                                                "<i  id='fDelbuy" + i.Id + "' class='icon-feather-edit'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach", "Custom",
+                                                new { id = i.Id },
+                                                new AjaxOptions { OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
+                                                new
+                                                     {
+                                                    id = "delete-attach",
+                                                    @class = "button  ripple-effect ico",
+                                                    @style = "  margin-left:5px;  padding: 3px 5px 3px 3px; ",
+                                                    title = "Удалить решение",
+                                                    data_tippy_placement = "top"
+                                                })*@
                                         }
 
                                         @if (Model.UserId == User.Identity.GetUserId())
@@ -333,14 +333,14 @@
             }
 
             @*<div class="single-page-section">
-                <h3>Необходимые навыки</h3>
-                <div class="task-tags">
-                    <span>iOS</span>
-                    <span>Android</span>
-                    <span>mobile apps</span>
-                    <span>design</span>
-                </div>
-            </div>*@
+                    <h3>Необходимые навыки</h3>
+                    <div class="task-tags">
+                        <span>iOS</span>
+                        <span>Android</span>
+                        <span>mobile apps</span>
+                        <span>design</span>
+                    </div>
+                </div>*@
             <div class="clearfix"></div>
 
             <div class="boxed-list margin-bottom-60">
@@ -545,7 +545,7 @@
                                                         <textarea id="edit-comment-desсription" name="Description" cols="30" rows="5" class="with-border" maxlength="200" placeholder="Оставьте своё предложение для заказчика...">@c.Description</textarea>
                                                         //Для проверки
                                                         @*<div>commentId=@c.Id</div>
-                                                        <div>description=@c.Description</div>*@
+                                                            <div>description=@c.Description</div>*@
 
 
                                                         <!-- Button -->
@@ -678,34 +678,34 @@
                                 </div>
 
                                 @*<!--Tabs -->
-                                <div class="sign-in-form">
+                                    <div class="sign-in-form">
 
-                                    <ul class="popup-tabs-nav">
-                                        <li><a href="#tab2">Отправка сообщения</a></li>
-                                    </ul>
+                                        <ul class="popup-tabs-nav">
+                                            <li><a href="#tab2">Отправка сообщения</a></li>
+                                        </ul>
 
-                                    <div class="popup-tabs-container">
+                                        <div class="popup-tabs-container">
 
-                                        <!-- Tab -->
-                                        <div class="popup-tab-content" id="tab2">
+                                            <!-- Tab -->
+                                            <div class="popup-tab-content" id="tab2">
 
-                                            <!-- Welcome Text -->
-                                            <div class="welcome-text">
-                                                <h3>Отправить сообщение @c.User.UserName</h3>
+                                                <!-- Welcome Text -->
+                                                <div class="welcome-text">
+                                                    <h3>Отправить сообщение @c.User.UserName</h3>
+                                                </div>
+
+                                                <!-- Form -->
+                                                <form method="post" id="send-pm">
+                                                    <textarea name="textarea" cols="10" placeholder="Оставьте сообщение..." class="with-border" required></textarea>
+                                                </form>
+
+                                                <!-- Button -->
+                                                <a class="button full-width button-sliding-icon ripple-effect" type="submit" form="send-pm" target="_blank">Отправить <i class="icon-material-outline-arrow-right-alt"></i></a>
+
                                             </div>
 
-                                            <!-- Form -->
-                                            <form method="post" id="send-pm">
-                                                <textarea name="textarea" cols="10" placeholder="Оставьте сообщение..." class="with-border" required></textarea>
-                                            </form>
-
-                                            <!-- Button -->
-                                            <a class="button full-width button-sliding-icon ripple-effect" type="submit" form="send-pm" target="_blank">Отправить <i class="icon-material-outline-arrow-right-alt"></i></a>
-
                                         </div>
-
-                                    </div>
-                                </div>*@
+                                    </div>*@
                             </div>
 
                         }
@@ -747,7 +747,7 @@
                                     <label for="radio-reject-executor"><span class="radio-label"></span>  Я ознакомился с правилами</label>
                                 </div>
                                 <input id="reject-executor" class="margin-top-15 button full-width button-sliding-icon ripple-effect"
-                                       type="button" value="Подвтердить" />
+                                       type="button" value="Подтвердить" />
 
                             </div>
                         </div>
@@ -809,7 +809,7 @@
                                         })
                                     @Html.Hidden("OwnerId", Model.Executor.Id)
                                     <!-- Button -->
-                                    <button @*id="close-custom"*@ class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Подтвердить выполнение <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                    <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Подтвердить выполнение <i class="icon-material-outline-arrow-right-alt"></i></button>
                                 }
                             </div>
 
@@ -818,6 +818,211 @@
                 </div>
                 <!-- Leave a Review Popup / End -->
             }
+        }
+        @if (Request.IsAuthenticated && Model.UserId == User.Identity.GetUserId() && Model.ExecutorId == null)
+        {
+            <div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+                <!--Tabs -->
+                <div class="sign-in-form">
+
+                    <ul class="popup-tabs-nav">
+                        <li><a href="#tab1">Редактировать заказ</a></li>
+                    </ul>
+
+                    <div class="popup-tabs-container">
+
+                        <!-- Tab -->
+                        <div class="popup-tab-content" id="tab">
+
+                            @using (Html.BeginForm("Edit", "Custom", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("Id", Model.Id)
+                                @Html.Hidden("UserId", Model.UserId)
+                                @Html.Hidden("StartDate", Model.StartDate)
+                                @Html.Hidden("ExecutorStartDate", Model.ExecutorStartDate)
+
+                                <!-- Welcome Text -->
+                                <!-- Form -->
+                                <div class="row">
+                                    <!-- Dashboard Box -->
+                                    <div>
+                                        <div class="dashboard-box margin-top-0">
+
+                                            <!-- Headline -->
+                                            <div class="headline">
+                                                <h3><i class="icon-feather-edit"></i> Редактирование заказа</h3>
+                                            </div>
+
+
+                                            <div class="content with-padding padding-bottom-10">
+                                                <div>
+
+                                                    <div>
+                                                        <div class="submit-field">
+                                                            <h5>Название задания</h5>
+                                                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "with-border", @placeholder = "Название задания" } })
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <div class="submit-field">
+                                                            <h5>Дисциплина</h5>
+                                                            @Html.DropDownListFor(model => model.CategoryTaskId, ViewBag.Tasks as SelectList,
+                                                            "Укажите дисциплину", new { @class = "selectpicker with-border", @id = "TaskList", autocomplete = "off" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <div class="submit-field">
+                                                            <h5>Предмет</h5>
+                                                            @Html.DropDownListFor(model => model.SkillId, Enumerable.Empty<SelectListItem>(),
+                                                                "Укажите предмет", new { @class = "selectpicker with-border", id = "SkillList", @disabled = "disabled", autocomplete = "off" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <div class="submit-field">
+                                                            <h5>Тип задания</h5>
+                                                            @Html.DropDownListFor(model => model.TypeTaskId, ViewBag.Types as SelectList, new { @class = "selectpicker with-border" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <div class="submit-field">
+                                                            <h5>Описание задания</h5>
+                                                            @Html.TextAreaFor(model => model.Description, new { rows = "5", cols = "30", @class = "with-border" })
+
+                                                            @*<div class="uploadButton margin-top-30">
+                                            <input multiple="multiple" class="uploadButton-input" type="file" name="AttachFile" id="AttachFile" required />
+                                            <label class="uploadButton-button ripple-effect" for="AttachFile">Прикрепить задания</label>
+                                            <span style="padding-left:10px" class="uploadButton-file">Вы можете прикрепить несколько вложений</span>
+                                        </div>*@
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <div class="submit-field">
+                                                            <h5>Дата сдачи задания</h5>
+                                                            <div class="col-xl-12">
+
+                                                                <div style="display:inline">
+                                                                    <div class="input-group date" data-provide="datepicker">
+                                                                        <div class="input-with-icon-left no-border">
+                                                                            <i class="icon-material-outline-date-range"></i>
+                                                                            <input id="EndingDate" placeholder="Дата сдачи" name="EndingDate" type="text" class="form-control">
+                                                                        </div>
+                                                                        <div class="input-group-addon">
+                                                                            <span class="glyphicon glyphicon-th"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <h5>Время сдачи</h5>
+                                                                    <div class="form-group">
+                                                                        <div class="input-group">
+                                                                            <div class="input-with-icon-left no-border">
+                                                                                <i class="icon-material-outline-access-time"></i>
+                                                                                <input id="datetimepicker3" placeholder="Время сдачи" type="text" class="form-control" />
+                                                                            </div>
+                                                                            <span class="input-group-addon">
+                                                                                <i class="glyphicon glyphicon-calendar"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="checkbox">
+                                                                    <input type="checkbox" id="checkboxDate">
+                                                                    <label for="checkboxDate"><span class="checkbox-icon"></span>Срок неизвестен</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <div class="col-xl-12">
+                                                            <div class="submit-field">
+                                                                <h5>Бюджет задания</h5>
+
+                                                                <div class="row">
+                                                                    <div class="col-xl-8">
+                                                                        <div class="input-with-icon">
+                                                                            @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @id = "min", @min = "0", @max = "25000", @class = "with-border disabled no-spinners", @placeholder = "Цена", @oninput = "validity.valid||(value = '');" } })
+                                                                            <i class="currency">Руб.</i>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="checkbox">
+                                                                    <input type="checkbox" id="checkboxNew">
+                                                                    <label for="checkboxNew"><span class="checkbox-icon"></span>По договоренности</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @*<div>
+                                    <div class="submit-field">
+                                        <h5>Срок блокировки оплаты</h5>
+                                        <select class="selectpicker-filter">
+                                            <option>5 дней</option>
+                                            <option>10 дней</option>
+                                            <option>15 дней</option>
+                                            <option>20 дней</option>
+                                            <option>30 дней</option>
+                                            <option>40 дней</option>
+                                        </select>
+                                    </div>
+                                </div>*@
+                                                    @*<div>
+                                    <div class="submit-field">
+                                        <h5>Проверка на плагиат</h5>
+                                        <div class="col-xl-6">
+                                            <select class="selectpicker-filter">
+                                                <option>40%</option>
+                                                <option>50%</option>
+                                                <option>60%</option>
+                                                <option>70%</option>
+                                                <option>80%</option>
+                                                <option>90%</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>*@
+
+                                                    @*<div id="fileUpCreate" style="border-bottom: 1px solid #e4e4e4;">
+
+                                </div>*@
+
+                                                    @*<div style="margin-top:20px">
+                                    <div class="submit-field">
+                                        <h5>Платные услуги</h5>
+
+                                        <select class="selectpicker-filter">
+                                            <option>40%</option>
+                                            <option>50%</option>
+                                            <option>60%</option>
+                                            <option>70%</option>
+                                            <option>80%</option>
+                                            <option>90%</option>
+                                        </select>
+
+                                    </div>
+                                </div>*@
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <input type="submit" value="Подтвердить изменения" class="button ripple-effect margin-top-20" />
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
 
         <!-- Spacer -->
@@ -844,10 +1049,12 @@
                     switch (Model.Status)
                     {
                         case HelpMe.Models.CustomStatus.Open:
+                            <a style="margin-bottom:20px" href="#small-dialog-3" class="apply-now-button popup-with-zoom-anim" title="Редактировать параметры задания" data-tippy-placement="bottom">Редактировать заказ <i class="icon-feather-edit"></i></a>
                             <a href="@Url.Action("Cancel", "Custom", new { id = Model.Id })" class="apply-now-button" title="Убрать заказ из списка видимых для исполнителей" data-tippy-placement="bottom">Отменить заказ <i class="icon-material-outline-undo"></i></a>
                             break;
 
                         case HelpMe.Models.CustomStatus.Cancelled:
+                            <a style="margin-bottom:20px" href="#small-dialog-3" class="apply-now-button popup-with-zoom-anim" title="Редактировать параметры задания" data-tippy-placement="bottom">Редактировать заказ <i class="icon-material-outline-info"></i></a>
                             <a href="@Url.Action("Cancel", "Custom", new { id = Model.Id })" class="apply-now-button" title="Вернуть заказ в список видимых для исполнителей" data-tippy-placement="bottom">Переоткрыть заказ <i class="icon-material-outline-redo"></i></a>
                             break;
 
@@ -2300,6 +2507,102 @@
                 text: 'Copied to clipboard!',
             });
         });
+
+
+
+
+        /**********************для поп-апа редактирования**********************/
+        $('.selectpicker').selectpicker({
+            liveSearch: true
+        });
+
+        $('.selectpicker-filter').selectpicker({
+            liveSearch: false
+        });
+
+
+        $(function () {
+            $('#datetimepicker3').datetimepicker(
+                { format: 'HH:mm' }
+            );
+
+            $('#TaskList').change(function () {
+                GetSkills();
+            });
+
+            function GetSkills() {
+                var id = $('#TaskList').val();
+                if (!id) {
+                    id = 0;
+                }
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetSkills", "User")/' + id,
+                    dataType: 'JSON',
+                    success: function (data) {
+                        $('#SkillList').empty();
+                        if (id != 0) {
+                            $('#SkillList').attr('disabled',false);
+                            $('#SkillList').append("<option value=''>Все предметы</option>");
+                            $.each(data, function (i, item) {
+                                $('#SkillList').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                            });
+                        }
+                        else {
+                            $('#SkillList').append("<option value=''>Все предметы</option>");
+                            $('#SkillList').attr("disabled", true);
+                        }
+                        $('#SkillList').selectpicker("refresh");
+                    },
+                    error: function (data) {
+                        alert(data.responseText);
+                    }
+                });
+            }
+
+
+           $("#checkboxNew").click(function () {
+            if ($(this).is(':checked')) {
+                $("#min").prop("disabled", true);
+                $("#min").css("background-color", "#f2f2f2");
+                $("#min").attr("placeholder", "");
+            } else {
+                $("#min").prop("disabled", false);
+                $("#min").css("background-color", "#ffffff");
+                $("#min").attr("placeholder", "Цена");
+            }
+           });
+
+        $("#checkboxDate").click(function () {
+            if ($(this).is(':checked')) {
+                $("#EndingDate").prop("disabled", true);
+                $("#datetimepicker3").prop("disabled", true);
+                $("#EndingDate").css("background-color", "#f2f2f2");
+                $("#datetimepicker3").css("background-color", "#f2f2f2");
+                $("#EndingDate").attr("placeholder", "");
+                $("#EndingDate").val("");
+                $("#datetimepicker3").attr("placeholder", "");
+                $("#datetimepicker3").val("");
+
+            } else {
+                $("#EndingDate").prop("disabled", false);
+                $("#datetimepicker3").prop("disabled", false);
+                $("#EndingDate").css("background-color", "#ffffff");
+                $("#datetimepicker3").css("background-color", "#ffffff");
+                $("#EndingDate").attr("placeholder", "Дата сдачи");
+                $("#datetimepicker3").attr("placeholder", "Время сдачи");
+            }
+        });
+
+
+        $('#EndingDate').datepicker({
+            language: 'ru',
+            autoclose: true,
+            format: "dd M yyyy"
+        }); //Initialise any date pickers
+
+
+    });
     </script>
 }
 

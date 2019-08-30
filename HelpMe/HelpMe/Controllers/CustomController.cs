@@ -1014,6 +1014,13 @@ namespace HelpMe.Controllers
                 return HttpNotFound();
             }
 
+            //пока еще не выбран исполнитель, подгружаем коллекцию дисциплин и типов задач (для возможности редактирования заказа)
+            if(customViewModel.ExecutorId==null)
+            {
+                ViewBag.Types = new SelectList(db.CustomTypes, "Id", "Name"); // выбор типа задачи
+                ViewBag.Tasks = new SelectList(db.TaskCategories, "Id", "Name"); // выбор дисциплины
+            }
+
             return View(customViewModel);
         }
 
@@ -1269,7 +1276,7 @@ namespace HelpMe.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,AttachFilePath,AttachFile,UserId,TypeTaskId,CategoryTaskId,EndingDate,Price")] CustomViewModel customViewModel)
+        public async Task<ActionResult> Edit([Bind(Include = "Id, Name, Description, TypeTaskId, CategoryTaskId, SkillId, UserId, StartDate, EndingDate, ExecutorStartDate, Price")] CustomViewModel customViewModel)
         {
             if (ModelState.IsValid)
             {
