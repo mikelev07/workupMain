@@ -137,54 +137,13 @@
                                 <ul id="cust" class="boxed-list-ul">
                                     @if (Model.Customs.Count() > 0)
                                     {
-                                        Html.Partial("_DetailsCustomsPage", Model.Customs.Where(c => c.Status == HelpMe.Models.CustomStatus.Close).OrderByDescending(c => c.EndingDate).ToPagedList(
+                                        @Html.Partial("_DetailsCustomsPage", Model.Customs.Where(c => c.DoneInTime != null).OrderByDescending(c => c.StartDate).ToPagedList(
                                             (int)Session["CustomsPage"], (int)Session["CustomsPageSize"]));
                                     }
                                     else
                                     {
                                         <li>Исполнитель еще не выполнял заказы...</li>
                                     }
-
-                                    @*<li>
-                                            <div class="boxed-list-item">
-                                                <!-- Content -->
-                                                <div class="item-content">
-                                                    <h4>Порешать уравнения</h4>
-                                                    <div class="item-details margin-top-10">
-                                                        <div class="detail-item"><i class="icon-material-outline-date-range"></i> Август 2018</div>
-                                                    </div>
-                                                    <div class="item-description">
-                                                        <p>Сделано в срок </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="boxed-list-item">
-                                                <!-- Content -->
-                                                <div class="item-content">
-                                                    <h4>Порешать одного челика</h4>
-                                                    <div class="item-details margin-top-10">
-                                                        <div class="detail-item"><i class="icon-material-outline-date-range"></i> Август 2018</div>
-                                                    </div>
-                                                    <div class="item-description">
-                                                        <p>Сделано никуя не в срок, тот типчик уже сам откинулся </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                                <div class="boxed-list-item">
-                                                     Content
-                                                    <div class="item-content">
-                                                        <h4>WordPress Theme Installation <span>Оценено исполнителем</span></h4>
-                                                        <div class="item-details margin-top-10">
-                                                            <div class="star-rating" data-rating="5.0"></div>
-                                                            <div class="detail-item"><i class="icon-material-outline-date-range"></i> Июнь 2019</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>*@
 
                                 </ul>
 

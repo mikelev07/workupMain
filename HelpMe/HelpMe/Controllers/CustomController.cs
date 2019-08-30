@@ -214,7 +214,7 @@ namespace HelpMe.Controllers
         {
             var custom = await db.Customs.FirstOrDefaultAsync(c => c.Id == id);
             var count = await db.MainAttachments.Where(a => a.CustomViewModelId == id).CountAsync(m => m.IsDownloaded == false);
-            if (count==0)
+            if (count == 0)
             {
                 custom.Status = CustomStatus.CheckCustom;
                 db.Entry(custom).State = EntityState.Modified;
@@ -239,7 +239,7 @@ namespace HelpMe.Controllers
             if (mainAttachments.Where(m => m.IsDownloaded == true).Count() == 0)
             {
                 db.Entry(customViewModel).State = EntityState.Modified;
-                if(mainAttachments.Where(m => m.IsDownloaded == false).Count() == 0)
+                if (mainAttachments.Where(m => m.IsDownloaded == false).Count() == 0)
                 {
                     customViewModel.Status = CustomStatus.Check;//выполняется исполнителем
                 }
@@ -482,14 +482,14 @@ namespace HelpMe.Controllers
             }
 
             CommentViewModel commentViewModel = await db.Comments.Include(c => c.CustomViewModel).FirstOrDefaultAsync(c => c.Id == CustId);
-            CustomViewModel customViewModel =  db.Customs.Where(c => c.Id == commentViewModel.CustomViewModelId).FirstOrDefault();
+            CustomViewModel customViewModel = db.Customs.Where(c => c.Id == commentViewModel.CustomViewModelId).FirstOrDefault();
 
             string myId = User.Identity.GetUserId();
             Wallet wallet = db.Wallets.Where(x => x.UserId == myId).FirstOrDefault();
             if (customViewModel.UserId != customViewModel.ExecutorId)
             {
                 customViewModel.ExecutorId = commentViewModel.UserId;
-                
+
                 db.Entry(customViewModel).State = EntityState.Modified;
                 customViewModel.ExecutorPrice = commentViewModel.OfferPrice;
                 customViewModel.Status = CustomStatus.Check; // заявка выполняется
@@ -517,7 +517,7 @@ namespace HelpMe.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-               
+
                 db.Entry(wallet).State = EntityState.Modified;
                 await db.SaveChangesAsync();
             }
@@ -554,6 +554,19 @@ namespace HelpMe.Controllers
             db.SaveChanges();
             context.Clients.User(uId).displayMessage(message);
             context.Clients.User(exId).displayMessage(message);
+        }
+
+        //перегрузка для односторонней нотификации
+        private void SendMessage(string message, int id, string userName)
+        {
+            // Получаем контекст хаба
+            var uId = db.Users.Where(x => x.UserName == userName).FirstOrDefault().Id;
+            string url = "/Custom/Details/" + id;
+            var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
+            Notification notification = new Notification { Id = 2, Title = message, Status = NotificationStatus.Unreading, Url = url, UserName = userName, ExUserName = null, UserId = uId, Description = null };
+            db.Notifications.Add(notification);
+            db.SaveChanges();
+            context.Clients.User(uId).displayMessage(message);
         }
 
         [HttpPost]
@@ -814,9 +827,9 @@ namespace HelpMe.Controllers
                             attach.CustomViewModelId = id;
                             attach.AttachFilePath = path;
                             attach.AttachFileExtens = fil.Extension;
-                            if (fileNameNew.Length > 10)
+                            if (fileNameNew.Length > 20)
                             {
-                                attach.AttachFileName = fileNameNew.Substring(0, 18);
+                                attach.AttachFileName = fileNameNew.Substring(0, 20);
                             }
                             else
                             {
@@ -872,9 +885,9 @@ namespace HelpMe.Controllers
                             attach.CustomViewModelId = id;
                             attach.AttachFilePath = path;
                             attach.AttachFileExtens = fil.Extension;
-                            if (fileNameNew.Length > 10)
+                            if (fileNameNew.Length > 20)
                             {
-                                attach.AttachFileName = fileNameNew.Substring(0, 18);
+                                attach.AttachFileName = fileNameNew.Substring(0, 20);
                             }
                             else
                             {
@@ -912,7 +925,7 @@ namespace HelpMe.Controllers
             // Тип файла - content-type
             if (
                 (attachViewModel.CustomViewModel.UserId == User.Identity.GetUserId() && attachViewModel.AttachStatus == AttachStatus.Purchased) ||
-                attachViewModel.CustomViewModel.ExecutorId==User.Identity.GetUserId()
+                attachViewModel.CustomViewModel.ExecutorId == User.Identity.GetUserId()
                 )
             {
                 string file_type = "application/" + Path.GetExtension(path);
@@ -1064,9 +1077,9 @@ namespace HelpMe.Controllers
                                 attach.CustomViewModelId = customViewModel.Id;
                                 attach.AttachFilePath = path;
                                 attach.AttachFileExtens = fil.Extension;
-                                if (fileNameNew.Length > 10)
+                                if (fileNameNew.Length > 20)
                                 {
-                                    attach.AttachFileName = fileNameNew.Substring(0, 18);
+                                    attach.AttachFileName = fileNameNew.Substring(0, 20);
                                 }
                                 else
                                 {
@@ -1090,54 +1103,84 @@ namespace HelpMe.Controllers
             return View(customViewModel);
         }
 
+        //для отклонения исполнителя. 
+        //Но сперва нужен функционал для рассмотрения заявки, а потом уже будет вызываться этот метод.
+        public async Task<ActionResult> RejectExecutor(int? customId)
+        {
+            if (customId == null)
+            {
+                return new HttpNotFoundResult("CustomId is null!");
+            }
+            CustomViewModel customViewModel = await db.Customs.Include(c=>c.Executor).FirstOrDefaultAsync(c => c.Id == customId);
+            if (customViewModel == null)
+            {
+                return new HttpNotFoundResult("Custom #"+customId+" wasn't found!");
+            }
+            db.Entry(customViewModel).State = EntityState.Modified;
+            customViewModel.ExecutorId = null;
+            await db.SaveChangesAsync();
+            return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
+        }
 
         // GET: Custom/Create
-        public async Task<ActionResult> Accept(int? id)
+        public async Task<ActionResult> Accept(int? id, [Bind(Include = "Id,Rating,Description,Date,UserId,OwnerId")] Review review)
         {
-            var transactions = await db.Transactions.Where(t => t.CustomId == id).ToListAsync();
-            var executorId = await db.Customs.Where(c => c.Id == id).Select(c => c.ExecutorId).FirstOrDefaultAsync();
-            var wallet = await db.Wallets.Where(w => w.UserId == executorId).FirstOrDefaultAsync();
-
-            foreach (var t in transactions.Where(t => t.Status == TransactionStatus.Waiting))
+            if (ModelState.IsValid)
             {
-                t.Status = TransactionStatus.Success;
-                wallet.Summ += t.Price;
-            }
+                //Make a review
+                review.Date = DateTime.Now;
+                review.UserId = User.Identity.GetUserId();
+                db.Reviews.Add(review);
+                User user = await db.Users.FirstOrDefaultAsync(u => u.Id == review.OwnerId);
+                
+                //make close-custom's logics
+                var transactions = await db.Transactions.Where(t => t.CustomId == id).ToListAsync();
+                var executorId = await db.Customs.Where(c => c.Id == id).Select(c => c.ExecutorId).FirstOrDefaultAsync();
+                var wallet = await db.Wallets.Where(w => w.UserId == executorId).FirstOrDefaultAsync();
 
-            // optimaize
-            CustomViewModel customViewModel = await db.Customs.Include(c => c.Comments)
-                                                              .Include(c => c.CategoryTask)
-                                                              .Include(c => c.TypeTask)
-                                                              .Include(c => c.User)
-                                                              .Include(c => c.Attachments)
-                                                              .FirstOrDefaultAsync(c => c.Id == id);
-
-            /*
-             Мысль такая: когда мы отправили заказ на доработку (метод Revision), то:
-                    -в заказ проставляется атрибут IsRevision = true
-                    -все новые прикрепленные решения (в заказе с таким флагом) также получают атрибут IsRevision = true
-             Когда мы закрываем заказ (метод Accept), то:
-                    -снимаем атрибут IsRevision в заказе
-                    -снимаем атрибут IsRevision со всех решений, являвшихся доработками
-             Логика в следующем: чтобы отличать новую доработку от старой. То есть когда цикл доработки завершен, 
-             то считаем все купленные доработки уже обычными решениями. А если откроется еще одна доработка, то мы 
-             сразу сможем отличить новые прикрепленные доработки от старых доработок. Как-то так. 
-             */
-            if (customViewModel.IsRevision)
-            {
-                var revisions = customViewModel.Attachments.Where(a => a.IsRevision);
-                foreach (var rev in revisions)
+                foreach (var t in transactions.Where(t => t.Status == TransactionStatus.Waiting))
                 {
-                    rev.IsRevision = false;
+                    t.Status = TransactionStatus.Success;
+                    wallet.Summ += t.Price;
                 }
-            }
 
-            db.Entry(customViewModel).State = EntityState.Modified;
-            customViewModel.Status = CustomStatus.Close;
-            customViewModel.IsRevision = false;
-            await db.SaveChangesAsync();
-            SendMessage("Вы закрыли заказ", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, customViewModel.User.UserName + "подтвердил выполнение заказа");
-            return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
+                // optimaize
+                CustomViewModel customViewModel = await db.Customs.Include(c => c.Comments)
+                                                                  .Include(c => c.CategoryTask)
+                                                                  .Include(c => c.TypeTask)
+                                                                  .Include(c => c.User)
+                                                                  .Include(c => c.Attachments)
+                                                                  .FirstOrDefaultAsync(c => c.Id == id);
+
+                /*
+                 Мысль такая: когда мы отправили заказ на доработку (метод Revision), то:
+                        -в заказ проставляется атрибут IsRevision = true
+                        -все новые прикрепленные решения (в заказе с таким флагом) также получают атрибут IsRevision = true
+                 Когда мы закрываем заказ (метод Accept), то:
+                        -снимаем атрибут IsRevision в заказе
+                        -снимаем атрибут IsRevision со всех решений, являвшихся доработками
+                 Логика в следующем: чтобы отличать новую доработку от старой. То есть когда цикл доработки завершен, 
+                 то считаем все купленные доработки уже обычными решениями. А если откроется еще одна доработка, то мы 
+                 сразу сможем отличить новые прикрепленные доработки от старых доработок. Как-то так. 
+                 */
+                if (customViewModel.IsRevision)
+                {
+                    var revisions = customViewModel.Attachments.Where(a => a.IsRevision);
+                    foreach (var rev in revisions)
+                    {
+                        rev.IsRevision = false;
+                    }
+                }
+
+                db.Entry(customViewModel).State = EntityState.Modified;
+                customViewModel.Status = CustomStatus.Close;
+                customViewModel.IsRevision = false;
+                customViewModel.DoneInTime = DateTime.Now < customViewModel.EndingDate;
+                await db.SaveChangesAsync();
+                SendMessage("Вы закрыли заказ", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, customViewModel.User.UserName + "подтвердил выполнение заказа");
+                return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
+            }
+            return new HttpNotFoundResult("Model of review is not valid!");
         }
 
         public async Task<ActionResult> Revision(int? id)
@@ -1162,28 +1205,28 @@ namespace HelpMe.Controllers
 
         public async Task<ActionResult> Cancel(int? id)
         {
-            var customViewModel = await db.Customs.Include(c=>c.Comments).Include(c=>c.User).FirstOrDefaultAsync(c => c.Id == id);
-            var usersWithOffers = customViewModel.Comments.Select(c=>c.User);
+            var customViewModel = await db.Customs.Include(c => c.Comments).Include(c => c.User).FirstOrDefaultAsync(c => c.Id == id);
+            var usersWithOffers = customViewModel.Comments.Select(c => c.User);
 
             db.Entry(customViewModel).State = EntityState.Modified;
 
             var previousStatus = customViewModel.Status;
-            if(previousStatus==CustomStatus.Open)
+            if (previousStatus == CustomStatus.Open)
             {
                 customViewModel.Status = CustomStatus.Cancelled; // Отменён
-                SendMessage("Вы отменили заказ", customViewModel.Id, customViewModel.User.UserName, null, null);
+                SendMessage("Вы отменили заказ", customViewModel.Id, customViewModel.User.UserName);
                 if (usersWithOffers != null)
                 {
-                    foreach(var user in usersWithOffers)
+                    foreach (var user in usersWithOffers)
                     {
                         SendMessage(null, customViewModel.Id, null, user.UserName, customViewModel.User.UserName + " отменил заказ");
                     }
                 }
             }
-            if(previousStatus==CustomStatus.Cancelled)
+            if (previousStatus == CustomStatus.Cancelled)
             {
                 customViewModel.Status = CustomStatus.Open; // Открыт
-                SendMessage("Вы переоткрыли заказ", customViewModel.Id, customViewModel.User.UserName, null, null);
+                SendMessage("Вы переоткрыли заказ", customViewModel.Id, customViewModel.User.UserName);
                 if (usersWithOffers != null)
                 {
                     foreach (var user in usersWithOffers)
@@ -1192,7 +1235,7 @@ namespace HelpMe.Controllers
                     }
                 }
             }
-            
+
             await db.SaveChangesAsync();
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
         }

@@ -91,17 +91,17 @@
                         </form>
 
                         @*
-                <div>
-                    <div class="uploadButton margin-top-30">
-                        <input type="hidden" name="CustomViewModelId" id="CustomViewModelId" value="@Model.Id" />
-                        <input class="uploadButton-input" type="file" name="upload" id="uploadFile" /><br />
-                        <label class="uploadButton-button ripple-effect" for="uploadFile">Прикрепить вложение</label>
-                        <span class="uploadButton-file-name">Загрузите файл вложения любого формата</span>
-                    </div>
-                    <div class="progress"></div>
+                        <div>
+                            <div class="uploadButton margin-top-30">
+                                <input type="hidden" name="CustomViewModelId" id="CustomViewModelId" value="@Model.Id" />
+                                <input class="uploadButton-input" type="file" name="upload" id="uploadFile" /><br />
+                                <label class="uploadButton-button ripple-effect" for="uploadFile">Прикрепить вложение</label>
+                                <span class="uploadButton-file-name">Загрузите файл вложения любого формата</span>
+                            </div>
+                            <div class="progress"></div>
 
-                    <input id="submitAttach" type="submit" value="Загрузить" class="button ripple-effect margin-top-10" />
-                </div>*@
+                            <input id="submitAttach" type="submit" value="Загрузить" class="button ripple-effect margin-top-10" />
+                        </div>*@
                     }
 
 
@@ -129,7 +129,7 @@
                 <div style="margin-bottom: 30px;" class="single-page-section">
                     <h3>Готовые решения исполнителя<span style="color: white" class="nav-tag" id="MainAttaches">@Model.MainAttachments.Count </span></h3>
 
-                    @if (Request.IsAuthenticated && Model.ExecutorId == User.Identity.GetUserId() && (Model.IsRevision==false && Model.Status!=HelpMe.Models.CustomStatus.Close))
+                    @if (Request.IsAuthenticated && Model.ExecutorId == User.Identity.GetUserId() && (Model.IsRevision == false && Model.Status != HelpMe.Models.CustomStatus.Close))
                     {
                         <form method="post" action="/Custom/UploadTestMultiAttach/@Model.Id" enctype="multipart/form-data" novalidate="" class="box has-advanced-upload">
                             <div class="box__input">
@@ -189,7 +189,7 @@
             {
                 <div class="single-page-section" style="margin-bottom:0">
                     <h3>Доработки исполнителя <span style="color: white" class="nav-tag" id="revisions">@Model.Attachments.Count </span></h3>
-                    @if (Request.IsAuthenticated && Model.ExecutorId == User.Identity.GetUserId() && Model.IsRevision==true)
+                    @if (Request.IsAuthenticated && Model.ExecutorId == User.Identity.GetUserId() && Model.IsRevision == true)
                     {
                         <div class="accordion js-accordion">
 
@@ -270,17 +270,17 @@
                                                 })
 
                                             @*@Ajax.RawActionLink(
-                                              "<i  id='fDelbuy" + i.Id + "' class='icon-feather-edit'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach", "Custom",
-                                              new { id = i.Id },
-                                              new AjaxOptions { OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
-                                              new
-                                                   {
-                                                  id = "delete-attach",
-                                                  @class = "button  ripple-effect ico",
-                                                  @style = "  margin-left:5px;  padding: 3px 5px 3px 3px; ",
-                                                  title = "Удалить решение",
-                                                  data_tippy_placement = "top"
-                                              })*@
+                                            "<i  id='fDelbuy" + i.Id + "' class='icon-feather-edit'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach", "Custom",
+                                            new { id = i.Id },
+                                            new AjaxOptions { OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
+                                            new
+                                                 {
+                                                id = "delete-attach",
+                                                @class = "button  ripple-effect ico",
+                                                @style = "  margin-left:5px;  padding: 3px 5px 3px 3px; ",
+                                                title = "Удалить решение",
+                                                data_tippy_placement = "top"
+                                            })*@
                                         }
 
                                         @if (Model.UserId == User.Identity.GetUserId())
@@ -333,14 +333,14 @@
             }
 
             @*<div class="single-page-section">
-                    <h3>Необходимые навыки</h3>
-                    <div class="task-tags">
-                        <span>iOS</span>
-                        <span>Android</span>
-                        <span>mobile apps</span>
-                        <span>design</span>
-                    </div>
-                </div>*@
+                <h3>Необходимые навыки</h3>
+                <div class="task-tags">
+                    <span>iOS</span>
+                    <span>Android</span>
+                    <span>mobile apps</span>
+                    <span>design</span>
+                </div>
+            </div>*@
             <div class="clearfix"></div>
 
             <div class="boxed-list margin-bottom-60">
@@ -350,7 +350,7 @@
                         <span>Предложения исполнителей  </span>
                         <span style="color:white" class="nav-tag" id="votes">@Model.Comments.Count </span>
                         <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-                        @if (Model.UserId == User.Identity.GetUserId() && Model.Comments.Count()>0)
+                        @if (Model.UserId == User.Identity.GetUserId() && Model.Comments.Count() > 0)
                         {
                             <div class="sort-by">
                                 <span>Сортировать по:</span>
@@ -545,7 +545,7 @@
                                                         <textarea id="edit-comment-desсription" name="Description" cols="30" rows="5" class="with-border" maxlength="200" placeholder="Оставьте своё предложение для заказчика...">@c.Description</textarea>
                                                         //Для проверки
                                                         @*<div>commentId=@c.Id</div>
-                                                            <div>description=@c.Description</div>*@
+                                                        <div>description=@c.Description</div>*@
 
 
                                                         <!-- Button -->
@@ -678,34 +678,34 @@
                                 </div>
 
                                 @*<!--Tabs -->
-                                    <div class="sign-in-form">
+                                <div class="sign-in-form">
 
-                                        <ul class="popup-tabs-nav">
-                                            <li><a href="#tab2">Отправка сообщения</a></li>
-                                        </ul>
+                                    <ul class="popup-tabs-nav">
+                                        <li><a href="#tab2">Отправка сообщения</a></li>
+                                    </ul>
 
-                                        <div class="popup-tabs-container">
+                                    <div class="popup-tabs-container">
 
-                                            <!-- Tab -->
-                                            <div class="popup-tab-content" id="tab2">
+                                        <!-- Tab -->
+                                        <div class="popup-tab-content" id="tab2">
 
-                                                <!-- Welcome Text -->
-                                                <div class="welcome-text">
-                                                    <h3>Отправить сообщение @c.User.UserName</h3>
-                                                </div>
-
-                                                <!-- Form -->
-                                                <form method="post" id="send-pm">
-                                                    <textarea name="textarea" cols="10" placeholder="Оставьте сообщение..." class="with-border" required></textarea>
-                                                </form>
-
-                                                <!-- Button -->
-                                                <a class="button full-width button-sliding-icon ripple-effect" type="submit" form="send-pm" target="_blank">Отправить <i class="icon-material-outline-arrow-right-alt"></i></a>
-
+                                            <!-- Welcome Text -->
+                                            <div class="welcome-text">
+                                                <h3>Отправить сообщение @c.User.UserName</h3>
                                             </div>
 
+                                            <!-- Form -->
+                                            <form method="post" id="send-pm">
+                                                <textarea name="textarea" cols="10" placeholder="Оставьте сообщение..." class="with-border" required></textarea>
+                                            </form>
+
+                                            <!-- Button -->
+                                            <a class="button full-width button-sliding-icon ripple-effect" type="submit" form="send-pm" target="_blank">Отправить <i class="icon-material-outline-arrow-right-alt"></i></a>
+
                                         </div>
-                                    </div>*@
+
+                                    </div>
+                                </div>*@
                             </div>
 
                         }
@@ -717,58 +717,110 @@
         </div>
 
 
+        @if (Request.IsAuthenticated && Model.UserId == User.Identity.GetUserId() && Model.ExecutorId != null)
+        {
+            if (Model.Status == HelpMe.Models.CustomStatus.Check || Model.Status == HelpMe.Models.CustomStatus.Revision)
+            {
+                <div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
 
-        <div id="small-dialog-4" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+                    <!--Tabs -->
+                    <div class="sign-in-form">
 
-            <!--Tabs -->
-            <div class="sign-in-form">
+                        <ul class="popup-tabs-nav">
+                            <li><a href="#tab1">Отклонить исполнителя</a></li>
+                        </ul>
 
-                <ul class="popup-tabs-nav">
-                    <li><a href="#tab1">Принять предложение</a></li>
-                </ul>
+                        <div class="popup-tabs-container">
 
-                <div class="popup-tabs-container">
+                            <!-- Tab -->
+                            <div class="popup-tab-content" id="tab">
 
-                    <!-- Tab -->
-                    <div class="popup-tab-content" id="tab">
+                                <!-- Welcome Text -->
+                                <div class="welcome-text">
+                                    <h3>Вы уверены, что хотите отказаться от услуг исполнителя @Model.Executor.UserName? </h3>
+                                </div>
 
-                        <!-- Welcome Text -->
-                        <div class="welcome-text">
-                            <span>Вы действительно хотите подтвердить выполнение?</span>
-                            <div class="bid-acceptance margin-top-15">
-                                Средства будут разблокированы и перейдут к исполнителю!
+                                <div class="radio">
+                                    <input id="radio-reject-executor" name="radio" type="radio" required autocomplete="off"
+                                           oninvalid="setCustomValidity('Сперва нужно ознакомиться с правилами!')"
+                                           oninput="setCustomValidity('')" />
+                                    <label for="radio-reject-executor"><span class="radio-label"></span>  Я ознакомился с правилами</label>
+                                </div>
+                                <input id="reject-executor" class="margin-top-15 button full-width button-sliding-icon ripple-effect"
+                                       type="button" value="Подвтердить" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <!-- Leave a Review Popup
+                ================================================== -->
+                <div id="small-dialog-4" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+                    <!--Tabs -->
+                    <div class="sign-in-form">
+
+                        <ul class="popup-tabs-nav">
+                            <li><a href="#tab">Подтвердите выполнение и оставьте отзыв</a></li>
+                        </ul>
+
+                        <div class="popup-tabs-container">
+
+                            <!-- Tab -->
+                            <div class="popup-tab-content" id="tab">
+
+                                @using (Html.BeginForm("Accept", "Custom", new { id = Model.Id }))
+                                {
+                                    @Html.AntiForgeryToken() <!-- Welcome Text -->
+                                    <div class="welcome-text">
+                                        <h3>Оцените исполнителя @Model.Executor.UserName:</h3>
+
+                                        <!-- Form -->
+                                        <!-- Leave Rating -->
+                                        <div class="clearfix"></div>
+                                        <div class="leave-rating-container">
+                                            <div class="leave-rating margin-bottom-5">
+                                                <input type="radio" name="Rating" id="rating-1" value="5" required>
+                                                <label for="rating-1" class="icon-material-outline-star"></label>
+                                                <input type="radio" name="Rating" id="rating-2" value="4" required>
+                                                <label for="rating-2" class="icon-material-outline-star"></label>
+                                                <input type="radio" name="Rating" id="rating-3" value="3" required>
+                                                <label for="rating-3" class="icon-material-outline-star"></label>
+                                                <input type="radio" name="Rating" id="rating-4" value="2" required>
+                                                <label for="rating-4" class="icon-material-outline-star"></label>
+                                                <input type="radio" name="Rating" id="rating-5" value="1" required>
+                                                <label for="rating-5" class="icon-material-outline-star"></label>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <!-- Leave Rating / End-->
+                                    </div>
+                                    @Html.TextArea("Description", "",
+                                   new
+                                        {
+                                       rows = "5",
+                                            cols = "7",
+                                       @placeholder = "Оставьте отзыв об исполнителе, которого он заслуживает (по желанию)...",
+                                       id = "create-review-description",
+                                       @class = "with-border"
+                                        })
+                                    @Html.Hidden("OwnerId", Model.Executor.Id)
+                                    <!-- Button -->
+                                    <button @*id="close-custom"*@ class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Подтвердить выполнение <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                }
                             </div>
 
                         </div>
-
-                        @using (Html.BeginForm("Accept", "Custom", new { id = Model.Id }))
-                        {
-                            <div class="radio">
-                                <input id="radio-accept-executor" name="radio" type="radio" required autocomplete="off"
-                                       oninvalid="setCustomValidity('Сперва нужно ознакомиться с правилами!')"
-                                       oninput="setCustomValidity('')" />
-                                <label for="radio-accept-executor"><span class="radio-label"></span>  Я ознакомился с правилами</label>
-                            </div>
-                            <input id="close-custom" class="margin-top-15 button full-width button-sliding-icon ripple-effect"
-                                   type="submit" value="Принять" />
-                        }
-
-                        @*<form id="terms">
-                                <div class="radio">
-                                    <input id="radio-1" name="radio" type="radio" required>
-                                    <label for="radio-1"><span class="radio-label"></span>  Я ознакомился с правилами</label>
-                                </div>
-                            </form>
-
-                            <a id="close-custom" href="@Url.Action("Accept", "Custom", new { id = Model.Id })"
-                               class="margin-top-15 button full-width button-sliding-icon ripple-effect"
-                               type="submit" form="terms">Принять <i class="icon-material-outline-arrow-right-alt"></i>
-                            </a>*@
                     </div>
                 </div>
-            </div>
-        </div>
+                <!-- Leave a Review Popup / End -->
+            }
+        }
 
+        <!-- Spacer -->
         <!-- Sidebar -->
         <div class="col-xl-4 col-lg-4">
             <div class="sidebar-container">
@@ -789,29 +841,35 @@
                 </div>
                 @if (Model.UserId == User.Identity.GetUserId())
                 {
-                    if (Model.Status == HelpMe.Models.CustomStatus.Open)
+                    switch (Model.Status)
                     {
-                        <a href="@Url.Action("Cancel", "Custom", new { id = Model.Id })" class="apply-now-button" title="Убрать заказ из списка видимых для исполнителей" data-tippy-placement="bottom">Отменить заказ <i class="icon-material-outline-undo"></i></a>
+                        case HelpMe.Models.CustomStatus.Open:
+                            <a href="@Url.Action("Cancel", "Custom", new { id = Model.Id })" class="apply-now-button" title="Убрать заказ из списка видимых для исполнителей" data-tippy-placement="bottom">Отменить заказ <i class="icon-material-outline-undo"></i></a>
+                            break;
+
+                        case HelpMe.Models.CustomStatus.Cancelled:
+                            <a href="@Url.Action("Cancel", "Custom", new { id = Model.Id })" class="apply-now-button" title="Вернуть заказ в список видимых для исполнителей" data-tippy-placement="bottom">Переоткрыть заказ <i class="icon-material-outline-redo"></i></a>
+                            break;
+
+                        case HelpMe.Models.CustomStatus.Revision:
+                        case HelpMe.Models.CustomStatus.Check:
+                            <a style="margin-bottom:20px" href="#small-dialog-3" class="apply-now-button popup-with-zoom-anim">Отказаться от исполнителя <i class="icon-material-outline-access-alarm"></i></a>
+                            break;
+
+                        case HelpMe.Models.CustomStatus.CheckCustom:
+                            <div id="buttonsCont" class="buttons-container">
+                                <a style="margin-bottom:20px" href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim">Подтвердить выполнение <i class="icon-material-outline-check"></i></a>
+                                <a href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
+                            </div>
+                            break;
+
+                        case HelpMe.Models.CustomStatus.Close:
+                            <a id="send-for-revision" href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
+                            break;
+
+                        default:
+                            break;
                     }
-                    if (Model.Status == HelpMe.Models.CustomStatus.Cancelled)
-                    {
-                        <a href="@Url.Action("Cancel", "Custom", new { id = Model.Id })" class="apply-now-button" title="Вернуть заказ в список видимых для исполнителей" data-tippy-placement="bottom">Переоткрыть заказ <i class="icon-material-outline-redo"></i></a>
-                    }
-                    if (Model.Status == HelpMe.Models.CustomStatus.CheckCustom)
-                    {
-                        <div id="buttonsCont" class="buttons-container">
-                            <a style="margin-bottom:20px" href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim">Подтвердить выполнение <i class="icon-material-outline-check"></i></a>
-                            <a href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
-                        </div>
-                    }
-                    else if (Model.Status == HelpMe.Models.CustomStatus.Close)
-                    {
-                        <a id="send-for-revision" href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
-                    }
-                    @*else if (Model.Status == HelpMe.Models.CustomStatus.Revision)
-                        {
-                            <a style="margin-bottom:20px" href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim">Подтвердить выполнение <i class="icon-material-outline-check"></i></a>
-                        }*@
                 }
 
                 <div class="js-accordion sidebar-widget">
@@ -1211,6 +1269,13 @@
 
             $("#executors-offers .lds-ring").hide();
             $("#boxed-list-ul > li:odd").css("background-color", "#fafafa");
+        });
+
+        $('#reject-executor').on('click', function () {
+            $(".mfp-close").trigger('click');
+            Snackbar.show({
+                text: 'Ваша заявка на отклонение исполнителя передана на рассмотрение!',
+            });
         });
 
        // $(".lds-ring").hide();
