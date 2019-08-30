@@ -33,7 +33,7 @@
                         <div class="salary-box">
 
                             <div class="salary-type">Бюджет задания</div>
-                            <div style="@(Model.Price != 0 ? "" : "font-size: 20px;")" class="salary-amount">@(Model.Price != 0 ? Model.Price + "руб." : "По договоренности")</div>
+                            <div style="@(Model.Price != null ? "" : "font-size: 20px;")" class="salary-amount">@(Model.Price != null ? Model.Price + "руб." : "По договоренности")</div>
                         </div>
 
                     </div>
@@ -1030,54 +1030,70 @@
         <div class="col-xl-4 col-lg-4">
             <div class="sidebar-container">
                 @{
-                    var totalDays = Model.TotalHrs.Days;
-                    var totalHours = Model.TotalHrs.Hours;
-                    if (totalDays < 0)
+                    var totalDays = Model.TotalHrs?.Days;
+                    var totalHours = Model.TotalHrs?.Hours;
+
+                    if (totalDays == null || totalHours == null)
                     {
-                        totalDays = 0;
+                        <div class="countdown green margin-bottom-35">
+                            Время завершения не указано
+                        </div>
                     }
-                    if (totalHours < 0)
+                    else
                     {
-                        totalHours = 0;
+                        if (totalDays < 0)
+                        {
+                            totalDays = 0;
+                        }
+                        if (totalHours < 0)
+                        {
+                            totalHours = 0;
+                        }
+                        <div style="@(totalDays < 3 ? "color:#de5959; background-color:#ffe9e9" : "")"
+                             class="countdown green margin-bottom-35">
+                            @(totalDays != 0 && totalHours != 0 ? "До завершения: " + totalDays + " дней и " + totalHours + " часов" : "Время вышло")
+                        </div>
                     }
+
                 }
-                <div style="@(totalDays < 3 ? "color:#de5959; background-color:#ffe9e9" : "")" class="countdown green margin-bottom-35">@(totalDays != 0 && totalHours != 0 ? "До завершения: " + totalDays + " дней и " + totalHours + " часов" : "Время вышло")</div>
+
+                <!--Sidebar buttons-->
                 <div id="buttonsCont" class="buttons-container">
-                </div>
-                @if (Model.UserId == User.Identity.GetUserId())
-                {
-                    switch (Model.Status)
+                    @if (Model.UserId == User.Identity.GetUserId())
                     {
-                        case HelpMe.Models.CustomStatus.Open:
-                            <a style="margin-bottom:20px" href="#small-dialog-3" class="apply-now-button popup-with-zoom-anim" title="Редактировать параметры задания" data-tippy-placement="bottom">Редактировать заказ <i class="icon-feather-edit"></i></a>
-                            <a href="@Url.Action("Cancel", "Custom", new { id = Model.Id })" class="apply-now-button" title="Убрать заказ из списка видимых для исполнителей" data-tippy-placement="bottom">Отменить заказ <i class="icon-material-outline-undo"></i></a>
-                            break;
+                        switch (Model.Status)
+                        {
+                            case HelpMe.Models.CustomStatus.Open:
+                                <a style="margin-bottom:20px" href="#small-dialog-3" class="apply-now-button popup-with-zoom-anim" title="Редактировать параметры задания" data-tippy-placement="bottom">Редактировать заказ <i class="icon-feather-edit"></i></a>
+                                <a href="@Url.Action("Cancel", "Custom", new { id = Model.Id })" class="apply-now-button" title="Убрать заказ из списка видимых для исполнителей" data-tippy-placement="bottom">Отменить заказ <i class="icon-material-outline-undo"></i></a>
+                                break;
 
-                        case HelpMe.Models.CustomStatus.Cancelled:
-                            <a style="margin-bottom:20px" href="#small-dialog-3" class="apply-now-button popup-with-zoom-anim" title="Редактировать параметры задания" data-tippy-placement="bottom">Редактировать заказ <i class="icon-material-outline-info"></i></a>
-                            <a href="@Url.Action("Cancel", "Custom", new { id = Model.Id })" class="apply-now-button" title="Вернуть заказ в список видимых для исполнителей" data-tippy-placement="bottom">Переоткрыть заказ <i class="icon-material-outline-redo"></i></a>
-                            break;
+                            case HelpMe.Models.CustomStatus.Cancelled:
+                                <a style="margin-bottom:20px" href="#small-dialog-3" class="apply-now-button popup-with-zoom-anim" title="Редактировать параметры задания" data-tippy-placement="bottom">Редактировать заказ <i class="icon-material-outline-info"></i></a>
+                                <a href="@Url.Action("Cancel", "Custom", new { id = Model.Id })" class="apply-now-button" title="Вернуть заказ в список видимых для исполнителей" data-tippy-placement="bottom">Переоткрыть заказ <i class="icon-material-outline-redo"></i></a>
+                                break;
 
-                        case HelpMe.Models.CustomStatus.Revision:
-                        case HelpMe.Models.CustomStatus.Check:
-                            <a style="margin-bottom:20px" href="#small-dialog-3" class="apply-now-button popup-with-zoom-anim">Отказаться от исполнителя <i class="icon-material-outline-access-alarm"></i></a>
-                            break;
+                            case HelpMe.Models.CustomStatus.Revision:
+                            case HelpMe.Models.CustomStatus.Check:
+                                <a style="margin-bottom:20px" href="#small-dialog-3" class="apply-now-button popup-with-zoom-anim">Отказаться от исполнителя <i class="icon-material-outline-access-alarm"></i></a>
+                                break;
 
-                        case HelpMe.Models.CustomStatus.CheckCustom:
-                            <div id="buttonsCont" class="buttons-container">
-                                <a style="margin-bottom:20px" href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim">Подтвердить выполнение <i class="icon-material-outline-check"></i></a>
-                                <a href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
-                            </div>
-                            break;
+                            case HelpMe.Models.CustomStatus.CheckCustom:
+                                <div id="buttonsCont" class="buttons-container">
+                                    <a style="margin-bottom:20px" href="#small-dialog-4" class="apply-now-button popup-with-zoom-anim">Подтвердить выполнение <i class="icon-material-outline-check"></i></a>
+                                    <a href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
+                                </div>
+                                break;
 
-                        case HelpMe.Models.CustomStatus.Close:
-                            <a id="send-for-revision" href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
-                            break;
+                            case HelpMe.Models.CustomStatus.Close:
+                                <a id="send-for-revision" href="@Url.Action("Revision", "Custom", new { id = Model.Id })" class="apply-now-button">Отправить на доработку <i class="icon-material-outline-compare-arrows"></i></a>
+                                break;
 
-                        default:
-                            break;
+                            default:
+                                break;
+                        }
                     }
-                }
+                </div>
 
                 <div class="js-accordion sidebar-widget">
                     <div class="job-overview accordion__item js-accordion-item">
@@ -1100,7 +1116,7 @@
                                 <li>
                                     <i class="icon-material-outline-access-time"></i>
                                     <h5>Выполнить до</h5>
-                                    <span>@Model.EndingDate.ToString("dd MMMM yyyy HH:mm:ss")</span>
+                                    <span>@((Model.EndingDate?.ToString("dd MMMM yyyy HH:mm:ss")) ?? "дата сдачи не указана")</span>
                                 </li>
                             </ul>
                         </div>
@@ -1130,11 +1146,11 @@
                                             var executorComment = Model.Comments.Where(c => c.UserId == Model.ExecutorId).FirstOrDefault();
                                             var hours = executorComment.Hours;
                                             var days = executorComment.Days;
-                                            var executorDeadLine = Model.ExecutorStartDate.AddDays(days).AddHours(hours);
+                                            var executorDeadLine = Model.ExecutorStartDate?.AddDays(days).AddHours(hours);
                                         }
                                         <i class="icon-material-outline-access-time"></i>
                                         <h5>Выполнит заказ к:</h5>
-                                        <span> @executorDeadLine.ToString("dd MMMM yyyy HH:mm:ss")</span>
+                                        <span> @(executorDeadLine?.ToString("dd MMMM yyyy HH:mm:ss"))</span>
                                     </li>
                                 </ul>
                             </div>

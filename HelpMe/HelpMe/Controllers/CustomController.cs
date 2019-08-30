@@ -999,6 +999,7 @@ namespace HelpMe.Controllers
             // optimaize
             CustomViewModel customViewModel = await db.Customs.Include(c => c.Comments)
                                                               .Include(c => c.CategoryTask)
+                                                              .Include(c=>c.Skill)
                                                               .Include(c => c.TypeTask)
                                                               .Include(c => c.User)
                                                               .Include(c => c.Attachments)
@@ -1041,7 +1042,7 @@ namespace HelpMe.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,AttachFilePath,AttachFile,UserId,TypeTaskId,CategoryTaskId,SkillId,EndingDate,Price")] CustomViewModel customViewModel)
+        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,AttachFilePath,AttachFile,UserId,TypeTaskId,CategoryTaskId,SkillId,TimeBlock,PlagiarismPercentage,EndingDate,Price")] CustomViewModel customViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -1182,7 +1183,14 @@ namespace HelpMe.Controllers
                 db.Entry(customViewModel).State = EntityState.Modified;
                 customViewModel.Status = CustomStatus.Close;
                 customViewModel.IsRevision = false;
-                customViewModel.DoneInTime = DateTime.Now < customViewModel.EndingDate;
+                if(customViewModel.EndingDate!=null)
+                {
+                    customViewModel.DoneInTime = DateTime.Now < customViewModel.EndingDate;
+                }
+                else
+                {
+                    customViewModel.DoneInTime = true;
+                }
                 await db.SaveChangesAsync();
                 SendMessage("Вы закрыли заказ", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, customViewModel.User.UserName + "подтвердил выполнение заказа");
                 return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });

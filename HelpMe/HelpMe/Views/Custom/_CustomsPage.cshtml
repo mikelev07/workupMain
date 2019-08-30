@@ -38,7 +38,7 @@
                     }
                     @skillName
                 </li>
-                <li><i class="icon-material-outline-date-range"></i>Сдать до: <strong>@item.EndingDate.ToShortDateString()</strong></li>
+                <li><i class="icon-material-outline-date-range"></i>Сдать до: <strong>@(item.EndingDate?.ToShortDateString())</strong></li>
                 <li><i class="icon-material-outline-account-balance-wallet"></i> Бюджет: <strong>@item.Price руб.</strong></li>
                 <li title="Дата публикации"><i class="icon-material-outline-access-time"></i>@item.StartDate.ToShortDateString() </li>
             </ul>

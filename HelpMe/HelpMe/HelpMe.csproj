@@ -257,6 +257,10 @@
     <Compile Include="Migrations\201908281459168_CustomViewModelMigration.Designer.cs">
       <DependentUpon>201908281459168_CustomViewModelMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908301809296_CustomNullableDateMigration.cs" />
+    <Compile Include="Migrations\201908301809296_CustomNullableDateMigration.Designer.cs">
+      <DependentUpon>201908301809296_CustomNullableDateMigration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\API\CustomApiModel.cs" />
@@ -559,6 +563,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908281459168_CustomViewModelMigration.resx">
       <DependentUpon>201908281459168_CustomViewModelMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908301809296_CustomNullableDateMigration.resx">
+      <DependentUpon>201908301809296_CustomNullableDateMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

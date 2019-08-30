@@ -18,15 +18,17 @@ namespace HelpMe.Models.API
         public DateTime StartDate { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime EndingDate { get; set; }
+        public DateTime? EndingDate { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime ExecutorStartDate { get; set; }
+        public DateTime? ExecutorStartDate { get; set; }
         public string TypeTaskName { get; set; }
         public string CategoryTaskName { get; set; }
         public string SkillName { get; set; }
-        public int Price { get; set; }
-      
+        public int? Price { get; set; }
+        public int TimeBlock { get; set; }
+        public int? PlagiarismPercentage { get; set; }
+
         public string UserName { get; set; }
 
         public string ExecutorName { get; set; }

@@ -116,8 +116,8 @@
                                     <div class="col-xl-4">
                                         <div class="submit-field">
                                             <h5>Дисциплина</h5>
-                                            @Html.DropDownListFor(model => model.CategoryTaskId,  ViewBag.Tasks as SelectList,
-                                            "Укажите дисциплину", new { @class = "selectpicker with-border", @id ="TaskList", autocomplete = "off"})
+                                            @Html.DropDownListFor(model => model.CategoryTaskId, ViewBag.Tasks as SelectList,
+                                            "Укажите дисциплину", new { @class = "selectpicker with-border", @id = "TaskList", autocomplete = "off" })
                                         </div>
                                     </div>
 
@@ -125,16 +125,14 @@
                                         <div class="submit-field">
                                             <h5>Предмет</h5>
                                             @Html.DropDownListFor(model => model.SkillId, Enumerable.Empty<SelectListItem>(),
-                                                "Укажите предмет", new { @class = "selectpicker with-border", id ="SkillList", @disabled = "disabled", autocomplete = "off"})
+                                                "Укажите предмет", new { @class = "selectpicker with-border", id = "SkillList", @disabled = "disabled", autocomplete = "off" })
                                         </div>
                                     </div>
 
                                     <div class="col-xl-4">
                                         <div class="submit-field">
-
                                             <h5>Тип задачи</h5>
                                             @Html.DropDownListFor(model => model.TypeTaskId, ViewBag.Types as SelectList, new { @class = "selectpicker with-border" })
-
                                         </div>
                                     </div>
 
@@ -178,7 +176,6 @@
                                         <div class="col-xl-12">
                                             <div class="submit-field">
                                                 <h5>Хотите указать свой бюджет?</h5>
-
                                                 <div class="row">
                                                     <div class="col-xl-8">
                                                         <div class="input-with-icon">
@@ -197,13 +194,13 @@
                                     <div class="col-xl-4">
                                         <div class="submit-field">
                                             <h5>Срок блокировки оплаты</h5>
-                                            <select class="selectpicker-filter">
-                                                <option>5 дней</option>
-                                                <option>10 дней</option>
-                                                <option>15 дней</option>
-                                                <option>20 дней</option>
-                                                <option>30 дней</option>
-                                                <option>40 дней</option>
+                                            <select class="selectpicker-filter" name="TimeBlock">
+                                                <option value="5">5 дней</option>
+                                                <option value="10">10 дней</option>
+                                                <option value="15">15 дней</option>
+                                                <option value="20" selected>20 дней</option>
+                                                <option value="30">30 дней</option>
+                                                <option value="40">40 дней</option>
                                             </select>
                                         </div>
                                     </div>
@@ -211,13 +208,13 @@
                                         <div class="submit-field">
                                             <h5>Проверка на плагиат</h5>
                                             <div class="col-xl-6">
-                                                <select class="selectpicker-filter" >
-                                                    <option>40%</option>
-                                                    <option>50%</option>
-                                                    <option>60%</option>
-                                                    <option>70%</option>
-                                                    <option>80%</option>
-                                                    <option>90%</option>
+                                                <select class="selectpicker-filter" name="PlagiarismPercentage">
+                                                    <option value="40">40%</option>
+                                                    <option value="50">50%</option>
+                                                    <option value="60">60%</option>
+                                                    <option value="70" selected>70%</option>
+                                                    <option value="80">80%</option>
+                                                    <option value="90">90%</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -237,27 +234,27 @@
                                     </div>
 
                                     <div id="fileUpCreate" style="border-bottom: 1px solid #e4e4e4;" class="col-xl-12">
-                                       
+
                                     </div>
-                                    
+
                                     <div style="margin-top:20px" class="col-xl-4">
                                         <div class="submit-field">
                                             <h5>Платные услуги</h5>
-                                            
-                                                <select class="selectpicker-filter">
-                                                    <option>40%</option>
-                                                    <option>50%</option>
-                                                    <option>60%</option>
-                                                    <option>70%</option>
-                                                    <option>80%</option>
-                                                    <option>90%</option>
-                                                </select>
-                                            
+
+                                            <select class="selectpicker-filter">
+                                                <option>40%</option>
+                                                <option>50%</option>
+                                                <option>60%</option>
+                                                <option>70%</option>
+                                                <option>80%</option>
+                                                <option>90%</option>
+                                            </select>
+
                                         </div>
                                     </div>
 
                                 </div>
-                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -316,7 +313,7 @@
 
 
         $('#AttachFile').change(function () {
-            alert(countAttaches)
+            //alert(countAttaches)
             if (countAttaches < 10) {
                 var file;
                 var fileName;
@@ -335,9 +332,9 @@
                         file = $('#AttachFile')[0].files[i].name;
                         if (file.length > 3)
                             fileName = file.substring(0, 10) + '...' + file.substring(file.lastIndexOf('.') + 1)
-    
+
                         $('#fileUpCreate').append('<div id="' + i + '" class="notification notice closeable"><p>' + fileName + '</p><a class="close" ></a></div >');
-                       
+
                         countAttaches++;
                     }
                     //  alert(countAttaches)
@@ -348,7 +345,7 @@
 
                     for (var i = lastIndexFile; i < finalFileBuffer.length && i < 10; i++) {
                         // if (i == 5) break;
-                       
+
                         file = finalFileBuffer[i].name;
                         if (file.length > 3)
                             fileName = file.substring(0, 10) + '.' + file.substring(file.lastIndexOf('.') + 1)
@@ -395,7 +392,7 @@
 
             countAttaches--;
             lastIndexFile = finalFileBuffer.length;
-           
+
             if (lastIndexFile == 0) {
                 finalFileBuffer = [];
                 fileBuffer = [];
@@ -406,7 +403,7 @@
             slideFade($(this).parent());
         });
 
-       
+
         $('.selectpicker').selectpicker({
             liveSearch: true
         });
@@ -459,49 +456,46 @@
             }
 
 
-           $("#checkboxNew").click(function () {
-            if ($(this).is(':checked')) {
-                $("#min").prop("disabled", true);
-                $("#min").css("background-color", "#f2f2f2");
-                $("#min").attr("placeholder", "");
-            } else {
-                $("#min").prop("disabled", false);
-                $("#min").css("background-color", "#ffffff");
-                $("#min").attr("placeholder", "Цена");
-            }
-           });
-            
-        $("#checkboxDate").click(function () {
-            if ($(this).is(':checked')) {
-                $("#EndingDate").prop("disabled", true);
-                $("#datetimepicker3").prop("disabled", true);
-                $("#EndingDate").css("background-color", "#f2f2f2");
-                $("#datetimepicker3").css("background-color", "#f2f2f2");
-                $("#EndingDate").attr("placeholder", "");
-                $("#EndingDate").val("");
-                $("#datetimepicker3").attr("placeholder", "");
-                $("#datetimepicker3").val("");
+            $("#checkboxNew").click(function () {
+                if ($(this).is(':checked')) {
+                    $("#min").prop("disabled", true);
+                    $("#min").css("background-color", "#f2f2f2");
+                    $("#min").attr("placeholder", "");
+                    $("#min").val("");
+                } else {
+                    $("#min").prop("disabled", false);
+                    $("#min").css("background-color", "#ffffff");
+                    $("#min").attr("placeholder", "Цена");
+                }
+            });
 
-            } else {
-                $("#EndingDate").prop("disabled", false);
-                $("#datetimepicker3").prop("disabled", false);
-                $("#EndingDate").css("background-color", "#ffffff");
-                $("#datetimepicker3").css("background-color", "#ffffff");
-                $("#EndingDate").attr("placeholder", "Дата сдачи");
-                $("#datetimepicker3").attr("placeholder", "Время сдачи");
-            }
+            $("#checkboxDate").click(function () {
+                if ($(this).is(':checked')) {
+                    $("#EndingDate").prop("disabled", true);
+                    $("#datetimepicker3").prop("disabled", true);
+                    $("#EndingDate").css("background-color", "#f2f2f2");
+                    $("#datetimepicker3").css("background-color", "#f2f2f2");
+                    $("#EndingDate").attr("placeholder", "");
+                    $("#EndingDate").val("");
+                    $("#datetimepicker3").attr("placeholder", "");
+                    $("#datetimepicker3").val("");
+
+                } else {
+                    $("#EndingDate").prop("disabled", false);
+                    $("#datetimepicker3").prop("disabled", false);
+                    $("#EndingDate").css("background-color", "#ffffff");
+                    $("#datetimepicker3").css("background-color", "#ffffff");
+                    $("#EndingDate").attr("placeholder", "Дата сдачи");
+                    $("#datetimepicker3").attr("placeholder", "Время сдачи");
+                }
+            });
+
+            $('#EndingDate').datepicker({
+                language: 'ru',
+                autoclose: true,
+                format: "dd M yyyy"
+            }); //Initialise any date pickers
+
         });
-
-
-        $('#EndingDate').datepicker({
-            language: 'ru',
-            autoclose: true,
-            format: "dd M yyyy"
-        }); //Initialise any date pickers
-        
-
-    });
-
-
     </script>
 }
