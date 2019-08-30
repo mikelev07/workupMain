@@ -48,7 +48,7 @@
         <div class="col-xl-8 col-lg-8 content-right-offset">
             <div class="single-page-section">
                 <h3 class="margin-bottom-25">Описание задачи</h3>
-                <p style="-moz-hyphens: auto;-webkit-hyphens: auto;-ms-hyphens: auto;">
+                <p style="-moz-hyphens: auto;-webkit-hyphens: auto;-ms-hyphens: auto; word-break:break-word;">
                     <em>@Html.Nl2Br(Model.Description)</em>
                 </p>
             </div>
@@ -149,38 +149,38 @@
                     }
                     <br />
                     <div id="Uploaded_Results_Main" class="attachments-container">
+                        <div class="attachments-container">
 
-                        @foreach (var i in Model.MainAttachments)
-                        {
-                            <div style="margin-bottom:20px; margin-right:14px">
-                                @if (Model.ExecutorId == User.Identity.GetUserId() && Request.IsAuthenticated)
-                                {
-                                    <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = i.AttachFilePath })"><span style="width:152px">@i.AttachFileName</span><i>@i.AttachFileExtens.TrimStart('.')</i></a>
-                                }
-                                else
-                                {
-                                    string attachPath = i.AttachFilePath.Replace("\\", "\\\\");
-                                    <a id="download-main-by-customer" class="attachment-box ripple-effect" onclick="DownloadMainAttachmentByCustomer(@i.Id,@Model.Id, '@attachPath')"><span style="width:152px">@i.AttachFileName</span><i>@i.AttachFileExtens.TrimStart('.')</i></a>
-                                }
-                                @if (i.CustomViewModel.ExecutorId == User.Identity.GetUserId() && (Model.IsRevision==false && Model.Status!=HelpMe.Models.CustomStatus.Close))
-                                {
-                                    @Ajax.RawActionLink("<i id='fDelbuy" + @i.Id + "' class='icon-feather-trash-2'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach", "Custom",
-                                            new { id = i.Id },
-                                            new AjaxOptions { OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
-                                            new
-                                            {
-                                                id = "delete-attach",
-                                                @class = "button green ripple-effect ico",
-                                                @style = "margin-left:5px; padding: 3px 5px 3px 3px; ",
-                                                title = "Удалить решение",
-                                                data_tippy_placement = "top"
-                                            }
-                                            )
-                                }
-
-                            </div>
-
-                        }
+                            @foreach (var i in Model.MainAttachments)
+                            {
+                                <div style="margin-bottom:20px; margin-right:14px">
+                                    @if (Model.ExecutorId == User.Identity.GetUserId() && Request.IsAuthenticated)
+                                    {
+                                        <a class="attachment-box ripple-effect" href="@Url.Action("GetFile", "Custom", new { path = i.AttachFilePath })"><span style="width:152px">@i.AttachFileName</span><i>@i.AttachFileExtens.TrimStart('.')</i></a>
+                                    }
+                                    else
+                                    {
+                                        string attachPath = i.AttachFilePath.Replace("\\", "\\\\");
+                                        <a id="download-main-by-customer" class="attachment-box ripple-effect" onclick="DownloadMainAttachmentByCustomer(@i.Id,@Model.Id, '@attachPath')"><span style="width:152px">@i.AttachFileName</span><i>@i.AttachFileExtens.TrimStart('.')</i></a>
+                                    }
+                                    @if (i.CustomViewModel.ExecutorId == User.Identity.GetUserId() && (Model.IsRevision == false && Model.Status != HelpMe.Models.CustomStatus.Close))
+                                    {
+                                        @Ajax.RawActionLink("<i id='fDelMain" + @i.Id + "' class='icon-feather-trash-2'></i><div id='ldsDelMainAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteMainAttach", "Custom",
+                                                new { id = i.Id },
+                                                new AjaxOptions { OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteMainAttach('" + @i.Id + "')" },
+                                                new
+                                                {
+                                                    id = "delete-attach",
+                                                    @class = "button green ripple-effect ico",
+                                                    @style = "margin-left:5px; padding: 3px 5px 3px 3px; ",
+                                                    title = "Удалить решение",
+                                                    data_tippy_placement = "top"
+                                                }
+                                                )
+                                    }
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
             }
@@ -350,7 +350,7 @@
                         <span>Предложения исполнителей  </span>
                         <span style="color:white" class="nav-tag" id="votes">@Model.Comments.Count </span>
                         <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-                        @if (Model.UserId == User.Identity.GetUserId())
+                        @if (Model.UserId == User.Identity.GetUserId() && Model.Comments.Count()>0)
                         {
                             <div class="sort-by">
                                 <span>Сортировать по:</span>
@@ -1251,8 +1251,9 @@
                     'fileId': fileId,
                     'customId': customId
                 },
-                 //contentType: 'application/json; charset=utf-8',
-                 //datatype: 'json',
+                //type : "POST",
+                //contentType: 'application/json; charset=utf-8',
+                //datatype: 'json',
                  type: "GET",
                  success: function () {
                      window.location = '@Url.Action("GetFile", "Custom")?path=' + path;
@@ -1324,6 +1325,19 @@
             });
         });
 
+        function OnSuccessDeleteMainAttach(attachId) {
+            $("#ldsDelMainAttach" + attachId).show()
+            $("#ldsDelMainAttach" + attachId).children().show()
+            $("#fDelMain" + attachId).hide();
+            $("#ldsDelMainAttach" + attachId).children().css('border-color', '#ffffff transparent transparent transparent');
+            $('#Uploaded_Results_Main').load('@Url.Action("LoadMainAttaches", "Custom")?id=' +@Model.Id);
+            $('#MainAttaches').text(function (i, txt) {
+                return (parseInt(txt, 10) - 1);
+            });
+
+            ChangeStatusSpan();
+        }
+
 
         function OnSuccessDeleteAttach(attachId) {
             $("#ldsDelAttach" + attachId).show()
@@ -1332,9 +1346,6 @@
             $("#ldsDelAttach" + attachId).children().css('border-color', '#ffffff transparent transparent transparent');
             $('#Uploaded_Revisions').load('@Url.Action("LoadAttaches", "Custom")?id=' +@Model.Id);
             $('#revisions').text(function (i, txt) {
-                return (parseInt(txt, 10) - 1);
-            });
-            $('#MainAttaches').text(function (i, txt) {
                 return (parseInt(txt, 10) - 1);
             });
 

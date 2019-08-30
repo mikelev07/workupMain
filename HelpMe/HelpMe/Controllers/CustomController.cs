@@ -180,6 +180,18 @@ namespace HelpMe.Controllers
             return status.GetDisplayName();
         }
 
+        public ActionResult LoadMyAttaches(int? id)
+        {
+            var allAttaches = db.MyAttachments.Include(c => c.CustomViewModel).Where(c => c.CustomViewModelId == id).ToList();
+            return PartialView(allAttaches);
+        }
+
+        public ActionResult LoadMainAttaches(int? id)
+        {
+            var allMainAttaches = db.MainAttachments.Include(m => m.CustomViewModel).Where(c => c.CustomViewModelId == id).ToList();
+            return PartialView(allMainAttaches);
+        }
+
         public ActionResult LoadAttaches(int? id)
         {
             var allAttaches = db.Attachments.Include(c => c.CustomViewModel).Where(c => c.CustomViewModelId == id).ToList();
@@ -216,6 +228,29 @@ namespace HelpMe.Controllers
             return await db.Attachments.Where(a => a.CustomViewModelId == id).CountAsync(a => a.AttachStatus == AttachStatus.NotPurchased);
         }
 
+        public async Task<JsonResult> DeleteMainAttach(int? id)
+        {
+            var mainAttach = await db.MainAttachments.FindAsync(id);
+            var customId = mainAttach.CustomViewModelId;
+            var customViewModel = await db.Customs.Include(c => c.MainAttachments).FirstOrDefaultAsync(c => c.Id == customId);
+            db.MainAttachments.Remove(mainAttach);
+            var mainAttachments = customViewModel.MainAttachments;
+
+            if (mainAttachments.Where(m => m.IsDownloaded == true).Count() == 0)
+            {
+                db.Entry(customViewModel).State = EntityState.Modified;
+                if(mainAttachments.Where(m => m.IsDownloaded == false).Count() == 0)
+                {
+                    customViewModel.Status = CustomStatus.Check;//выполняется исполнителем
+                }
+                else
+                {
+                    customViewModel.Status = CustomStatus.CheckCustom;//проверяется заказчиком
+                }
+            }
+            await db.SaveChangesAsync();
+            return Json(true);
+        }
 
         public async Task<JsonResult> DeleteAttach(int? id)
         {
@@ -253,17 +288,6 @@ namespace HelpMe.Controllers
 
             await db.SaveChangesAsync();
             return Json(true);
-        }
-        public ActionResult LoadMyAttaches(int? id)
-        {
-            var allAttaches = db.MyAttachments.Include(c => c.CustomViewModel).Where(c => c.CustomViewModelId == id).ToList();
-            return PartialView(allAttaches);
-        }
-
-        public ActionResult LoadMainAttaches(int? id)
-        {
-            var allAttaches = db.MainAttachments.Include(c => c.CustomViewModel).Where(c => c.CustomViewModelId == id).ToList();
-            return PartialView(allAttaches);
         }
 
         [HttpPost]
@@ -921,9 +945,9 @@ namespace HelpMe.Controllers
 
         //действие для скачки готового решения заказчиком 
         //осуществляется следующая проверка: остались ли еще решения для скачивания
-        public FileResult DownloadMainAttachment(int fileId, int customId)
+        public async Task<bool> DownloadMainAttachment(int fileId, int customId)
         {
-            var currentCustom = db.Customs.Include(c => c.MainAttachments).FirstOrDefault(c => c.Id == customId);
+            var currentCustom = await db.Customs.Include(c => c.MainAttachments).FirstOrDefaultAsync(c => c.Id == customId);
             var mainAttachments = currentCustom.MainAttachments;
 
             string currentFilePath = "";
@@ -940,23 +964,14 @@ namespace HelpMe.Controllers
                         attach.IsDownloaded = true;
                         attach.DownloadDate = DateTime.Now;
                         db.Entry(attach).State = EntityState.Modified;
-                        //db.SaveChangesAsync();
+                        //await db.SaveChangesAsync();
                     }
 
                 }
-                //if (!attach.IsDownloaded)
-                //{
-                //    allFilesDownloaded = false;
-                //}
             }
 
-            //if (allFilesDownloaded)
-            //{
-            //    currentCustom.Status = CustomStatus.CheckCustom;
-            //    db.Entry(currentCustom).State = EntityState.Modified;
-            //}
-            db.SaveChanges();
-            return GetFile(currentFilePath);
+            await db.SaveChangesAsync();
+            return true;
         }
 
         // GET: Custom/Details/5
