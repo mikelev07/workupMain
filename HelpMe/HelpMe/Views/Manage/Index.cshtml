@@ -31,210 +31,216 @@
             </nav>
         </div>
 
-        @using (Html.BeginForm("Index", "Manage", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        @using (Ajax.BeginForm("MyAccountSave", "Manage", FormMethod.Post, new AjaxOptions { }))
         {
             @Html.AntiForgeryToken()
             <!-- Row -->
-    <div class="row">
+            <div class="row">
 
-        <!-- Dashboard Box -->
-        <div class="col-xl-12">
-            <div class="dashboard-box margin-top-0">
+                <!-- Dashboard Box -->
+                <div class="col-xl-12">
+                    <div class="dashboard-box margin-top-0">
 
-                <!-- Headline -->
-                <div class="headline">
-                    <h3><i class="icon-material-outline-account-circle"></i> Мой аккаунт</h3>
-                </div>
-
-                <div class="content with-padding padding-bottom-0">
-
-                    <div class="row">
-
-                        <div class="col-auto">
-                            <div class="avatar-wrapper" data-tippy-placement="bottom" title="Изменить аватар">
-                                <img class="profile-pic" src="@Url.Content(ViewBag.Image)" alt="" />
-                                <div class="upload-button"></div>
-                                <input class="file-upload" type="file" name="ImageFile" id="ImageFile" />
-                            </div>
+                        <!-- Headline -->
+                        <div class="headline">
+                            <h3><i class="icon-material-outline-account-circle"></i> Мой аккаунт</h3>
                         </div>
 
-                        <div class="col">
+                        <div class="content with-padding padding-bottom-0">
+
                             <div class="row">
 
-                                <div class="col-xl-6">
-                                    <div class="submit-field">
-                                        <h5>Статус</h5>
-                                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Name } })
+                                <div class="col-auto">
+                                    <div class="avatar-wrapper" data-tippy-placement="bottom" title="Изменить аватар">
+                                        <img class="profile-pic" src="@Url.Content(ViewBag.Image)" alt="" />
+                                        <div class="upload-button"></div>
+                                        <input class="file-upload" type="file" name="ImageFile" id="ImageFile" />
                                     </div>
                                 </div>
 
-                                <div class="col-xl-6">
-                                    <div class="submit-field">
-                                        <h5>Возраст</h5>
-                                        @Html.EditorFor(model => model.Age, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Age } })
-                                    </div>
-                                </div>
-
-                                <div class="col-xl-6">
-                                    <!-- Account Type -->
-                                    <div class="submit-field">
-                                        <h5>Тип аккаунта</h5>
-                                        <div class="account-type">
-                                            <div>
-                                                <input type="radio" name="account-type-radio" id="freelancer-radio-1" class="account-type-radio" checked />
-                                                <label for="freelancer-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-account-circle"></i>Исполнитель</label>
-                                            </div>
-
-                                            <div>
-                                                <input type="radio" name="account-type-radio" id="employer-radio-1" class="account-type-radio" />
-                                                <label for="employer-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-business-center"></i>Заказчик</label>
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col-xl-6">
+                                            <div class="submit-field">
+                                                <h5>Ник</h5>
+                                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Name } })
                                             </div>
                                         </div>
+
+                                        <div class="col-xl-6">
+                                            <div class="submit-field">
+                                                <h5>Телефон</h5>
+                                                @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.PhoneNumber } })
+                                            </div>
+                                        </div>
+
+                                        @*<div class="col-xl-6">
+                                                <div class="submit-field">
+                                                    <h5>Возраст</h5>
+                                                    @Html.EditorFor(model => model.Age, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Age } })
+                                                </div>
+                                            </div>*@
+
+                                        <div class="col-xl-6">
+                                            <!-- Account Type -->
+                                            <div class="submit-field">
+                                                <h5>Тип аккаунта</h5>
+                                                <div class="account-type">
+                                                    <div>
+                                                        <input type="radio" name="account-type-radio" id="freelancer-radio-1" class="account-type-radio" checked />
+                                                        <label for="freelancer-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-account-circle"></i>Исполнитель</label>
+                                                    </div>
+
+                                                    @*<div>
+                                                            <input type="radio" name="account-type-radio" id="employer-radio-1" class="account-type-radio"  disabled/>
+                                                            <label for="employer-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-business-center"></i>Заказчик</label>
+                                                        </div>*@
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl-6">
+                                            <div class="submit-field">
+                                                <h5>Почта</h5>
+                                                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Email } })
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
-
-                                <div class="col-xl-6">
-                                    <div class="submit-field">
-                                        <h5>Почта</h5>
-                                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Email } })
-                                    </div>
-                                </div>
-
                             </div>
+
                         </div>
                     </div>
-
                 </div>
-            </div>
-        </div>
-        <div class="col-xl-12">
-            <input type="submit" value="Сохранить изменения" class="button ripple-effect big margin-top-30" />
-        </div>
-        <!-- Dashboard Box -->
-        <div class="col-xl-12">
-            <div class="dashboard-box">
+                <div class="col-xl-12">
+                    <input type="submit" value="Сохранить изменения" class="button ripple-effect big margin-top-30" />
+                </div>
+                <!-- Dashboard Box -->
+                <div class="col-xl-12">
+                    <div class="dashboard-box">
 
-                <!-- Headline -->
-                <div class="headline">
-                    <h3><i class="icon-material-outline-face"></i> Мой профиль</h3>
+                        <!-- Headline -->
+                        <div class="headline">
+                            <h3><i class="icon-material-outline-face"></i> Мой профиль</h3>
+                        </div>
+
+                        <div class="content">
+                            <ul class="fields-ul">
+                                <li>
+                                    <div class="row">
+
+                                        <div class="col-xl-6">
+                                            <div class="submit-field">
+                                                <h5>Дисциплины</h5>
+
+
+                                                <a href="#small-dialog" class="apply-now-button popup-with-zoom-anim margin-bottom-50">Привлечь к заданию <i class="icon-material-outline-arrow-right-alt"></i></a>
+
+                                                <br />
+                                                <div class="keywords-list">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl-6">
+                                            <div class="submit-field">
+                                                <h5>Приложения</h5>
+
+                                                <!-- Attachments -->
+                                                <div class="attachments-container margin-top-0 margin-bottom-0">
+                                                    <div class="attachment-box ripple-effect">
+                                                        <span>Cover Letter</span>
+                                                        <i>PDF</i>
+                                                        <button class="remove-attachment" data-tippy-placement="top" title="Remove"></button>
+                                                    </div>
+                                                    <div class="attachment-box ripple-effect">
+                                                        <span>Contract</span>
+                                                        <i>DOCX</i>
+                                                        <button class="remove-attachment" data-tippy-placement="top" title="Remove"></button>
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix"></div>
+
+                                                <!-- Upload Button -->
+                                                <div class="uploadButton margin-top-0">
+                                                    <input class="uploadButton-input" type="file" accept="image/*, application/pdf" id="upload" multiple />
+                                                    <label class="uploadButton-button ripple-effect" for="upload">Загрузить фото</label>
+                                                    <span class="uploadButton-file-name">Максимальный размер: 10 MB</span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="row">
+
+
+                                        <div class="col-xl-12">
+                                            <div class="submit-field">
+                                                <h5>Расскажите о себе</h5>
+                                                <textarea cols="30" rows="5" class="with-border">Привет всем, кто я такой?.</textarea>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="content">
-                    <ul class="fields-ul">
-                        <li>
+                <!-- Dashboard Box -->
+                <div class="col-xl-12">
+                    <div id="test1" class="dashboard-box">
+
+                        <!-- Headline -->
+                        <div class="headline">
+                            <h3><i class="icon-material-outline-lock"></i> Пароль</h3>
+                        </div>
+
+                        <div class="content with-padding">
                             <div class="row">
-                               
-                                <div class="col-xl-6">
+                                <div class="col-xl-4">
                                     <div class="submit-field">
-                                        <h5>Дисциплины</h5>
-
-                                       
-                                        <a href="#small-dialog" class="apply-now-button popup-with-zoom-anim margin-bottom-50">Привлечь к заданию <i class="icon-material-outline-arrow-right-alt"></i></a>
-
-                                        <br />
-                                        <div class="keywords-list">
-
-                                        </div>
+                                        <h5>Текущий пароль</h5>
+                                        <input type="password" class="with-border">
                                     </div>
                                 </div>
 
-                                    <div class="col-xl-6">
-                                        <div class="submit-field">
-                                            <h5>Приложения</h5>
-
-                                            <!-- Attachments -->
-                                            <div class="attachments-container margin-top-0 margin-bottom-0">
-                                                <div class="attachment-box ripple-effect">
-                                                    <span>Cover Letter</span>
-                                                    <i>PDF</i>
-                                                    <button class="remove-attachment" data-tippy-placement="top" title="Remove"></button>
-                                                </div>
-                                                <div class="attachment-box ripple-effect">
-                                                    <span>Contract</span>
-                                                    <i>DOCX</i>
-                                                    <button class="remove-attachment" data-tippy-placement="top" title="Remove"></button>
-                                                </div>
-                                            </div>
-                                            <div class="clearfix"></div>
-
-                                            <!-- Upload Button -->
-                                            <div class="uploadButton margin-top-0">
-                                                <input class="uploadButton-input" type="file" accept="image/*, application/pdf" id="upload" multiple />
-                                                <label class="uploadButton-button ripple-effect" for="upload">Загрузить фото</label>
-                                                <span class="uploadButton-file-name">Максимальный размер: 10 MB</span>
-                                            </div>
-
-                                        </div>
+                                <div class="col-xl-4">
+                                    <div class="submit-field">
+                                        <h5>Новый пароль</h5>
+                                        <input type="password" class="with-border">
                                     </div>
                                 </div>
-</li>
-                        <li>
-                            <div class="row">
-                                
+
+                                <div class="col-xl-4">
+                                    <div class="submit-field">
+                                        <h5>Повторить пароль</h5>
+                                        <input type="password" class="with-border">
+                                    </div>
+                                </div>
 
                                 <div class="col-xl-12">
-                                    <div class="submit-field">
-                                        <h5>Опишите себя</h5>
-                                        <textarea cols="30" rows="5" class="with-border">Привет всем, кто я такой?.</textarea>
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="two-step" checked>
+                                        <label for="two-step"><span class="checkbox-icon"></span> Включить двухфакторную авторизацию</label>
                                     </div>
                                 </div>
-
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Dashboard Box -->
-        <div class="col-xl-12">
-            <div id="test1" class="dashboard-box">
-
-                <!-- Headline -->
-                <div class="headline">
-                    <h3><i class="icon-material-outline-lock"></i> Пароль</h3>
-                </div>
-
-                <div class="content with-padding">
-                    <div class="row">
-                        <div class="col-xl-4">
-                            <div class="submit-field">
-                                <h5>Текущий пароль</h5>
-                                <input type="password" class="with-border">
-                            </div>
-                        </div>
-
-                        <div class="col-xl-4">
-                            <div class="submit-field">
-                                <h5>Новый пароль</h5>
-                                <input type="password" class="with-border">
-                            </div>
-                        </div>
-
-                        <div class="col-xl-4">
-                            <div class="submit-field">
-                                <h5>Повторить пароль</h5>
-                                <input type="password" class="with-border">
-                            </div>
-                        </div>
-
-                        <div class="col-xl-12">
-                            <div class="checkbox">
-                                <input type="checkbox" id="two-step" checked>
-                                <label for="two-step"><span class="checkbox-icon"></span> Включить двухфакторную авторизацию</label>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Button -->
+                <div class="col-xl-12">
+                    <input type="submit" value="Сохранить изменения" class="button ripple-effect big margin-top-30" />
+                </div>
+
             </div>
-        </div>
-
-        <!-- Button -->
-        <div class="col-xl-12">
-            <input type="submit" value="Сохранить изменения" class="button ripple-effect big margin-top-30" />
-        </div>
-
-    </div>
         }
 
         <!-- Row / End -->
@@ -324,7 +330,7 @@
                         <input type="checkbox" id="chekcbox3" checked>
                         <label for="chekcbox3"><span class="checkbox-icon"></span> Чечно-залупский</label>
                     </div>
-                   
+
 
                 </div>
 
@@ -368,7 +374,7 @@
                     <p>Tokyo is the capital of Japan.</p>
                 </div>
 
-                
+
             </div>
 
 
@@ -404,123 +410,119 @@
 
         var keywordsList = $(".keywords-list");
         function addKeywordSub(str, i) {
-			var $newKeyword = $("<span id='"+ i +"' class='keyword'><span class='keyword-remove'></span><span class='keyword-text'>"+ str +"</span></span>");
-			keywordsList.append($newKeyword).trigger('resizeContainer');
+            var $newKeyword = $("<span id='" + i + "' class='keyword'><span class='keyword-remove'></span><span class='keyword-text'>" + str + "</span></span>");
+            keywordsList.append($newKeyword).trigger('resizeContainer');
         }
 
-       // $('select').val(1);
-       
+        // $('select').val(1);
+
         var arr = new Array();
         var lastIndex = 0;
-            $('.selectpicker').on('change', function(){
-                 $(this).find("option").each(function()
-                 {
-                     if($(this).is(":selected"))
-                     {             
-                        id = $(this).attr("value");
-                        if(arr.indexOf(id) == -1)
-                        {
-                            arr.push(id);
-                            lastIndex = id;
-                            addKeywordSub(select_option(arr[arr.length-1]),arr[arr.length-1]);
-                        }
-                     }
-                     else
-                     {
-                         id = $(this).attr("value"); 
-                        // keywordsList.find('#' + id).children(":first").trigger('click')
-                         keywordsList.find('#' + id).addClass('keyword-removed');
-                        function removeFromMarkup(){
-			              $(".keyword-removed").remove();
-			            }
-			            setTimeout(removeFromMarkup, 500);
-			            keywordsList.css({'height':'auto'}).height();
-                         arr = jQuery.grep(arr, function(value) {
-                          return value != id;
-                         }); 
+        $('.selectpicker').on('change', function () {
+            $(this).find("option").each(function () {
+                if ($(this).is(":selected")) {
+                    id = $(this).attr("value");
+                    if (arr.indexOf(id) == -1) {
+                        arr.push(id);
+                        lastIndex = id;
+                        addKeywordSub(select_option(arr[arr.length - 1]), arr[arr.length - 1]);
+                    }
+                }
+                else {
+                    id = $(this).attr("value");
+                    // keywordsList.find('#' + id).children(":first").trigger('click')
+                    keywordsList.find('#' + id).addClass('keyword-removed');
+                    function removeFromMarkup() {
+                        $(".keyword-removed").remove();
+                    }
+                    setTimeout(removeFromMarkup, 500);
+                    keywordsList.css({ 'height': 'auto' }).height();
+                    arr = jQuery.grep(arr, function (value) {
+                        return value != id;
+                    });
 
-                        
-                     }
-                 });
-                
-              
 
+                }
             });
 
+
+
+        });
+
         function select_option(i) {
-          return $('select option[value="' + i + '"]').html();
+            return $('select option[value="' + i + '"]').html();
         }
 
         /*
         $('.selectpicker').change(function () {
-            
+
             var selectedItem = $(this).find("option:selected").val();
             addKeywordSub(selectedItem);
-          
-               
+
+
         }); */
 
-        	// removing keyword
-		$(document).on("click",".keyword-remove", function(){
+        // removing keyword
+        $(document).on("click", ".keyword-remove", function () {
             $(this).parent().addClass('keyword-removed');
-           /* var clone = $('#uploadAttache').clone();
-            clone.attr('id', 'field2');
-            $('#field2_area').html(clone);
-            alert($('#field2')[0].files[0].name)
-            alert($('#field2')[0].files[1].name) */
-           
-            $('#dicp').find('[value='+  $(this).parent().attr('id') +']').prop('selected', false);
-             $('.selectpicker').selectpicker('refresh')
+            /* var clone = $('#uploadAttache').clone();
+             clone.attr('id', 'field2');
+             $('#field2_area').html(clone);
+             alert($('#field2')[0].files[0].name)
+             alert($('#field2')[0].files[1].name) */
 
-           // var idAttach = $(this).parent().attr('id');
-          //  var filesArray = $('#uploadAttache')[0].files;
-          //  var fileBuffer = [];
-           // Array.prototype.push.apply(fileBuffer, filesArray);
-          //  finalFileBuffer.splice(idAttach, 1);
+            $('#dicp').find('[value=' + $(this).parent().attr('id') + ']').prop('selected', false);
+            $('.selectpicker').selectpicker('refresh')
+
+            // var idAttach = $(this).parent().attr('id');
+            //  var filesArray = $('#uploadAttache')[0].files;
+            //  var fileBuffer = [];
+            // Array.prototype.push.apply(fileBuffer, filesArray);
+            //  finalFileBuffer.splice(idAttach, 1);
             //alert(fileBuffer)
             //finalFileBuffer = fileBuffer;
 
-			function removeFromMarkup(){
-			  $(".keyword-removed").remove();
-			}
-			setTimeout(removeFromMarkup, 500);
-			keywordsList.css({'height':'auto'}).height();
-		});
+            function removeFromMarkup() {
+                $(".keyword-removed").remove();
+            }
+            setTimeout(removeFromMarkup, 500);
+            keywordsList.css({ 'height': 'auto' }).height();
+        });
 
         // animating container height
-		keywordsList.on('resizeContainer', function(){
-		    var heightnow = $(this).height();
-		    var heightfull = $(this).css({'max-height':'auto', 'height':'auto'}).height();
+        keywordsList.on('resizeContainer', function () {
+            var heightnow = $(this).height();
+            var heightfull = $(this).css({ 'max-height': 'auto', 'height': 'auto' }).height();
 
-			$(this).css({ 'height' : heightnow }).animate({ 'height': heightfull }, 200);
-		});
+            $(this).css({ 'height': heightnow }).animate({ 'height': heightfull }, 200);
+        });
 
-		$(window).on('resize', function() {
-			keywordsList.css({'height':'auto'}).height();
-		});
+        $(window).on('resize', function () {
+            keywordsList.css({ 'height': 'auto' }).height();
+        });
 
-		// Auto Height for keywords that are pre-added
-		$(window).on('load', function() {
-			var keywordCount = $('.keywords-list').children("span").length;
+        // Auto Height for keywords that are pre-added
+        $(window).on('load', function () {
+            var keywordCount = $('.keywords-list').children("span").length;
 
-			// Enables scrollbar if more than 3 items
-			if (keywordCount > 0) {
-				keywordsList.css({'height':'auto'}).height();
-		
-			} 
-		});
+            // Enables scrollbar if more than 3 items
+            if (keywordCount > 0) {
+                keywordsList.css({ 'height': 'auto' }).height();
 
-            /*
-        	$('#dicp').on('click', function(){ 
-			
-                addKeywordSub();
-                alert($('#dicp').val())
-			
-		});*/
-        	
+            }
+        });
 
-        
+        /*
+        $('#dicp').on('click', function(){
+
+            addKeywordSub();
+            alert($('#dicp').val())
+
+});*/
+
+
+
 
     </script>
-    
-    }
+
+}
