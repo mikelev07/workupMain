@@ -22,6 +22,7 @@ namespace HelpMe.Models
         public bool IsNotBusy { get; set; }
         public string ImagePath { get; set; } = "~/Content/Custom/images/user-avatar-big-01.jpg";
         public string Email { get; set; }
+        public string Phone { get; set; }
         public string Role { get; set; }
         public int PositiveThumbs { get; set; }
         public int NegativeThumbs { get; set; }
