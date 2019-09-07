@@ -91,10 +91,10 @@ namespace HelpMe.Models
             Wallets = new List<Wallet>(); // добавляем список кошельков
         }
 
-        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager, string authenticationType)
+        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager)
         {
             // Обратите внимание, что authenticationType должен совпадать с типом, определенным в CookieAuthenticationOptions.AuthenticationType
-            var userIdentity = await manager.CreateIdentityAsync(this, authenticationType);
+            var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Здесь добавьте утверждения пользователя
             return userIdentity;
         }
