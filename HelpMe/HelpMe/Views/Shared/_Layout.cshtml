@@ -359,6 +359,7 @@
     </div>
     <!--Ссылка на библиотеку SignalR -->
     @Scripts.Render("~/bundles/jquery")
+
     <script src="~/Scripts/Custom/simplebar.min.js"></script>
     <script src="~/Scripts/jquery.signalR-2.3.0.min.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>
@@ -368,19 +369,22 @@
     <script src="~/Scripts/Custom/locale/bootstrap-datepicker.ru.js" charset="UTF-8"></script>
     <script src="~/Scripts/Custom/moment-with-locales.min.js"></script>
     <script src="~/Scripts/Custom/bootstrap-datetimepicker.min.js"></script>
-  
-    
+
+
     <script src="~/signalr/hubs"></script>
     <script src="~/Scripts/util.js"></script>
-    <script src="~/Scripts/iwc-all.min.js"></script>
-    <script src="~/Scripts/signalr-patch.js"></script>
-    <script src="~/Scripts/iwc-signalr.js"></script>
+    @* <script src="~/Scripts/iwc-all.min.js"></script>*@
+    @* <script src="~/Scripts/signalr-patch.js"></script>*@
+        @*<script src="~/Scripts/iwc-signalr.js"></script>*@
 
 
 
     @Scripts.Render("~/bundles/Scripts/Custom/js")
     <!-- Snackbar // documentation: https://www.polonel.com/snackbar/ -->
     <script>
+
+        $('#header .right-side').css('float', 'left')
+          $('#header .right-side').css('float','right')
         // Snackbar for user status switcher
         $('#snackbar-user-status label').click(function () {
             Snackbar.show({
@@ -397,161 +401,161 @@
 
     <!-- Google Autocomplete -->
     <script>
-      /*  $('#loginButton').click(function () {
+              /*  $('#loginButton').click(function () {
 
-            var dataForm = {
-                "userid": $("#emailField").val(),
-                "password": $("#passwordField").val(),
-            };
-            $.ajax({
-                url: "/Account/ValidateUser",
-                type: "POST",
-                data: JSON.stringify(dataForm),
-                dataType: "json",
-                contentType: "application/json",
-                success: function (response) {
-                    if (response.Success) {
-                        $.ajax({
-                            type: "POST",
-                            url: "/Account/Login",
-                            data: dataForm,
-                            success: function (response) { }
-                        });
-                    } else {
-                        $('#valid').text('Неверный логин');
-                    }
-                },
-            });
-        });
-
-*/
-        $.ajax({
-            type: 'GET',
-            url: '/Home/GetUnreadingCount',
-            success: function (response) {
-                count = response;
-                if (count == 0) {
-                    $('#notific').hide();
-                    $('.ncount').hide();
-                } else {
-                    $('#notific').text(count);
-                    $('.ncount').text(count);
-                }
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        })
-        var isSucess = false;
-        $("#not-trigger").on('click', '#notCl', function () {
-
-            $.ajax({
-                type: 'GET',
-                url: '/Home/GetAllNotifications',
-                success: function (response) {
-                    $('.ncount').text(0);
-                    if (!isSucess) {
-                    $('#notifContent').empty();
-                    if (response.length == 0) {
-                        $('#notifContent').append($('<li>Нет данных</li>'));
-                    }
-                        $.each(response, function (index, value) {
-                            if (value.UserName != "@User.Identity.Name") {
-                                $('.ncont').prepend($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text"> Пользователь <strong> ' + value.UserName + ' </strong> ' + value.Description + ' <span class="color"> к заказу</span></span></a></li>'));
+                    var dataForm = {
+                        "userid": $("#emailField").val(),
+                        "password": $("#passwordField").val(),
+                    };
+                    $.ajax({
+                        url: "/Account/ValidateUser",
+                        type: "POST",
+                        data: JSON.stringify(dataForm),
+                        dataType: "json",
+                        contentType: "application/json",
+                        success: function (response) {
+                            if (response.Success) {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Account/Login",
+                                    data: dataForm,
+                                    success: function (response) { }
+                                });
+                            } else {
+                                $('#valid').text('Неверный логин');
                             }
-                            else {
-                                $('.ncont').prepend($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Title + ' <span class="color"> к заказу</span></span></a></li>'));
-                            }
-                            })
-                    }
-                    isSucess = true;
+                        },
+                    });
+                });
 
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            })
-        });
-
-
-            $('#notCl').click(function (e) {
+        */
                 $.ajax({
                     type: 'GET',
-                    url: '/Home/GetAllNotifications',
+                    url: '/Home/GetUnreadingCount',
                     success: function (response) {
-                        $('#notific').hide();
-                        $('.ncount').hide();
-                        $('#notifContent').empty();
-
-                        if (response.length == 0) {
-                            $('#notifContent').append($('<li>Нет данных</li>'));
+                        count = response;
+                        if (count == 0) {
+                            $('#notific').hide();
+                            $('.ncount').hide();
+                        } else {
+                            $('#notific').text(count);
+                            $('.ncount').text(count);
                         }
-
-                        $.each(response, function (index, value) {
-                            if (value.UserName != "@User.Identity.Name") {
-                                $('#notifContent').prepend($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text"> Пользователь <strong> ' + value.UserName + ' </strong> ' + value.Description + ' <span class="color"> к заказу</span></span></a></li>'));
-                            }
-                            else {
-                                $('#notifContent').prepend($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Title + ' <span class="color"> к заказу</span></span></a></li>'));
-                            }
-                        });
                     },
                     error: function (error) {
                         console.log(error);
                     }
                 })
-            });
+                var isSucess = false;
+                $("#not-trigger").on('click', '#notCl', function () {
 
-            var notificationhub = $.connection.notificationHub;
+                    $.ajax({
+                        type: 'GET',
+                        url: '/Home/GetAllNotifications',
+                        success: function (response) {
+                            $('.ncount').text(0);
+                            if (!isSucess) {
+                            $('#notifContent').empty();
+                            if (response.length == 0) {
+                                $('#notifContent').append($('<li>Нет данных</li>'));
+                            }
+                                $.each(response, function (index, value) {
+                                    if (value.UserName != "@User.Identity.Name") {
+                                        $('.ncont').prepend($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text"> Пользователь <strong> ' + value.UserName + ' </strong> ' + value.Description + ' <span class="color"> к заказу</span></span></a></li>'));
+                                    }
+                                    else {
+                                        $('.ncont').prepend($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Title + ' <span class="color"> к заказу</span></span></a></li>'));
+                                    }
+                                    })
+                            }
+                            isSucess = true;
 
-            notificationhub.client.displayMessage = function (message) {
-                $('#notific').show();
-                $('.ncount').show();
-                var num = $('#notific').text();
-                var num1 = $('.ncount').text();
-                if (num == '') num = num1 = 0;
-                $('.ncount').text(parseInt(num) + 1);
-
-
-
-                Snackbar.show({
-                    text: 'Новое уведомление!',
-                    pos: 'top-right',
-                    showAction: false,
-                    actionText: "Dismiss",
-                    width: 200,
-                    duration: 4000,
-                    textColor: '#5f9025',
-                    backgroundColor: '#EBF6E0',
-
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    })
                 });
-               // $('#notifContent').prepend($('<li class="notifications-not-read"><a href="dashboard-manage-candidates.html"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text"> <strong>Магамед</strong> предлагает вам <span class="color">оценить работу</span></span></a></li>'));
-                var audio = new Audio('../Content/intuition.mp3');
-                audio.play();
-            };
-
-            $.connection.hub.start();
 
 
+                    $('#notCl').click(function (e) {
+                        $.ajax({
+                            type: 'GET',
+                            url: '/Home/GetAllNotifications',
+                            success: function (response) {
+                                $('#notific').hide();
+                                $('.ncount').hide();
+                                $('#notifContent').empty();
 
-        function initAutocomplete() {
-            var options = {
-                types: ['(cities)'],
-                // componentRestrictions: {country: "us"}
-            };
+                                if (response.length == 0) {
+                                    $('#notifContent').append($('<li>Нет данных</li>'));
+                                }
 
-            var input = document.getElementById('autocomplete-input');
-            var autocomplete = new google.maps.places.Autocomplete(input, options);
-        }
+                                $.each(response, function (index, value) {
+                                    if (value.UserName != "@User.Identity.Name") {
+                                        $('#notifContent').prepend($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text"> Пользователь <strong> ' + value.UserName + ' </strong> ' + value.Description + ' <span class="color"> к заказу</span></span></a></li>'));
+                                    }
+                                    else {
+                                        $('#notifContent').prepend($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Title + ' <span class="color"> к заказу</span></span></a></li>'));
+                                    }
+                                });
+                            },
+                            error: function (error) {
+                                console.log(error);
+                            }
+                        })
+                    });
 
-        // Autocomplete adjustment for homepage
-        if ($('.intro-banner-search-form')[0]) {
-            setTimeout(function () {
-                $(".pac-container").prependTo(".intro-search-field.with-autocomplete");
-            }, 300);
-        }
+                    var notificationhub = $.connection.notificationHub;
+
+                    notificationhub.client.displayMessage = function (message) {
+                        $('#notific').show();
+                        $('.ncount').show();
+                        var num = $('#notific').text();
+                        var num1 = $('.ncount').text();
+                        if (num == '') num = num1 = 0;
+                        $('.ncount').text(parseInt(num) + 1);
+
+
+
+                        Snackbar.show({
+                            text: 'Новое уведомление!',
+                            pos: 'top-right',
+                            showAction: false,
+                            actionText: "Dismiss",
+                            width: 200,
+                            duration: 4000,
+                            textColor: '#5f9025',
+                            backgroundColor: '#EBF6E0',
+
+                        });
+                       // $('#notifContent').prepend($('<li class="notifications-not-read"><a href="dashboard-manage-candidates.html"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text"> <strong>Магамед</strong> предлагает вам <span class="color">оценить работу</span></span></a></li>'));
+                        var audio = new Audio('../Content/intuition.mp3');
+                        audio.play();
+                    };
+
+                    $.connection.hub.start();
+
+
+        /*
+                function initAutocomplete() {
+                    var options = {
+                        types: ['(cities)'],
+                        // componentRestrictions: {country: "us"}
+                    };
+
+                    var input = document.getElementById('autocomplete-input');
+                    var autocomplete = new google.maps.places.Autocomplete(input, options);
+                }
+
+                // Autocomplete adjustment for homepage
+                if ($('.intro-banner-search-form')[0]) {
+                    setTimeout(function () {
+                        $(".pac-container").prependTo(".intro-search-field.with-autocomplete");
+                    }, 300);
+                } */
 
     </script>
     @RenderSection("scripts", required: false)
 </body>
-</html>
+        </html>
