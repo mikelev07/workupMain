@@ -29,7 +29,6 @@ namespace HelpMe.Models
         public ICollection<TaskCategory> TaskCategories { get; set; }
         public ICollection<Skill> Skills { get; set; }
         public ICollection<CustomViewModel> Customs { get; set; }
-
         public ICollection<Review> Reviews { get; set; }
     }
 
@@ -72,7 +71,7 @@ namespace HelpMe.Models
         public ICollection<AttachModel> Attachments { get; set; }
         public ICollection<MyAttachModel> MyAttachments { get; set; }
         public ICollection<MainAttachModel> MainAttachments { get; set; }
-        public ICollection<Portfolios> Portfolios { get; set; }
+
         public User()
         {
             Notifications = new List<Notification>();
@@ -82,7 +81,6 @@ namespace HelpMe.Models
             Skills = new List<Skill>();
             Messages = new List<MessageStoreViewModel>();
             Reviews = new List<Review>();
-            Portfolios = new List<Portfolios>();
             ChatDialogs = new List<ChatDialog>();
             Notes = new List<Note>();
             Attachments = new List<AttachModel>();
@@ -130,7 +128,6 @@ namespace HelpMe.Models
         public DbSet<MessageAttach> MessageAttaches { get; set; }
         public DbSet<CustomViewModel> Customs { get; set; }
         public DbSet<AttachModel> Attachments { get; set; }
-        public DbSet<Portfolios> Portfolioses { get; set; }
         public DbSet<MyAttachModel> MyAttachments { get; set; }
         public DbSet<MainAttachModel> MainAttachments { get; set; }
         public DbSet<CommentViewModel> Comments { get; set; }
