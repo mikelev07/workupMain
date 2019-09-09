@@ -1,4 +1,5 @@
-﻿@using HelpMe.Helpers
+﻿@using Microsoft.AspNet.Identity
+@using HelpMe.Helpers
 
 @{
     Layout = "~/Views/Shared/_LayoutDash.cshtml";
@@ -31,9 +32,11 @@
                     <div class="tabs">
                         <div class="tabs-header">
                             <ul>
-                                <li class="active"><a href="#tab-1" data-tab-id="1">Выполняется</a></li>
-                                <li><a href="#tab-2" data-tab-id="2">Закрыто</a></li>
-                                <li><a href="#tab-3" data-tab-id="3">Спорная ситуация</a></li>
+                                <li class="active"><a href="#tab-1" data-tab-id="1">Все</a></li>
+                                <li><a href="#tab-2" data-tab-id="2">Выполняются</a></li>
+                                <li><a href="#tab-3" data-tab-id="3">Проверка</a></li>
+                                <li><a href="#tab-4" data-tab-id="4">Доработка</a></li>
+                                <li><a href="#tab-5" data-tab-id="5">Закрытые</a></li>
                             </ul>
                             <div class="tab-hover"></div>
                             <nav class="tabs-nav">
@@ -48,6 +51,99 @@
                                     <ul class="dashboard-box-list">
 
                                         @foreach (var i in Model)
+                                        {
+                                            <li>
+                                                <!-- Job Listing -->
+                                                <div class="job-listing width-adjustment">
+
+                                                    <!-- Job Listing Details -->
+                                                    <div class="job-listing-details">
+
+                                                        <!-- Details -->
+                                                        <div class="job-listing-description">
+                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
+
+                                                            <!-- Job Listing Footer -->
+                                                            <div class="job-listing-footer">
+                                                                <ul>
+                                                                    <li><i class="icon-material-outline-access-time"></i>Создано @i.StartDate</li>
+                                                                    <li><i class="icon-material-outline-access-time"></i>Сдать до @i.EndingDate</li>
+                                                                </ul>
+                                                            </div>
+
+                                                            <h4><a href="#">Заказчик: @i.User.UserName </a></h4>
+                                                            <div class="freelancer-rating">
+                                                                @{
+                                                                    var likes = i.User.PositiveThumbs;
+                                                                    var dislikes = i.User.NegativeThumbs;
+                                                                    var rate = "0.0";
+                                                                    if (likes + dislikes > 0)
+                                                                    {
+                                                                        rate = Math.Round((double)likes / (likes + dislikes) * 5, 1).ToString().Replace(',', '.');
+                                                                    }
+                                                                    if (rate.Length == 1)
+                                                                    {
+                                                                        rate = rate + ".0";
+                                                                    }
+                                                                }
+                                                                <div class="star-rating" data-rating="@rate"></div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Task Details -->
+                                                <ul style="padding: 13px; margin-top:5px; margin-bottom:5px" class="dashboard-task-info">
+                                                    <li><strong>@i.Price рубля</strong><span>Бюджет</span></li>
+                                                    <li><strong>@i.CategoryTask.Name</strong><span>Дисциплина</span></li>
+                                                    <li><strong>@i.TypeTask.Name</strong><span>Тип работы</span></li>
+                                                </ul>
+
+                                                <!-- Buttons -->
+                                                <div class="buttons-to-right always-visible">
+                                                    <a href="#small-dialog-2-@i.Id" class="popup-with-zoom-anim button  ripple-effect"><i class="icon-feather-mail"></i> Отправить сообщение заказчику</a>
+                                                </div>
+                                            </li>
+
+                                            <!--Send message pop-up-->
+                                            <div id="small-dialog-2-@i.Id" class="small-dialog-2 zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+                                                <ul class="popup-tabs-nav">
+                                                    <li><a href="#tab2">Отправка сообщения</a></li>
+                                                </ul>
+                                                <div class="popup-tabs-container">
+                                                    @using (Html.BeginForm("AddMessage", "Chat", FormMethod.Post))
+                                                    {
+                                                        @Html.AntiForgeryToken();
+                                                        <!-- Tab -->
+
+                                                        <div class="popup-tab-content" id="tab2">
+
+                                                            <!-- Welcome Text -->
+                                                            <div class="welcome-text">
+                                                                <h3>Отправьте сообщение @i.User.UserName</h3>
+                                                            </div>
+                                                            @Html.Hidden("UserFromId", i.ExecutorId, new { id = "userFromId-" + i.ExecutorId })
+                                                            @Html.Hidden("UserToId", i.UserId, new { id = "userToId-" + i.UserId })
+
+                                                            <textarea name="Description" id="add-message-description-@i.UserId" cols="10" placeholder="Сообщение" class="with-border"></textarea>
+                                                            <!-- Button -->
+                                                            <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Отправить <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                                        </div>
+                                                    }
+
+                                                </div>
+                                            </div>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="tab" data-tab-id="2">
+                                <div class="content">
+                                    <ul class="dashboard-box-list">
+
+                                        @foreach (var i in Model.Where(c => c.Status == HelpMe.Models.CustomStatus.Check))
                                         {
                                             <li>
                                                 <!-- Job Listing -->
@@ -86,23 +182,285 @@
 
                                                 <!-- Buttons -->
                                                 <div class="buttons-to-right always-visible">
-                                                    <a href="#small-dialog-2" class="popup-with-zoom-anim button  ripple-effect"><i class="icon-feather-mail"></i> Отправить сообщение заказчику</a>
+                                                    <a href="#small-dialog-2-@i.Id" class="popup-with-zoom-anim button  ripple-effect"><i class="icon-feather-mail"></i> Отправить сообщение заказчику</a>
                                                 </div>
                                             </li>
 
+                                            <!--Send message pop-up-->
+                                            <div id="small-dialog-2-@i.Id" class="small-dialog-2 zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+                                                <ul class="popup-tabs-nav">
+                                                    <li><a href="#tab2">Отправка сообщения</a></li>
+                                                </ul>
+                                                <div class="popup-tabs-container">
+                                                    @using (Html.BeginForm("AddMessage", "Chat", FormMethod.Post))
+                                                    {
+                                                        @Html.AntiForgeryToken();
+                                                        <!-- Tab -->
+
+                                                        <div class="popup-tab-content" id="tab2">
+
+                                                            <!-- Welcome Text -->
+                                                            <div class="welcome-text">
+                                                                <h3>Отправьте сообщение @i.User.UserName</h3>
+                                                            </div>
+                                                            @Html.Hidden("UserFromId", i.ExecutorId, new { id = "userFromId-" + i.ExecutorId })
+                                                            @Html.Hidden("UserToId", i.UserId, new { id = "userToId-" + i.UserId })
+
+                                                            <textarea name="Description" id="add-message-description-@i.UserId" cols="10" placeholder="Сообщение" class="with-border"></textarea>
+                                                            <!-- Button -->
+                                                            <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Отправить <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                                        </div>
+                                                    }
+
+                                                </div>
+                                            </div>
                                         }
                                     </ul>
                                 </div>
                             </div>
-                            <div class="tab" data-tab-id="2">
-                                <p>Это что блять за тарзан нахуй.</p>
-                            </div>
                             <div class="tab" data-tab-id="3">
-                                <p>Воцап мэн.</p>
-                                                           </div>
+                                <div class="content">
+                                    <ul class="dashboard-box-list">
+
+                                        @foreach (var i in Model.Where(c => c.Status == HelpMe.Models.CustomStatus.CheckCustom))
+                                        {
+                                            <li>
+                                                <!-- Job Listing -->
+                                                <div class="job-listing width-adjustment">
+
+                                                    <!-- Job Listing Details -->
+                                                    <div class="job-listing-details">
+
+                                                        <!-- Details -->
+                                                        <div class="job-listing-description">
+                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
+
+                                                            <!-- Job Listing Footer -->
+                                                            <div class="job-listing-footer">
+                                                                <ul>
+                                                                    <li><i class="icon-material-outline-access-time"></i>Создано @i.StartDate</li>
+                                                                    <li><i class="icon-material-outline-access-time"></i>Сдать до @i.EndingDate</li>
+                                                                </ul>
+                                                            </div>
+
+                                                            <h4><a href="#">Заказчик: @i.User.UserName </a></h4>
+                                                            <div class="freelancer-rating">
+                                                                <div class="star-rating" data-rating="5.0"></div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Task Details -->
+                                                <ul style="padding: 13px; margin-top:5px; margin-bottom:5px" class="dashboard-task-info">
+                                                    <li><strong>@i.Price рубля</strong><span>Бюджет</span></li>
+                                                    <li><strong>@i.CategoryTask.Name</strong><span>Дисциплина</span></li>
+                                                    <li><strong>@i.TypeTask.Name</strong><span>Тип работы</span></li>
+                                                </ul>
+
+                                                <!-- Buttons -->
+                                                <div class="buttons-to-right always-visible">
+                                                    <a href="#small-dialog-2-@i.Id" class="popup-with-zoom-anim button  ripple-effect"><i class="icon-feather-mail"></i> Отправить сообщение заказчику</a>
+                                                </div>
+                                            </li>
+
+                                            <!--Send message pop-up-->
+                                            <div id="small-dialog-2-@i.Id" class="small-dialog-2 zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+                                                <ul class="popup-tabs-nav">
+                                                    <li><a href="#tab2">Отправка сообщения</a></li>
+                                                </ul>
+                                                <div class="popup-tabs-container">
+                                                    @using (Html.BeginForm("AddMessage", "Chat", FormMethod.Post))
+                                                    {
+                                                        @Html.AntiForgeryToken();
+                                                        <!-- Tab -->
+
+                                                        <div class="popup-tab-content" id="tab2">
+
+                                                            <!-- Welcome Text -->
+                                                            <div class="welcome-text">
+                                                                <h3>Отправьте сообщение @i.User.UserName</h3>
+                                                            </div>
+                                                            @Html.Hidden("UserFromId", i.ExecutorId, new { id = "userFromId-" + i.ExecutorId })
+                                                            @Html.Hidden("UserToId", i.UserId, new { id = "userToId-" + i.UserId })
+
+                                                            <textarea name="Description" id="add-message-description-@i.UserId" cols="10" placeholder="Сообщение" class="with-border"></textarea>
+                                                            <!-- Button -->
+                                                            <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Отправить <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                                        </div>
+                                                    }
+
+                                                </div>
+                                            </div>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="tab" data-tab-id="4">
+                                <div class="content">
+                                    <ul class="dashboard-box-list">
+
+                                        @foreach (var i in Model.Where(c => c.Status == HelpMe.Models.CustomStatus.Revision))
+                                        {
+                                            <li>
+                                                <!-- Job Listing -->
+                                                <div class="job-listing width-adjustment">
+
+                                                    <!-- Job Listing Details -->
+                                                    <div class="job-listing-details">
+
+                                                        <!-- Details -->
+                                                        <div class="job-listing-description">
+                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
+
+                                                            <!-- Job Listing Footer -->
+                                                            <div class="job-listing-footer">
+                                                                <ul>
+                                                                    <li><i class="icon-material-outline-access-time"></i>Создано @i.StartDate</li>
+                                                                    <li><i class="icon-material-outline-access-time"></i>Сдать до @i.EndingDate</li>
+                                                                </ul>
+                                                            </div>
+
+                                                            <h4><a href="#">Заказчик: @i.User.UserName </a></h4>
+                                                            <div class="freelancer-rating">
+                                                                <div class="star-rating" data-rating="5.0"></div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Task Details -->
+                                                <ul style="padding: 13px; margin-top:5px; margin-bottom:5px" class="dashboard-task-info">
+                                                    <li><strong>@i.Price рубля</strong><span>Бюджет</span></li>
+                                                    <li><strong>@i.CategoryTask.Name</strong><span>Дисциплина</span></li>
+                                                    <li><strong>@i.TypeTask.Name</strong><span>Тип работы</span></li>
+                                                </ul>
+
+                                                <!-- Buttons -->
+                                                <div class="buttons-to-right always-visible">
+                                                    <a href="#small-dialog-2-@i.Id" class="popup-with-zoom-anim button  ripple-effect"><i class="icon-feather-mail"></i> Отправить сообщение заказчику</a>
+                                                </div>
+                                            </li>
+
+                                            <!--Send message pop-up-->
+                                            <div id="small-dialog-2-@i.Id" class="small-dialog-2 zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+                                                <ul class="popup-tabs-nav">
+                                                    <li><a href="#tab2">Отправка сообщения</a></li>
+                                                </ul>
+                                                <div class="popup-tabs-container">
+                                                    @using (Html.BeginForm("AddMessage", "Chat", FormMethod.Post))
+                                                    {
+                                                        @Html.AntiForgeryToken();
+                                                        <!-- Tab -->
+
+                                                        <div class="popup-tab-content" id="tab2">
+
+                                                            <!-- Welcome Text -->
+                                                            <div class="welcome-text">
+                                                                <h3>Отправьте сообщение @i.User.UserName</h3>
+                                                            </div>
+                                                            @Html.Hidden("UserFromId", i.ExecutorId, new { id = "userFromId-" + i.ExecutorId })
+                                                            @Html.Hidden("UserToId", i.UserId, new { id = "userToId-" + i.UserId })
+
+                                                            <textarea name="Description" id="add-message-description-@i.UserId" cols="10" placeholder="Сообщение" class="with-border"></textarea>
+                                                            <!-- Button -->
+                                                            <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Отправить <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                                        </div>
+                                                    }
+
+                                                </div>
+                                            </div>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="tab" data-tab-id="5">
+                                <div class="content">
+                                    <ul class="dashboard-box-list">
+
+                                        @foreach (var i in Model.Where(c => c.Status == HelpMe.Models.CustomStatus.Close))
+                                        {
+                                            <li>
+                                                <!-- Job Listing -->
+                                                <div class="job-listing width-adjustment">
+
+                                                    <!-- Job Listing Details -->
+                                                    <div class="job-listing-details">
+
+                                                        <!-- Details -->
+                                                        <div class="job-listing-description">
+                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
+
+                                                            <!-- Job Listing Footer -->
+                                                            <div class="job-listing-footer">
+                                                                <ul>
+                                                                    <li><i class="icon-material-outline-access-time"></i>Создано @i.StartDate</li>
+                                                                    <li><i class="icon-material-outline-access-time"></i>Сдать до @i.EndingDate</li>
+                                                                </ul>
+                                                            </div>
+
+                                                            <h4><a href="#">Заказчик: @i.User.UserName </a></h4>
+                                                            <div class="freelancer-rating">
+                                                                <div class="star-rating" data-rating="5.0"></div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Task Details -->
+                                                <ul style="padding: 13px; margin-top:5px; margin-bottom:5px" class="dashboard-task-info">
+                                                    <li><strong>@i.Price рубля</strong><span>Бюджет</span></li>
+                                                    <li><strong>@i.CategoryTask.Name</strong><span>Дисциплина</span></li>
+                                                    <li><strong>@i.TypeTask.Name</strong><span>Тип работы</span></li>
+                                                </ul>
+
+                                                <!-- Buttons -->
+                                                <div class="buttons-to-right always-visible">
+                                                    <a href="#small-dialog-2-@i.Id" class="popup-with-zoom-anim button  ripple-effect"><i class="icon-feather-mail"></i> Отправить сообщение заказчику</a>
+                                                </div>
+                                            </li>
+
+                                            <!--Send message pop-up-->
+                                            <div id="small-dialog-2-@i.Id" class="small-dialog-2 zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+                                                <ul class="popup-tabs-nav">
+                                                    <li><a href="#tab2">Отправка сообщения</a></li>
+                                                </ul>
+                                                <div class="popup-tabs-container">
+                                                    @using (Html.BeginForm("AddMessage", "Chat", FormMethod.Post))
+                                                    {
+                                                        @Html.AntiForgeryToken();
+                                                        <!-- Tab -->
+
+                                                        <div class="popup-tab-content" id="tab2">
+
+                                                            <!-- Welcome Text -->
+                                                            <div class="welcome-text">
+                                                                <h3>Отправьте сообщение @i.User.UserName</h3>
+                                                            </div>
+                                                            @Html.Hidden("UserFromId", i.ExecutorId, new { id = "userFromId-" + i.ExecutorId })
+                                                            @Html.Hidden("UserToId", i.UserId, new { id = "userToId-" + i.UserId })
+
+                                                            <textarea name="Description" id="add-message-description-@i.UserId" cols="10" placeholder="Сообщение" class="with-border"></textarea>
+                                                            <!-- Button -->
+                                                            <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Отправить <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                                        </div>
+                                                    }
+
+                                                </div>
+                                            </div>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -209,6 +567,6 @@
             S_tst("h");
         }
 
-        </script>
+    </script>
 
 }

@@ -668,6 +668,7 @@ header.fullwidth .container {
 }
 
 #header .right-side {
+    top:0;
 	float: right;
 	text-align: right;
 	width: auto;

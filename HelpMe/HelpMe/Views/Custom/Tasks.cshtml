@@ -32,12 +32,14 @@
                     <div class="tabs">
                         <div class="tabs-header">
                             <ul>
-                                <li class="active"><a href="#tab-1" data-tab-id="1">Открытые</a></li>
-                                <li><a href="#tab-2" data-tab-id="2">Выполняются</a></li>
-                                <li><a href="#tab-3" data-tab-id="3">Покупка</a></li>
-                                <li><a href="#tab-4" data-tab-id="4">Проверяются</a></li>
-                                <li><a href="#tab-5" data-tab-id="5">Доработка</a></li>
-                                <li><a href="#tab-6" data-tab-id="6">Закрытые</a></li>
+                                <li class="active"><a href="#tab-1" data-tab-id="1">Все</a></li>
+                                <li><a href="#tab-2" data-tab-id="2">Открытые</a></li>
+                                <li><a href="#tab-3" data-tab-id="3">Выполняются</a></li>
+                                <li><a href="#tab-4" data-tab-id="4">Покупка</a></li>
+                                <li><a href="#tab-5" data-tab-id="5">Проверка</a></li>
+                                <li><a href="#tab-6" data-tab-id="6">Доработка</a></li>
+                                <li><a href="#tab-7" data-tab-id="7">Закрытые</a></li>
+                                <li><a href="#tab-8" data-tab-id="8">Отмененные</a></li>
                             </ul>
                             <div class="tab-hover"></div>
                             <nav class="tabs-nav">
@@ -48,6 +50,62 @@
                         <!-- Tab Content -->
                         <div class="tabs-content">
                             <div class="tab active" data-tab-id="1">
+                                <div class="content">
+                                    <ul class="dashboard-box-list">
+
+                                        @foreach (var i in Model)
+                                        {
+
+                                            <li>
+                                                <!-- Job Listing -->
+                                                <div class="job-listing width-adjustment">
+
+                                                    <!-- Job Listing Details -->
+                                                    <div class="job-listing-details">
+
+                                                        <!-- Details -->
+                                                        <div class="job-listing-description">
+                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })" target="_blank">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
+
+                                                            <!-- Job Listing Footer -->
+                                                            <div class="job-listing-footer">
+                                                                <ul>
+                                                                    <li><i class="icon-material-outline-access-time"></i>Создано @i.StartDate</li>
+                                                                    <li><i class="icon-material-outline-access-time"></i>Сдать до @i.EndingDate</li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Task Details -->
+                                                <ul style="padding: 13px; margin-top:5px; margin-bottom:10px" class="dashboard-task-info">
+                                                    <li><strong>@i.Price рубля</strong><span>Вы указали цену</span></li>
+                                                    <li><strong>@i.CategoryTask.Name</strong><span>Дисциплина</span></li>
+
+                                                    <li><strong>@i.TypeTask.Name</strong><span>Тип работы</span></li>
+                                                </ul>
+
+                                                <!-- Buttons -->
+                                                <div class="always-visible">
+                                                    <a href="@Url.Action("Bidders", "Custom", new { id = i.Id })" class="button ripple-effect" target="_blank"><i class="icon-material-outline-supervisor-account"></i> Управление предложениями <span class="button-info">@i.Comments.Count()</span></a>
+                                                    @if (i.Status == HelpMe.Models.CustomStatus.Open)
+                                                    {
+                                                        <a href="#" class="button gray ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
+                                                        <a href="@Url.Action("Cancel", "Custom", new { id = i.Id })" class="button gray ripple-effect ico" title="Отменить" data-tippy-placement="top"><i class="icon-material-outline-undo"></i></a>
+                                                    }
+                                                    @if (i.Status == HelpMe.Models.CustomStatus.Cancelled)
+                                                    {
+                                                        <a href="@Url.Action("Cancel", "Custom", new { id = i.Id })" class="button gray ripple-effect ico" title="Переоткрыть" data-tippy-placement="top"><i class="icon-material-outline-redo"></i></a>
+                                                    }
+                                                </div>
+                                            </li>
+
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="tab" data-tab-id="2">
                                 <div class="content">
                                     <ul class="dashboard-box-list">
 
@@ -63,7 +121,7 @@
 
                                                         <!-- Details -->
                                                         <div class="job-listing-description">
-                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
+                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })" target="_blank">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
 
                                                             <!-- Job Listing Footer -->
                                                             <div class="job-listing-footer">
@@ -88,7 +146,7 @@
                                                 <div class="always-visible">
                                                     <a href="@Url.Action("Bidders", "Custom", new { id = i.Id })" class="button ripple-effect"><i class="icon-material-outline-supervisor-account"></i> Управление предложениями <span class="button-info">@i.Comments.Count()</span></a>
                                                     <a href="#" class="button gray ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
-                                                    <a href="#" class="button gray ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
+                                                    <a href="@Url.Action("Cancel", "Custom", new { id = i.Id })" class="button gray ripple-effect ico" title="Отменить" data-tippy-placement="top"><i class="icon-material-outline-undo"></i></a>
                                                 </div>
                                             </li>
 
@@ -96,7 +154,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="tab" data-tab-id="2">
+                            <div class="tab" data-tab-id="3">
                                 <div class="content">
                                     <ul class="dashboard-box-list">
 
@@ -111,7 +169,7 @@
 
                                                         <!-- Details -->
                                                         <div class="job-listing-description">
-                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
+                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })" target="_blank">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
 
                                                             <!-- Job Listing Footer -->
                                                             <div class="job-listing-footer">
@@ -135,8 +193,8 @@
                                                 <!-- Buttons -->
                                                 <div class="always-visible">
                                                     <a href="@Url.Action("Bidders", "Custom", new { id = i.Id })" class="button ripple-effect"><i class="icon-material-outline-supervisor-account"></i> Управление предложениями <span class="button-info">@i.Comments.Count()</span></a>
-                                                    <a href="#" class="button gray ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
-                                                    <a href="#" class="button gray ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
+                                                    @*<a href="#" class="button gray ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
+                                                        <a href="@Url.Action("Cancel", "Custom", new { id = i.Id })" class="button gray ripple-effect ico" title="Отменить" data-tippy-placement="top"><i class="icon-material-outline-undo"></i></a>*@
                                                 </div>
                                             </li>
 
@@ -144,7 +202,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="tab" data-tab-id="3">
+                            <div class="tab" data-tab-id="4">
                                 <div class="content">
                                     <ul class="dashboard-box-list">
 
@@ -159,7 +217,7 @@
 
                                                         <!-- Details -->
                                                         <div class="job-listing-description">
-                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
+                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })" target="_blank">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
 
                                                             <!-- Job Listing Footer -->
                                                             <div class="job-listing-footer">
@@ -183,8 +241,8 @@
                                                 <!-- Buttons -->
                                                 <div class="always-visible">
                                                     <a href="@Url.Action("Bidders", "Custom", new { id = i.Id })" class="button ripple-effect"><i class="icon-material-outline-supervisor-account"></i> Управление предложениями <span class="button-info">@i.Comments.Count()</span></a>
-                                                    <a href="#" class="button gray ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
-                                                    <a href="#" class="button gray ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
+                                                    @*<a href="#" class="button gray ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
+                                                        <a href="@Url.Action("Cancel", "Custom", new { id = i.Id })" class="button gray ripple-effect ico" title="Отменить" data-tippy-placement="top"><i class="icon-material-outline-undo"></i></a>*@
                                                 </div>
                                             </li>
 
@@ -192,7 +250,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="tab" data-tab-id="4">
+                            <div class="tab" data-tab-id="5">
                                 <div class="content">
                                     <ul class="dashboard-box-list">
 
@@ -208,7 +266,7 @@
 
                                                         <!-- Details -->
                                                         <div class="job-listing-description">
-                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
+                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })" target="_blank">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
 
                                                             <!-- Job Listing Footer -->
                                                             <div class="job-listing-footer">
@@ -232,8 +290,8 @@
                                                 <!-- Buttons -->
                                                 <div class=" always-visible">
                                                     <a href="@Url.Action("Bidders", "Custom", new { id = i.Id })" class="button ripple-effect"><i class="icon-material-outline-supervisor-account"></i> Управление предложениями <span class="button-info">@i.Comments.Count()</span></a>
-                                                    <a href="#" class="button gray ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
-                                                    <a href="#" class="button gray ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
+                                                    @*<a href="#" class="button gray ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
+                                                        <a href="@Url.Action("Cancel", "Custom", new { id = i.Id })" class="button gray ripple-effect ico" title="Отменить" data-tippy-placement="top"><i class="icon-material-outline-undo"></i></a>*@
                                                 </div>
                                             </li>
 
@@ -241,7 +299,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="tab" data-tab-id="5">
+                            <div class="tab" data-tab-id="6">
                                 <div class="content">
                                     <ul class="dashboard-box-list">
 
@@ -256,7 +314,7 @@
 
                                                         <!-- Details -->
                                                         <div class="job-listing-description">
-                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
+                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })" target="_blank">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
 
                                                             <!-- Job Listing Footer -->
                                                             <div class="job-listing-footer">
@@ -280,8 +338,8 @@
                                                 <!-- Buttons -->
                                                 <div class=" always-visible">
                                                     <a href="@Url.Action("Bidders", "Custom", new { id = i.Id })" class="button ripple-effect"><i class="icon-material-outline-supervisor-account"></i> Управление предложениями <span class="button-info">@i.Comments.Count()</span></a>
-                                                    <a href="#" class="button gray ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
-                                                    <a href="#" class="button gray ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
+                                                    @*<a href="#" class="button gray ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
+                                                        <a href="@Url.Action("Cancel", "Custom", new { id = i.Id })" class="button gray ripple-effect ico" title="Отменить" data-tippy-placement="top"><i class="icon-material-outline-undo"></i></a>*@
                                                 </div>
                                             </li>
 
@@ -289,7 +347,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="tab" data-tab-id="6">
+                            <div class="tab" data-tab-id="7">
                                 <div class="content">
                                     <ul class="dashboard-box-list">
 
@@ -304,7 +362,7 @@
 
                                                         <!-- Details -->
                                                         <div class="job-listing-description">
-                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
+                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })" target="_blank">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
 
                                                             <!-- Job Listing Footer -->
                                                             <div class="job-listing-footer">
@@ -328,8 +386,56 @@
                                                 <!-- Buttons -->
                                                 <div class="always-visible">
                                                     <a href="@Url.Action("Bidders", "Custom", new { id = i.Id })" class="button ripple-effect"><i class="icon-material-outline-supervisor-account"></i> Управление предложениями <span class="button-info">@i.Comments.Count()</span></a>
-                                                    <a href="#" class="button gray ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
-                                                    <a href="#" class="button gray ripple-effect ico" title="Удалить" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
+                                                    @*<a href="#" class="button gray ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
+                                                        <a href="#" class="button gray ripple-effect ico" title="Отменить" data-tippy-placement="top"><i class="icon-material-outline-undo"></i></a>*@
+                                                </div>
+                                            </li>
+
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="tab" data-tab-id="8">
+                                <div class="content">
+                                    <ul class="dashboard-box-list">
+
+                                        @foreach (var i in Model.Where(s => s.Status == HelpMe.Models.CustomStatus.Cancelled))
+                                        {
+                                            <li>
+                                                <!-- Job Listing -->
+                                                <div class="job-listing width-adjustment">
+
+                                                    <!-- Job Listing Details -->
+                                                    <div class="job-listing-details">
+
+                                                        <!-- Details -->
+                                                        <div class="job-listing-description">
+                                                            <h3 class="job-listing-title"><a href="@Url.Action("Details", "Custom", new { id = i.Id })" target="_blank">@i.Name</a> <span class="dashboard-status-button yellow">@HtmlExtensions.EnumDisplayNameFor(i.Status)</span></h3>
+
+                                                            <!-- Job Listing Footer -->
+                                                            <div class="job-listing-footer">
+                                                                <ul>
+                                                                    <li><i class="icon-material-outline-access-time"></i>Создано @i.StartDate</li>
+                                                                    <li><i class="icon-material-outline-access-time"></i>Сдать до @i.EndingDate</li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Task Details -->
+                                                <ul style="padding: 13px; margin-top:5px; margin-bottom:10px" class="dashboard-task-info">
+                                                    <li><strong>@i.Price рубля</strong><span>Вы указали цену</span></li>
+                                                    <li><strong>@i.CategoryTask.Name</strong><span>Дисциплина</span></li>
+
+                                                    <li><strong>@i.TypeTask.Name</strong><span>Тип работы</span></li>
+                                                </ul>
+
+                                                <!-- Buttons -->
+                                                <div class="always-visible">
+                                                    <a href="@Url.Action("Bidders", "Custom", new { id = i.Id })" class="button ripple-effect"><i class="icon-material-outline-supervisor-account"></i> Управление предложениями <span class="button-info">@i.Comments.Count()</span></a>
+                                                    @*<a href="#" class="button gray ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>*@
+                                                    <a href="@Url.Action("Cancel", "Custom", new { id = i.Id })" class="button gray ripple-effect ico" title="Переоткрыть" data-tippy-placement="top"><i class="icon-material-outline-redo"></i></a>
                                                 </div>
                                             </li>
 

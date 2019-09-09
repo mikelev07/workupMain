@@ -10,7 +10,7 @@
         <!-- Dashboard Headline -->
         <div class="dashboard-headline">
             <h3>Управление предложениями</h3>
-            <span class="margin-top-7">Управление для <a href="#">@Model.FirstOrDefault().CustomViewModel.Name</a></span>
+            <span class="margin-top-7">Управление для <a href="@Url.Action("Details","Custom", new { id = Model.FirstOrDefault().CustomViewModelId})" target="_blank">@Model.FirstOrDefault().CustomViewModel.Name</a></span>
 
             <!-- Breadcrumbs -->
             <nav id="breadcrumbs" class="green">
@@ -45,44 +45,162 @@
 
                             @foreach (var i in Model)
                             {
-                            <li>
-                                <!-- Overview -->
-                                <div class="freelancer-overview manage-candidates">
-                                    <div class="freelancer-overview-inner">
+                                <li>
+                                    <!-- Overview -->
+                                    <div class="freelancer-overview manage-candidates">
+                                        <div class="freelancer-overview-inner">
 
-                                        <!-- Avatar -->
-                                        <div class="freelancer-avatar">
-                                            <div class="verified-badge"></div>
-                                            <a href="#"><img src="~/Content/Custom/images/user-avatar-big-02.jpg" alt=""></a>
-                                        </div>
-
-                                        <!-- Name -->
-                                        <div class="freelancer-name">
-                                            <h4><a href="#">@i.User.UserName <img class="flag" src="images/flags/de.svg" alt=""  data-tippy-placement="top"></a></h4>
-
-                                            <!-- Details -->
-                                            <span class="freelancer-detail-item"><a href="#"><i class="icon-feather-clock"></i>Добавлено @i.CreationDate</a></span>
-
-                                            <!-- Rating -->
-                                            <div class="freelancer-rating">
-                                                <div class="star-rating" data-rating="5.0"></div>
+                                            <!-- Avatar -->
+                                            <div class="freelancer-avatar">
+                                                <div class="verified-badge"></div>
+                                                <a href="#"><img src="~/Content/Custom/images/user-avatar-big-02.jpg" alt=""></a>
                                             </div>
 
-                                            <!-- Bid Details -->
-                                            <ul class="dashboard-task-info bid-info">
-                                                <li><strong>@i.OfferPrice</strong><span>Предложена цена</span></li>
-                                                <li><strong>@i.Hours</strong><span>Время выполнения</span></li>
-                                            </ul>
+                                            <!-- Name -->
+                                            <div class="freelancer-name">
+                                                <h4><a href="#">@i.User.UserName </a></h4>
 
-                                            <!-- Buttons -->
-                                            <div class="buttons-to-right always-visible margin-top-25 margin-bottom-0">
-                                                <a href="#small-dialog-1" class="popup-with-zoom-anim button ripple-effect"><i class="icon-material-outline-check"></i> Принять заказ</a>
-                                                <a href="#small-dialog-2" class="popup-with-zoom-anim button  ripple-effect"><i class="icon-feather-mail"></i> Отправить сообщение</a>
+                                                <!-- Details -->
+                                                <span class="freelancer-detail-item"><a href="#"><i class="icon-feather-clock"></i>Добавлено @i.CreationDate</a></span>
+
+                                                <!-- Rating -->
+                                                <div class="freelancer-rating">
+                                                    @{
+                                                        var likes = i.User.PositiveThumbs;
+                                                        var dislikes = i.User.NegativeThumbs;
+                                                        var rate = "0.0";
+                                                        if (likes + dislikes > 0)
+                                                        {
+                                                            rate = Math.Round((double)likes / (likes + dislikes) * 5, 1).ToString().Replace(',', '.');
+                                                        }
+                                                        if (rate.Length == 1)
+                                                        {
+                                                            rate = rate + ".0";
+                                                        }
+                                                    }
+                                                    <div class="star-rating" data-rating="@rate"></div>
+                                                </div>
+
+                                                <!-- Bid Details -->
+                                                <ul class="dashboard-task-info bid-info">
+                                                    <li><strong>@i.OfferPrice руб.</strong><span>Предложена цена</span></li>
+                                                    <li>
+                                                        @if (i.Days != 0)
+                                                        {
+                                                            <strong>@i.Days дней</strong>
+                                                        }
+                                                        else
+                                                        {
+                                                            <strong>@i.Hours часов</strong>
+                                                        }
+                                                        <span>Время выполнения</span>
+                                                    </li>
+                                                    <li><strong>@i.Description</strong><span>Комментарий</span></li>
+                                                </ul>
+
+                                                <!-- Buttons -->
+                                                <div class="buttons-to-right always-visible margin-top-25 margin-bottom-0">
+                                                    @if (i.CustomViewModel.ExecutorId == null)
+                                                    {
+                                                        <a href="#small-dialog-1-@i.Id" class="popup-with-zoom-anim button ripple-effect"><i class="icon-material-outline-check"></i> Принять предложение</a>
+                                                    }
+                                                    <a href="#small-dialog-2-@i.Id" class="popup-with-zoom-anim button  ripple-effect"><i class="icon-feather-mail"></i> Отправить сообщение</a>
+                                                </div>
+
+                                                <!--Accept executor pop-up-->
+                                                <div id="small-dialog-1-@i.Id" class="small-dialog-1 zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+                                                    <!--Tabs -->
+                                                    <div class="sign-in-form">
+
+                                                        <ul class="popup-tabs-nav">
+                                                            <li><a href="#tab1">Принять предложение</a></li>
+                                                        </ul>
+
+                                                        <div class="popup-tabs-container">
+
+                                                            <!-- Tab -->
+                                                            <div class="popup-tab-content" id="tab">
+
+                                                                <!-- Welcome Text -->
+                                                                <div class="welcome-text">
+                                                                    <h3>Принять предложение от @i.User.UserName?</h3>
+                                                                    <div class="bid-acceptance margin-top-15">
+                                                                        <div class="bid-rate">
+                                                                            <div class="rate">@i.OfferPrice рублей</div>
+                                                                            @if (i.Days > 0)
+                                                                            {
+                                                                                <span>за @i.Days дней</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span>за @i.Hours часов</span>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                @using (Html.BeginForm("ChooseExecutor", "Custom", new { CustId = i.Id }))
+                                                                {
+                                                                    <div class="radio">
+                                                                        <input id="radio-choose-executor-@i.UserId" name="radio" type="radio" required autocomplete="off"
+                                                                               oninvalid="setCustomValidity('Сперва нужно ознакомиться с правилами!')"
+                                                                               oninput="setCustomValidity('')" />
+                                                                        <label for="radio-choose-executor-@i.UserId"><span class="radio-label"></span>  Я ознакомился с правилами</label>
+                                                                    </div>
+                                                                    <input class="margin-top-15 button full-width button-sliding-icon ripple-effect"
+                                                                               type="submit" value="Принять" />
+                                                                    @*if (ViewBag.WalletSumm >= i.OfferPrice)
+                                                                    {
+                                                                        <input class="margin-top-15 button full-width button-sliding-icon ripple-effect"
+                                                                               type="submit" value="Принять" />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        int exSum = i.OfferPrice - ViewBag.WalletSumm;
+
+                                                                        <a href="/Wallet/AddSumm?summ=@exSum&returnUrl=@Request.Url.ToString()" style="color:white" class="margin-top-15 button full-width button-sliding-icon ripple-effect">Пополнить счет на @exSum и принять</a>
+                                                                    }*@
+
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!--Send message pop-up-->
+                                                <div id="small-dialog-2-@i.Id" class="small-dialog-2 zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+                                                    <ul class="popup-tabs-nav">
+                                                        <li><a href="#tab2">Отправка сообщения</a></li>
+                                                    </ul>
+                                                    <div class="popup-tabs-container">
+                                                        @using (Html.BeginForm("AddMessage", "Chat", FormMethod.Post))
+                                                        {
+                                                            @Html.AntiForgeryToken();
+                                                            <!-- Tab -->
+
+                                                            <div class="popup-tab-content" id="tab2">
+
+                                                                <!-- Welcome Text -->
+                                                                <div class="welcome-text">
+                                                                    <h3>Отправьте сообщение @i.User.UserName</h3>
+                                                                </div>
+                                                                @Html.Hidden("UserFromId", i.CustomViewModel.UserId, new { id = "userFromId-" + i.CustomViewModel.UserId })
+                                                                @Html.Hidden("UserToId", i.UserId, new { id = "userToId-" + i.UserId })
+
+                                                                <textarea name="Description" id="add-message-description-@i.UserId" cols="10" placeholder="Сообщение" class="with-border"></textarea>
+                                                                <!-- Button -->
+                                                                <button class="button margin-top-35 full-width button-sliding-icon ripple-effect" type="submit">Отправить <i class="icon-material-outline-arrow-right-alt"></i></button>
+                                                            </div>
+                                                        }
+
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </li>
+                                </li>
                             }
 
                         </ul>
