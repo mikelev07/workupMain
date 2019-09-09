@@ -131,16 +131,18 @@
                                                 <h5>Дисциплины</h5>
 
 
-                                                <a href="#small-dialog" class="apply-now-button popup-with-zoom-anim margin-bottom-50">Привлечь к заданию <i class="icon-material-outline-arrow-right-alt"></i></a>
+                                                <a href="#small-dialog" class="apply-now-button popup-with-zoom-anim margin-bottom-50">Выбрать специализацию <i class="icon-material-outline-arrow-right-alt"></i></a>
 
-                                                <br />
-                                                <div class="keywords-list">
+                                               <br />
+                                                <div style="margin-top:-100px;" id="myDisp">
 
                                                 </div>
+                                               
+                                                <br />
                                             </div>
                                         </div>
 
-                                        <div class="col-xl-12">
+                                        <div style="margin-top: 10px;" class="col-xl-12">
                                             <div class="submit-field">
                                                 <h5>Портфолио</h5>
                                                 <form method="post" action="/Manage/UploadPortfolioMultiAttach/?name=@User.Identity.Name" enctype="multipart/form-data" novalidate="" class="box has-advanced-upload">
@@ -306,9 +308,9 @@
 
 
                 <div class="taby">
-                    <button class="tablinks active" onclick="openCity(event, 'London')">Математические дисциплины</button>
-                    <button class="tablinks" onclick="openCity(event, 'Paris')">Естественные науки</button>
-                    <button class="tablinks" onclick="openCity(event, 'Tokyo')">Естественные ватуки</button>
+                    <button id="1" class="tablinks active" onclick="openCity(event, 'London')">Математические дисциплины</button>
+                    <button id="2" class="tablinks" onclick="openCity(event, 'Paris')">Естественные науки</button>
+                    <button id="3" class="tablinks" onclick="openCity(event, 'Tokyo')">Гуманитарные науки</button>
                     <button class="tablinks" onclick="openCity(event, 'London1')">Естественные уруки</button>
                     <button class="tablinks" onclick="openCity(event, 'Paris1')">Естественные суки</button>
                     <button class="tablinks" onclick="openCity(event, 'Tokyo1')">Естественные хуйуки</button>
@@ -323,15 +325,15 @@
                 <div id="London" class="tabycontent">
 
                     <div class="checkbox">
-                        <input type="checkbox" id="chekcbox1" checked>
+                        <input class="checkboxI" type="checkbox" id="chekcbox1">
                         <label for="chekcbox1"><span class="checkbox-icon"></span> Догги-стайл</label>
                     </div> <br />
                     <div class="checkbox">
-                        <input type="checkbox" id="chekcbox2" checked>
+                        <input class="checkboxI" type="checkbox" id="chekcbox2">
                         <label for="chekcbox2"><span class="checkbox-icon"></span> Догги-станский</label>
                     </div> <br />
                     <div class="checkbox">
-                        <input type="checkbox" id="chekcbox3" checked>
+                        <input class="checkboxI" type="checkbox" id="chekcbox3">
                         <label for="chekcbox3"><span class="checkbox-icon"></span> Чечно-залупский</label>
                     </div>
 
@@ -339,13 +341,33 @@
                 </div>
 
                 <div style="display:none" id="Paris" class="tabycontent">
-                    <h3>Paris</h3>
-                    <p>Paris is the capital of France.</p>
+                    <div class="checkbox">
+                        <input class="checkboxI" type="checkbox" id="chekcbox12">
+                        <label for="chekcbox12"><span class="checkbox-icon"></span> Матан</label>
+                    </div> <br />
+                    <div class="checkbox">
+                        <input class="checkboxI" type="checkbox" id="chekcbox22">
+                        <label for="chekcbox22"><span class="checkbox-icon"></span> Котан</label>
+                    </div> <br />
+                    <div class="checkbox">
+                        <input class="checkboxI" type="checkbox" id="chekcbox33">
+                        <label for="chekcbox33"><span class="checkbox-icon"></span> Котопес</label>
+                    </div>
                 </div>
 
                 <div style="display:none" id="Tokyo" class="tabycontent">
-                    <h3>Tokyo</h3>
-                    <p>Tokyo is the capital of Japan.</p>
+                    <div class="checkbox">
+                        <input class="checkboxI" type="checkbox" id="chekcbox13">
+                        <label for="chekcbox13"><span class="checkbox-icon"></span> Куклин</label>
+                    </div> <br />
+                    <div class="checkbox">
+                        <input class="checkboxI" type="checkbox" id="chekcbox24">
+                        <label for="chekcbox24"><span class="checkbox-icon"></span> Пуклин</label>
+                    </div> <br />
+                    <div class="checkbox">
+                        <input class="checkboxI" type="checkbox" id="chekcbox331">
+                        <label for="chekcbox331"><span class="checkbox-icon"></span> Стуклин </label>
+                    </div>
                 </div>
 
                 <div style="display:none" id="London1" class="tabycontent">
@@ -595,12 +617,38 @@
             evt.currentTarget.className += " active";
         }
 
-        /*
+        
+        $(".checkboxI").change(function() {
+            if (this.checked) {
+                var idVal = $(this).attr("id");
+                addKeywordSub($("label[for='"+idVal+"']").text(), idVal)  
+            }
+             keywordsList.css({ 'height': 'auto' }).height();
+        });
+
         var keywordsList = $(".keywords-list");
+         
         function addKeywordSub(str, i) {
+            var tabText = $(".taby button.active").text()
+            var tabId = $(".taby button.active").attr("id") + "-detail";
+
+            if ($("#" + tabId).length == 0) {
+                $("#myDisp").append("<br><br><div id='" + tabId + "'></div>")
+                $("#" + tabId).append("<div class='headerForDisp'></div>")
+                $("#" + tabId).append("<div class='keywords-list'></div>")
+            
+
+            if (!($('#'+tabId+' .headerForDisp h4:contains(' + tabText + ')').length > 0)) {
+                $("#"+tabId + " .headerForDisp").append("<h4>" + tabText + "</h4>")
+                }
+            }
+
+           keywordsList = $("#"+tabId + " .keywords-list");
             var $newKeyword = $("<span id='" + i + "' class='keyword'><span class='keyword-remove'></span><span class='keyword-text'>" + str + "</span></span>");
             keywordsList.append($newKeyword).trigger('resizeContainer');
         }
+        /*
+      
 
         // $('select').val(1);
 
