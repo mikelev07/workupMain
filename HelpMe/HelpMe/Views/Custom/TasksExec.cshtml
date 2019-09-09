@@ -166,7 +166,20 @@
 
                                                             <h4><a href="#">Заказчик: @i.User.UserName </a></h4>
                                                             <div class="freelancer-rating">
-                                                                <div class="star-rating" data-rating="5.0"></div>
+                                                                @{
+                                                                    var likes = i.User.PositiveThumbs;
+                                                                    var dislikes = i.User.NegativeThumbs;
+                                                                    var rate = "0.0";
+                                                                    if (likes + dislikes > 0)
+                                                                    {
+                                                                        rate = Math.Round((double)likes / (likes + dislikes) * 5, 1).ToString().Replace(',', '.');
+                                                                    }
+                                                                    if (rate.Length == 1)
+                                                                    {
+                                                                        rate = rate + ".0";
+                                                                    }
+                                                                }
+                                                                <div class="star-rating" data-rating="@rate"></div>
                                                             </div>
 
                                                         </div>
@@ -246,7 +259,20 @@
 
                                                             <h4><a href="#">Заказчик: @i.User.UserName </a></h4>
                                                             <div class="freelancer-rating">
-                                                                <div class="star-rating" data-rating="5.0"></div>
+                                                                @{
+                                                                    var likes = i.User.PositiveThumbs;
+                                                                    var dislikes = i.User.NegativeThumbs;
+                                                                    var rate = "0.0";
+                                                                    if (likes + dislikes > 0)
+                                                                    {
+                                                                        rate = Math.Round((double)likes / (likes + dislikes) * 5, 1).ToString().Replace(',', '.');
+                                                                    }
+                                                                    if (rate.Length == 1)
+                                                                    {
+                                                                        rate = rate + ".0";
+                                                                    }
+                                                                }
+                                                                <div class="star-rating" data-rating="@rate"></div>
                                                             </div>
 
                                                         </div>
@@ -326,7 +352,20 @@
 
                                                             <h4><a href="#">Заказчик: @i.User.UserName </a></h4>
                                                             <div class="freelancer-rating">
-                                                                <div class="star-rating" data-rating="5.0"></div>
+                                                                @{
+                                                                    var likes = i.User.PositiveThumbs;
+                                                                    var dislikes = i.User.NegativeThumbs;
+                                                                    var rate = "0.0";
+                                                                    if (likes + dislikes > 0)
+                                                                    {
+                                                                        rate = Math.Round((double)likes / (likes + dislikes) * 5, 1).ToString().Replace(',', '.');
+                                                                    }
+                                                                    if (rate.Length == 1)
+                                                                    {
+                                                                        rate = rate + ".0";
+                                                                    }
+                                                                }
+                                                                <div class="star-rating" data-rating="@rate"></div>
                                                             </div>
 
                                                         </div>
@@ -406,7 +445,20 @@
 
                                                             <h4><a href="#">Заказчик: @i.User.UserName </a></h4>
                                                             <div class="freelancer-rating">
-                                                                <div class="star-rating" data-rating="5.0"></div>
+                                                                @{
+                                                                    var likes = i.User.PositiveThumbs;
+                                                                    var dislikes = i.User.NegativeThumbs;
+                                                                    var rate = "0.0";
+                                                                    if (likes + dislikes > 0)
+                                                                    {
+                                                                        rate = Math.Round((double)likes / (likes + dislikes) * 5, 1).ToString().Replace(',', '.');
+                                                                    }
+                                                                    if (rate.Length == 1)
+                                                                    {
+                                                                        rate = rate + ".0";
+                                                                    }
+                                                                }
+                                                                <div class="star-rating" data-rating="@rate"></div>
                                                             </div>
 
                                                         </div>
