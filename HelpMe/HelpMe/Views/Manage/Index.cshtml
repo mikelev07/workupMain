@@ -304,104 +304,32 @@
                     <h3>Выберите специализацию</h3>
                 </div>
 
-                <!-- Form -->
-
-
                 <div class="taby">
-                    <button id="1" class="tablinks active" onclick="openCity(event, 'London')">Математические дисциплины</button>
-                    <button id="2" class="tablinks" onclick="openCity(event, 'Paris')">Естественные науки</button>
-                    <button id="3" class="tablinks" onclick="openCity(event, 'Tokyo')">Гуманитарные науки</button>
-                    <button class="tablinks" onclick="openCity(event, 'London1')">Естественные уруки</button>
-                    <button class="tablinks" onclick="openCity(event, 'Paris1')">Естественные суки</button>
-                    <button class="tablinks" onclick="openCity(event, 'Tokyo1')">Естественные хуйуки</button>
-                    <button class="tablinks" onclick="openCity(event, 'London2')">Естественные тануки</button>
-                    <button class="tablinks" onclick="openCity(event, 'Paris2')">Естественные батуки</button>
-                    <button class="tablinks" onclick="openCity(event, 'Tokyo2')">
-                        Естественные шмуки
-                    </button>
 
+                    @foreach (var i in Model.TaskCategories)
+                    {
+                        <button id="@i.Id-disp" class="tablinks active" onclick="openCity(event, '@i.Id-spec')">@i.Name</button>
+                    }
                 </div>
+                @foreach (var i in Model.TaskCategories)
+                {
+                   
 
-                <div id="London" class="tabycontent">
+            <div style="@(Model.TaskCategories.First() == i ? "" : "display:none")" id="@i.Id-spec" class="tabycontent">
 
+                @foreach (var skill in i.Skills)
+                {
                     <div class="checkbox">
-                        <input class="checkboxI" type="checkbox" id="chekcbox1">
-                        <label for="chekcbox1"><span class="checkbox-icon"></span> Догги-стайл</label>
-                    </div> <br />
-                    <div class="checkbox">
-                        <input class="checkboxI" type="checkbox" id="chekcbox2">
-                        <label for="chekcbox2"><span class="checkbox-icon"></span> Догги-станский</label>
-                    </div> <br />
-                    <div class="checkbox">
-                        <input class="checkboxI" type="checkbox" id="chekcbox3">
-                        <label for="chekcbox3"><span class="checkbox-icon"></span> Чечно-залупский</label>
+                        <input class="checkboxI" type="checkbox" id="@skill.Id">
+                        <label for="@skill.Id"><span class="checkbox-icon"></span>@skill.Name</label>
                     </div>
 
-
+                    <br />
+                }
                 </div>
 
-                <div style="display:none" id="Paris" class="tabycontent">
-                    <div class="checkbox">
-                        <input class="checkboxI" type="checkbox" id="chekcbox12">
-                        <label for="chekcbox12"><span class="checkbox-icon"></span> Матан</label>
-                    </div> <br />
-                    <div class="checkbox">
-                        <input class="checkboxI" type="checkbox" id="chekcbox22">
-                        <label for="chekcbox22"><span class="checkbox-icon"></span> Котан</label>
-                    </div> <br />
-                    <div class="checkbox">
-                        <input class="checkboxI" type="checkbox" id="chekcbox33">
-                        <label for="chekcbox33"><span class="checkbox-icon"></span> Котопес</label>
-                    </div>
+                }
                 </div>
-
-                <div style="display:none" id="Tokyo" class="tabycontent">
-                    <div class="checkbox">
-                        <input class="checkboxI" type="checkbox" id="chekcbox13">
-                        <label for="chekcbox13"><span class="checkbox-icon"></span> Куклин</label>
-                    </div> <br />
-                    <div class="checkbox">
-                        <input class="checkboxI" type="checkbox" id="chekcbox24">
-                        <label for="chekcbox24"><span class="checkbox-icon"></span> Пуклин</label>
-                    </div> <br />
-                    <div class="checkbox">
-                        <input class="checkboxI" type="checkbox" id="chekcbox331">
-                        <label for="chekcbox331"><span class="checkbox-icon"></span> Стуклин </label>
-                    </div>
-                </div>
-
-                <div style="display:none" id="London1" class="tabycontent">
-                    <h3>London</h3>
-                    <p>London is the capital city of England.</p>
-                </div>
-
-                <div style="display:none" id="Paris1" class="tabycontent">
-                    <h3>Paris</h3>
-                    <p>Paris is the capital of France.</p>
-                </div>
-
-                <div style="display:none" id="Tokyo1" class="tabycontent">
-                    <h3>Tokyo</h3>
-                    <p>Tokyo is the capital of Japan.</p>
-                </div>
-
-                <div style="display:none" id="London2" class="tabycontent">
-                    <h3>London</h3>
-                    <p>London is the capital city of England.</p>
-                </div>
-
-                <div style="display:none" id="Paris2" class="tabycontent">
-                    <h3>Paris</h3>
-                    <p>Paris is the capital of France.</p>
-                </div>
-
-                <div style="display:none" id="Tokyo2" class="tabycontent">
-                    <h3>Tokyo</h3>
-                    <p>Tokyo is the capital of Japan.</p>
-                </div>
-
-
-            </div>
 
 
         </div>
