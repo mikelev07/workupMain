@@ -130,7 +130,7 @@ namespace HelpMe.Controllers
 
             var tasksModel = db.Customs.Include(c => c.TypeTask)
                 .Include(c => c.CategoryTask)
-                .Include(c => c.Executor)
+                //.Include(c => c.Executor)
                 .Include(c => c.Skill)
                 .Include(c => c.User)
                 .Include(c => c.MyAttachments)
@@ -157,8 +157,9 @@ namespace HelpMe.Controllers
         public ActionResult Bidders(int? id)
         {
             var customViewModels = db.Customs.Include(c => c.Comments)
-                                            .Where(i => i.Id == id)
-                                            .Include(c => c.User).Include(c => c.Executor).FirstOrDefault();
+                                            .Include(c => c.User)
+                                            //.Include(c => c.Executor)
+                                            .Where(i => i.Id == id).FirstOrDefault();
 
             var comms = customViewModels.Comments.ToList();
 

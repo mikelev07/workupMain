@@ -41,19 +41,20 @@
                                 <div class="boxed-list-item">
                                     <!-- Content -->
                                     <div class="item-content">
-                                        <h4>Курсы по момологии</h4>
-                                        <span>@i.Owner.UserName</span>
+                                        <h4><a href="@Url.Action("Details", "User", new { username = i.Owner.UserName })" target="_blank">@i.Owner.UserName</a></h4>
                                         <div class="item-details margin-top-10">
                                             Вы поставили: &nbsp;
-                                            <div class="star-rating" data-rating="5.0"></div>
-                                            <div class="detail-item"><i class="icon-material-outline-date-range"></i> Май 2019</div>
+                                            <div class="star-rating" data-rating="@i.Rating"></div>
+                                            @*<div class="detail-item"><i class="icon-material-outline-date-range"></i> Май 2019</div>*@
                                         </div>
+                                        <br />
+                                        <div class="detail-item">@*<i class="icon-material-outline-date-range"></i>*@Дата отзыва: @i.Date</div>
                                         <div class="item-description">
-                                            <p>@i.Description.</p>
+                                            <em>"@i.Description"</em>
                                         </div>
                                     </div>
                                 </div>
-                                <a href="#small-dialog-1" class="popup-with-zoom-anim button gray ripple-effect margin-top-5 margin-bottom-10"><i class="icon-feather-edit"></i> Изменить отзыв</a>
+                                <a href="#small-dialog-1" class="popup-with-zoom-anim button ripple-effect margin-top-5 margin-bottom-10"><i class="icon-feather-edit"></i> Изменить отзыв</a>
                             </li>
                             }
                         </ul>
@@ -83,7 +84,7 @@
 
                     <!-- Headline -->
                     <div class="headline">
-                        <h3><i class="icon-material-outline-face"></i>Отзовы обо мне</h3>
+                        <h3><i class="icon-material-outline-face"></i>Отзывы обо мне</h3>
                     </div>
 
                     <div class="content">
@@ -95,16 +96,20 @@
                                     <div class="boxed-list-item">
                                         <!-- Content -->
                                         <div class="item-content">
-                                            <h4>Главная звезда коммунистов</h4>
-                                            <span >@i.User.UserName</span>
-                                            <span class="company-not-rated margin-bottom-5">Нет рейтинга</span>
+                                            <h4><a href="@Url.Action("Details", "User", new { username = i.User.UserName })" target="_blank">@i.User.UserName</a></h4>
+                                            <div class="item-details margin-top-10">
+                                                @*<i class="icon-material-outline-rate-review"></i>*@Оценка: &nbsp;
+                                                <div class="star-rating" data-rating="@i.Rating"></div>
+                                            </div>
+                                            <br />
+                                            <div class="detail-item">@*<i class="icon-material-outline-date-range"></i>*@Дата отзыва: @i.Date</div>
                                             <div class="item-description">
-                                                <p>@i.Description.</p>
+                                                <em>"@i.Description"</em>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <a href="#small-dialog-2" class="popup-with-zoom-anim button ripple-effect margin-top-5 margin-bottom-10"><i class="icon-material-outline-thumb-up"></i> Оставить отзыв пользователю</a>
+                                    @*<a href="#small-dialog-2" class="popup-with-zoom-anim button ripple-effect margin-top-5 margin-bottom-10"><i class="icon-material-outline-thumb-up"></i> Оставить отзыв пользователю</a>*@
                                 </li>
                            }
                         </ul>

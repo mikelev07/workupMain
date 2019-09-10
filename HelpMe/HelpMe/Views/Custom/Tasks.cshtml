@@ -80,7 +80,7 @@
 
                                                 <!-- Task Details -->
                                                 <ul style="padding: 13px; margin-top:5px; margin-bottom:10px" class="dashboard-task-info">
-                                                    <li><strong>@i.Price рубля</strong><span>Вы указали цену</span></li>
+                                                    <li><strong>@(i.Price!=null ? i.Price.ToString() : "по договоренности") рублей</strong><span>Ваш бюджет</span></li>
                                                     <li><strong>@i.CategoryTask.Name</strong><span>Дисциплина</span></li>
 
                                                     <li><strong>@i.TypeTask.Name</strong><span>Тип работы</span></li>
@@ -136,7 +136,7 @@
 
                                                 <!-- Task Details -->
                                                 <ul style="padding: 13px; margin-top:5px; margin-bottom:10px" class="dashboard-task-info">
-                                                    <li><strong>@i.Price рубля</strong><span>Вы указали цену</span></li>
+                                                    <li><strong>@(i.Price != null ? i.Price.ToString() : "по договоренности") рублей</strong><span>Ваш бюджет</span></li>
                                                     <li><strong>@i.CategoryTask.Name</strong><span>Дисциплина</span></li>
 
                                                     <li><strong>@i.TypeTask.Name</strong><span>Тип работы</span></li>
@@ -184,7 +184,7 @@
 
                                                 <!-- Task Details -->
                                                 <ul style="padding: 13px; margin-top:5px; margin-bottom:10px" class="dashboard-task-info">
-                                                    <li><strong>@i.Price рубля</strong><span>Вы указали цену</span></li>
+                                                    <li><strong>@(i.Price != null ? i.Price.ToString() : "по договоренности") рублей</strong><span>Ваш бюджет</span></li>
                                                     <li><strong>@i.CategoryTask.Name</strong><span>Дисциплина</span></li>
 
                                                     <li><strong>@i.TypeTask.Name</strong><span>Тип работы</span></li>
@@ -232,7 +232,7 @@
 
                                                 <!-- Task Details -->
                                                 <ul style="padding: 13px; margin-top:5px; margin-bottom:10px" class="dashboard-task-info">
-                                                    <li><strong>@i.Price рубля</strong><span>Вы указали цену</span></li>
+                                                    <li><strong>@(i.Price != null ? i.Price.ToString() : "по договоренности") рублей</strong><span>Ваш бюджет</span></li>
                                                     <li><strong>@i.CategoryTask.Name</strong><span>Дисциплина</span></li>
 
                                                     <li><strong>@i.TypeTask.Name</strong><span>Тип работы</span></li>
@@ -281,7 +281,7 @@
 
                                                 <!-- Task Details -->
                                                 <ul style="padding: 13px; margin-top:5px; margin-bottom:10px" class="dashboard-task-info">
-                                                    <li><strong>@i.Price рубля</strong><span>Вы указали цену</span></li>
+                                                    <li><strong>@(i.Price != null ? i.Price.ToString() : "по договоренности") рублей</strong><span>Ваш бюджет</span></li>
                                                     <li><strong>@i.CategoryTask.Name</strong><span>Дисциплина</span></li>
 
                                                     <li><strong>@i.TypeTask.Name</strong><span>Тип работы</span></li>
@@ -329,7 +329,7 @@
 
                                                 <!-- Task Details -->
                                                 <ul style="padding: 13px; margin-top:5px; margin-bottom:10px" class="dashboard-task-info">
-                                                    <li><strong>@i.Price рубля</strong><span>Вы указали цену</span></li>
+                                                    <li><strong>@(i.Price != null ? i.Price.ToString() : "по договоренности") рублей</strong><span>Ваш бюджет</span></li>
                                                     <li><strong>@i.CategoryTask.Name</strong><span>Дисциплина</span></li>
 
                                                     <li><strong>@i.TypeTask.Name</strong><span>Тип работы</span></li>
@@ -377,7 +377,7 @@
 
                                                 <!-- Task Details -->
                                                 <ul style="padding: 13px; margin-top:5px; margin-bottom:10px" class="dashboard-task-info">
-                                                    <li><strong>@i.Price рубля</strong><span>Вы указали цену</span></li>
+                                                    <li><strong>@(i.Price != null ? i.Price.ToString() : "по договоренности") рублей</strong><span>Ваш бюджет</span></li>
                                                     <li><strong>@i.CategoryTask.Name</strong><span>Дисциплина</span></li>
 
                                                     <li><strong>@i.TypeTask.Name</strong><span>Тип работы</span></li>
@@ -425,7 +425,7 @@
 
                                                 <!-- Task Details -->
                                                 <ul style="padding: 13px; margin-top:5px; margin-bottom:10px" class="dashboard-task-info">
-                                                    <li><strong>@i.Price рубля</strong><span>Вы указали цену</span></li>
+                                                    <li><strong>@(i.Price != null ? i.Price.ToString() : "по договоренности") рублей</strong><span>Ваш бюджет</span></li>
                                                     <li><strong>@i.CategoryTask.Name</strong><span>Дисциплина</span></li>
 
                                                     <li><strong>@i.TypeTask.Name</strong><span>Тип работы</span></li>
@@ -487,8 +487,6 @@
     </div>
 </div>
 <!-- Dashboard Content / End -->
-</div>
-<!-- Dashboard Container / End -->
 
 
 @section Scripts {
