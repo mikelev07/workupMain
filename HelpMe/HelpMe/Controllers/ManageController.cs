@@ -80,10 +80,12 @@ namespace HelpMe.Controllers
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
-            };
-            var colls = db.Skills.Include(s => s.TaskCategory);
-            ViewBag.Tasks = new SelectList(colls, "Id", "Name", "TaskCategory.Name",1);
+                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
+                TaskCategories = db.TaskCategories.Include(s => s.Skills).ToList()
+        };
+
+            //ViewBag.SkillsSet = db.Skills.Include(s => s.TaskCategory);
+            // ViewBag.Tasks = new SelectList(colls, "Id", "Name", "TaskCategory.Name",1);
             return View(model);
         }
 
