@@ -1,4 +1,5 @@
-﻿@{
+﻿@using PagedList
+@{
     Layout = "~/Views/Shared/_LayoutDash.cshtml";
 }
 @model HelpMe.Models.ReviewDashModel
@@ -16,7 +17,7 @@
             <nav id="breadcrumbs" class="dark">
                 <ul>
                     <li><a href="#">Главный</a></li>
-                    <li><a href="#">Отзыв</a></li>
+                    <li><a href="#">Отзывы</a></li>
                 </ul>
             </nav>
         </div>
@@ -31,87 +32,59 @@
                     <!-- Headline -->
                     <div class="headline">
                         <h3><i class="icon-material-outline-business"></i> Мои отзывы</h3>
+                        <div class="sort-by">
+                            <select class="selectpicker hide-tick" id="sortReviews" autocomplete="off">
+                                <option value="1" selected>Новые</option>
+                                <option value="2">Давние</option>
+                                <option value="3">По рейтингу</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="content">
-                        <ul class="dashboard-box-list">
-                            @foreach (var i in Model.Reviews)
+                        <ul class="dashboard-box-list reviews-about-me">
+                            @if (Model.Reviews.Count() > 0)
                             {
-                            <li>
-                                <div class="boxed-list-item">
-                                    <!-- Content -->
-                                    <div class="item-content">
-                                        <h4><a href="@Url.Action("Details", "User", new { username = i.Owner.UserName })" target="_blank">@i.Owner.UserName</a></h4>
-                                        <div class="item-details margin-top-10">
-                                            Вы поставили: &nbsp;
-                                            <div class="star-rating" data-rating="@i.Rating"></div>
-                                            @*<div class="detail-item"><i class="icon-material-outline-date-range"></i> Май 2019</div>*@
-                                        </div>
-                                        <br />
-                                        <div class="detail-item">@*<i class="icon-material-outline-date-range"></i>*@Дата отзыва: @i.Date</div>
-                                        <div class="item-description">
-                                            <em>"@i.Description"</em>
-                                        </div>
-                                    </div>
-                                </div>
-                                <a href="#small-dialog-1" class="popup-with-zoom-anim button ripple-effect margin-top-5 margin-bottom-10"><i class="icon-feather-edit"></i> Изменить отзыв</a>
-                            </li>
+                                @Html.Partial("_ReviewsReviewsPage", Model.Reviews.OrderByDescending(c => c.Date).ToPagedList(
+                                    (int)Session["ReviewsPage"], (int)Session["ReviewsPageSize"]));
+                            }
+                            else
+                            {
+                                <li>Вы еще не оставляли отзывов...</li>
                             }
                         </ul>
                     </div>
                 </div>
 
-                <!-- Pagination -->
-                <div class="clearfix"></div>
-                <div class="pagination-container margin-top-40 margin-bottom-0">
-                    <nav class="pagination">
-                        <ul>
-                            <li><a href="#" class="ripple-effect current-page">1</a></li>
-                            <li><a href="#" class="ripple-effect">2</a></li>
-                            <li><a href="#" class="ripple-effect">3</a></li>
-                            <li class="pagination-arrow"><a href="#" class="ripple-effect"><i class="icon-material-outline-keyboard-arrow-right"></i></a></li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="clearfix"></div>
-                <!-- Pagination / End -->
-
             </div>
 
             <!-- Dashboard Box -->
             <div class="col-xl-6">
-                <div class="dashboard-box margin-top-0">
+                <div class="dashboard-box margin-top-0 ">
 
                     <!-- Headline -->
                     <div class="headline">
                         <h3><i class="icon-material-outline-face"></i>Отзывы обо мне</h3>
+                        <div class="sort-by">
+                            <select class="selectpicker hide-tick" id="sortMyReviews" autocomplete="off">
+                                <option value="1" selected>Новые</option>
+                                <option value="2">Давние</option>
+                                <option value="3">По рейтингу</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="content">
-                        <ul class="dashboard-box-list">
-
-                           @foreach (var i in Model.MyReviews)
-                           {
-                                <li>
-                                    <div class="boxed-list-item">
-                                        <!-- Content -->
-                                        <div class="item-content">
-                                            <h4><a href="@Url.Action("Details", "User", new { username = i.User.UserName })" target="_blank">@i.User.UserName</a></h4>
-                                            <div class="item-details margin-top-10">
-                                                @*<i class="icon-material-outline-rate-review"></i>*@Оценка: &nbsp;
-                                                <div class="star-rating" data-rating="@i.Rating"></div>
-                                            </div>
-                                            <br />
-                                            <div class="detail-item">@*<i class="icon-material-outline-date-range"></i>*@Дата отзыва: @i.Date</div>
-                                            <div class="item-description">
-                                                <em>"@i.Description"</em>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    @*<a href="#small-dialog-2" class="popup-with-zoom-anim button ripple-effect margin-top-5 margin-bottom-10"><i class="icon-material-outline-thumb-up"></i> Оставить отзыв пользователю</a>*@
-                                </li>
-                           }
+                        <ul class="dashboard-box-list my-reviews">
+                            @if (Model.MyReviews.Count() > 0)
+                            {
+                                @Html.Partial("_ReviewsMyReviewsPage", Model.MyReviews.OrderByDescending(c => c.Date).ToPagedList(
+                                    (int)Session["MyReviewsPage"], (int)Session["MyReviewsPageSize"]));
+                            }
+                            else
+                            {
+                                <li>У Вас еще нет отзывов...</li>
+                            }
                         </ul>
                     </div>
                 </div>
@@ -124,7 +97,7 @@
         <div class="dashboard-footer-spacer"></div>
         <div class="small-footer margin-top-15">
             <div class="small-footer-copyrights">
-                © 2019 <strong>Воцап №2</strong>. Все права соблюдены.
+                © 2019 <strong>Воцап №2</strong>. Все права вертел я.
             </div>
             <ul class="footer-social-links">
                 <li>
@@ -154,3 +127,136 @@
 
     </div>
 </div>
+
+@section Scripts{
+    <script type="text/javascript">
+
+        function ChangeUrl(page, url) {
+            if (typeof (history.pushState) != "undefined") {
+                var obj = { Page: page, Url: url };
+                history.pushState(null, obj.Page, obj.Url);
+            } else {
+                alert("Browser does not support HTML5.");
+            }
+        }
+
+        $('body').on('click', '.dashboard-box-list.my-reviews .pagination a', function (event) {
+            event.preventDefault();
+            //console.log('page');
+            var url = $(this).attr('href');
+            //console.log(url);
+            $.ajax({
+                url: url,
+                data: {
+
+                },
+                success: function (result) {
+                    ChangeUrl('index', url);
+                    $('.dashboard-box-list.my-reviews').html(result);
+                    starRating('.dashboard-box-list.my-reviews .star-rating');
+                }
+            });
+        });
+
+        $('body').on('click', '.dashboard-box-list.reviews-about-me .pagination a', function (event) {
+            event.preventDefault();
+            //console.log('page');
+            var url = $(this).attr('href');
+            //console.log(url);
+            $.ajax({
+                url: url,
+                data: {
+
+                },
+                success: function (result) {
+                    ChangeUrl('index', url);
+                    $('.dashboard-box-list.reviews-about-me').html(result);
+                    starRating('.dashboard-box-list.reviews-about-me .star-rating');
+                }
+            });
+        });
+
+
+        $('#sortMyReviews').on('change', function () {
+            var sortType = $(this).val();
+            $(".dashboard-box-list.my-reviews").load('@Url.Action("Reviews", "Manage")?myReviewsSortSelected=true&myReviewsSortType=' + sortType);
+
+            //var sortingType = $(this).val();
+            ////console.log('sortingType = '+sortingType);
+            //var initialComments = $('.my-reviews');
+            //var sortedComments;
+
+            //switch (sortingType) {
+            //    case '2'://по давним
+            //        //console.log('sortComments = по давним');
+            //        sortedComments = initialComments.sort(function (a, b) {
+            //            var first = $(a).find('.date-of-my-review').text();
+            //            var second = $(b).find('.date-of-my-review').text();
+            //            return (first < second) ? -1 : (first > second) ? 1 : 0;
+            //        });
+            //        break;
+
+
+            //    case '3'://по рейтингу
+            //        //console.log('sortComments = по рейтингу');
+            //        sortedComments = initialComments.sort(function (a, b) {
+            //            var firstDiv = $(a).find('.star-rating').data('rating');
+            //            var secondDiv = $(b).find('.star-rating').data('rating');
+            //            return (firstDiv > secondDiv) ? -1 : (firstDiv < secondDiv) ? 1 : 0;
+            //        });
+            //        break;
+
+            //    default://по дате отзыва (по умолчанию)
+            //        //console.log('sortComments = по дате отзыва');
+            //        sortedComments = initialComments.sort(function (a, b) {
+            //            var first = $(a).find('.date-of-my-review').text();
+            //            var second = $(b).find('.date-of-my-review').text();
+            //            return (first > second) ? -1 : (first < second) ? 1 : 0;
+            //        });
+            //        break;
+            //}
+            //$('.dashboard-box-list.my-reviews').append(sortedComments);
+        });
+
+
+        $('#sortReviews').on('change', function () {
+            var sortType = $(this).val();
+            $(".dashboard-box-list.reviews-about-me").load('@Url.Action("Reviews", "Manage")?reviewsSortSelected=true&reviewsSortType=' + sortType);
+
+            //var sortingType = $(this).val();
+            ////console.log('sortingType = '+sortingType);
+            //var initialComments = $('.reviews-about-me');
+            //var sortedComments;
+
+            //switch (sortingType) {
+            //    case '2'://по давним
+            //        //console.log('sortComments = по давним');
+            //        sortedComments = initialComments.sort(function (a, b) {
+            //            var first = $(a).find('.date-of-review').text();
+            //            var second = $(b).find('.date-of-review').text();
+            //            return (first < second) ? -1 : (first > second) ? 1 : 0;
+            //        });
+            //        break;
+
+            //    case '3'://по рейтингу
+            //        //console.log('sortComments = по рейтингу');
+            //        sortedComments = initialComments.sort(function (a, b) {
+            //            var firstDiv = $(a).find('.star-rating').data('rating');
+            //            var secondDiv = $(b).find('.star-rating').data('rating');
+            //            return (firstDiv > secondDiv) ? -1 : (firstDiv < secondDiv) ? 1 : 0;
+            //        });
+            //        break;
+
+            //    default://по новым (по умолчанию)
+            //        //console.log('sortComments = по дате отзыва');
+            //        sortedComments = initialComments.sort(function (a, b) {
+            //            var first = $(a).find('.date-of-review').text();
+            //            var second = $(b).find('.date-of-review').text();
+            //            return (first > second) ? -1 : (first < second) ? 1 : 0;
+            //        });
+            //        break;
+            //}
+            //$('.dashboard-box-list.reviews-about-me').append(sortedComments);
+        });
+    </script>
+}

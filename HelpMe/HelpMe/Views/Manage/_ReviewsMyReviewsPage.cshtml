@@ -1,0 +1,65 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@model  IPagedList<HelpMe.Models.Review>
+
+@foreach (var i in Model)
+{
+    <li class="reviews-about-me">
+        <div class="boxed-list-item">
+            <div class="freelancer-overview">
+                <div class="freelancer-avatar">
+                    @*@{
+                            string divClass = "verified-badge not-busy";
+                            if (i.User.IsNotBusy == false)
+                            {
+                                divClass = "verified-badge busy";
+                            }
+                        }
+                        <div title="занят" class="@divClass"></div>*@
+                    <a href="@Url.Action("Details", "User", new { userName = i.User.UserName })" target="_blank">
+                        @if (String.IsNullOrEmpty(i.User.ImagePath))
+                        {
+                            <img src="~/Content/Custom/images/user-avatar-big-02.jpg" alt="avatar" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content(i.User.ImagePath)" alter="avatar" />
+                        }
+                    </a>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="item-content">
+                <h4><a href="@Url.Action("Details", "User", new { username = i.User.UserName })" target="_blank">@i.User.UserName</a></h4>
+                <div class="item-details margin-top-10">
+                    @*<i class="icon-material-outline-rate-review"></i>*@Оценка: &nbsp;
+                    <div class="star-rating" data-rating="@i.Rating"></div>
+                </div>
+                <br />
+                <div class="detail-item">@*<i class="icon-material-outline-date-range"></i>*@Дата отзыва: <span class="date-of-review">@i.Date</span></div>
+                <div class="item-description">
+                    <em>"@i.Description"</em>
+                </div>
+            </div>
+        </div>
+
+        @*<a href="#small-dialog-2" class="popup-with-zoom-anim button ripple-effect margin-top-5 margin-bottom-10"><i class="icon-material-outline-thumb-up"></i> Оставить отзыв пользователю</a>*@
+    </li>
+}
+<!-- Pagination -->
+<div class="clearfix"></div>
+<div class="pagination-container margin-top-40 margin-bottom-10">
+    <nav class="pagination">
+        <ul>
+            @Html.PagedListPager(Model, x => Url.Action("Reviews",
+           new
+                {
+               myReviewsPaginated = true,
+               myReviewsPage = x
+           }))
+        </ul>
+    </nav>
+</div>
+<div class="clearfix"></div>
+<!-- Pagination / End -->

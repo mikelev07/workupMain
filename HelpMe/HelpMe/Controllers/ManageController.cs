@@ -9,6 +9,8 @@ using Microsoft.Owin.Security;
 using HelpMe.Models;
 using System.Data.Entity;
 using System.IO;
+using System.Collections.Generic;
+using PagedList;
 
 namespace HelpMe.Controllers
 {
@@ -18,6 +20,10 @@ namespace HelpMe.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+
+        private const int pageSize = 3;
+        private const int myReviewsPageSize = 3;    //for Reviews.cshtml in "My reviews" column
+        private const int reviewsPageSize = 3;    //for Reviews.cshtml in "reviews" column
 
         public ManageController()
         {
@@ -392,7 +398,26 @@ namespace HelpMe.Controllers
             return View(model);
         }
 
-        public ActionResult Reviews()
+        public IEnumerable<Review> SortReviews(IEnumerable<Review> reviews, int sortType)
+        {
+            switch (sortType)
+            {
+                case 2://по давним
+                    reviews = reviews.OrderBy(r => r.Date);
+                    break;
+                case 3://по рейтингу
+                    reviews = reviews.OrderByDescending(r => r.Rating);
+                    break;
+                default://по новым(по умолчанию)
+                    reviews = reviews.OrderByDescending(r => r.Date);
+                    break;
+            }
+            return reviews;
+        }
+
+        public ActionResult Reviews(
+            bool? myReviewsPaginated, int? myReviewsPage, bool? myReviewsSortSelected, int? myReviewsSortType,
+            bool? reviewsPaginated, int? reviewsPage, bool? reviewsSortSelected, int? reviewsSortType)
         {
             // var customViewModels = db.Customs.Include(c => c.Comments).Include(c => c.User).OrderBy(x => x.Id);
             string userId = User.Identity.GetUserId();
@@ -402,6 +427,63 @@ namespace HelpMe.Controllers
             var myrewsModel = db.Reviews.Where(t => t.OwnerId == userId).ToList();
 
             ReviewDashModel reviews = new ReviewDashModel { MyReviews = myrewsModel, Reviews = rewsModel };
+
+
+
+
+            /**************************************for pagination**************************************/
+
+            if (myReviewsSortType != null) // сбрасываем страницу моих отзывов в начало, если была выбрана новая сортировка
+            {
+                Session["MyReviewsPage"] = 1;
+            }
+            else
+            {
+                Session["MyReviewsPage"] = myReviewsPage ?? Session["MyReviewsPage"] ?? 1;
+            }
+            Session["MyReviewsSortType"] = myReviewsSortType ?? Session["MyReviewsSortType"] ?? 1;
+
+
+            if (reviewsSortType != null) // сбрасываем страницу отзывов в начало, если была выбрана новая сортировка
+            {
+                Session["ReviewsPage"] = 1;
+            }
+            else
+            {
+                Session["ReviewsPage"] = reviewsPage ?? Session["ReviewsPage"] ?? 1;
+            }
+            Session["ReviewsSortType"] = reviewsSortType ?? Session["ReviewsSortType"] ?? 1;
+
+            if (Request.IsAjaxRequest())
+            {
+                if (myReviewsPaginated == true || myReviewsSortSelected == true)
+                {
+                    var sortedMyReviews = SortReviews(reviews.MyReviews, (int)Session["MyReviewsSortType"]);
+                    var pagedMyReviews = sortedMyReviews.ToPagedList((int)Session["MyReviewsPage"], myReviewsPageSize);
+                    return PartialView("_ReviewsMyReviewsPage", pagedMyReviews);
+                }
+                if (reviewsPaginated == true || reviewsSortSelected == true)
+                {
+                    var sortedReviews = SortReviews(reviews.Reviews, (int)Session["ReviewsSortType"]);
+                    var pagedReviews = sortedReviews.ToPagedList((int)Session["ReviewsPage"], reviewsPageSize);
+                    return PartialView("_ReviewsReviewsPage", pagedReviews);
+                }
+            }
+            myReviewsSortSelected = null;
+            myReviewsSortType = null;
+            myReviewsPaginated = null;
+            myReviewsPage = null;
+
+            Session["MyReviewsPage"] = 1;
+            Session["MyReviewsPageSize"] = myReviewsPageSize;
+
+            reviewsSortSelected = null;
+            reviewsSortType = null;
+            reviewsPaginated = null;
+            reviewsPage = null;
+
+            Session["ReviewsPage"] = 1;
+            Session["ReviewsPageSize"] = reviewsPageSize;
 
             return View(reviews);
            
@@ -525,3 +607,4 @@ namespace HelpMe.Controllers
         #endregion
     }
 }
+ 

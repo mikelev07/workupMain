@@ -31,14 +31,25 @@
                     <!-- Headline -->
                     <div class="headline">
                         <h3><i class="icon-material-outline-gavel"></i> Список моих предложений</h3>
+                        <div class="sort-by">
+                            <select class="selectpicker hide-tick" id="sortComments" autocomplete="off">
+                                <option value="1" selected>Новые ставки</option>
+                                <option value="2">Давние ставки</option>
+                                <option value="3">Дата сдачи</option>
+                                <option value="4">Дешевые</option>
+                                <option value="5">Дорогие</option>
+                                <option value="6">Возрастание срока</option>
+                                <option value="7">Убывание срока</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="content">
                         <ul class="dashboard-box-list">
-                            @foreach (var i in Model.OrderByDescending(c=>c.CreationDate))
+                            @foreach (var i in Model.OrderByDescending(c => c.CreationDate))
                             {
 
-                                <li>
+                                <li class="my-active-bidders">
                                     <!-- Job Listing -->
                                     <div class="job-listing width-adjustment">
 
@@ -51,10 +62,10 @@
                                                 <div class="job-listing-footer">
                                                     <ul>
                                                         <li><i class="icon-material-outline-access-time"></i>Заказ создан @i.CustomViewModel.StartDate</li>
-                                                        <li><i class="icon-material-outline-access-time"></i>Сдать до @i.CustomViewModel.EndingDate</li>
+                                                        <li class="date-of-ending"><i class="icon-material-outline-access-time"></i>Сдать до @i.CustomViewModel.EndingDate</li>
                                                     </ul>
                                                     <ul>
-                                                        <li><i class="icon-material-outline-access-time"></i>Дата ставки @i.CreationDate</li>
+                                                        <li class="date-of-offer"><i class="icon-material-outline-access-time"></i>Дата ставки @i.CreationDate</li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -63,15 +74,15 @@
 
                                     <!-- Task Details -->
                                     <ul class="dashboard-task-info">
-                                        <li><strong>@i.OfferPrice руб.</strong><span>Ваша ставка</span></li>
+                                        <li><strong class="offer-price">@i.OfferPrice руб.</strong><span>Ваша ставка</span></li>
                                         <li>
                                             @if (i.Days != 0)
                                             {
-                                                <strong>@i.Days дней</strong>
+                                                <strong><span class="job-period">@i.Days</span> <span class="unit-of-period">дней</span></strong>
                                             }
                                             else
                                             {
-                                                <strong>@i.Hours часов</strong>
+                                                <strong><span class="job-period">@i.Hours</span> <span class="unit-of-period">часов</span></strong>
                                             }
                                             <span>Срок выполнения</span>
                                         </li>
@@ -82,11 +93,14 @@
                                     <div class="buttons-to-right always-visible">
                                         @if (i.CustomViewModel.Status == HelpMe.Models.CustomStatus.Open)
                                         {
+                                            //var updateTargetIdEdit = "user-comment-bid-rate-" + i.Id;
+
                                             <a href="#small-dialog" class="popup-with-zoom-anim button green ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
                                             <a href="#small-dialog-3" class="button red ripple-effect ico" title="Удалить предложение" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
+                                            
+                                            
                                             <!--Pop-up-->
                                             <div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
-
 
                                                 <div class="sign-in-form">
 
@@ -258,3 +272,138 @@
     </div>
 </div>
 <!-- Dashboard Content / End -->
+
+@section Scripts{
+    <script type="text/javascript">
+        $('#sortComments').on('change', function () {
+            var sortingType = $(this).val();
+            //console.log('sortingType = '+sortingType);
+            var initialComments = $('.my-active-bidders');
+            var sortedComments;
+
+            switch (sortingType) {
+                case '2'://по старым ставкам
+                    //console.log('sortComments = по старым ставкам');
+                    sortedComments = initialComments.sort(function (a, b) {
+                        var first = $(a).find('.date-of-offer').text();
+                        var second = $(b).find('.date-of-offer').text();
+                        return (first > second) ? 1 : (first < second) ? -1 : 0;
+                    });
+                    break;
+
+                case '3'://по дате сдачи
+                    //console.log('sortComments = по дате сдачи');
+                    sortedComments = initialComments.sort(function (a, b) {
+                        var first = $(a).find('.date-of-ending').text();
+                        var second = $(b).find('.date-of-ending').text();
+                        return (first < second) ? -1 : (first > second) ? 1 : 0;
+                    });
+                    break;
+
+                case '4'://по дешевым
+                    //console.log('sortComments = по дешевым');
+                    sortedComments = initialComments.sort(function (a, b) {
+                        var first = parseInt($(a).find('.offer-price').text());
+                        var second = parseInt($(b).find('.offer-price').text());
+                        return (first > second) ? 1 : (first < second) ? -1 : 0;
+                    });
+                    break;
+
+                case '5'://по дорогим
+                    //console.log('sortComments = по дорогим');
+                    sortedComments = initialComments.sort(function (a, b) {
+                        var first = parseInt($(a).find('.offer-price').text());
+                        var second = parseInt($(b).find('.offer-price').text());
+                        return (first > second) ? -1 : (first < second) ? 1 : 0;
+                    });
+                    break;
+
+                case '6'://по возрастанию срока выполнения
+                    //console.log('sortComments = по возрастанию срока выполнения');
+                    sortedComments = initialComments.sort(function (a, b) {
+                        var first = parseInt($(a).find('.job-period').text());
+                        var firstUnit = $(a).find('.unit-of-period').text();
+                        var second = parseInt($(b).find('.job-period').text());
+                        var secondUnit = $(b).find('.unit-of-period').text();
+
+                        firstUnit == 'дней' ? (first = first * 24) : (first = first);
+                        secondUnit == 'дней' ? (second = second * 24) : (second = second);
+                        return (first < second) ? -1 : (first > second) ? 1 : 0;
+                    });
+                    break;
+
+                case '7'://по убыванию срока выполнения
+                    //console.log('sortComments = по убыванию срока выполнения');
+                    sortedComments = initialComments.sort(function (a, b) {
+                        var first = parseInt($(a).find('.job-period').text());
+                        var firstUnit = $(a).find('.unit-of-period').text();
+                        var second = parseInt($(b).find('.job-period').text());
+                        var secondUnit = $(b).find('.unit-of-period').text();
+
+                        firstUnit == 'дней' ? (first = first * 24) : (first = first);
+                        secondUnit == 'дней' ? (second = second * 24) : (second = second);
+                        return (first > second) ? -1 : (first < second) ? 1 : 0;
+                    });
+                    break;
+
+                default://по новым ставкам(по умолчанию)
+                    //console.log('sortComments = по новым ставкам');
+                    sortedComments = initialComments.sort(function (a, b) {
+                        var first = $(a).find('.date-of-offer').text();
+                        var second = $(b).find('.date-of-offer').text();
+                        return (first > second) ? -1 : (first < second) ? 1 : 0;
+                    });
+                    break;
+            }
+            $('.dashboard-box-list').append(sortedComments);
+        });
+
+        //edit button
+        function OnBeginEditComment() {
+            var description = $("#edit-comment-desсription").val();
+            var slider = $("#edit-comment-slider-price").val();
+            var time = $("#edit-comment-time").val();
+            var timeUnit = $("#edit-time-units").val();
+            if (description == "") {
+                Snackbar.show({
+                    text: 'Добавьте комментарий!',
+                });
+                return false;
+            }
+            if (slider == "") {
+                Snackbar.show({
+                    text: 'Добавьте стоимость выполнения!',
+                });
+                return false;
+            }
+            if (time == "") {
+                Snackbar.show({
+                    text: 'Добавьте срок выполнения!',
+                });
+                return false;
+            }
+            if (time < minValue || time > maxValue) {
+                Snackbar.show({
+                    text: 'Введите число в диапазоне от ' + minValue + ' до ' + maxValue + '!',
+                });
+                return false;
+            }
+            return true;
+
+        }
+
+        function OnSuccessEditComment(commentId) {
+            var userDescriptionId = '#user-comment-' + commentId + " .item-description";
+            var newDescription = $('#edit-comment-desсription').val();
+            //console.log('userDescriptionId = ' + userDescriptionId);
+            //console.log('newDescription = ' + newDescription);
+            $(userDescriptionId).text(newDescription);
+            $(".mfp-close").trigger('click');
+            Snackbar.show({
+                text: 'Предложение успешно изменено!',
+            });
+        }
+
+        //delete button
+    </script>
+}

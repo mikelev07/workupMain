@@ -32,39 +32,56 @@
                     <div class="headline">
                         <h3><i class="icon-material-outline-supervisor-account"></i> @Model.Count() предложения</h3>
                         <div class="sort-by">
-                            <span>Сортировать по:</span>
                             <select class="selectpicker hide-tick" id="sortComments" autocomplete="off">
-                                <option value="1" selected>Новым</option>
-                                <option value="2">Давним</option>
-                                <option value="3">Рейтингу</option>
-                                <option value="4">Дешевым</option>
-                                <option value="5">Дорогим</option>
+                                <option value="1" selected>Новые</option>
+                                <option value="2">Давние</option>
+                                <option value="3">По рейтингу</option>
+                                <option value="4">Дешевые</option>
+                                <option value="5">Дорогие</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="content">
-                        <ul class="dashboard-box-list comments">
+                        <ul class="dashboard-box-list">
 
-                            @foreach (var i in Model)
+                            @foreach (var i in Model.OrderByDescending(c => c.CreationDate))
                             {
-                                <li>
+                                <li class="bidders">
                                     <!-- Overview -->
                                     <div class="freelancer-overview manage-candidates">
                                         <div class="freelancer-overview-inner">
 
                                             <!-- Avatar -->
-                                            <div class="freelancer-avatar">
-                                                <div class="verified-badge"></div>
-                                                <a href="#"><img src="~/Content/Custom/images/user-avatar-big-02.jpg" alt=""></a>
+                                            <div class="freelancer-overview">
+                                                <div class="freelancer-avatar">
+                                                    @*@{
+                                                            string divClass = "verified-badge not-busy";
+                                                            if (i.User.IsNotBusy == false)
+                                                            {
+                                                                divClass = "verified-badge busy";
+                                                            }
+                                                        }
+                                                        <div title="занят" class="@divClass"></div>*@
+                                                    <a href="@Url.Action("Details", "User", new { userName = i.User.UserName })" target="_blank">
+                                                        @if (String.IsNullOrEmpty(i.User.ImagePath))
+                                                        {
+                                                            <img src="~/Content/Custom/images/user-avatar-big-02.jpg" alt="avatar" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="@Url.Content(i.User.ImagePath)" alter="avatar" />
+                                                        }
+                                                    </a>
+                                                </div>
                                             </div>
 
                                             <!-- Name -->
                                             <div class="freelancer-name">
-                                                <h4><a href="#">@i.User.UserName </a></h4>
+                                                <h4><a href="@Url.Action("Details", "User", new { username = i.User.UserName })" target="_blank">Заказчик: @i.User.UserName </a></h4>
 
                                                 <!-- Details -->
-                                                <span class="freelancer-detail-item"><a href="#"><i class="icon-feather-clock"></i>Добавлено @i.CreationDate</a></span>
+                                                <span class="freelancer-detail-item"><a href="#"><i class="icon-feather-clock"></i><span class="creation-date-span">Добавлено @i.CreationDate</span></a></span>
 
                                                 <!-- Rating -->
                                                 <div class="freelancer-rating">
@@ -154,16 +171,16 @@
                                                                     <input class="margin-top-15 button full-width button-sliding-icon ripple-effect"
                                                                            type="submit" value="Принять" />
                                                                     @*if (ViewBag.WalletSumm >= i.OfferPrice)
-                                                                        {
-                                                                            <input class="margin-top-15 button full-width button-sliding-icon ripple-effect"
-                                                                                   type="submit" value="Принять" />
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            int exSum = i.OfferPrice - ViewBag.WalletSumm;
+                            {
+                                <input class="margin-top-15 button full-width button-sliding-icon ripple-effect"
+                                       type="submit" value="Принять" />
+                            }
+                            else
+                            {
+                                int exSum = i.OfferPrice - ViewBag.WalletSumm;
 
-                                                                            <a href="/Wallet/AddSumm?summ=@exSum&returnUrl=@Request.Url.ToString()" style="color:white" class="margin-top-15 button full-width button-sliding-icon ripple-effect">Пополнить счет на @exSum и принять</a>
-                                                                        }*@
+                                <a href="/Wallet/AddSumm?summ=@exSum&returnUrl=@Request.Url.ToString()" style="color:white" class="margin-top-15 button full-width button-sliding-icon ripple-effect">Пополнить счет на @exSum и принять</a>
+                            }*@
 
                                                                 }
                                                             </div>
@@ -254,15 +271,15 @@
         $('#sortComments').on('change', function () {
             var sortingType = $(this).val();
             //console.log('sortingType = '+sortingType);
-            var initialComments = $('.comments');
+            var initialComments = $('.bidders');
             var sortedComments;
 
             switch (sortingType) {
                 case '2'://по давним
                     //console.log('sortComments = по давним');
                     sortedComments = initialComments.sort(function (a, b) {
-                        var firstDiv = $(a).find('h6').text();
-                        var secondDiv = $(b).find('h6').text();
+                        var firstDiv = $(a).find('.creation-date-span').text();
+                        var secondDiv = $(b).find('.creation-date-span').text();
                         return (firstDiv > secondDiv) ? 1 : (firstDiv < secondDiv) ? -1 : 0;
                     });
                     break;
@@ -297,15 +314,13 @@
                 default://по новым (по умолчанию)
                     //console.log('sortComments = по новым');
                     sortedComments = initialComments.sort(function (a, b) {
-                        var firstDiv = $(a).find('h6').text();
-                        var secondDiv = $(b).find('h6').text();
+                        var firstDiv = $(a).find('.creation-date-span').text();
+                        var secondDiv = $(b).find('.creation-date-span').text();
                         return (firstDiv > secondDiv) ? -1 : (firstDiv < secondDiv) ? 1 : 0;
                     });
                     break;
             }
-            $('#boxed-list-ul').append(sortedComments);
-            $('#boxed-list-ul>li').css('background-color', 'transparent');
-            $('#boxed-list-ul>li:odd').css('background-color', '#fafafa');
+            $('.dashboard-box-list').append(sortedComments);
         });
     </script>
 }

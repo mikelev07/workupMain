@@ -553,6 +553,8 @@
     <Content Include="Views\Custom\LoadButtonArch.cshtml" />
     <Content Include="Views\Custom\LoadMainAttaches.cshtml" />
     <Content Include="Views\Manage\LoadPortfolioAttaches.cshtml" />
+    <Content Include="Views\Manage\_ReviewsMyReviewsPage.cshtml" />
+    <Content Include="Views\Manage\_ReviewsReviewsPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
