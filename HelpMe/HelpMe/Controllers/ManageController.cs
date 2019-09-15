@@ -73,8 +73,15 @@ namespace HelpMe.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            var user = db.Users.Include(s => s.Skills).Where(u => u.Id == userId).FirstOrDefault();
             ViewBag.Image = user.ImagePath ?? "~/Content/Custom/images/user-avatar-placeholder.png";
+
+
+            HashSet<int> sentIDs = new HashSet<int>(user.Skills.Select(s => s.Id));
+            ViewBag.SendIds = sentIDs;
+            var tasks = db.TaskCategories.Include(k => k.Skills).Where(s => s.Skills.Any(m => sentIDs.Contains(m.Id))).ToList();
+
+
             var model = new IndexViewModel
             {
                 Name = User.Identity.Name,
@@ -87,13 +94,18 @@ namespace HelpMe.Controllers
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
-                TaskCategories = db.TaskCategories.Include(s => s.Skills).ToList()
-        };
+                TaskCategories = db.TaskCategories.Include(s => s.Skills).ToList(),
+                MyTaskCategories = tasks,
+
+            };
 
             //ViewBag.SkillsSet = db.Skills.Include(s => s.TaskCategory);
             // ViewBag.Tasks = new SelectList(colls, "Id", "Name", "TaskCategory.Name",1);
             return View(model);
         }
+
+
+
 
         // POST: /Manage/ChangePassword
         [HttpPost]

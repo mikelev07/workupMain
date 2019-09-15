@@ -21,6 +21,7 @@ namespace HelpMe.Models
         public bool TwoFactor { get; set; }
         public bool BrowserRemembered { get; set; }
         public List<TaskCategory> TaskCategories { get; set; }
+        public List<TaskCategory> MyTaskCategories { get; set; }
 
     }
 

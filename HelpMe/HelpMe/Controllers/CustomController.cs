@@ -93,6 +93,8 @@ namespace HelpMe.Controllers
             return customsToPage.ToList();
         }
 
+
+
         public IQueryable<CustomViewModel> SortCustoms(IQueryable<CustomViewModel> customs, int sortId)
         {
             //by new customs
@@ -789,6 +791,28 @@ namespace HelpMe.Controllers
             CustomViewModel currentCustom = await db.Customs.FindAsync(id);
             bool hasComments = currentCustom.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() >= 1;
             return Json(hasComments);
+        }
+
+
+        public async Task<JsonResult> ChooseSpecialization(int? id)
+        {
+            string uId = User.Identity.GetUserId();
+
+            User user = await db.Users.Where(u => u.Id == uId)
+                                      .Include(t => t.TaskCategories)
+                                      .Include(s => s.Skills)
+                                      .FirstOrDefaultAsync();
+
+            Skill skill = db.Skills.Where(i => i.Id == id).FirstOrDefault();
+            
+            
+
+            user.Skills.Add(skill);
+           
+            await db.SaveChangesAsync();
+
+            //bool hasComments = currentCustom.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() >= 1;
+            return Json(true);
         }
 
 
