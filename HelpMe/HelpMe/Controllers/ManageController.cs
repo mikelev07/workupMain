@@ -73,7 +73,8 @@ namespace HelpMe.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
-            var user = db.Users.Include(s => s.Skills).Where(u => u.Id == userId).FirstOrDefault();
+            var user = db.Users.Include(s => s.Skills).Include(s =>s.Portfolios)
+                                .Where(u => u.Id == userId).FirstOrDefault();
             ViewBag.Image = user.ImagePath ?? "~/Content/Custom/images/user-avatar-placeholder.png";
 
 
@@ -96,7 +97,7 @@ namespace HelpMe.Controllers
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
                 TaskCategories = db.TaskCategories.Include(s => s.Skills).ToList(),
                 MyTaskCategories = tasks,
-
+                PortfoliosCount = user.Portfolios.Count
             };
 
             //ViewBag.SkillsSet = db.Skills.Include(s => s.TaskCategory);

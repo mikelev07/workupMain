@@ -22,6 +22,7 @@ namespace HelpMe.Models
         public bool BrowserRemembered { get; set; }
         public List<TaskCategory> TaskCategories { get; set; }
         public List<TaskCategory> MyTaskCategories { get; set; }
+        public int PortfoliosCount { get; set; }
 
     }
 
