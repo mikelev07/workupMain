@@ -764,24 +764,6 @@ namespace HelpMe.Controllers
             return Json(true);
         }
 
-
-        public async Task<bool> RemoveSpecialization(int? id)
-        {
-            string uId = User.Identity.GetUserId();
-
-            User user = await db.Users.Where(u => u.Id == uId)
-                                      .Include(t => t.TaskCategories)
-                                      .Include(s => s.Skills)
-                                      .FirstOrDefaultAsync();
-
-            var skill = await db.Skills.FindAsync(id);
-
-            user.Skills.Remove(skill);
-            await db.SaveChangesAsync();
-
-            return true;
-        }
-
         //[HttpPost]
         //[ValidateAntiForgeryToken]
         public async Task<bool> DeleteComment(int? id)
@@ -802,6 +784,44 @@ namespace HelpMe.Controllers
             //}
             //return;
             //return RedirectToAction("Index");
+        }
+
+        public async Task<JsonResult> EditMyBid(int commentId, int price, int period, string timeUnit, string description)
+        {
+            var comment = await db.Comments.FirstOrDefaultAsync(c => c.Id == commentId);
+            db.Entry(comment).State = EntityState.Modified;
+            comment.OfferPrice = price;
+            if (timeUnit == "дней")
+            {
+                comment.Days = period;
+                comment.Hours = 0;
+            }
+            if (timeUnit == "часов")
+            {
+                comment.Days = 0;
+                comment.Hours = period;
+            }
+            comment.Description = description;
+            await db.SaveChangesAsync();
+            return Json(true);
+        }
+
+
+        public async Task<bool> RemoveSpecialization(int? id)
+        {
+            string uId = User.Identity.GetUserId();
+
+            User user = await db.Users.Where(u => u.Id == uId)
+                                      .Include(t => t.TaskCategories)
+                                      .Include(s => s.Skills)
+                                      .FirstOrDefaultAsync();
+
+            var skill = await db.Skills.FindAsync(id);
+
+            user.Skills.Remove(skill);
+            await db.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<JsonResult> HasComments(int id)
