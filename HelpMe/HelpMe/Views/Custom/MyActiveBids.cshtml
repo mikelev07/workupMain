@@ -77,7 +77,7 @@
                                         <li>
                                             <span class="offer-price" style="display:inherit"><strong id="offer-price-@i.Id">@i.OfferPrice</strong>&nbsp<strong>руб.</strong></span><span>Ваша ставка</span>
                                         </li>
-                                        <li>
+                                        <li id="job-period-@i.Id">
                                             @if (i.Days != 0)
                                             {
                                                 <span style="display:inherit"><strong id="job-period-days-@i.Id" class="job-period">@i.Days</strong>&nbsp<strong id="time-unit-days-@i.Id" class="unit-of-period">дней</strong></span>
@@ -459,8 +459,8 @@
             //console.log('commentId = ' + commentId + ' | execPrice = ' + execPrice + ' | jobPeriod = ' + jobPeriod + ' | timeUnit = ' + timeUnit + ' | description = ' + description);
             $.ajax({
                 url: "/Custom/EditMyBid",
-                contentType: "application/json; charset=utf-8",
-                dataType: 'json',
+                //contentType: "application/json; charset=utf-8",
+                //dataType: 'json',
                 data: {
                     'commentId': commentId,
                     'price': execPrice,
@@ -471,18 +471,21 @@
                 success: function (data) {
                     //alert('hello there');
                     //заменяем поля нужного предложения
-                    $('#offer-price-' + commentId).val(execPrice);
+                    $('#offer-price-' + commentId).text(execPrice);
 
+                    var timeHtml = '';
                     if (timeUnit == 'дней') {
-                        $('#time-unit-hours-' + commentId).hide();
-                        $('#time-unit-days-' + commentId).text('дней');
-                        $('#job-period-days-' + commentId).val(jobPeriod);
+                        timeHtml = '<span style="display:inherit"><strong id="job-period-days-' + commentId +
+                            '" class="job-period">' + jobPeriod + '</strong>&nbsp<strong id="time-unit-days-' + commentId +
+                            '" class="unit-of-period">дней</strong></span>';
                     }
                     if (timeUnit == 'часов') {
-                        $('#time-unit-days-' + commentId).hide();
-                        $('#time-unit-hours-' + commentId).text('часов');
-                        $('#job-period-hours-' + commentId).val(jobPeriod);
+                        timeHtml = '<span style="display:inherit"><strong id="job-period-hours-' + commentId +
+                            '" class="job-period">' + jobPeriod + '</strong>&nbsp<strong id="time-unit-hours-' + commentId +
+                            '" class="unit-of-period">часов</strong></span>';
                     }
+                    timeHtml += '<span>Срок выполнения</span>';
+                    $('#job-period-' + commentId).empty().append(timeHtml);
 
                     $('#description-' + commentId).text(description);
 

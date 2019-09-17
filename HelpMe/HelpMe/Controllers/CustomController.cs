@@ -786,7 +786,7 @@ namespace HelpMe.Controllers
             //return RedirectToAction("Index");
         }
 
-        public async Task<JsonResult> EditMyBid(int commentId, int price, int period, string timeUnit, string description)
+        public async Task<bool> EditMyBid(int commentId, int price, int period, string timeUnit, string description)
         {
             var comment = await db.Comments.FirstOrDefaultAsync(c => c.Id == commentId);
             db.Entry(comment).State = EntityState.Modified;
@@ -803,7 +803,7 @@ namespace HelpMe.Controllers
             }
             comment.Description = description;
             await db.SaveChangesAsync();
-            return Json(true);
+            return true;
         }
 
 
