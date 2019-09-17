@@ -93,6 +93,8 @@ namespace HelpMe.Controllers
             return customsToPage.ToList();
         }
 
+
+
         public IQueryable<CustomViewModel> SortCustoms(IQueryable<CustomViewModel> customs, int sortId)
         {
             //by new customs
@@ -762,6 +764,24 @@ namespace HelpMe.Controllers
             return Json(true);
         }
 
+
+        public async Task<bool> RemoveSpecialization(int? id)
+        {
+            string uId = User.Identity.GetUserId();
+
+            User user = await db.Users.Where(u => u.Id == uId)
+                                      .Include(t => t.TaskCategories)
+                                      .Include(s => s.Skills)
+                                      .FirstOrDefaultAsync();
+
+            var skill = await db.Skills.FindAsync(id);
+
+            user.Skills.Remove(skill);
+            await db.SaveChangesAsync();
+
+            return true;
+        }
+
         //[HttpPost]
         //[ValidateAntiForgeryToken]
         public async Task<bool> DeleteComment(int? id)
@@ -789,6 +809,28 @@ namespace HelpMe.Controllers
             CustomViewModel currentCustom = await db.Customs.FindAsync(id);
             bool hasComments = currentCustom.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() >= 1;
             return Json(hasComments);
+        }
+
+
+        public async Task<JsonResult> ChooseSpecialization(int? id)
+        {
+            string uId = User.Identity.GetUserId();
+
+            User user = await db.Users.Where(u => u.Id == uId)
+                                      .Include(t => t.TaskCategories)
+                                      .Include(s => s.Skills)
+                                      .FirstOrDefaultAsync();
+
+            Skill skill = db.Skills.Where(i => i.Id == id).FirstOrDefault();
+
+
+
+            user.Skills.Add(skill);
+
+            await db.SaveChangesAsync();
+
+            //bool hasComments = currentCustom.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() >= 1;
+            return Json(true);
         }
 
 
@@ -1000,7 +1042,7 @@ namespace HelpMe.Controllers
             // optimaize
             CustomViewModel customViewModel = await db.Customs.Include(c => c.Comments)
                                                               .Include(c => c.CategoryTask)
-                                                              .Include(c=>c.Skill)
+                                                              .Include(c => c.Skill)
                                                               .Include(c => c.TypeTask)
                                                               .Include(c => c.User)
                                                               .Include(c => c.Attachments)
@@ -1017,7 +1059,7 @@ namespace HelpMe.Controllers
             }
 
             //пока еще не выбран исполнитель, подгружаем коллекцию дисциплин и типов задач (для возможности редактирования заказа)
-            if(customViewModel.ExecutorId==null)
+            if (customViewModel.ExecutorId == null)
             {
                 ViewBag.Types = new SelectList(db.CustomTypes, "Id", "Name"); // выбор типа задачи
                 ViewBag.Tasks = new SelectList(db.TaskCategories, "Id", "Name"); // выбор дисциплины
@@ -1120,10 +1162,10 @@ namespace HelpMe.Controllers
             {
                 return new HttpNotFoundResult("CustomId is null!");
             }
-            CustomViewModel customViewModel = await db.Customs.Include(c=>c.Executor).FirstOrDefaultAsync(c => c.Id == customId);
+            CustomViewModel customViewModel = await db.Customs.Include(c => c.Executor).FirstOrDefaultAsync(c => c.Id == customId);
             if (customViewModel == null)
             {
-                return new HttpNotFoundResult("Custom #"+customId+" wasn't found!");
+                return new HttpNotFoundResult("Custom #" + customId + " wasn't found!");
             }
             db.Entry(customViewModel).State = EntityState.Modified;
             customViewModel.ExecutorId = null;
@@ -1141,7 +1183,7 @@ namespace HelpMe.Controllers
                 review.UserId = User.Identity.GetUserId();
                 db.Reviews.Add(review);
                 User user = await db.Users.FirstOrDefaultAsync(u => u.Id == review.OwnerId);
-                
+
                 //make close-custom's logics
                 var transactions = await db.Transactions.Where(t => t.CustomId == id).ToListAsync();
                 var executorId = await db.Customs.Where(c => c.Id == id).Select(c => c.ExecutorId).FirstOrDefaultAsync();
@@ -1184,7 +1226,7 @@ namespace HelpMe.Controllers
                 db.Entry(customViewModel).State = EntityState.Modified;
                 customViewModel.Status = CustomStatus.Close;
                 customViewModel.IsRevision = false;
-                if(customViewModel.EndingDate!=null)
+                if (customViewModel.EndingDate != null)
                 {
                     customViewModel.DoneInTime = DateTime.Now < customViewModel.EndingDate;
                 }
