@@ -10,7 +10,13 @@
         <!-- Dashboard Headline -->
         <div class="dashboard-headline">
             <h3>Управление предложениями</h3>
-            <span class="margin-top-7">Управление для <a href="@Url.Action("Details","Custom", new { id = Model.FirstOrDefault().CustomViewModelId})" target="_blank">@Model.FirstOrDefault().CustomViewModel.Name</a></span>
+            @{
+                var customId = Model.FirstOrDefault()?.CustomViewModelId;
+                if (customId != null)
+                {
+                    <span class="margin-top-7">Управление для <a href="@Url.Action("Details","Custom", new { id = customId})" target="_blank">@(Model.FirstOrDefault().CustomViewModel.Name)</a></span>
+                }
+            }
 
             <!-- Breadcrumbs -->
             <nav id="breadcrumbs" class="green">
