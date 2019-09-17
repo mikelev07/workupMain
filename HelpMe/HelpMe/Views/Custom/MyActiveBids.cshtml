@@ -49,7 +49,7 @@
                             @foreach (var i in Model.OrderByDescending(c => c.CreationDate))
                             {
 
-                                <li class="my-active-bidders">
+                                <li id="my-active-bid-@i.Id" class="my-active-bidders">
                                     <!-- Job Listing -->
                                     <div class="job-listing width-adjustment">
 
@@ -97,12 +97,12 @@
                                         {
                                             //var updateTargetIdEdit = "user-comment-bid-rate-" + i.Id;
 
-                                            <a href="#small-dialog" class="popup-with-zoom-anim button green ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
-                                            <a href="#small-dialog-3" class="button red ripple-effect ico" title="Удалить предложение" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
+                                            <a href="#small-dialog-@i.Id" class="popup-with-zoom-anim button green ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
+                                            <a href="#small-dialog-2-@i.Id" class="popup-with-zoom-anim button red ripple-effect ico" title="Удалить предложение" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
 
 
                                             <!--Pop-up-->
-                                            <div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+                                            <div id="small-dialog-@i.Id" class="small-dialog-1 zoom-anim-dialog mfp-hide dialog-with-tabs">
 
                                                 <div class="sign-in-form">
 
@@ -185,7 +185,7 @@
                                                 </div>
                                             </div>
 
-                                            <div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+                                            <div id="small-dialog-2-@i.Id" class="small-dialog-2 zoom-anim-dialog mfp-hide dialog-with-tabs">
                                                 <div class="sign-in-form">
                                                     <ul class="popup-tabs-nav">
                                                         <li><a href="#tab">Удалить предложение</a></li>
@@ -204,8 +204,8 @@
                                                             </div>
 
                                                             <!-- Button -->
-                                                            <button id="delete-comment-button" class="button full-width button-sliding-icon ripple-effect"
-                                                                    type="submit" onclick="return OnClickDeleteComment(@i.Id)">
+                                                            <button class="button full-width button-sliding-icon ripple-effect"
+                                                                    type="submit" onclick="return OnClickDeleteBid(@i.CustomViewModelId, @i.Id)">
                                                                 Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i>
                                                             </button>
                                                         </div>
@@ -452,6 +452,9 @@
             //проверяем, не является ли данный юзер текущим исполнителем
             if (IsAlreadyExecutor(customId)) {
                 $(".mfp-close").trigger('click');
+                Snackbar.show({
+                    text: 'Вас уже выбрали исполнителем. Редактирование предложения запрещено.',
+                });
                 return;
             }
 
@@ -499,6 +502,38 @@
                     $(".mfp-close").trigger('click');
                     Snackbar.show({
                         text: 'Ошибка при редактировании! Попробуйте еще раз.',
+                    });
+                }
+            });
+        }
+
+        function OnClickDeleteBid(customId, commentId) {
+            //проверяем, не является ли данный юзер текущим исполнителем
+            if (IsAlreadyExecutor(customId)) {
+                $(".mfp-close").trigger('click');
+                Snackbar.show({
+                    text: 'Вас уже выбрали исполнителем. Удаление предложения запрещено.',
+                });
+                return;
+            }
+
+            $.ajax({
+                url: "/Custom/DeleteComment",
+                data: {
+                    'id': commentId
+                },
+                success: function (data) {
+                    $('#my-active-bid-' + commentId).remove();
+                    $(".mfp-close").trigger('click');
+                    Snackbar.show({
+                        text: 'Предложение успешно удалено!',
+                    });
+                },
+                error: function (data) {
+                    //console.log('DeleteComment is gone bad');
+                    $(".mfp-close").trigger('click');
+                    Snackbar.show({
+                        text: 'Ошибка при удалении! Попробуйте еще раз.',
                     });
                 }
             });
