@@ -895,10 +895,10 @@
                                                             @Html.TextAreaFor(model => model.Description, new { rows = "5", cols = "30", @class = "with-border" })
 
                                                             @*<div class="uploadButton margin-top-30">
-                                            <input multiple="multiple" class="uploadButton-input" type="file" name="AttachFile" id="AttachFile" required />
-                                            <label class="uploadButton-button ripple-effect" for="AttachFile">Прикрепить задания</label>
-                                            <span style="padding-left:10px" class="uploadButton-file">Вы можете прикрепить несколько вложений</span>
-                                        </div>*@
+                                                                    <input multiple="multiple" class="uploadButton-input" type="file" name="AttachFile" id="AttachFile" required />
+                                                                    <label class="uploadButton-button ripple-effect" for="AttachFile">Прикрепить задания</label>
+                                                                    <span style="padding-left:10px" class="uploadButton-file">Вы можете прикрепить несколько вложений</span>
+                                                                </div>*@
                                                         </div>
                                                     </div>
 
@@ -959,53 +959,53 @@
                                                         </div>
                                                     </div>
                                                     @*<div>
-                                    <div class="submit-field">
-                                        <h5>Срок блокировки оплаты</h5>
-                                        <select class="selectpicker-filter">
-                                            <option>5 дней</option>
-                                            <option>10 дней</option>
-                                            <option>15 дней</option>
-                                            <option>20 дней</option>
-                                            <option>30 дней</option>
-                                            <option>40 дней</option>
-                                        </select>
-                                    </div>
-                                </div>*@
+                                                            <div class="submit-field">
+                                                                <h5>Срок блокировки оплаты</h5>
+                                                                <select class="selectpicker-filter">
+                                                                    <option>5 дней</option>
+                                                                    <option>10 дней</option>
+                                                                    <option>15 дней</option>
+                                                                    <option>20 дней</option>
+                                                                    <option>30 дней</option>
+                                                                    <option>40 дней</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>*@
                                                     @*<div>
-                                    <div class="submit-field">
-                                        <h5>Проверка на плагиат</h5>
-                                        <div class="col-xl-6">
-                                            <select class="selectpicker-filter">
-                                                <option>40%</option>
-                                                <option>50%</option>
-                                                <option>60%</option>
-                                                <option>70%</option>
-                                                <option>80%</option>
-                                                <option>90%</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>*@
+                                                            <div class="submit-field">
+                                                                <h5>Проверка на плагиат</h5>
+                                                                <div class="col-xl-6">
+                                                                    <select class="selectpicker-filter">
+                                                                        <option>40%</option>
+                                                                        <option>50%</option>
+                                                                        <option>60%</option>
+                                                                        <option>70%</option>
+                                                                        <option>80%</option>
+                                                                        <option>90%</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>*@
 
                                                     @*<div id="fileUpCreate" style="border-bottom: 1px solid #e4e4e4;">
 
-                                </div>*@
+                                                        </div>*@
 
                                                     @*<div style="margin-top:20px">
-                                    <div class="submit-field">
-                                        <h5>Платные услуги</h5>
+                                                            <div class="submit-field">
+                                                                <h5>Платные услуги</h5>
 
-                                        <select class="selectpicker-filter">
-                                            <option>40%</option>
-                                            <option>50%</option>
-                                            <option>60%</option>
-                                            <option>70%</option>
-                                            <option>80%</option>
-                                            <option>90%</option>
-                                        </select>
+                                                                <select class="selectpicker-filter">
+                                                                    <option>40%</option>
+                                                                    <option>50%</option>
+                                                                    <option>60%</option>
+                                                                    <option>70%</option>
+                                                                    <option>80%</option>
+                                                                    <option>90%</option>
+                                                                </select>
 
-                                    </div>
-                                </div>*@
+                                                            </div>
+                                                        </div>*@
 
                                                 </div>
                                             </div>
@@ -2577,17 +2577,17 @@
             }
 
 
-           $("#checkboxNew").click(function () {
-            if ($(this).is(':checked')) {
-                $("#min").prop("disabled", true);
-                $("#min").css("background-color", "#f2f2f2");
-                $("#min").attr("placeholder", "");
-            } else {
-                $("#min").prop("disabled", false);
-                $("#min").css("background-color", "#ffffff");
-                $("#min").attr("placeholder", "Цена");
-            }
-           });
+            $("#checkboxNew").click(function () {
+                if ($(this).is(':checked')) {
+                    $("#min").prop("disabled", true);
+                    $("#min").css("background-color", "#f2f2f2");
+                    $("#min").attr("placeholder", "");
+                } else {
+                    $("#min").prop("disabled", false);
+                    $("#min").css("background-color", "#ffffff");
+                    $("#min").attr("placeholder", "Цена");
+                }
+            });
 
         $("#checkboxDate").click(function () {
             if ($(this).is(':checked')) {

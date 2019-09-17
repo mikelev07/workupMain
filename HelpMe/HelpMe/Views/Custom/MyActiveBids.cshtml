@@ -74,19 +74,21 @@
 
                                     <!-- Task Details -->
                                     <ul class="dashboard-task-info">
-                                        <li><strong class="offer-price">@i.OfferPrice руб.</strong><span>Ваша ставка</span></li>
+                                        <li>
+                                            <span class="offer-price" style="display:inherit"><strong id="offer-price-@i.Id">@i.OfferPrice</strong>&nbsp<strong>руб.</strong></span><span>Ваша ставка</span>
+                                        </li>
                                         <li>
                                             @if (i.Days != 0)
                                             {
-                                                <strong><span class="job-period">@i.Days</span> <span class="unit-of-period">дней</span></strong>
+                                                <span style="display:inherit"><strong id="job-period-days-@i.Id" class="job-period">@i.Days</strong>&nbsp<strong id="time-unit-days-@i.Id" class="unit-of-period">дней</strong></span>
                                             }
-                                            else
+                                            @if(i.Hours!=0)
                                             {
-                                                <strong><span class="job-period">@i.Hours</span> <span class="unit-of-period">часов</span></strong>
+                                                <span style="display:inherit"><strong id="job-period-hours-@i.Id" class="job-period">@i.Hours</strong>&nbsp<strong id="time-unit-hours-@i.Id" class="unit-of-period">часов</strong></span>
                                             }
                                             <span>Срок выполнения</span>
                                         </li>
-                                        <li><strong>@i.Description</strong><span class="word-break">Комментарий</span></li>
+                                        <li><strong id="description-@i.Id">@i.Description</strong><span class="word-break">Комментарий</span></li>
                                     </ul>
 
                                     <!-- Buttons -->
@@ -97,8 +99,8 @@
 
                                             <a href="#small-dialog" class="popup-with-zoom-anim button green ripple-effect ico" title="Редактировать" data-tippy-placement="top"><i class="icon-feather-edit"></i></a>
                                             <a href="#small-dialog-3" class="button red ripple-effect ico" title="Удалить предложение" data-tippy-placement="top"><i class="icon-feather-trash-2"></i></a>
-                                            
-                                            
+
+
                                             <!--Pop-up-->
                                             <div id="small-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
 
@@ -111,21 +113,7 @@
 
                                                         <!-- Tab -->
                                                         <div class="popup-tab-content" id="tab">
-
-                                                            @using (Ajax.BeginForm("EditComment", new { Id = i.Id }, new AjaxOptions
-                                                            {
-                                                                InsertionMode = InsertionMode.Replace,
-                                                                OnBegin = "return OnBeginEditComment()",
-                                                                OnSuccess = "return OnSuccessEditComment(" + i.Id + ")"
-                                                            }))
-                                                            {
-                                                                @Html.AntiForgeryToken()
-
-                                                                @*@Html.Hidden("Id", c.Id.ToString())*@
-                                                                @Html.Hidden("UserId", i.UserId.ToString())
-                                                                @Html.Hidden("CustomViewModelId", i.CustomViewModelId.ToString())
-                                                                @Html.Hidden("CreationDate", i.CreationDate.ToString())
-
+                                                            @{
                                                                 var timeCount = i.Days;
                                                                 string nameTime = "Days";
                                                                 if (timeCount == 0)
@@ -133,65 +121,64 @@
                                                                     nameTime = "Hours";
                                                                     timeCount = i.Hours;
                                                                 }
+                                                            }
+                                                            <!-- Bidding -->
+                                                            <div class="bidding-widget">
+                                                                <!-- Headline -->
+                                                                <span class="bidding-detail">Укажите <strong>стоимость работы:</strong> </span>
 
-                                                                <!-- Bidding -->
-                                                                <div class="bidding-widget">
-                                                                    <!-- Headline -->
-                                                                    <span class="bidding-detail">Укажите <strong>стоимость работы:</strong> </span>
+                                                                <!-- Price Slider -->
+                                                                <div class="bidding-value">
+                                                                    <span id="edit-bid-bidding-value-@i.Id"></span> руб. <button type="button" id="edit-bid-show-price" onclick="OnClickShowPriceValue(@i.Id)"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button>
+                                                                    <input id="edit-bid-price-value-@i.Id" name="OfferPrice" class="no-spinners" style="margin-bottom:5px; display:none"
+                                                                           placeholder="Укажите стоимость" type="number" value="@i.OfferPrice"
+                                                                           oninput="validity.valid||(value='');" min="0" max="50000"
+                                                                           data-tippy-placement="top" onkeyup="OnKeyUpPriceValue(@i.Id)"/>
+                                                                </div>
 
-                                                                    <!-- Price Slider -->
-                                                                    <div class="bidding-value">
-                                                                        <span id="edit-comment-bidding-value"></span> руб. <button type="button" id="edit-comment-show-price"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button>
-                                                                        <input id="edit-comment-price-value" name="OfferPrice" class="no-spinners" style="margin-bottom:5px; display:none"
-                                                                               placeholder="Укажите стоимость" type="number" value="0"
-                                                                               oninput="validity.valid||(value='');" min="0" max="50000"
-                                                                               data-tippy-placement="top" />
+                                                                <input id="edit-bid-slider-price-@i.Id" class="bidding-slider" type="text" value="@i.OfferPrice"
+                                                                       data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
+                                                                       data-slider-max="50000" data-slider-value="@i.OfferPrice" data-slider-step="50"
+                                                                       data-slider-tooltip="hide" onchange="OnChangeSliderPrice(@i.Id)"/>
+
+                                                                <!-- Headline -->
+                                                                <span class="bidding-detail margin-top-10">Укажите <strong>срок выполнения:</strong></span>
+
+                                                                <!-- Fields -->
+                                                                <div class="bidding-fields">
+                                                                    <div class="bidding-field">
+
+                                                                        <!-- Quantity Buttons -->
+                                                                        <div class="qtyButtons with-border">
+                                                                            <div class="qtyDec"></div>
+                                                                            <input id="edit-bid-time-@i.Id" class="no-spinners" type="number" min="1" max="100"
+                                                                                   step="1" name="@nameTime" value="@timeCount" oninput="validity.valid||(value='');">
+                                                                            <div class="qtyInc"></div>
+                                                                        </div>
                                                                     </div>
-
-                                                                    <input id="edit-comment-slider-price" class="bidding-slider" type="text" value="@i.CustomViewModel.Price"
-                                                                           data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
-                                                                           data-slider-max="50000" data-slider-value="@i.CustomViewModel.Price" data-slider-step="50"
-                                                                           data-slider-tooltip="hide" />
-
-                                                                    <!-- Headline -->
-                                                                    <span class="bidding-detail margin-top-10">Укажите <strong>срок выполнения:</strong></span>
-
-                                                                    <!-- Fields -->
-                                                                    <div class="bidding-fields">
-                                                                        <div class="bidding-field">
-
-                                                                            <!-- Quantity Buttons -->
-                                                                            <div class="qtyButtons with-border">
-                                                                                <div class="qtyDec"></div>
-                                                                                <input id="edit-comment-time" class="no-spinners" type="number" min="1" max="100"
-                                                                                       step="1" name="@nameTime" value="@timeCount" oninput="validity.valid||(value='');">
-                                                                                <div class="qtyInc"></div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="bidding-field">
-                                                                            <select class="selectpicker default with-border" id="edit-time-units">
-                                                                                @if (nameTime == "Days")
-                                                                                {
-                                                                                    <option selected value="1">дней</option>
-                                                                                    <option value="2">часов</option>
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    <option value="1">дней</option>
-                                                                                    <option selected value="2">часов</option>
-                                                                                }
-                                                                            </select>
-                                                                        </div>
+                                                                    <div class="bidding-field">
+                                                                        <select class="selectpicker default with-border" id="edit-time-units-@i.Id" onchange="OnChangeEditTimeUnit(@i.Id)">
+                                                                            @if (nameTime == "Days")
+                                                                            {
+                                                                                <option selected value="1">дней</option>
+                                                                                <option value="2">часов</option>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <option value="1">дней</option>
+                                                                                <option selected value="2">часов</option>
+                                                                            }
+                                                                        </select>
                                                                     </div>
                                                                 </div>
-                                                                <!-- Headline -->
-                                                                <span class="bidding-detail margin-top-10">Добавьте <strong>комментарий:</strong></span>
+                                                            </div>
+                                                            <!-- Headline -->
+                                                            <span class="bidding-detail margin-top-10">Добавьте <strong>комментарий:</strong></span>
 
-                                                                <textarea id="edit-comment-desсription" name="Description" cols="30" rows="5" class="with-border" maxlength="200" placeholder="Оставьте своё предложение для заказчика...">@i.Description</textarea>
+                                                            <textarea id="edit-bid-desсription-@i.Id" name="Description" cols="30" rows="5" class="with-border" maxlength="200" placeholder="Оставьте своё предложение для заказчика...">@i.Description</textarea>
 
-                                                                <!-- Button -->
-                                                                <button class="button full-width button-sliding-icon ripple-effect" type="submit">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button>
-                                                            }
+                                                            <!-- Button -->
+                                                            <button class="button full-width button-sliding-icon ripple-effect" type="button" onclick="EditBidFunction(@i.CustomViewModelId, @i.Id)">Сохранить <i class="icon-material-outline-arrow-right-alt"></i></button>
                                                         </div>
 
                                                     </div>
@@ -359,51 +346,227 @@
         });
 
         //edit button
-        function OnBeginEditComment() {
-            var description = $("#edit-comment-desсription").val();
-            var slider = $("#edit-comment-slider-price").val();
-            var time = $("#edit-comment-time").val();
-            var timeUnit = $("#edit-time-units").val();
+        var minValue = 1;   //min time
+        var maxValue = 100; //max time
+
+        $(document).ready(function () {
+            RangeSlider();
+        });
+
+        function OnClickShowPriceValue(commentId) {
+            $('#edit-bid-price-value-' + commentId).toggle('show');
+        }
+
+        function OnKeyUpPriceValue(commentId) {
+            var editBidBox = document.getElementById('edit-bid-price-value-' + commentId);
+            var editBidSliderValue = document.getElementById('edit-bid-slider-price-' + commentId);
+            editBidSliderValue.value = editBidBox.value;
+            $('#edit-bid-bidding-value-' + commentId).text(editBidBox.value);
+            $('#edit-bid-slider-price-' + commentId).slider('setValue', editBidBox.value);
+        }
+
+        function OnChangeEditTimeUnit(commentId) {
+            var selectedOption = $('#edit-time-units-' + commentId);
+            if (selectedOption.val() == 1) {
+                $('#edit-bid-time-' + commentId).attr('name', 'Days');
+            }
+            else {
+                $('#edit-bid-time-' + commentId).attr('name', 'Hours');
+            }
+        }
+
+        function OnChangeSliderPrice(commentId) {
+            $("#edit-bid-price-value-" + commentId).val($("#edit-bid-slider-price-" + commentId).val());
+        }
+
+        $(document).on("click", ".qtyDec, .qtyInc", function () {
+            var events = $._data(this, "events");
+            if (events == null) {
+                var $button = $(this);
+                var buttonHasClassInc = $button.hasClass('qtyInc');
+                var oldValue = $button.parent().find("input").val();
+
+                if (oldValue < minValue || (oldValue == minValue && !buttonHasClassInc)) {
+                    $button.parent().find("input").val(minValue);
+                }
+                else {
+                    if (oldValue > maxValue || (oldValue == maxValue && buttonHasClassInc)) {
+                        $button.parent().find("input").val(maxValue);
+                    }
+                    else {
+                        if (buttonHasClassInc) {
+                            $button.parent().find("input").val(parseFloat(oldValue) + 1);
+                        }
+                        else {
+                            $button.parent().find("input").val(parseFloat(oldValue) - 1);
+                        }
+                    }
+                }
+
+                function qtySum() {
+                    var arr = document.getElementsByName('qtyInput');
+                    var tot = 0;
+                    for (var i = 0; i < arr.length; i++) {
+                        if (parseInt(arr[i].value)) {
+                            tot += parseInt(arr[i].value);
+                        }
+                    }
+                }
+                qtySum();
+                $(".qtyTotal").addClass("rotate-x");}
+        });
+        
+        function EditBidFunction(customId, commentId) {
+            //проверяем заполненность полей
+            var execPrice = $('#edit-bid-slider-price-' + commentId).val();
+            var jobPeriod = $('#edit-bid-time-' + commentId).val();    //срок
+            var timeUnit = $('#edit-time-units-' + commentId).children('option:selected').text();   //единица измерения срока
+            var description = $('#edit-bid-desсription-' + commentId).val();
+            //console.log('execPrice = ' + execPrice + ' | jobPeriod = ' + jobPeriod + ' | timeUnit = ' + timeUnit + ' | description = ' + description);
+
+            if (execPrice == "") {
+                Snackbar.show({
+                    text: 'Добавьте стоимость выполнения!',
+                });
+                return;
+            }
+            if (jobPeriod == "") {
+                Snackbar.show({
+                    text: 'Добавьте срок выполнения!',
+                });
+                return;
+            }
+            if (jobPeriod < minValue || jobPeriod > maxValue) {
+                Snackbar.show({
+                    text: 'Введите число в диапазоне от ' + minValue + ' до ' + maxValue + '!',
+                });
+                return;
+            }
             if (description == "") {
                 Snackbar.show({
                     text: 'Добавьте комментарий!',
                 });
-                return false;
+                return;
             }
-            if (slider == "") {
-                Snackbar.show({
-                    text: 'Добавьте стоимость выполнения!',
-                });
-                return false;
-            }
-            if (time == "") {
-                Snackbar.show({
-                    text: 'Добавьте срок выполнения!',
-                });
-                return false;
-            }
-            if (time < minValue || time > maxValue) {
-                Snackbar.show({
-                    text: 'Введите число в диапазоне от ' + minValue + ' до ' + maxValue + '!',
-                });
-                return false;
-            }
-            return true;
 
-        }
+            //проверяем, не является ли данный юзер текущим исполнителем
+            if (IsAlreadyExecutor(customId)) {
+                $(".mfp-close").trigger('click');
+                return;
+            }
 
-        function OnSuccessEditComment(commentId) {
-            var userDescriptionId = '#user-comment-' + commentId + " .item-description";
-            var newDescription = $('#edit-comment-desсription').val();
-            //console.log('userDescriptionId = ' + userDescriptionId);
-            //console.log('newDescription = ' + newDescription);
-            $(userDescriptionId).text(newDescription);
-            $(".mfp-close").trigger('click');
-            Snackbar.show({
-                text: 'Предложение успешно изменено!',
+            //собственно само редактирование
+            //console.log('commentId = ' + commentId + ' | execPrice = ' + execPrice + ' | jobPeriod = ' + jobPeriod + ' | timeUnit = ' + timeUnit + ' | description = ' + description);
+            $.ajax({
+                url: "/Custom/EditMyBid",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                data: {
+                    'commentId': commentId,
+                    'price': execPrice,
+                    'period': jobPeriod,
+                    'timeUnit': timeUnit,
+                    'description': description
+                },
+                success: function (data) {
+                    //alert('hello there');
+                    //заменяем поля нужного предложения
+                    $('#offer-price-' + commentId).val(execPrice);
+
+                    if (timeUnit == 'дней') {
+                        $('#time-unit-hours-' + commentId).hide();
+                        $('#time-unit-days-' + commentId).text('дней');
+                        $('#job-period-days-' + commentId).val(jobPeriod);
+                    }
+                    if (timeUnit == 'часов') {
+                        $('#time-unit-days-' + commentId).hide();
+                        $('#time-unit-hours-' + commentId).text('часов');
+                        $('#job-period-hours-' + commentId).val(jobPeriod);
+                    }
+
+                    $('#description-' + commentId).text(description);
+
+                    $(".mfp-close").trigger('click');
+                    Snackbar.show({
+                        text: 'Предложение успешно изменено!',
+                    });
+                },
+                error: function (data) {
+                    //console.log('EditMyBid is gone bad');
+                    $(".mfp-close").trigger('click');
+                    Snackbar.show({
+                        text: 'Ошибка при редактировании! Попробуйте еще раз.',
+                    });
+                }
             });
         }
 
-        //delete button
+        function IsAlreadyExecutor(customId) {
+            $.ajax({
+                type: 'GET',
+                url: "/Custom/IsExecutor/" + customId,
+                success: function (data) {
+                    if (data=="True") {
+                        Snackbar.show({
+                            text: 'Вы не можете редактировать предложение, вас уже выбрали исполнителем!',
+                        });
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            });
+        }
+
+        function RangeSlider() {
+            // Thousand Separator
+            function ThousandSeparator(nStr) {
+                nStr += '';
+                var x = nStr.split('.');
+                var x1 = x[0];
+                var x2 = x.length > 1 ? '.' + x[1] : '';
+                var rgx = /(\d+)(\d{3})/;
+                while (rgx.test(x1)) {
+                    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                }
+
+                return x1 + x2;
+            }
+
+            // Bidding Slider Average Value
+            var avgValue = (parseInt($('.bidding-slider').attr("data-slider-min")) + parseInt($('.bidding-slider').attr("data-slider-max"))) / 2;
+            if ($('.bidding-slider').data("slider-value") === 'auto') {
+                $('.bidding-slider').attr({ 'data-slider-value': avgValue });
+            }
+
+            // Bidding Slider Init
+            $('.bidding-slider').slider();
+
+            $('[id^="edit-bid-bidding-value"]').each(function () {
+                var bidSlider = $(this).parent().siblings('.bidding-slider');
+                $(this).text(ThousandSeparator(parseInt(bidSlider.val())));
+            });
+            //$('[id^="edit-bid-bidding-value"]').text(ThousandSeparator(parseInt($('.bidding-slider').val())));
+
+            $(".bidding-slider").on("slide", function (slideEvt) {
+                $(this).siblings('.bidding-value').children('[id^="edit-bid-bidding-value"]').text(ThousandSeparator(parseInt(slideEvt.value)));
+                //$("#edit-bid-bidding-value").text(ThousandSeparator(parseInt(slideEvt.value)));
+            });
+            
+
+            // Default Bootstrap Range Slider
+            var currencyAttr = $(".range-slider").attr('data-slider-currency');
+
+            $(".range-slider").slider({
+                formatter: function (value) {
+                    return currencyAttr + ThousandSeparator(parseInt(value[0])) + " - " + currencyAttr + ThousandSeparator(parseInt(value[1]));
+                }
+            });
+
+            $(".range-slider-single").slider();
+
+            //$("#edit-bid-price-value").val = parseInt($("#edit-bid-bidding-value").text());
+        }
+            //delete button
     </script>
 }

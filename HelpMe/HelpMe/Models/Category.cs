@@ -34,5 +34,16 @@ namespace HelpMe.Models
         public ICollection<User> Users { get; set; }
         public int? TaskCategoryId { get; set; }
         public TaskCategory TaskCategory { get; set; }
+
+      
     }
+
+    public static class SkillExtension
+    {
+        public static IEnumerable<T> DistinctBy<T, TKey>(this IEnumerable<T> items, Func<T, TKey> property)
+        {
+            return items.GroupBy(property).Select(x => x.First());
+        }
+    }
+
 }
