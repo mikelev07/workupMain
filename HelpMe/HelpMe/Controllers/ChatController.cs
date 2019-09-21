@@ -275,13 +275,9 @@ namespace HelpMe.Controllers
         {
             string userFromId = User.Identity.GetUserId();
 
-            var messages = await db.Messages.Include(u => u.UserFrom)
-                                      .Include(u => u.UserTo)
+            var messages = await db.Messages
                                       .Include(u => u.MessageAttaches)
-                                      .Where(d => d.ChatDialogId == dialogId)
-                                      .Where(m => (m.UserFromId == userFromId && m.UserToId == userToId) ||
-                                      (m.UserFromId == userToId) && m.UserToId == userFromId)
-                                      .OrderBy(m => m.DateSend).ToListAsync();
+                                      .Where(d => d.ChatDialogId == dialogId).ToListAsync();
 
             HttpContext.Response.Cookies["OpenDialogId"].Value = dialogId.ToString();
 
