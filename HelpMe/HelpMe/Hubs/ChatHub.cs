@@ -53,7 +53,7 @@ namespace HelpMe.Hubs
                 partnerDialog.Id = 3;
                 partnerDialog.UserFromId = db.Users.Where(x => x.UserName == toUserName).FirstOrDefault().Id;
                 partnerDialog.UserToId =  db.Users.Where(x => x.Id == reqId).FirstOrDefault().Id;
-                partnerDialog.Status = DialogStatus.Close;
+                //partnerDialog.Status = DialogStatus.Close;
                 db.ChatDialogs.Add(partnerDialog);
                 db.SaveChanges();
             }
@@ -77,10 +77,10 @@ namespace HelpMe.Hubs
 
             
             var openDialog = db.ChatDialogs.Where(i => i.Id == partnerDialogId).FirstOrDefault();
-            if (openDialog.Status == DialogStatus.Open)
-                messageStoreViewModelPartner.Status = MessageStatus.Reading;
-            else
-                messageStoreViewModelPartner.Status = MessageStatus.Undreading;
+            //if (openDialog.Status == DialogStatus.Open)
+            //    messageStoreViewModelPartner.Status = MessageStatus.Reading;
+            //else
+            //    messageStoreViewModelPartner.Status = MessageStatus.Undreading;
 
 
             messageStoreViewModelPartner.ChatDialogId = partnerDialogId;

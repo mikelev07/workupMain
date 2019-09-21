@@ -67,7 +67,6 @@ namespace HelpMe.Models
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public DialogStatus Status { get; set; }
         public string UserFromId { get; set; }
         public virtual User UserFrom { get; set; }
 
@@ -81,15 +80,6 @@ namespace HelpMe.Models
         {
             Messages = new List<MessageStoreViewModel>();
         }
-    }
-
-    public enum DialogStatus
-    {
-        [Display(Name = "Закрыт")]
-        Close,
-        [Display(Name = "Открыт")]
-        Open
-
     }
 
     public enum MessageStatus

@@ -41,11 +41,6 @@ namespace HelpMe.Controllers
                                           (m.UserFromId == userToId) && m.UserToId == userFromId)
                                           .OrderBy(m => m.DateSend).ToListAsync();
 
-
-                db.Entry(currentDialog).State = EntityState.Modified;
-                currentDialog.Status = DialogStatus.Open;
-                await db.SaveChangesAsync();
-
                 ViewBag.UserToName = currentDialog?.UserTo?.UserName;
                 return View(messages);
             }
@@ -86,7 +81,7 @@ namespace HelpMe.Controllers
                                                     .ToListAsync();
 
             var openDialog = db.ChatDialogs.Where(i => i.UserFromId == requestId)
-                                           .Where(s => s.Status == DialogStatus.Open)
+                                           //.Where(s => s.Status == DialogStatus.Open)
                                            .FirstOrDefault();
 
             ViewBag.UserToName = openDialog?.UserTo?.UserName;
@@ -106,7 +101,7 @@ namespace HelpMe.Controllers
                                                     .ToListAsync();
 
             var openDialog = db.ChatDialogs.Where(i => i.UserFromId == requestId)
-                                           .Where(s => s.Status == DialogStatus.Open)
+                                           //.Where(s => s.Status == DialogStatus.Open)
                                            .FirstOrDefault();
 
             ViewBag.UserToName = openDialog?.UserTo?.UserName;
@@ -179,14 +174,14 @@ namespace HelpMe.Controllers
                     dialogFrom.Messages.Add(message);
                     dialogFrom.UserFromId = userFromId;
                     dialogFrom.UserToId = userToId;
-                    dialogFrom.Status = DialogStatus.Close;
+                    //dialogFrom.Status = DialogStatus.Close;
 
                     ChatDialog dialogTo = new ChatDialog();
                     dialogTo.Id = 2;
                     dialogTo.Messages.Add(messageStoreViewModelPartner);
                     dialogTo.UserFromId = userToId;
                     dialogTo.UserToId = userFromId;
-                    dialogTo.Status = DialogStatus.Close;
+                    //dialogTo.Status = DialogStatus.Close;
 
                     db.ChatDialogs.Add(dialogTo);
                     db.ChatDialogs.Add(dialogFrom);
@@ -211,7 +206,7 @@ namespace HelpMe.Controllers
                         dialogFrom.Id = 3;
                         dialogFrom.UserFromId = userFromId;
                         dialogFrom.UserToId = userToId;
-                        dialogFrom.Status = DialogStatus.Close;
+                        //dialogFrom.Status = DialogStatus.Close;
                         db.ChatDialogs.Add(dialogFrom);
                     }
                     var dialogTo = dialogs.Where(u => u.UserFromId == userToId && u.UserToId == userFromId).FirstOrDefault();
@@ -221,7 +216,7 @@ namespace HelpMe.Controllers
                         dialogTo.Id = 4;
                         dialogTo.UserFromId = userToId;
                         dialogTo.UserToId = userFromId;
-                        dialogTo.Status = DialogStatus.Close;
+                        //dialogTo.Status = DialogStatus.Close;
                         db.ChatDialogs.Add(dialogTo);
                     }
 
@@ -238,18 +233,15 @@ namespace HelpMe.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetLastMessage(string userName)
+        public ActionResult GetLastMessage(string userToId, int dialogId)
         {
-            string requestId = User.Identity.GetUserId();
-            var userTo = db.Users.Include(u => u.Messages).Where(u => u.UserName == userName).FirstOrDefault();
-            var userFrom = db.Users.Include(u => u.Messages).Where(u => u.Id == requestId).FirstOrDefault();
-            var dialogId = db.ChatDialogs.Where(u => u.UserFromId == userFrom.Id && u.UserToId == userTo.Id).FirstOrDefault().Id;
+            string userFromId = User.Identity.GetUserId();
 
             var messages = db.Messages.Include(u => u.UserFrom)
                                       .Include(u => u.UserTo)
                                       .Where(d => d.ChatDialogId == dialogId)
-                                      .Where(m => (m.UserFromId == userFrom.Id && m.UserToId == userTo.Id) ||
-                                      (m.UserFromId == userTo.Id) && m.UserToId == userFrom.Id).OrderBy(m => m.DateSend);
+                                      .Where(m => (m.UserFromId == userFromId && m.UserToId == userToId) ||
+                                      (m.UserFromId == userToId) && m.UserToId == userFromId).OrderBy(m => m.DateSend);
 
             var lastMessage = messages.OrderByDescending(o => o.Id).FirstOrDefault().Description;
 
@@ -271,7 +263,7 @@ namespace HelpMe.Controllers
 
 
             var openDialog = db.ChatDialogs.Where(i => i.UserFromId == requestId).FirstOrDefault();
-            openDialog.Status = DialogStatus.Open;
+            //openDialog.Status = DialogStatus.Open;
 
             db.ChatDialogs.Remove(dialog);
             await db.SaveChangesAsync();
@@ -279,43 +271,27 @@ namespace HelpMe.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> LoadHistory(string userName)
+        public async Task<ActionResult> LoadHistory(string userToId, int dialogId)
         {
-            string requestId = User.Identity.GetUserId();
-            var userTo = await db.Users.Include(u => u.Messages).Where(u => u.UserName == userName).FirstOrDefaultAsync();
-            var userToId = userTo.Id;
-
-            //находим открытый диалог (если такой есть)
-            var openDialog = await db.ChatDialogs
-                .Where(i => i.UserFromId == requestId)
-                .Where(s => s.Status == DialogStatus.Open).FirstOrDefaultAsync();
-            if (openDialog != null)
-            {
-                db.Entry(openDialog).State = EntityState.Modified;
-                openDialog.Status = DialogStatus.Close;
-            }
-
-            //ищем необходимый диалог
-            var dialog = await db.ChatDialogs.Include(c => c.UserFrom).Include(c => c.UserTo)
-                                        .Where(c => c.UserFromId == requestId && c.UserToId == userToId).FirstOrDefaultAsync();
-            db.Entry(dialog).State = EntityState.Modified;
-            dialog.Status = DialogStatus.Open;
+            string userFromId = User.Identity.GetUserId();
 
             var messages = await db.Messages.Include(u => u.UserFrom)
                                       .Include(u => u.UserTo)
                                       .Include(u => u.MessageAttaches)
-                                      .Where(d => d.ChatDialogId == dialog.Id)
-                                      .Where(m => (m.UserFromId == requestId && m.UserToId == userToId) ||
-                                      (m.UserFromId == userToId) && m.UserToId == requestId)
+                                      .Where(d => d.ChatDialogId == dialogId)
+                                      .Where(m => (m.UserFromId == userFromId && m.UserToId == userToId) ||
+                                      (m.UserFromId == userToId) && m.UserToId == userFromId)
                                       .OrderBy(m => m.DateSend).ToListAsync();
 
-            foreach (var message in messages)
-            {
-                db.Entry(message).State = EntityState.Modified;
-                message.Status = MessageStatus.Reading;
-            }
-            await db.SaveChangesAsync();
-            HttpContext.Response.Cookies["OpenDialogId"].Value = dialog.Id.ToString();
+            HttpContext.Response.Cookies["OpenDialogId"].Value = dialogId.ToString();
+
+            //нужно доработать
+            //foreach (var message in messages)
+            //{
+            //    db.Entry(message).State = EntityState.Modified;
+            //    message.Status = MessageStatus.Reading;
+            //}
+            //await db.SaveChangesAsync();
 
             return PartialView(messages);
         }
