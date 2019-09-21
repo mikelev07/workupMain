@@ -58,6 +58,7 @@ namespace HelpMe.Models
     {
         public int Id { get; set; }
         public string AttachUrl { get; set; }
+        public string AttachName { get; set; }
         public int? MessageStoreViewModelId { get; set; }
         public virtual MessageStoreViewModel MessageStoreViewModel { get; set; }
     }

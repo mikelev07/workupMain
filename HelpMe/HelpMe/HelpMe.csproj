@@ -273,6 +273,10 @@
     <Compile Include="Migrations\201908311606086_addPortfolioModel.Designer.cs">
       <DependentUpon>201908311606086_addPortfolioModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909210755588_fixAttachMessageModel.cs" />
+    <Compile Include="Migrations\201909210755588_fixAttachMessageModel.Designer.cs">
+      <DependentUpon>201909210755588_fixAttachMessageModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\API\CustomApiModel.cs" />
@@ -592,6 +596,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908311606086_addPortfolioModel.resx">
       <DependentUpon>201908311606086_addPortfolioModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909210755588_fixAttachMessageModel.resx">
+      <DependentUpon>201909210755588_fixAttachMessageModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

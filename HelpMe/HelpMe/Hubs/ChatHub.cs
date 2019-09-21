@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -97,7 +98,9 @@ namespace HelpMe.Hubs
                 for (var i = 0; i < fileUrls.Count; i++)
                 {
                     string url = fileUrls[i];
-                    var attach = new MessageAttach() { AttachUrl = url, MessageStoreViewModelId = messageStoreViewModel.Id };
+                    string nameAttach = Path.GetFileName(url);
+
+                    var attach = new MessageAttach() { AttachName = nameAttach, AttachUrl = url, MessageStoreViewModelId = messageStoreViewModel.Id };
                     db.MessageAttaches.Add(attach);
 
                 }
@@ -107,7 +110,8 @@ namespace HelpMe.Hubs
                 for (var i = fileUrls.Count - 1; i >= 0; i--)
                 {
                     string url = fileUrls[i];
-                    var attach = new MessageAttach() { AttachUrl = url, MessageStoreViewModelId = messageStoreViewModelPartner.Id };
+                    string nameAttach = Path.GetFileName(url);
+                    var attach = new MessageAttach() { AttachName = nameAttach, AttachUrl = url, MessageStoreViewModelId = messageStoreViewModelPartner.Id };
                     db.MessageAttaches.Add(attach);
                 }
 
