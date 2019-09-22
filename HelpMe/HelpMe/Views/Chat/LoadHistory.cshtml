@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<HelpMe.Models.MessageStoreViewModel>
 @using Microsoft.AspNet.Identity
-@using System.Globalization
+@using HelpMe.Helpers
 
 <div style="margin-bottom:145px">
 
@@ -14,7 +14,7 @@
         if (item == Model.FirstOrDefault())
         {
             <div class="message-time-sign">
-                <span>@item.DateSend.ToLocalTime().ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)</span>
+                <span>@item.DateSend.ToClientDate()@*.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)*@</span>
             </div>
         }
 
@@ -22,7 +22,7 @@
         {
             sad = item;
             <div class="message-time-sign">
-                <span>@item.DateSend.ToLocalTime().ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)</span>
+                <span>@item.DateSend.ToClientDate()@*.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)*@</span>
             </div>
         }
 
@@ -31,7 +31,7 @@
             <div class="message-bubble me">
                 <div class="message-bubble-inner">
                     <div class="message-avatar">
-                        <span style="font-size:14px"> @item.DateSend.ToLocalTime().ToString("H:mm", CultureInfo.InvariantCulture) </span>
+                        <span style="font-size:14px"> @item.DateSend.ToClientTime()@*.ToString("H:mm", CultureInfo.InvariantCulture)*@ </span>
                     </div>
                     <div class="message-text">
                         <p> @item.Description </p>
@@ -52,7 +52,7 @@
             <div class="message-bubble">
                 <div class="message-bubble-inner">
                     <div class="message-avatar">
-                        <span style="font-size:14px"> @item.DateSend.ToLocalTime().ToString("H:mm", CultureInfo.InvariantCulture) </span>
+                        <span style="font-size:14px"> @item.DateSend.ToClientTime()@*.ToString("H:mm", CultureInfo.InvariantCulture)*@ </span>
                     </div>
                     <div class="message-text">
                         <p> @item.Description </p>

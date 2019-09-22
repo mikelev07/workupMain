@@ -1,5 +1,5 @@
-﻿@model IEnumerable<HelpMe.Models.ChatDialog>
-
+﻿@using HelpMe.Helpers
+@model IEnumerable<HelpMe.Models.ChatDialog>
 
 @foreach (HelpMe.Models.ChatDialog d in Model)
 {
@@ -11,7 +11,7 @@
                     <h5>@d.UserTo.UserName </h5>
                     <span class="notificationNew" id="notification-@d.UserTo.ConnectionId">
 
-                        @d.Messages.OrderByDescending(o => o.Id).FirstOrDefault().DateSend.ToShortTimeString()
+                        @d.Messages.OrderByDescending(o => o.Id).FirstOrDefault().DateSend.ToClientTime()
 
                     </span>
                 </div>
