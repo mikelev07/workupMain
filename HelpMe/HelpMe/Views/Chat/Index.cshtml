@@ -35,7 +35,7 @@
                                     <div class="message-by">
                                         <div class="message-by-headline">
                                             <h5>@d.UserTo.UserName </h5>
-                                            <span class="notificationNew data-utc-date" id="notification-@d.UserTo.ConnectionId">
+                                            <span class="notificationNew data-utc-time" id="notification-@d.UserTo.ConnectionId">
 
                                                 @d.Messages.OrderByDescending(o => o.Id).FirstOrDefault().DateSend.ToClientTime()@*.ToString("H:mm", CultureInfo.InvariantCulture)*@
 
@@ -119,7 +119,7 @@
                                     <div class="message-bubble me">
                                         <div class="message-bubble-inner">
                                             <div class="message-avatar">
-                                                <span class="data-utc-date" style="font-size:14px"> @item.DateSend.ToClientTime()@*.ToString("H:mm", CultureInfo.InvariantCulture)*@ </span>
+                                                <span class="data-utc-time" style="font-size:14px"> @item.DateSend.ToClientTime()@*.ToString("H:mm", CultureInfo.InvariantCulture)*@ </span>
                                             </div>
                                             <div class="message-text">
                                                 <p> @item.Description </p>
@@ -140,7 +140,7 @@
                                     <div class="message-bubble">
                                         <div class="message-bubble-inner">
                                             <div class="message-avatar">
-                                                <span class="data-utc-date" style="font-size:14px"> @item.DateSend.ToClientTime()@*.ToString("H:mm", CultureInfo.InvariantCulture)*@ </span>
+                                                <span class="data-utc-time" style="font-size:14px"> @item.DateSend.ToClientTime()@*.ToString("H:mm", CultureInfo.InvariantCulture)*@ </span>
                                             </div>
                                             <div class="message-text">
                                                 <p> @item.Description </p>
@@ -204,12 +204,15 @@
     </div>
 </div>
 @section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script type="text/javascript">
         $(function () {
             $('.data-utc-date').each(function () {
-                var d = moment($(this).text());
-                $(this).text(d.format());
+                var d = moment($(this).text(), "DD.MM.YYYY");
+                $(this).text(d.format("DD.MM.YYYY"));
+            });
+            $('.data-utc-time').each(function () {
+                var d = moment($(this).text(), "HH:mm");
+                $(this).text(d.format("HH:mm"));
             });
             //для скрытия кнопок вложения и отправки сообщения если не выбран диалог
             var isAnyDialogChosen = "@(Model!=null)";
