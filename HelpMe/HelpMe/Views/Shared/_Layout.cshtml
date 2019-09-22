@@ -434,9 +434,9 @@
                     type: 'GET',
                     url: '/Home/GetUnreadingMessageCount',
                     success: function (response) {
-                    if($("#messUnreadCount").length == 0) {
-                        $('.messUnread').append("<span id='messUnreadCount'>" + response + "</span>")
-                      }
+                        if($("#messUnreadCount").length == 0) {
+                            $('.messUnread').append("<span id='messUnreadCount'>" + response + "</span>")
+                        }
                     },
                     error: function (error) {
                         console.log(error);
@@ -516,6 +516,15 @@
                     });
 
                     var notificationhub = $.connection.notificationHub;
+                    var chathub = $.connection.chatHub;
+
+                     chathub.client.displayUnreadCountMessage = function () {
+                       
+                        var unreadText = $('#messUnreadCount').text();
+                        $('#messUnreadCount').text(parseInt(unreadText) + 1);
+
+                    };
+
 
                     notificationhub.client.displayMessage = function (message) {
                         $('#notific').show();

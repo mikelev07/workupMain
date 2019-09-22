@@ -66,8 +66,9 @@ namespace HelpMe.Hubs
             messageStoreViewModel.DateSend = DateTime.Now;
             messageStoreViewModel.Status = MessageStatus.Reading;
             messageStoreViewModel.ChatDialogId = myDialogId;
-            
-            
+
+
+            messageStoreViewModelPartner.Status = MessageStatus.Undreading;
             messageStoreViewModelPartner.UserFromId = messageStoreViewModel.UserFromId;
             messageStoreViewModelPartner.UserToId = messageStoreViewModel.UserToId;
             messageStoreViewModelPartner.Description = message;
@@ -90,6 +91,8 @@ namespace HelpMe.Hubs
             Clients.User(uId).addMessage(name, message, dateSend, fileUrls);
             Clients.User(reqId).addMessage(name, message, dateSend, fileUrls);
 
+            Clients.User(uId).displayUnreadCountMessage();
+     
             db.Messages.Add(messageStoreViewModel);
             db.Messages.Add(messageStoreViewModelPartner);
             db.SaveChanges();
