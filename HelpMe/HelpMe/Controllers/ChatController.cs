@@ -281,13 +281,19 @@ namespace HelpMe.Controllers
 
             HttpContext.Response.Cookies["OpenDialogId"].Value = dialogId.ToString();
 
-            //нужно доработать
-            //foreach (var message in messages)
-            //{
-            //    db.Entry(message).State = EntityState.Modified;
-            //    message.Status = MessageStatus.Reading;
-            //}
-            //await db.SaveChangesAsync();
+
+            if (messages.Find(c => c.Status == MessageStatus.Undreading) != null) {
+                var messagesUnread = messages
+                                    .Where(d => d.Status == MessageStatus.Undreading);
+
+                foreach (var message in messagesUnread)
+                {
+                    db.Entry(message).State = EntityState.Modified;
+                    message.Status = MessageStatus.Reading;
+                }
+
+                await db.SaveChangesAsync();
+            }
 
             return PartialView(messages);
         }

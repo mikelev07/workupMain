@@ -65,7 +65,7 @@ namespace HelpMe.Controllers
         public JsonResult GetUnreadingMessageCount()
         {
             string reqId = User.Identity.GetUserId();
-            var unreadCount = db.Messages.Where(s => s.Status == MessageStatus.Undreading).Where(u => u.UserToId == reqId).Count();
+            var unreadCount = db.Messages.Where(s => s.Status == MessageStatus.Undreading).Where(u => u.UserToId == reqId || u.UserFromId == reqId).Count();
 
             return new JsonResult { Data = unreadCount, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
