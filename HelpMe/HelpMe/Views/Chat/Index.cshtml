@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<HelpMe.Models.MessageStoreViewModel>
 @using Microsoft.AspNet.Identity
 @using System.Globalization
+@using HelpMe.Helpers
 @{
     Layout = "~/Views/Shared/_LayoutChat.cshtml";
 }
@@ -36,7 +37,7 @@
                                             <h5>@d.UserTo.UserName </h5>
                                             <span class="notificationNew" id="notification-@d.UserTo.ConnectionId">
 
-                                                @d.Messages.OrderByDescending(o => o.Id).FirstOrDefault().DateSend.ToString("H:mm", CultureInfo.InvariantCulture)
+                                                @d.Messages.OrderByDescending(o => o.Id).FirstOrDefault().DateSend.ToClientTime()@*.ToString("H:mm", CultureInfo.InvariantCulture)*@
 
                                             </span>
                                         </div>
@@ -100,7 +101,7 @@
                                 if (item == Model.FirstOrDefault())
                                 {
                                     <div class="message-time-sign">
-                                        <span>@item.DateSend.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)</span>
+                                        <span>@item.DateSend.ToClientTime()@*.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)*@</span>
                                     </div>
                                 }
 
@@ -108,7 +109,7 @@
                                 {
                                     sad = item;
                                     <div class="message-time-sign">
-                                        <span>@item.DateSend.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)</span>
+                                        <span>@item.DateSend.ToClientTime()@*.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)*@</span>
                                     </div>
                                 }
 
@@ -118,7 +119,7 @@
                                     <div class="message-bubble me">
                                         <div class="message-bubble-inner">
                                             <div class="message-avatar">
-                                                <span style="font-size:14px"> @item.DateSend.ToString("H:mm", CultureInfo.InvariantCulture) </span>
+                                                <span style="font-size:14px"> @item.DateSend.ToClientTime()@*.ToString("H:mm", CultureInfo.InvariantCulture)*@ </span>
                                             </div>
                                             <div class="message-text">
                                                 <p> @item.Description </p>
@@ -139,7 +140,7 @@
                                     <div class="message-bubble">
                                         <div class="message-bubble-inner">
                                             <div class="message-avatar">
-                                                <span style="font-size:14px"> @item.DateSend.ToString("H:mm", CultureInfo.InvariantCulture) </span>
+                                                <span style="font-size:14px"> @item.DateSend.ToClientTime()@*.ToString("H:mm", CultureInfo.InvariantCulture)*@ </span>
                                             </div>
                                             <div class="message-text">
                                                 <p> @item.Description </p>
@@ -185,7 +186,7 @@
                         <input multiple="multiple" style="display:none" id="uploadAttache" type="file" name="upload" />
                         
                         <a id="upload_link" href="#" class="button gray ripple-effect ico" title="Добавить вложение" data-tippy-placement="top"><i class="icon-feather-paperclip"></i></a>
-                        <textarea id="message" cols="1" rows="1" placeholder="Ваше сообщение..." data-autoresize></textarea>
+                        <textarea id="message" cols="1" rows="1" maxlength="250" placeholder="Ваше сообщение..." data-autoresize></textarea>
                         <button id="sendmessage" class="button ripple-effect">Отправить</button>
                     </div>
 
@@ -205,25 +206,29 @@
 @section Scripts {
     <script>
         $(function () {
+            //для скрытия кнопок вложения и отправки сообщения если не выбран диалог
+            var isAnyDialogChosen = "@(Model!=null)";
+            if (isAnyDialogChosen == "False") {
+                $('.message-reply').hide();
+            }
 
-          
-        $('.message-action').on('click', function (e) {
-            var UserName = $('.message-action').attr('id');
-            $.ajax({
-                cache: false,
-                url: '@Url.Action("DeleteDialog", "Chat")',
-                type: 'POST',
-                data: { userName: UserName },
-                success: function (result) {
-                    $('#chatusers').load('@Url.Action("LoadDialogs", "Chat")')
-                },
-                error: function (result) {
-                    alert('Вложение не удалено');
-                }
+            $('.message-action').on('click', function (e) {
+                var UserName = $('.message-action').attr('id');
+                $.ajax({
+                    cache: false,
+                    url: '@Url.Action("DeleteDialog", "Chat")',
+                    type: 'POST',
+                    data: { userName: UserName },
+                    success: function (result) {
+                        $('#chatusers').load('@Url.Action("LoadDialogs", "Chat")')
+                    },
+                    error: function (result) {
+                        alert('Вложение не удалено');
+                    }
+                });
+
             });
-
         });
-    });
 
     //disableScroll();
     var objDiv = document.getElementById("chatroom");
@@ -269,6 +274,7 @@
                 'dialogId': dialogId
             }
         }).done(function (result) {
+            $('.message-reply').show();
             $('#chatroom').html(result);
             $('#chatroom').scrollTop($('#chatroom').prop('scrollHeight'));
         });

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Principal;
@@ -85,7 +86,7 @@ namespace HelpMe.Hubs
 
             messageStoreViewModelPartner.ChatDialogId = partnerDialogId;
 
-            var dateSend = messageStoreViewModel.DateSend.ToShortTimeString();
+            var dateSend = messageStoreViewModel.DateSend.ToLocalTime().ToString("H:mm", CultureInfo.InvariantCulture);
             Clients.User(uId).addMessage(name, message, dateSend, fileUrls);
             Clients.User(reqId).addMessage(name, message, dateSend, fileUrls);
 

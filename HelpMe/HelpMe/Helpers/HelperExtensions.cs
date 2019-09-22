@@ -87,5 +87,13 @@ namespace HelpMe.Helpers
             }
             return MvcHtmlString.Create(result.ToString());
         }
+
+        public static MvcHtmlString ToClientTime(this DateTime dateTime)
+        {
+            var builder = new TagBuilder("span");
+            builder.MergeAttribute("data-utc-time", dateTime.ToString());
+            builder.SetInnerText(string.Format("{0} (UTC)", dateTime.ToString()));
+            return new MvcHtmlString(builder.ToString());
+        }
     }
 }

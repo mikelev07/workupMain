@@ -394,23 +394,54 @@ $(function () {
         // Открываем соединение
         $.connection.hub.start().done(function () {
             chat.server.connect();
-          
+
             $('#sendmessage').on('click', function (e) {
+                SendMessageFunction(e);
+            });  
+
+            $('#message').keydown(delay(function (e) {
+                if (e.keyCode != 8) {
+                    var encodedName = $('<div />').text($('#username').val() + " печатает...").html();
+
+                    chat.server.isTyping(encodedName, $('#toUserName').val(), $('#username').val());
+                   
+                }
+            },500));
+
+            $('#message').keypress(function (e) {
+                var key = e.which;
+                if (key == 13)  // the enter key code
+                {
+                    SendMessageFunction(e);
+                }
+            });
+
+            function delay(callback, ms) {
+                var timer = 0;
+                return function () {
+                    var context = this, args = arguments;
+                    clearTimeout(timer);
+                    timer = setTimeout(function () {
+                        callback.apply(context, args);
+                    }, ms || 0);
+                };
+            }
+
+            function SendMessageFunction(e) {
                 e.preventDefault();
                 var files = document.getElementById('uploadAttache').files;
                 if (files.length > 0) {
                     if (window.FormData !== undefined) {
                         var data = new FormData();
-                        if (finalFileBuffer.length > 0 ) {
+                        if (finalFileBuffer.length > 0 && finalFileBuffer.length <= 5) {
                             for (var x = 0; x <= finalFileBuffer.length && x < 5; x++) {
                                 data.append("file" + x, finalFileBuffer[x]);
                             }
                         } else {
-                            for (var x = 0; x <= files.length && x < 5; x++) {
+                            for (var x = 0; x < files.length && x < 5; x++) {
                                 data.append("file" + x, files[x]);
                             }
                         }
-                       
                         $.ajax({
                             xhr: function () {
                                 var xhr = new window.XMLHttpRequest();
@@ -429,7 +460,7 @@ $(function () {
                                 xhr.addEventListener("progress", function (evt) {
                                     if (evt.lengthComputable) {
                                         var percentComplete = evt.loaded / evt.total;
-                                        
+
                                         $('.progress').css({
                                             width: percentComplete * 100 + '%'
                                         });
@@ -463,108 +494,17 @@ $(function () {
                     }
                 }
                 else {
-                    chat.server.send($('#username').val(), $('textarea#message').val(), $('#partnerId').val(), $('#toUserName').val(), null);
-                    $('textarea#message').val('');
-                }
-            });  
-
-
-            function delay(callback, ms) {
-                var timer = 0;
-                return function () {
-                    var context = this, args = arguments;
-                    clearTimeout(timer);
-                    timer = setTimeout(function () {
-                        callback.apply(context, args);
-                    }, ms || 0);
-                };
-            }
-
-            $('#message').keydown(delay(function (e) {
-                if (e.keyCode != 8) {
-                    var encodedName = $('<div />').text($('#username').val() + " печатает...").html();
-
-                    chat.server.isTyping(encodedName, $('#toUserName').val(), $('#username').val());
-                   
-                }
-            },500));
-
-            $('#message').keypress(function (e) {
-                var key = e.which;
-                if (key == 13)  // the enter key code
-                {
-                    e.preventDefault()
-                    var files = document.getElementById('uploadAttache').files;
-                    if (files.length > 0) {
-                        if (window.FormData !== undefined) {
-                            var data = new FormData();
-                            if (finalFileBuffer.length > 0 && finalFileBuffer.length <= 5) {
-                                for (var x = 0; x < finalFileBuffer.length && x < 5 ; x++) {
-                                    data.append("file" + x, finalFileBuffer[x]);
-                                }
-                            } else {
-                                for (var x = 0; x < files.length && x < 5; x++) {
-                                    data.append("file" + x, files[x]);
-                                }
-                            }
-                            $.ajax({
-                                xhr: function () {
-                                    var xhr = new window.XMLHttpRequest();
-                                    xhr.upload.addEventListener("progress", function (evt) {
-                                        if (evt.lengthComputable) {
-                                            var percentComplete = evt.loaded / evt.total;
-                                            console.log(percentComplete);
-                                            $('.progress').css({
-                                                width: percentComplete * 100 + '%'
-                                            });
-                                            if (percentComplete === 1) {
-                                                $('.progress').addClass('hide');
-                                            }
-                                        }
-                                    }, false);
-                                    xhr.addEventListener("progress", function (evt) {
-                                        if (evt.lengthComputable) {
-                                            var percentComplete = evt.loaded / evt.total;
-
-                                            $('.progress').css({
-                                                width: percentComplete * 100 + '%'
-                                            });
-                                        }
-                                    }, false);
-                                    return xhr;
-                                },
-                                type: "POST",
-                                url: '/Chat/UploadAttach',
-                                contentType: false,
-                                processData: false,
-                                data: data,
-                                success: function (result) {
-                                   
-                                    chat.server.send($('#username').val(), $('textarea#message').val(), $('#partnerId').val(), $('#toUserName').val(), result);
-                                    $('textarea#message').val('');
-                                    $('#fileUp').hide();
-                                    $('#fileUp').empty();
-                                    $('.message-reply').css('margin-top', "15px");
-                                    document.getElementById("uploadAttache").value = "";
-                                    idAttachArray = [];
-                                    finalFileBuffer = [];
-                                    fileBuffer = [];
-                                    countAttaches = 0;
-                                },
-                                error: function (xhr, status, p3) {
-                                    alert(xhr.responseText);
-                                }
-                            });
-                        } else {
-                            alert("Браузер не поддерживает загрузку файлов HTML5!");
-                        }
-                    }
-                    else {
+                    if ($('#message').text() != "") {
                         chat.server.send($('#username').val(), $('textarea#message').val(), $('#partnerId').val(), $('#toUserName').val(), null);
                         $('textarea#message').val('');
                     }
+                    else {
+                        Snackbar.show({
+                            text: 'Введите текст сообщения или выберите файл для загрузки.'
+                        });
+                    }
                 }
-            });
+            }
         });
 });
 
