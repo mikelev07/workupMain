@@ -152,22 +152,18 @@
 
                                 </div>
 
-                                <!-- Messages -->
                                 <div class="header-notifications">
                                     <div class="header-notifications-trigger">
-                                        <a href="#"><i class="icon-feather-mail"></i><span>3</span></a>
+                                        <a href="#" class="messUnread"><i class="icon-feather-mail"></i></a>
                                     </div>
-
                                     <!-- Dropdown -->
                                     <div class="header-notifications-dropdown">
-
                                         <div class="header-notifications-headline">
                                             <h4>Сообщения</h4>
                                             <button class="mark-as-read ripple-effect-dark" title="Пометить как прочитанное" data-tippy-placement="left">
                                                 <i class="icon-feather-check-square"></i>
                                             </button>
                                         </div>
-
                                         <div class="header-notifications-content">
                                             <div class="header-notifications-scroll" data-simplebar>
                                                 <ul>
@@ -177,19 +173,29 @@
                                                             <span class="notification-avatar status-online"><img src="images/user-avatar-small-03.jpg" alt=""></span>
                                                             <div class="notification-text">
                                                                 <strong>Магамед Магамедович</strong>
-                                                                <p class="notification-msg-text">Спасибо, что решился на эту авантюру...</p>
+                                                                <p class="notification-msg-text">..</p>
                                                                 <span class="color">4 часа назад</span>
                                                             </div>
                                                         </a>
                                                     </li>
-
                                                     <!-- Notification -->
                                                     <li class="notifications-not-read">
                                                         <a href="dashboard-messages.html">
                                                             <span class="notification-avatar status-online"><img src="images/user-avatar-small-03.jpg" alt=""></span>
                                                             <div class="notification-text">
                                                                 <strong>Магамед Магамедович</strong>
-                                                                <p class="notification-msg-text">Спасибо, что решился на эту авантюру...</p>
+                                                                <p class="notification-msg-text">..</p>
+                                                                <span class="color">4 часа назад</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                    <!-- Notification -->
+                                                    <li class="notifications-not-read">
+                                                        <a href="dashboard-messages.html">
+                                                            <span class="notification-avatar status-online"><img src="images/user-avatar-small-03.jpg" alt=""></span>
+                                                            <div class="notification-text">
+                                                                <strong>Магамед Магамедович</strong>
+                                                                <p class="notification-msg-text">.</p>
                                                                 <span class="color">4 часа назад</span>
                                                             </div>
                                                         </a>
@@ -197,7 +203,6 @@
                                                 </ul>
                                             </div>
                                         </div>
-
                                         <a href="/chat" class="header-notifications-button ripple-effect button-sliding-icon">Посмотреть все сообщения<i class="icon-material-outline-arrow-right-alt"></i></a>
                                     </div>
                                 </div>
@@ -522,5 +527,38 @@
 
 </body>
 </html>
+
+<script>
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/Home/GetUnreadingMessageCount',
+                    success: function (response) {
+                        if (response != 0) {
+                            if ($("#messUnreadCount").length == 0) {
+                                $('.messUnread').append("<span id='messUnreadCount'>" + response + "</span>")
+                            }
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                })
+
+
+                var chathub = $.connection.chatHub;
+
+                    chathub.client.displayUnreadCountMessage = function () {
+
+                        if ($("#messUnreadCount").length == 0) {
+                            $('.messUnread').append("<span id='messUnreadCount'>1</span>")
+                        } else {
+                            var unreadText = $('#messUnreadCount').text();
+                            $('#messUnreadCount').text(parseInt(unreadText) + 1);
+                        }
+                    };
+
+
+</script>
 
 
