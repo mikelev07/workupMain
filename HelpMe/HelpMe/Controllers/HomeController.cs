@@ -18,7 +18,10 @@ namespace HelpMe.Controllers
         {
             string uId = User.Identity.GetUserId();
             var unreadCount = db.Notifications.Where(n => n.UserId == uId).Where(n => n.Status == NotificationStatus.Unreading).Count();
-           // ViewBag.Count = unreadCount;
+            // ViewBag.Count = unreadCount;<span id="messUnreadCount">3</span>
+
+
+
             return View();
         }
 
@@ -56,6 +59,14 @@ namespace HelpMe.Controllers
             string reqId = User.Identity.GetUserId();
             var unreadCount = db.Notifications.Where(u => u.UserId == reqId).Where(n => n.Status == NotificationStatus.Unreading).Count();
             
+            return new JsonResult { Data = unreadCount, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        public JsonResult GetUnreadingMessageCount()
+        {
+            string reqId = User.Identity.GetUserId();
+            var unreadCount = db.Messages.Where(s => s.Status == MessageStatus.Undreading).Where(u => u.UserFromId == reqId || u.UserToId == reqId).Count();
+
             return new JsonResult { Data = unreadCount, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 

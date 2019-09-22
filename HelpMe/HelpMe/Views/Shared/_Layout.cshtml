@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>@ViewBag.Title – приложение ASP.NET</title>
     <link rel="stylesheet" type="text/css" href="~/Content/Custom/datepicker.css">
-   
+
     <link rel="stylesheet" href="~/Content/Custom/bootstrap-datetimepicker.css" />
     @Styles.Render("~/Content/Custom/css")
     @Scripts.Render("~/bundles/modernizr")
@@ -103,7 +103,7 @@
                                 <div class="header-notifications" id="not-trigger">
                                     <!-- Trigger -->
                                     <div class="header-notifications-trigger">
-                                        <a id="notCl" href="#"><i class="icon-feather-bell"></i><span style="@(ViewBag.Count >= 1 ? "display:none" : "")" class="ncount" id="notific">@ViewBag.Count</span></a>
+                                        <a id="notCl" href="#"><i class="icon-feather-bell"></i></a>
                                     </div>
                                     <!-- Dropdown -->
                                     <div class="header-notifications-dropdown">
@@ -124,7 +124,7 @@
                                 <!-- Messages -->
                                 <div class="header-notifications">
                                     <div class="header-notifications-trigger">
-                                        <a href="#"><i class="icon-feather-mail"></i><span>3</span></a>
+                                        <a href="#" class="messUnread"><i class="icon-feather-mail"></i></a>
                                     </div>
                                     <!-- Dropdown -->
                                     <div class="header-notifications-dropdown">
@@ -143,7 +143,7 @@
                                                             <span class="notification-avatar status-online"><img src="images/user-avatar-small-03.jpg" alt=""></span>
                                                             <div class="notification-text">
                                                                 <strong>Магамед Магамедович</strong>
-                                                                <p class="notification-msg-text">Спасибо, что решился на эту авантюру...</p>
+                                                                <p class="notification-msg-text">..</p>
                                                                 <span class="color">4 часа назад</span>
                                                             </div>
                                                         </a>
@@ -154,7 +154,7 @@
                                                             <span class="notification-avatar status-online"><img src="images/user-avatar-small-03.jpg" alt=""></span>
                                                             <div class="notification-text">
                                                                 <strong>Магамед Магамедович</strong>
-                                                                <p class="notification-msg-text">Спасибо, что решился на эту авантюру...</p>
+                                                                <p class="notification-msg-text">..</p>
                                                                 <span class="color">4 часа назад</span>
                                                             </div>
                                                         </a>
@@ -165,7 +165,7 @@
                                                             <span class="notification-avatar status-online"><img src="images/user-avatar-small-03.jpg" alt=""></span>
                                                             <div class="notification-text">
                                                                 <strong>Магамед Магамедович</strong>
-                                                                <p class="notification-msg-text">Спасибо, что решился на эту авантюру...</p>
+                                                                <p class="notification-msg-text">.</p>
                                                                 <span class="color">4 часа назад</span>
                                                             </div>
                                                         </a>
@@ -375,7 +375,7 @@
     <script src="~/Scripts/util.js"></script>
     @* <script src="~/Scripts/iwc-all.min.js"></script>*@
     @* <script src="~/Scripts/signalr-patch.js"></script>*@
-        @*<script src="~/Scripts/iwc-signalr.js"></script>*@
+    @*<script src="~/Scripts/iwc-signalr.js"></script>*@
 
 
 
@@ -384,7 +384,7 @@
     <script>
 
         $('#header .right-side').css('float', 'left')
-          $('#header .right-side').css('float','right')
+        $('#header .right-side').css('float', 'right')
         // Snackbar for user status switcher
         $('#snackbar-user-status label').click(function () {
             Snackbar.show({
@@ -426,21 +426,30 @@
                             }
                         },
                     });
-                });
+                });GetUnreadingMessageCount
 
         */
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/Home/GetUnreadingMessageCount',
+                    success: function (response) {
+                    if($("#messUnreadCount").length == 0) {
+                        $('.messUnread').append("<span id='messUnreadCount'>" + response + "</span>")
+                      }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                })
+
+
+
                 $.ajax({
                     type: 'GET',
                     url: '/Home/GetUnreadingCount',
                     success: function (response) {
-                        count = response;
-                        if (count == 0) {
-                            $('#notific').hide();
-                            $('.ncount').hide();
-                        } else {
-                            $('#notific').text(count);
-                            $('.ncount').text(count);
-                        }
+                       
                     },
                     error: function (error) {
                         console.log(error);
@@ -558,4 +567,4 @@
     </script>
     @RenderSection("scripts", required: false)
 </body>
-        </html>
+</html>
