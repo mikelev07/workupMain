@@ -530,6 +530,18 @@
                             var unreadText = $('#messUnreadCount').text();
                             $('#messUnreadCount').text(parseInt(unreadText) + 1);
                         }
+
+                         Snackbar.show({
+                            text: 'Новое сообщение!',
+                            pos: 'top-right',
+                            showAction: false,
+                            actionText: "Dismiss",
+                            width: 200,
+                            duration: 1500,
+                            textColor: '#5f9025',
+                            backgroundColor: '#EBF6E0',
+
+                        });
                     };
 
 
