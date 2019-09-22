@@ -494,7 +494,8 @@ $(function () {
                     }
                 }
                 else {
-                    if ($('#message').val()) {
+                    var messageText = $('#message').val().trim();
+                    if (messageText) {
                         chat.server.send($('#username').val(), $('textarea#message').val(), $('#partnerId').val(), $('#toUserName').val(), null);
                         $('textarea#message').val('');
                     }
