@@ -98,6 +98,14 @@ $(function () {
         $(this).removeClass('x onX').val('').change();
     });
 
+    function ConvertTimeToLocal(time) {
+        var currentHour = new Date().getHours();
+
+        var newTime = moment(time);
+        newTime.set({ 'hour': currentHour });
+
+        return newTime;
+    }
 
     $('#autocomplete-input').keyup(function () {
         var dialogName = $('#autocomplete-input').val();
@@ -120,9 +128,6 @@ $(function () {
                     if (data.length == 2)
                         $('#chatusers').html('<li style="margin-top:20px;margin-left:90px">Не найдено диалога</li>');
                 }
-                
-              
-                  
             }
         });
 
@@ -288,7 +293,7 @@ $(function () {
 
         // Объявление функции, которая хаб вызывает при получении сообщений
     chat.client.addMessage = function (name, message, dateSend, fileUrls) {
-
+        localDateSend = ConvertTimeToLocal(dateSend);
         var attaches = '';
         var style = 'style = "border:1px dashed white; background-color:#28b661; margin-top:5px;"';
         var spanStyle = 'style = "color:white"';
@@ -302,20 +307,21 @@ $(function () {
           
             if (fileUrls != null) {
                 attaches = initAttaches(fileUrls, attaches, style, spanStyle, iStyle);
-                var messageHtml = '<div class="message-bubble me"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p>' + attaches + ' </div></div><div class="clearfix"></div></div>';
+                var messageHtml = '<div class="message-bubble me"><div class="message-bubble-inner"><div class="message-avatar"><span class="data-utc-time" style="font-size:14px">' + String(localDateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p>' + attaches + ' </div></div><div class="clearfix"></div></div>';
             }
             else {
-                var messageHtml = '<div class="message-bubble me"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p></div></div><div class="clearfix"></div></div>';
+                var messageHtml = '<div class="message-bubble me"><div class="message-bubble-inner"><div class="message-avatar"><span class="data-utc-time" style="font-size:14px">' + String(localDateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p></div></div><div class="clearfix"></div></div>';
             }
-            } else {
+        }
+        else {
             if (fileUrls != null) {
                 attaches = initAttaches(fileUrls, attaches, otherStyle, otherSpanStyle, otherIStyle);
-                var messageHtml = '<div class="message-bubble"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p>' + attaches + '</div></div><div class="clearfix"></div></div>';
+                var messageHtml = '<div class="message-bubble"><div class="message-bubble-inner"><div class="message-avatar"><span class="data-utc-time" style="font-size:14px">' + String(localDateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p>' + attaches + '</div></div><div class="clearfix"></div></div>';
             }
             else {
-                var messageHtml = '<div class="message-bubble"><div class="message-bubble-inner"><div class="message-avatar"><span style="font-size:14px">' + String(dateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p></div></div><div class="clearfix"></div></div>';
+                var messageHtml = '<div class="message-bubble"><div class="message-bubble-inner"><div class="message-avatar"><span class="data-utc-time" style="font-size:14px">' + String(localDateSend) + '</span></div><div class="message-text"><p>' + htmlEncode(message) + '</p></div></div><div class="clearfix"></div></div>';
             }
-            }
+        }
 
         if ($('#username').val() != htmlEncode(name)) {
             if ($('#toUserName').val() != htmlEncode(name)) {
@@ -340,7 +346,6 @@ $(function () {
 
         // Добавление сообщений на веб-страницу 
        // $('#chatroom').append(messageHtml);
-      
         $('#chatroom').scrollTop($('#chatroom').prop('scrollHeight'));
     };
 

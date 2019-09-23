@@ -34,18 +34,3 @@
         </a>
     </li>
 }
-
-@section Scripts {
-    <script type="text/javascript">
-        $(function () {
-            //$('.data-utc-date').each(function () {
-            //    var d = moment($(this).text(), "DD.MM.YYYY");
-            //    $(this).text(d.format("DD.MM.YYYY"));
-            //});
-            $('.data-utc-time').each(function () {
-                var d = moment($(this).text(), "HH:mm");
-                $(this).text(d.format("HH:mm"));
-            });
-        }
-    </script>
-}

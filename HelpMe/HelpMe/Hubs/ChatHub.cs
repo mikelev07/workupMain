@@ -8,6 +8,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using HelpMe.Helpers;
 using HelpMe.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
@@ -87,7 +88,7 @@ namespace HelpMe.Hubs
 
             messageStoreViewModelPartner.ChatDialogId = partnerDialogId;
 
-            var dateSend = messageStoreViewModel.DateSend.ToLocalTime().ToString("H:mm", CultureInfo.InvariantCulture);
+            var dateSend = messageStoreViewModel.DateSend.ToClientTime();
             Clients.User(uId).addMessage(name, message, dateSend, fileUrls);
             Clients.User(reqId).addMessage(name, message, dateSend, fileUrls);
 

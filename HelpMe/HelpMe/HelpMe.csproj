@@ -308,6 +308,7 @@
     <Compile Include="Utils\TimerModule.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ApplicationInsights.config" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -392,9 +393,6 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="ApplicationInsights.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Custom\fonts\Brand-Icons.ttf" />
     <Content Include="Content\Custom\fonts\Brand-Icons.woff" />
     <Content Include="Content\Custom\fonts\Feather-Icons.ttf" />
