@@ -124,7 +124,6 @@ $(function () {
             var currentClientYear = dateTimeNowClient.getFullYear();
 
             var dateTimeNowServer = new Date(Date.parse(GetServerDateTime()));
-            console.log('server time: ' + dateTimeNowServer);
             var currentServerDay = dateTimeNowServer.getDay();
             var currentServerMonth = dateTimeNowServer.getMonth();
             var currentServerYear = dateTimeNowServer.getFullYear();
