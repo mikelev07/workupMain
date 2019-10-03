@@ -90,6 +90,11 @@ namespace HelpMe.Controllers
             return PartialView(filtDialog);
         }
 
+        public DateTime DateTimeNow()
+        {
+            return DateTime.Now;
+        } 
+
 
         public async Task<ActionResult> LoadDialogs()
         {

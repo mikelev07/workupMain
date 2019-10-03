@@ -7,7 +7,6 @@
 }
 
 <style>
-    
 </style>
 
 <div class="dashboard-content-container" data-simplebar>
@@ -171,10 +170,10 @@
                         }
 
                     </div>
-                    
+
 
                     <span style="display:none" id="field2_area"><input style="display:none" multiple="multiple" type="file" id="field2" /></span>
-                  
+
                     <div class="keywords-container" style="margin-bottom:0px;">
                         <div id="fileUp" style="display:none; margin:0px" class="">
                         </div>
@@ -184,7 +183,7 @@
                     <div class="message-reply">
                         <input type="hidden" id="partnerId" />
                         <input multiple="multiple" style="display:none" id="uploadAttache" type="file" name="upload" />
-                        
+
                         <a id="upload_link" href="#" class="button gray ripple-effect ico" title="Добавить вложение" data-tippy-placement="top"><i class="icon-feather-paperclip"></i></a>
                         <textarea id="message" cols="1" rows="1" maxlength="250" placeholder="Ваше сообщение..." data-autoresize></textarea>
                         <button id="sendmessage" class="button ripple-effect">Отправить</button>
@@ -209,7 +208,7 @@
             ConvertServerDateTimeToLocalDateTime("#chatBody");
 
             //для скрытия кнопок вложения и отправки сообщения если не выбран диалог
-            var isAnyDialogChosen = "@(Model!=null)";
+            var isAnyDialogChosen = "@(Model != null)";
             if (isAnyDialogChosen == "False") {
                 $('.message-reply').hide();
             }
@@ -232,26 +231,54 @@
             });
         });
 
-        function ConvertServerDateTimeToLocalDateTime(htmlElementName) {
-            var dateTimeNow = new Date();
-            var currentHour = dateTimeNow.getHours();
-            var currentDay = dateTimeNow.getDate();
-            var currentMonth = dateTimeNow.getMonth();
-            var currentYear = dateTimeNow.getFullYear();
+        function GetServerDateTime() {
+            $.ajax({
+                url: '/Chat/DateTimeNow',
+                type: 'GET',
+            }).done(function (result) {
+                return result;
+            });
+        }
 
-            $(htmlElementName+'.data-utc-date').each(function () {
+        function ConvertServerDateTimeToLocalDateTime(htmlElementName) {
+            $(htmlElementName + ' span.data-utc-date').each(function () {
+                var dateTimeNowClient = new Date();
+                var currentClientDay = dateTimeNowClient.getDate();
+                var currentClientMonth = dateTimeNowClient.getMonth();
+                var currentClientYear = dateTimeNowClient.getFullYear();
+
+                var dateTimeNowServer = new Date(Date.parse(GetServerDateTime()));
+                var currentServerDay = dateTimeNowServer.getDay();
+                var currentServerMonth = dateTimeNowServer.getMonth();
+                var currentServerYear = dateTimeNowServer.getFullYear();
+
+                var diffDays = currentClientDay - currentServerDay;
+                var diffMonths = currentClientMonth - currentServerMonth;
+                var diffYears = currentClientYear - currentServerYear;
+
                 var d = moment($(this).text(), "DD.MM.YYYY");
-                d.set({
-                    'date': currentDay,
-                    'month': currentMonth,
-                    'year': currentYear
-                });
+                d = d.add(diffDays, 'days')
+                    .add(diffMonths, 'months')
+                    .add(diffYears, 'years');
                 $(this).text(d.format("DD.MM.YYYY"));
             });
 
-            $(htmlElementName+'.data-utc-time').each(function () {
+            $(htmlElementName + ' span.data-utc-time').each(function () {
+                var dateTimeNowClient = new Date();
+                var currentClientHour = dateTimeNowClient.getHours();
+                var currentClientMinute = dateTimeNowClient.getMinutes();
+
+                var dateTimeNowServer = new Date(Date.parse(GetServerDateTime()));
+                var currentServerHour = dateTimeNowServer.getHours();
+                var currentServerMonth = dateTimeNowServer.getMinutes();
+
+                var diffHours = currentClientHour - currentServerHour;
+                var diffMinutes = currentClientMinute - currentServerMonth;
+
+
                 var d = moment($(this).text(), "HH:mm");
-                d.set({ 'hour': currentHour });
+                d = d.add(diffHours, 'hours')
+                    .add(diffMinutes, 'minutes');
                 $(this).text(d.format("HH:mm"));
             });
         }

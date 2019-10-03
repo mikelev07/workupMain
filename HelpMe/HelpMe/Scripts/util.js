@@ -101,11 +101,65 @@ $(function () {
     function ConvertTimeToLocal(time) {
         var currentHour = new Date().getHours();
 
-        var newTime = moment(time);
+        var newTime = moment(time, "HH:mm");
         newTime.set({ 'hour': currentHour });
 
-        return newTime;
+        return newTime.format("HH:mm");
     }
+
+    function GetServerDateTime() {
+        $.ajax({
+            url: '/Chat/DateTimeNow',
+            type: 'GET',
+        }).done(function (result) {
+            return result;
+        });
+    }
+
+    function ConvertServerDateTimeToLocalDateTime(htmlElementName) {
+        $(htmlElementName + ' span.data-utc-date').each(function () {
+            var dateTimeNowClient = new Date();
+            var currentClientDay = dateTimeNowClient.getDate();
+            var currentClientMonth = dateTimeNowClient.getMonth();
+            var currentClientYear = dateTimeNowClient.getFullYear();
+
+            var dateTimeNowServer = new Date(Date.parse(GetServerDateTime()));
+            console.log('server time: ' + dateTimeNowServer);
+            var currentServerDay = dateTimeNowServer.getDay();
+            var currentServerMonth = dateTimeNowServer.getMonth();
+            var currentServerYear = dateTimeNowServer.getFullYear();
+
+            var diffDays = currentClientDay - currentServerDay;
+            var diffMonths = currentClientMonth - currentServerMonth;
+            var diffYears = currentClientYear - currentServerYear;
+
+            var d = moment($(this).text(), "DD.MM.YYYY");
+            d = d.add(diffDays, 'days')
+                .add(diffMonths, 'months')
+                .add(diffYears, 'years');
+            $(this).text(d.format("DD.MM.YYYY"));
+        });
+
+        $(htmlElementName + ' span.data-utc-time').each(function () {
+            var dateTimeNowClient = new Date();
+            var currentClientHour = dateTimeNowClient.getHours();
+            var currentClientMinute = dateTimeNowClient.getMinutes();
+
+            var dateTimeNowServer = new Date(Date.parse(GetServerDateTime()));
+            var currentServerHour = dateTimeNowServer.getHours();
+            var currentServerMonth = dateTimeNowServer.getMinutes();
+
+            var diffHours = currentClientHour - currentServerHour;
+            var diffMinutes = currentClientMinute - currentServerMonth;
+
+
+            var d = moment($(this).text(), "HH:mm");
+            d = d.add(diffHours, 'hours')
+                .add(diffMinutes, 'minutes');
+            $(this).text(d.format("HH:mm"));
+        });
+    }
+    
 
     $('#autocomplete-input').keyup(function () {
         var dialogName = $('#autocomplete-input').val();
@@ -120,8 +174,10 @@ $(function () {
 
                 if (data == "''") {
                     $('#chatusers').html('<li style="margin-top:20px;margin-left:90px">Не найдено диалога</li>');
-                    if (dialogName === "")
-                        $('#chatusers').html(data)
+                    if (dialogName === "") {
+                        $('#chatusers').html(data);
+                        ConvertServerDateTimeToLocalDateTime('#chatusers');
+                    }
                 } else {
 
                     $('#chatusers').html(data)
