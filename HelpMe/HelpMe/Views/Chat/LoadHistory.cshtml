@@ -14,7 +14,7 @@
         if (item == Model.FirstOrDefault())
         {
             <div class="message-time-sign">
-                <span class="data-utc-date">@item.DateSend.ToClientDate()@*.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)*@</span>
+                <span class="data-utc-date">@item.DateSend.ToJavaScriptMilliseconds()</span>
             </div>
         }
 
@@ -22,7 +22,7 @@
         {
             sad = item;
             <div class="message-time-sign">
-                <span class="data-utc-date">@item.DateSend.ToClientDate()</span>
+                <span class="data-utc-date">@item.DateSend.ToJavaScriptMilliseconds()</span>
             </div>
         }
 
@@ -31,7 +31,7 @@
             <div class="message-bubble me">
                 <div class="message-bubble-inner">
                     <div class="message-avatar">
-                        <span class="data-utc-time" style="font-size:14px"> @item.DateSend.ToClientTime() </span>
+                        <span class="data-utc-time" style="font-size:14px"> @item.DateSend.ToJavaScriptMilliseconds() </span>
                     </div>
                     <div class="message-text">
                         <p> @item.Description </p>
@@ -52,7 +52,7 @@
             <div class="message-bubble">
                 <div class="message-bubble-inner">
                     <div class="message-avatar">
-                        <span class="data-utc-time" style="font-size:14px"> @item.DateSend.ToClientTime() </span>
+                        <span class="data-utc-time" style="font-size:14px"> @item.DateSend.ToJavaScriptMilliseconds() </span>
                     </div>
                     <div class="message-text">
                         <p> @item.Description </p>

@@ -88,7 +88,7 @@ namespace HelpMe.Hubs
 
             messageStoreViewModelPartner.ChatDialogId = partnerDialogId;
 
-            var dateSend = messageStoreViewModel.DateSend.ToClientTime();
+            var dateSend = messageStoreViewModel.DateSend.ToJavaScriptMilliseconds();
             Clients.User(uId).addMessage(name, message, dateSend, fileUrls);
             Clients.User(reqId).addMessage(name, message, dateSend, fileUrls);
 

@@ -88,51 +88,10 @@ namespace HelpMe.Helpers
             return MvcHtmlString.Create(result.ToString());
         }
 
-        public static string ToClientTime(this DateTime dateTime)
-        {
-            return string.Format("{0}", dateTime.ToString("H:mm"));
-        }
-
-        public static string ToClientDate(this DateTime dateTime)
-        {
-            return string.Format("{0}", dateTime.ToString("dd.MM.yyyy"));
-        }
-
-        public static string ToClientDateTime(this DateTime dateTime)
-        {
-            return string.Format("{0}", dateTime.ToString("dd.MM.yyyy H:mm"));
-        }
-
-
-        private static readonly long DatetimeMinTimeTicks =
-            (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks;
-
+        private static readonly long DatetimeMinTimeTicks = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks;
         public static long ToJavaScriptMilliseconds(this DateTime dateTime)
         {
             return (long)((dateTime.ToUniversalTime().Ticks - DatetimeMinTimeTicks) / 10000);
-        }
-
-        public static string RelativeTime(this DateTime dateTime)
-        {
-            var span = new TimeSpan(dateTime.Ticks - DateTime.Now.Ticks);
-            var diff = Math.Abs(span.TotalSeconds);
-            if(diff< 60)
-            {
-                return span.Seconds.ToString() + " секунд назад";
-            }
-            if (diff < 3600)
-            {
-                return span.Minutes.ToString() + " минут назад";
-            }
-            if (diff < 24 * 3600)
-            {
-                return span.Hours.ToString() + " часов назад";
-            }
-            if (diff < 48 * 3600)
-            {
-                return "вчера";
-            }
-            return span.Days.ToString() + " дней назад";
         }
     }
 }

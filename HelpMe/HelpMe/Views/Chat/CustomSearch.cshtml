@@ -12,7 +12,7 @@
                     <h5>@d.UserTo.UserName </h5>
                     <span class="notificationNew data-utc-time" id="notification-@d.UserTo.ConnectionId">
 
-                        @d.Messages.OrderByDescending(o => o.Id).FirstOrDefault().DateSend.ToClientTime()
+                        @d.Messages.OrderByDescending(o => o.Id).FirstOrDefault().DateSend.ToJavaScriptMilliseconds()
 
                     </span>
                 </div>

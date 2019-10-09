@@ -36,7 +36,7 @@
                                             <h5>@d.UserTo.UserName </h5>
                                             <span class="notificationNew data-utc-time" id="notification-@d.UserTo.ConnectionId">
 
-                                                @d.Messages.OrderByDescending(o => o.Id).FirstOrDefault().DateSend.ToJavaScriptMilliseconds()@*.ToString("H:mm", CultureInfo.InvariantCulture)*@
+                                                @d.Messages.OrderByDescending(o => o.Id).FirstOrDefault().DateSend.ToJavaScriptMilliseconds()
 
                                             </span>
                                         </div>
@@ -100,7 +100,7 @@
                                 if (item == Model.FirstOrDefault())
                                 {
                                     <div class="message-time-sign">
-                                        <span class="data-utc-date">@item.DateSend.ToClientDate()@*.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)*@</span>
+                                        <span class="data-utc-date">@item.DateSend.ToJavaScriptMilliseconds()</span>
                                     </div>
                                 }
 
@@ -108,7 +108,7 @@
                                 {
                                     sad = item;
                                     <div class="message-time-sign">
-                                        <span class="data-utc-date">@item.DateSend.ToClientDate()@*.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)*@</span>
+                                        <span class="data-utc-date">@item.DateSend.ToJavaScriptMilliseconds()</span>
                                     </div>
                                 }
 
@@ -118,7 +118,7 @@
                                     <div class="message-bubble me">
                                         <div class="message-bubble-inner">
                                             <div class="message-avatar">
-                                                <span class="data-utc-time" style="font-size:14px"> @item.DateSend.ToClientTime()@*.ToString("H:mm", CultureInfo.InvariantCulture)*@ </span>
+                                                <span class="data-utc-time" style="font-size:14px"> @item.DateSend.ToJavaScriptMilliseconds() </span>
                                             </div>
                                             <div class="message-text">
                                                 <p> @item.Description </p>
@@ -139,7 +139,7 @@
                                     <div class="message-bubble">
                                         <div class="message-bubble-inner">
                                             <div class="message-avatar">
-                                                <span class="data-utc-time" style="font-size:14px"> @item.DateSend.ToClientTime()@*.ToString("H:mm", CultureInfo.InvariantCulture)*@ </span>
+                                                <span class="data-utc-time" style="font-size:14px"> @item.DateSend.ToJavaScriptMilliseconds() </span>
                                             </div>
                                             <div class="message-text">
                                                 <p> @item.Description </p>
@@ -205,132 +205,8 @@
 @section Scripts {
     <script type="text/javascript">
         $(function () {
-            DifferenceBetweenServerAndClientTime(MakeRelativeDate, "#chatusers");
-            //console.log('timeDifference = ' + timeDifference);
-            //ConvertServerDateTimeToLocalDateTime("#chatbody");
-            //MakeRelativeDate("#chatusers");
-            
-
-            function GetServerDateTime(callback) {
-                $.ajax({
-                    url: '/Chat/DateTimeNow',
-                    type: 'GET',
-                    success: callback,
-                    error: function () {
-                        console.log("Error while calling method '/Chat/DateTimeNow'");
-                    }
-                });
-            }
-
-            function DifferenceBetweenServerAndClientTime(callback, htmlElementName) {
-                GetServerDateTime(function (data) {
-                    var dateTimeNowServer = new Date(Date.parse(data));
-                    //console.log('dateTimeNowServer = ' + dateTimeNowServer);
-                    var dateTimeNowClient = new Date();
-                    var timeDifference = dateTimeNowClient.getTime() - dateTimeNowServer.getTime();//in milliseconds
-                    callback(htmlElementName, timeDifference);
-                });
-                
-            }
-
-            function MakeRelativeDate(htmlElementName, timeDifference) {
-                $(htmlElementName + ' span.data-utc-time').each(function () {
-                    var now = new Date();
-                    var milliseconds = parseInt($(this).text(), 10);
-                    var currentDate = new Date(milliseconds);
-
-                    //convert server date to client date
-                    var interval = timeDifference/60000; //interval between server and client in minutes (60 * 1000)
-                    //console.log('interval = ' + interval);
-                    if (interval > 0) {
-                        currentDate.setMinutes(currentDate.getMinutes() + interval);
-                    }
-                    else {
-                        currentDate.setMinutes(currentDate.getMinutes() - interval);
-                    }
-
-                    //get relative date from received date
-                    var diff = Math.abs(Math.floor((currentDate.getTime() - now.getTime()) / 1000)); //in seconds
-
-                    if(diff< 60)
-                    {
-                        $(this).text(diff + " секунд назад");
-                        return;
-                    }
-                    if (diff < 3600)
-                    {
-                        $(this).text(Math.floor(diff / 60) + " минут назад");
-                        return;
-                    }
-                    if (diff < 24 * 3600)
-                    {
-                        $(this).text(Math.floor(diff / 3600) + " часов назад");
-                        return;
-                    }
-                    if (diff < 48 * 3600)
-                    {
-                        $(this).text("вчера");
-                        return;
-                    }
-                    if (diff < 30 * 24 * 3600) {
-                        $(this).text(Math.floor(diff / 3600 / 24) + " дней назад");
-                        return;
-                    }
-                    if (diff < 12 * 30 * 24 * 3600) {
-                        $(this).text(Math.floor(diff / 3600 / 24 / 30) + " месяцев назад");
-                        return;
-                    }
-                    if (Number.isInteger(diff)) {
-                        $(this).text(Math.floor(diff / 3600 / 24 / 30 / 12) + " лет назад");
-                        return;
-                    }
-
-                    $(this).text( "wrong date!");
-                });
-            }
-
-            function ConvertServerDateTimeToLocalDateTime(htmlElementName) {
-                $(htmlElementName + ' span.data-utc-date').each(function () {
-                    var dateTimeNowClient = new Date();
-                    var currentClientDay = dateTimeNowClient.getDate();
-                    var currentClientMonth = dateTimeNowClient.getMonth();
-                    var currentClientYear = dateTimeNowClient.getFullYear();
-
-                    var dateTimeNowServer = new Date(Date.parse(GetServerDateTime()));
-                    var currentServerDay = dateTimeNowServer.getDay();
-                    var currentServerMonth = dateTimeNowServer.getMonth();
-                    var currentServerYear = dateTimeNowServer.getFullYear();
-
-                    var diffDays = currentClientDay - currentServerDay;
-                    var diffMonths = currentClientMonth - currentServerMonth;
-                    var diffYears = currentClientYear - currentServerYear;
-
-                    var d = moment($(this).text(), "DD.MM.YYYY");
-                    d = d.add(diffDays, 'days')
-                        .add(diffMonths, 'months')
-                        .add(diffYears, 'years');
-                    $(this).text(d.format("DD.MM.YYYY"));
-                });
-
-                $(htmlElementName + ' span.data-utc-time').each(function () {
-                    var dateTimeNowClient = new Date();
-                    var currentClientHour = dateTimeNowClient.getHours();
-                    var currentClientMinute = dateTimeNowClient.getMinutes();
-
-                    var dateTimeNowServer = new Date(Date.parse(GetServerDateTime()));
-                    var currentServerHour = dateTimeNowServer.getHours();
-                    var currentServerMonth = dateTimeNowServer.getMinutes();
-
-                    var diffHours = currentClientHour - currentServerHour;
-                    var diffMinutes = currentClientMinute - currentServerMonth;
-
-
-                    var d = moment($(this).text(), "HH:mm");
-                    d = d.add(diffHours, 'hours')
-                        .add(diffMinutes, 'minutes');
-                    $(this).text(d.format("HH:mm"));
-                });
-            }
+            //make relative datetime in dialogs (to the left from the chat)
+            DifferenceBetweenServerAndClientTime(MakeRelativeDate, FormatServerDateTime, "#chatusers", "#chatroom");
 
             //для скрытия кнопок вложения и отправки сообщения если не выбран диалог
             var isAnyDialogChosen = "@(Model != null)";
@@ -356,6 +232,107 @@
             });
         });
 
+
+        //метод для нахождения текущего серверного времени
+            function GetServerDateTime(callback) {
+                $.ajax({
+                    url: '/Chat/DateTimeNow',
+                    type: 'GET',
+                    success: callback,
+                    error: function () {
+                        console.log("Error while calling method '/Chat/DateTimeNow'");
+                    }
+                });
+            }
+
+            //метод для нахождения разницы между серверным временем и клиентским (в мс)
+            function DifferenceBetweenServerAndClientTime(callback1, callback2, htmlElementName1, htmlElementName2) {
+                GetServerDateTime(function (data) {
+                    var dateTimeNowServer = new Date(Date.parse(data));
+                    var dateTimeNowClient = new Date();
+                    //timeDifference объявлена в util.js
+                    timeDifference = dateTimeNowClient.getTime() - dateTimeNowServer.getTime();//в мс
+                    callback1(htmlElementName1);
+                    callback2(htmlElementName2);
+                });
+
+            }
+
+            //метод для перевода серверного времени в клиентское
+            function ConvertTimeToLocalDateTime(serverTimeInMilliSeconds) {
+                var oldDate = new Date(serverTimeInMilliSeconds);
+                var interval = timeDifference / 60000; //разница между сервером и клиентом в минутах (60 * 1000)
+
+                if (interval > 0) {
+                    oldDate.setMinutes(oldDate.getMinutes() + interval);
+                }
+                else {
+                    oldDate.setMinutes(oldDate.getMinutes() - interval);
+                }
+
+                return oldDate;
+            }
+
+            //метод для перевода абсолютной даты в относительную
+            function MakeRelativeDate(htmlElementName) {
+                $(htmlElementName + ' span.data-utc-time').each(function () {
+                    var thisDateInMilliSeconds = parseInt($(this).text(), 10);
+
+                    //сначала переведем время в клиентское
+                    var currentDate = ConvertTimeToLocalDateTime(thisDateInMilliSeconds);
+
+                    //затем переводим полученное клиентское время в относительное
+                    var now = new Date();
+                    var diff = Math.abs(Math.floor((currentDate.getTime() - now.getTime()) / 1000)); //в секундах
+
+                    if (diff < 60) {
+                        $(this).text(diff + " секунд назад");
+                        return;
+                    }
+                    if (diff < 3600) {
+                        $(this).text(Math.floor(diff / 60) + " минут назад");
+                        return;
+                    }
+                    if (diff < 24 * 3600) {
+                        $(this).text(Math.floor(diff / 3600) + " часов назад");
+                        return;
+                    }
+                    if (diff < 48 * 3600) {
+                        $(this).text("вчера");
+                        return;
+                    }
+                    if (diff < 30 * 24 * 3600) {
+                        $(this).text(Math.floor(diff / 3600 / 24) + " дней назад");
+                        return;
+                    }
+                    if (diff < 12 * 30 * 24 * 3600) {
+                        $(this).text(Math.floor(diff / 3600 / 24 / 30) + " месяцев назад");
+                        return;
+                    }
+                    if (Number.isInteger(diff)) {
+                        $(this).text(Math.floor(diff / 3600 / 24 / 30 / 12) + " лет назад");
+                        return;
+                    }
+                    else {
+                        $(this).text("wrong date!");
+                    }
+                });
+            }
+
+            //переводит серверную дату и время в клиентскую, а также отображает её в нужном формате (дата или время)
+            function FormatServerDateTime(htmlElementName) {
+                $(htmlElementName + ' span.data-utc-date').each(function () {
+                    var thisDate = $(this).text();
+                    var currentDate = ConvertTimeToLocalDateTime(parseInt(thisDate, 10));
+                    $(this).text(moment(currentDate).format("DD.MM.YYYY"));
+                });
+
+                $(htmlElementName + ' span.data-utc-time').each(function () {
+                    var thisDate = $(this).text();
+                    var currentDate = ConvertTimeToLocalDateTime(parseInt(thisDate, 10));
+                    $(this).text(moment(currentDate).format("HH:mm"));
+                });
+            }
     //disableScroll();
     var objDiv = document.getElementById("chatroom");
     objDiv.scrollTop = objDiv.scrollHeight;
@@ -402,8 +379,10 @@
         }).done(function (result) {
             $('.message-reply').show();
             $('#chatroom').html(result);
-            ConvertServerDateTimeToLocalDateTime("#chatroom");
+            FormatServerDateTime("#chatroom");
             $('#chatroom').scrollTop($('#chatroom').prop('scrollHeight'));
+        }).error(function () {
+            console.log('Error while calling /Chat/LoadHistory');
         });
     }
 
