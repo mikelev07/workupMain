@@ -212,7 +212,6 @@
                 </div>
             </div>
 
-            <!-- Dashboard Box -->
             <div class="col-xl-12">
                 <div id="test1" class="dashboard-box">
 
@@ -220,43 +219,47 @@
                     <div class="headline">
                         <h3><i class="icon-material-outline-lock"></i> Пароль</h3>
                     </div>
-
-                    <div class="content with-padding">
-                        <div class="row">
-                            <div class="col-xl-4">
-                                <div class="submit-field">
-                                    <h5>Текущий пароль</h5>
-                                    <input type="password" class="with-border">
+                    @using (Html.BeginForm("ChangePassword", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="content with-padding">
+                            <div class="row">
+                                <div class="col-xl-4">
+                                    <div class="submit-field">
+                                        <h5>Текущий пароль</h5>
+                                        <input name="OldPassword" type="password" class="with-border">
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-xl-4">
-                                <div class="submit-field">
-                                    <h5>Новый пароль</h5>
-                                    <input type="password" class="with-border">
+                                <div class="col-xl-4">
+                                    <div class="submit-field">
+                                        <h5>Новый пароль</h5>
+                                        <input name="NewPassword" type="password" class="with-border">
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-xl-4">
-                                <div class="submit-field">
-                                    <h5>Повторить пароль</h5>
-                                    <input type="password" class="with-border">
+                                <div class="col-xl-4">
+                                    <div class="submit-field">
+                                        <h5>Повторить пароль</h5>
+                                        <input name="ConfirmPassword" type="password" class="with-border">
+                                    </div>
                                 </div>
+                                @*
+                                <div class="col-xl-12">
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="two-step" checked>
+                                        <label for="two-step"><span class="checkbox-icon"></span> Включить двухфакторную авторизацию</label>
+                                    </div>
+                                </div>
+                                 *@
                             </div>
-
                             <div class="col-xl-12">
-                                <div class="checkbox">
-                                    <input type="checkbox" id="two-step" checked>
-                                    <label for="two-step"><span class="checkbox-icon"></span> Включить двухфакторную авторизацию</label>
-                                </div>
+                                <input type="submit" value="Сохранить изменения" class="button ripple-effect big margin-top-30" />
                             </div>
                         </div>
-                        <div class="col-xl-12">
-                            <input type="submit" value="Сохранить изменения" class="button ripple-effect big margin-top-30" />
-                        </div>
+                    }
+
                     </div>
-                  
-                </div>
             </div>
 
 
