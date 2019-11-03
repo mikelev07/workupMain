@@ -16,7 +16,6 @@
     @Scripts.Render("~/bundles/modernizr")
 
     <style>
-
         .nav-tag {
             display: inline-block;
             font-weight: 700;
@@ -547,12 +546,9 @@
                                 }
 
                                 $.each(response, function (index, value) {
-                                    if (value.UserName != "@User.Identity.Name") {
-                                        $('#notifContent').prepend($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text"> Пользователь <strong> ' + value.UserName + ' </strong> ' + value.Description + ' <span class="color"> к заказу</span></span></a></li>'));
-                                    }
-                                    else {
-                                        $('#notifContent').prepend($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Title + ' <span class="color"> к заказу</span></span></a></li>'));
-                                    }
+
+                                   $('#notifContent').prepend($('<li class="notifications-not-read"><a href=""><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.DescriptionTo + '</span></a></li>'));
+                                    
                                 });
                             },
                             error: function (error) {
@@ -561,7 +557,7 @@
                         })
                     });
 
-        var notificationhub = $.connection.notificationHub;
+                    var notificationhub = $.connection.notificationHub;
 
                     var chathub = $.connection.chatHub;
 
@@ -595,8 +591,6 @@
                         var num1 = $('.ncount').text();
                         if (num == '') num = num1 = 0;
                         $('.ncount').text(parseInt(num) + 1);
-
-
 
                         Snackbar.show({
                             text: 'Новое уведомление!',

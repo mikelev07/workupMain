@@ -342,11 +342,11 @@ namespace HelpMe.Controllers
 
         public async Task<bool> AttractToCustom(string yourMessage, int customId, string userFromName, string userToName, string sentMessage)
         {
-            bool hasAlreadyNotification = await db.Notifications.AnyAsync(n => n.Url == ("/Custom/Details/" + customId) && n.ExUserName==userToName);
-            if (hasAlreadyNotification)
-            {
-                return false;
-            }
+           // bool hasAlreadyNotification = await db.Notifications.AnyAsync(n => n.Url == ("/Custom/Details/" + customId) && n.ExUserName==userToName);
+           // if (hasAlreadyNotification)
+           // {
+           //     return false;
+            //}
 
             var userFrom = await db.Users.FirstOrDefaultAsync(x => x.UserName == userFromName);
             var userFromId = userFrom.Id;
@@ -355,32 +355,7 @@ namespace HelpMe.Controllers
             string url = "/Custom/Details/" + customId;
             var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
 
-            Notification notification = new Notification {
-                Id = 1,
-                Title = yourMessage,
-                Status = NotificationStatus.Unreading,
-                Url = url,
-                UserName = userFromName,
-                ExUserName = userToName,
-                UserId = userToId,
-                Description = sentMessage
-            };
-            Notification notification2 = new Notification {
-                Id = 2,
-                Title = yourMessage,
-                Status = NotificationStatus.Unreading,
-                Url = url,
-                UserName = userFromName,
-                ExUserName = userToName,
-                UserId = userFromId,
-                Description = sentMessage
-            };
-
-            db.Notifications.Add(notification);
-            db.Notifications.Add(notification2);
-            db.SaveChanges();
-            context.Clients.User(userFromId).displayMessage(yourMessage);
-            context.Clients.User(userToId).displayMessage(yourMessage);
+       
 
             return true;
         }

@@ -281,6 +281,14 @@
     <Compile Include="Migrations\201909211051128_DialogStatusAwayMigration.Designer.cs">
       <DependentUpon>201909211051128_DialogStatusAwayMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911031736472_andNeeeew.cs" />
+    <Compile Include="Migrations\201911031736472_andNeeeew.Designer.cs">
+      <DependentUpon>201911031736472_andNeeeew.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911031802404_andNeeeew1.cs" />
+    <Compile Include="Migrations\201911031802404_andNeeeew1.Designer.cs">
+      <DependentUpon>201911031802404_andNeeeew1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\API\CustomApiModel.cs" />
@@ -608,6 +616,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909211051128_DialogStatusAwayMigration.resx">
       <DependentUpon>201909211051128_DialogStatusAwayMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911031736472_andNeeeew.resx">
+      <DependentUpon>201911031736472_andNeeeew.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911031802404_andNeeeew1.resx">
+      <DependentUpon>201911031802404_andNeeeew1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

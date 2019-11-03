@@ -324,6 +324,15 @@ namespace HelpMe.Controllers
 
                         attach.UserId = User.Identity.GetUserId();
                         db.MyAttachments.Add(attach);
+                        NotificationHubModel notificationHubModel = new NotificationHubModel()
+                        {
+                            UserFromId = User.Identity.GetUserId(),
+                            UserToId = customViewModel.ExecutorId,
+                            DescriptionFrom = "Вы загрузили решение к заказу",
+                            DescriptionTo = "Исполнитель " + customViewModel.Executor.UserName + " загрузил решение"
+                        };
+
+                        SendM(notificationHubModel);
                         // SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
                         await db.SaveChangesAsync();
                     }
@@ -384,7 +393,18 @@ namespace HelpMe.Controllers
 
                         attach.UserId = User.Identity.GetUserId();
                         db.Attachments.Add(attach);
-                        SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
+
+                        NotificationHubModel notificationHubModel = new NotificationHubModel()
+                        {
+                            UserFromId = User.Identity.GetUserId(),
+                            UserToId = customViewModel.ExecutorId,
+                            DescriptionFrom = "Вы загрузили решение к заказу",
+                            DescriptionTo = "Исполнитель " + customViewModel.Executor.UserName + " загрузил решение"
+                        };
+
+                        SendM(notificationHubModel);
+
+                        //SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
                         db.Entry(customViewModel).State = EntityState.Modified;
                         customViewModel.Status = CustomStatus.NeedBuy;//ожидает покупки
                         await db.SaveChangesAsync();
@@ -526,7 +546,7 @@ namespace HelpMe.Controllers
             }
             string uName = db.Users.Where(c => c.Id == customViewModel.UserId).FirstOrDefault().UserName;
             string exName = db.Users.Where(c => c.Id == customViewModel.ExecutorId).FirstOrDefault().UserName;
-            SendMessage("Вы выбрали исполнителем " + exName, customViewModel.Id, uName, exName, "выбрал вас исполнителем");
+           // SendMessage();
 
             await db.SaveChangesAsync();
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
@@ -543,35 +563,40 @@ namespace HelpMe.Controllers
             return PartialView(allCustoms);
         }
 
-        private void SendMessage(string message, int id, string userName, string exUsername, string descr)
+        private void SendM(NotificationHubModel notif)
         {
-            // Получаем контекст хаба
-            var uId = db.Users.Where(x => x.UserName == userName).FirstOrDefault().Id;
-            var exId = db.Users.Where(x => x.UserName == exUsername).FirstOrDefault().Id;
-            string url = "/Custom/Details/" + id;
             var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
-            Notification notification = new Notification { Id = 1, Title = message, Status = NotificationStatus.Unreading, Url = url, UserName = userName, ExUserName = exUsername, UserId = exId, Description = descr };
-            Notification notification2 = new Notification { Id = 2, Title = message, Status = NotificationStatus.Unreading, Url = url, UserName = userName, ExUserName = exUsername, UserId = uId, Description = descr };
-            db.Notifications.Add(notification);
-            db.Notifications.Add(notification2);
-            db.SaveChanges();
-            context.Clients.User(uId).displayMessage(message);
-            context.Clients.User(exId).displayMessage(message);
-        }
 
-        //перегрузка для односторонней нотификации
-        private void SendMessage(string message, int id, string userName)
-        {
-            // Получаем контекст хаба
-            var uId = db.Users.Where(x => x.UserName == userName).FirstOrDefault().Id;
-            string url = "/Custom/Details/" + id;
-            var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
-            Notification notification = new Notification { Id = 2, Title = message, Status = NotificationStatus.Unreading, Url = url, UserName = userName, ExUserName = null, UserId = uId, Description = null };
-            db.Notifications.Add(notification);
-            db.SaveChanges();
-            context.Clients.User(uId).displayMessage(message);
-        }
+            Notification notificationFrom = new Notification
+            {
+                Id = 1,
+                UserFromId = notif.UserFromId,
+                UserToId = notif.UserToId,
+                UserId = notif.UserFromId,
+                DescriptionFrom = notif.DescriptionFrom,
+                DescriptionTo = notif.DescriptionTo,
+                StartDate = DateTime.Now
+            };
 
+            Notification notificationTo = new Notification
+            {
+                Id = 2,
+                UserFromId = notif.UserFromId,
+                UserToId = notif.UserToId,
+                UserId = notif.UserFromId,
+                DescriptionFrom = notif.DescriptionFrom,
+                DescriptionTo = notif.DescriptionTo,
+                StartDate = DateTime.Now
+            };
+
+            db.Notifications.Add(notificationFrom);
+            db.Notifications.Add(notificationTo);
+            db.SaveChanges();
+
+            context.Clients.User(notif.UserFromId).displayMessage(notif.DescriptionFrom);
+            context.Clients.User(notif.UserToId).displayMessage(notif.DescriptionTo);
+        }
+        
         [HttpPost]
         public async Task<ActionResult> SendSolution(int? id, HttpPostedFileBase upload)
         {
@@ -959,6 +984,17 @@ namespace HelpMe.Controllers
 
                             attach.UserId = User.Identity.GetUserId();
                             db.MainAttachments.Add(attach);
+
+                            NotificationHubModel notificationHubModel = new NotificationHubModel()
+                            {
+                                UserFromId = User.Identity.GetUserId(),
+                                UserToId = customViewModel.ExecutorId,
+                                DescriptionFrom = "Вы загрузили решение к заказу",
+                                DescriptionTo = "Исполнитель " + customViewModel.Executor.UserName + " загрузил решение"
+                            };
+
+                            SendM(notificationHubModel);
+
                             // SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
                             await db.SaveChangesAsync();
                             count = customViewModel.MainAttachments.Count;
@@ -1255,7 +1291,7 @@ namespace HelpMe.Controllers
                     customViewModel.DoneInTime = true;
                 }
                 await db.SaveChangesAsync();
-                SendMessage("Вы закрыли заказ", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, customViewModel.User.UserName + "подтвердил выполнение заказа");
+                //SendMessage("Вы закрыли заказ", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, customViewModel.User.UserName + "подтвердил выполнение заказа");
                 return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
             }
             return new HttpNotFoundResult("Model of review is not valid!");
@@ -1277,7 +1313,7 @@ namespace HelpMe.Controllers
 
             customViewModel.Status = CustomStatus.Revision; // на доработку
             await db.SaveChangesAsync();
-            SendMessage("Вы отправили заказ на доработку", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, customViewModel.User.UserName + "отправил заказ на доработку");
+            //SendMessage("Вы отправили заказ на доработку", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, customViewModel.User.UserName + "отправил заказ на доработку");
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
         }
 
@@ -1292,24 +1328,24 @@ namespace HelpMe.Controllers
             if (previousStatus == CustomStatus.Open)
             {
                 customViewModel.Status = CustomStatus.Cancelled; // Отменён
-                SendMessage("Вы отменили заказ", customViewModel.Id, customViewModel.User.UserName);
+                //SendMessage("Вы отменили заказ", customViewModel.Id, customViewModel.User.UserName);
                 if (usersWithOffers != null)
                 {
                     foreach (var user in usersWithOffers)
                     {
-                        SendMessage(null, customViewModel.Id, null, user.UserName, customViewModel.User.UserName + " отменил заказ");
+                        //SendMessage(null, customViewModel.Id, null, user.UserName, customViewModel.User.UserName + " отменил заказ");
                     }
                 }
             }
             if (previousStatus == CustomStatus.Cancelled)
             {
                 customViewModel.Status = CustomStatus.Open; // Открыт
-                SendMessage("Вы переоткрыли заказ", customViewModel.Id, customViewModel.User.UserName);
+               // SendMessage("Вы переоткрыли заказ", customViewModel.Id, customViewModel.User.UserName);
                 if (usersWithOffers != null)
                 {
                     foreach (var user in usersWithOffers)
                     {
-                        SendMessage(null, customViewModel.Id, null, user.UserName, customViewModel.User.UserName + " переоткрыл заказ");
+                        //SendMessage(null, customViewModel.Id, null, user.UserName, customViewModel.User.UserName + " переоткрыл заказ");
                     }
                 }
             }
