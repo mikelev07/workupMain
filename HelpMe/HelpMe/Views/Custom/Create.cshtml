@@ -7,69 +7,6 @@
 <!-- Dashboard Container -->
 <div class="dashboard-container">
 
-    <!-- Dashboard Sidebar
-    ================================================== -->
-    <div class="dashboard-sidebar">
-        <div class="dashboard-sidebar-inner" data-simplebar>
-            <div class="dashboard-nav-container">
-
-                <!-- Responsive Navigation Trigger -->
-                <a href="#" class="dashboard-responsive-nav-trigger">
-                    <span class="hamburger hamburger--collapse">
-                        <span class="hamburger-box">
-                            <span class="hamburger-inner"></span>
-                        </span>
-                    </span>
-                    <span class="trigger-title">Навигация</span>
-                </a>
-
-                <!-- Navigation -->
-                <div class="dashboard-nav">
-                    <div class="dashboard-nav-inner">
-
-                        <ul data-submenu-title="Основное">
-                            <li class="active"><a href="/manage/dashboard"><i class="icon-material-outline-dashboard"></i> Рабочая доска</a></li>
-                            <li><a href="/chat"><i class="icon-material-outline-question-answer"></i> Сообщения <span class="nav-tag">2</span></a></li>
-                            <li><a href="dashboard-bookmarks.html"><i class="icon-material-outline-star-border"></i> Избранное</a></li>
-                            <li><a href="dashboard-reviews.html"><i class="icon-material-outline-rate-review"></i> Отзывы</a></li>
-                        </ul>
-
-                        <ul data-submenu-title="Организация">
-                            <li>
-                                <a href="#"><i class="icon-material-outline-business-center"></i> Задания</a>
-                                <ul>
-                                    <li><a href="dashboard-manage-jobs.html">Управление задачами <span class="nav-tag">3</span></a></li>
-                                    <li><a href="dashboard-manage-candidates.html">Управление исполнителями </a></li>
-                                    <li><a href="dashboard-post-a-job.html">Разместить задачу</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#"><i class="icon-material-outline-assignment"></i> Задачи</a>
-                                <ul>
-                                    <li><a href="dashboard-manage-tasks.html">Управлять задачами <span class="nav-tag">2</span></a></li>
-                                    <li><a href="dashboard-manage-bidders.html">Редактировать задачи</a></li>
-                                    <li><a href="dashboard-my-active-bids.html">Мои активные задачи <span class="nav-tag">4</span></a></li>
-                                    <li><a href="dashboard-post-a-task.html">Разместить задачу</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-
-
-                        <ul data-submenu-title="Аккаунт">
-                            <li><a href="/manage/"><i class="icon-material-outline-settings"></i> Настройки</a></li>
-                            <li><a href="index-logged-out.html"><i class="icon-material-outline-power-settings-new"></i> Выход</a></li>
-                        </ul>
-
-                    </div>
-                </div>
-                <!-- Navigation / End -->
-
-            </div>
-        </div>
-    </div>
-    <!-- Dashboard Sidebar / End -->
-    <!-- Dashboard Content
-    ================================================== -->
     <div class="dashboard-content-container" data-simplebar>
         <div class="dashboard-content-inner">
 
@@ -151,6 +88,7 @@
                                                             <span class="glyphicon glyphicon-th"></span>
                                                         </div>
                                                     </div>
+                                                    @*
                                                     <h5>Время сдачи</h5>
                                                     <div class="form-group">
                                                         <div class="input-group">
@@ -163,6 +101,7 @@
                                                             </span>
                                                         </div>
                                                     </div>
+                                                        *@
                                                 </div>
                                                 <div class="checkbox">
                                                     <input type="checkbox" id="checkboxDate">
@@ -173,7 +112,6 @@
                                     </div>
 
                                     <div class="col-xl-4">
-                                        <div class="col-xl-12">
                                             <div class="submit-field">
                                                 <h5>Хотите указать свой бюджет?</h5>
                                                 <div class="row">
@@ -189,7 +127,6 @@
                                                     <label for="checkboxNew"><span class="checkbox-icon"></span>По договоренности</label>
                                                 </div>
                                             </div>
-                                        </div>
                                     </div>
                                     <div class="col-xl-4">
                                         <div class="submit-field">
@@ -199,8 +136,6 @@
                                                 <option value="10">10 дней</option>
                                                 <option value="15">15 дней</option>
                                                 <option value="20" selected>20 дней</option>
-                                                <option value="30">30 дней</option>
-                                                <option value="40">40 дней</option>
                                             </select>
                                         </div>
                                     </div>
@@ -308,8 +243,15 @@
     @Scripts.Render("~/bundles/jqueryval")
 
 
-
     <script>
+        var dateToday = new Date();
+        $('#EndingDate').datepicker({
+                startDate: new Date(),
+                language: 'ru',
+                autoclose: true,
+               format: "dd M yyyy",
+              
+            }); //Initialise any date pickers
 
 
         $('#AttachFile').change(function () {
@@ -413,10 +355,7 @@
         });
 
 
-        $(function () { // will trigger when the document is ready
-
-
-
+        $(function () { // will trigger when the document is 
             $('#datetimepicker3').datetimepicker(
                 { format: 'HH:mm' }
             );
@@ -489,13 +428,6 @@
                     $("#datetimepicker3").attr("placeholder", "Время сдачи");
                 }
             });
-
-            $('#EndingDate').datepicker({
-                language: 'ru',
-                autoclose: true,
-                format: "dd M yyyy"
-            }); //Initialise any date pickers
-
         });
     </script>
 }

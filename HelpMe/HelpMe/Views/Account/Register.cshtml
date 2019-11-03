@@ -34,15 +34,19 @@
                 <!-- Account Type -->
                 <div class="account-type">
                     <div>
-                        <input type="radio" name="account-type-radio" id="freelancer-radio-1" class="account-type-radio" checked />
-                        <label for="freelancer-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-account-circle"></i> Исполнитель</label>
+                        <input type="radio" name="RoleName" value="employee" id="freelancer-radio-1" class="account-type-radio" checked />
+                        <label for="freelancer-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-school"></i> Исполнитель</label>
                     </div>
                     <div>
-                        <input type="radio" name="account-type-radio" id="employer-radio-1" class="account-type-radio" />
+                        <input type="radio" name="RoleName" value="user" id="employer-radio-1" class="account-type-radio" />
                         <label for="employer-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-business-center"></i> Заказчик</label>
                     </div>
                 </div>
                 <!-- Form -->
+                <div class="input-with-icon-left">
+                    <i class="icon-material-outline-account-circle"></i>
+                    @Html.TextBox("UserName", "", new { @class = "input-text with-border",@id="usName-2", @placeholder = "Ваш логин" })
+                </div>
 
                 <div class="input-with-icon-left">
                     <i class="icon-material-baseline-mail-outline"></i>
@@ -50,15 +54,16 @@
                 </div>
                 <div class="input-with-icon-left" title="Пароль должен быть не менее 6 символов" data-tippy-placement="bottom">
                     <i class="icon-material-outline-lock"></i>
-                    @Html.Password("Password", "", new { @class = "input-text with-border", @placeholder = "Пароль" })
+                    @Html.Password("Password", "", new { @class = "input-text with-border",@id="fpass-1", @placeholder = "Пароль" })
                 </div>
                 <div class="input-with-icon-left">
                     <i class="icon-material-outline-lock"></i>
-                    @Html.Password("ConfirmPassword", "", new { @class = "input-text with-border", @placeholder = "Повторите пароль" })
+                    @Html.Password("ConfirmPassword", "", new { @class = "input-text with-border",@id="spass-2" @placeholder = "Повторите пароль" })
                 </div>
-               
+                <div style="display:none" class="result-1"></div>
+
                 @Html.ValidationMessage("Email", "", new { @class = "text-danger" }) <br />
-                @Html.ValidationMessage("Password", "", new { @class = "text-danger" }) 
+                @Html.ValidationMessage("Password", "", new { @class = "text-danger" })
                 <!-- Button -->
                 <input value="Создать" class="button full-width button-sliding-icon ripple-effect" type="submit">
                 <!-- Social Login -->
@@ -106,4 +111,31 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+          $('#spass-1').on('keyup', function(){      
+            if ($('#fpass-1').val() == $('#spass-1').val()) {
+              $('.result-1').hide();
+            } else {
+                   $('.result-1').show();
+                $('.result-1').html('Пароли не совпадают');
+            }
+        });
+
+        $("#usName-2").bind('keyup',function(){
+            $(this).val($(this).val().replace(/[^a-z ]/i, ""));
+              Snackbar.show({
+                text: 'Только латинские символы!',
+                pos: 'bottom-center',
+                showAction: false,
+                actionText: "Dismiss",
+                duration: 3000,
+                textColor: '#fff',
+                backgroundColor: '#383838'
+            });
+        });
+
+    </script>
+
+
 }

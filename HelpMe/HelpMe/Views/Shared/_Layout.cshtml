@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNet.Identity
 @using HelpMe.Models
+@using System.Security.Claims;
 
 <!DOCTYPE html>
 <html>
@@ -184,7 +185,10 @@
                                 <!-- Messages -->
                                 <div class="header-notifications user-menu">
                                     <div class="header-notifications-trigger">
-                                        <a href="#"><div class="user-avatar status-online"><img src="~/Content/Custom/images/user-avatar-small-01.jpg" alt=""></div></a>
+                                        @{
+                                            var avatar = ((ClaimsIdentity)User.Identity).FindFirst("avatar");
+                                        }
+                                        <a href="#"><div   class="user-avatar status-online"><img style="height:42px;width:42px" src="@Url.Content(avatar.Value == null ? "~/Content/Custom/images/user-avatar-placeholder.png" : avatar.Value)" alt=""></div></a>
                                     </div>
                                     <!-- Dropdown -->
                                     <div class="header-notifications-dropdown">
@@ -192,15 +196,19 @@
                                         <div class="user-status">
                                             <!-- User Name / Avatar -->
                                             <div class="user-details">
-                                                <div class="user-avatar status-online"><img src="~/Content/Custom/images/user-avatar-small-01.jpg" alt=""></div>
+                                                <div  class="user-avatar status-online"><img style="height:42px;width:42px" src="@Url.Content(avatar.Value == null ? "~/Content/Custom/images/user-avatar-placeholder.png" : avatar.Value)" alt=""></div>
                                                 <div class="user-name">
                                                     @User.Identity.GetUserName() <span></span>
                                                 </div>
                                             </div>
                                             <!-- User Status Switcher -->
                                             <div class="status-switch" id="snackbar-user-status">
-                                                <label class="user-online current-status">В работе</label>
-                                                <label class="user-invisible">Занят</label>
+                                                @{
+                                                    var status = ((ClaimsIdentity)User.Identity).FindFirst("status");
+                                                }
+
+                                                <label value="sucess" class="@(status.Value != "true" ? "user-online" : "user-online current-status")">В работе</label>
+                                                <label value="dontworry" class="@(status.Value != "true" ? "user-invisible current-status" : "user-invisible") ">Занят</label>
                                                 <!-- Status Indicator -->
                                                 <span class="status-indicator" aria-hidden="true"></span>
                                             </div>
@@ -314,32 +322,32 @@
                             <!-- Account Type -->
                             <div class="account-type">
                                 <div>
-                                    <input type="radio" name="account-type-radio" id="freelancer-radio" class="account-type-radio" checked />
-                                    <label for="freelancer-radio" class="ripple-effect-dark"><i class="icon-material-outline-account-circle"></i> Исполнитель</label>
+                                    <input type="radio" name="RoleName" value="employee" id="freelancer-radio" class="account-type-radio" checked />
+                                    <label for="freelancer-radio" class="ripple-effect-dark"><i class="icon-material-outline-school"></i> Исполнитель</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="account-type-radio" id="employer-radio" class="account-type-radio" />
+                                    <input type="radio" name="RoleName" value="user" id="employer-radio" class="account-type-radio" />
                                     <label for="employer-radio" class="ripple-effect-dark"><i class="icon-material-outline-business-center"></i> Заказчик</label>
                                 </div>
                             </div>
                             <!-- Form -->
                             <div class="input-with-icon-left">
-                                <i class="icon-material-baseline-mail-outline"></i>
-                                @Html.TextBox("UserName", "", new { @class = "input-text with-border", @placeholder = "Ваш логин" })
+                                <i class="icon-material-outline-account-circle"></i>
+                                @Html.TextBox("UserName", "", new { @class = "input-text with-border", @id = "usName", @placeholder = "Ваш логин" })
                             </div>
                             <div class="input-with-icon-left">
                                 <i class="icon-material-baseline-mail-outline"></i>
-                                @Html.TextBox("Email", "", new { @class = "input-text with-border", @placeholder = "Ваша почта" })
+                                @Html.TextBox("Email", "", new { @class = "input-text with-border", @type = "email", @placeholder = "Ваша почта" })
                             </div>
                             <div class="input-with-icon-left" title="Пароль должен быть не менее 6 символов" data-tippy-placement="bottom">
                                 <i class="icon-material-outline-lock"></i>
-                                @Html.Password("Password", "", new { @class = "input-text with-border", @placeholder = "Пароль" })
+                                @Html.Password("Password", "", new { @class = "input-text with-border", @id = "fpass", @placeholder = "Пароль" })
                             </div>
                             <div class="input-with-icon-left">
                                 <i class="icon-material-outline-lock"></i>
-                                @Html.Password("ConfirmPassword", "", new { @class = "input-text with-border", @placeholder = "Повторите пароль" })
+                                @Html.Password("ConfirmPassword", "", new { @class = "input-text with-border", @id = "spass", @placeholder = "Повторите пароль" })
                             </div>
-
+                            <div style="display:none" class="result"></div>
                             <!-- Button -->
                             <input value="Создать" class="button full-width button-sliding-icon ripple-effect" type="submit">
                             <!-- Social Login -->
@@ -384,10 +392,45 @@
     <!-- Snackbar // documentation: https://www.polonel.com/snackbar/ -->
     <script>
 
+        $('#spass').on('keyup', function () {
+            if ($('#fpass').val() == $('#spass').val()) {
+                $('.result').hide();
+            } else {
+                $('.result').show();
+                $('.result').html('Пароли не совпадают');
+            }
+        });
+
+        $("#usName").bind('keyup', function () {
+            $(this).val($(this).val().replace(/[^a-z ]/i, ""));
+            Snackbar.show({
+                text: 'Только латинские символы!',
+                pos: 'bottom-center',
+                showAction: false,
+                actionText: "Dismiss",
+                duration: 3000,
+                textColor: '#fff',
+                backgroundColor: '#383838'
+            });
+        });
+
         $('#header .right-side').css('float', 'left')
         $('#header .right-side').css('float', 'right')
-        // Snackbar for user status switcher
+       
         $('#snackbar-user-status label').click(function () {
+
+             $.ajax({
+                    type: 'POST',
+                    url: '/User/ChangeStatus/',
+                     data: {value: $(this).attr("value")},
+                    success: function (response) {
+                       
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                })
+
             Snackbar.show({
                 text: 'Статус изменен!',
                 pos: 'bottom-center',
@@ -452,7 +495,7 @@
                     type: 'GET',
                     url: '/Home/GetUnreadingCount',
                     success: function (response) {
-                       
+
                     },
                     error: function (error) {
                         console.log(error);

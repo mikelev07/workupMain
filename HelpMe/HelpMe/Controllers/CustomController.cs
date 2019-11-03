@@ -21,7 +21,7 @@ namespace HelpMe.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        int pageSize = 4; // количество объектов на страницу
+        int pageSize = 20; // количество объектов на страницу
 
         // GET: Custom
         public ActionResult Index(int? id, string name, int? typeTaskId, int? taskCategoryId, int? skillId,

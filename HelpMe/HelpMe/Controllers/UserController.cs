@@ -13,9 +13,41 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using PagedList;
 using HelpMe.Hubs;
+using System.Security.Claims;
+using System.Security.Principal;
+using Microsoft.Owin.Security;
 
 namespace HelpMe.Controllers
 {
+    public static class Extensions
+    {
+        public static void AddUpdateClaim(this IPrincipal currentPrincipal, string key, string value)
+        {
+            var identity = currentPrincipal.Identity as ClaimsIdentity;
+            if (identity == null)
+                return;
+
+           
+            var existingClaim = identity.FindFirst(key);
+            if (existingClaim != null)
+                identity.RemoveClaim(existingClaim);
+
+         
+            identity.AddClaim(new Claim(key, value));
+            var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
+            authenticationManager.AuthenticationResponseGrant = new AuthenticationResponseGrant(new ClaimsPrincipal(identity), new AuthenticationProperties() { IsPersistent = true });
+        }
+
+        public static string GetClaimValue(this IPrincipal currentPrincipal, string key)
+        {
+            var identity = currentPrincipal.Identity as ClaimsIdentity;
+            if (identity == null)
+                return null;
+
+            var claim = identity.Claims.FirstOrDefault(c => c.Type == key);
+            return claim.Value;
+        }
+    }
     public class UserController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -178,6 +210,7 @@ namespace HelpMe.Controllers
             return (int)TempData["UsersFound"];
         }
 
+
         public JsonResult GetSkills(int id)
         {
             var skills = db.Skills.Where(m => m.TaskCategoryId == id).ToList();
@@ -281,6 +314,31 @@ namespace HelpMe.Controllers
             return View(user);
 
         }
+
+        public async Task<bool> ChangeStatus(string value)
+        {
+            string usId = User.Identity.GetUserId();
+            var userFrom = await db.Users.FirstOrDefaultAsync(x => x.Id == usId);
+
+            db.Entry(userFrom).State = EntityState.Modified;
+
+            if (value != "dontworry")
+            {
+                userFrom.IsNotBusy = true;
+                User.AddUpdateClaim("status", "true");
+            }
+            else
+            {
+                userFrom.IsNotBusy = false;
+                User.AddUpdateClaim("status", "false");
+            }
+
+            await db.SaveChangesAsync();
+
+            return true;
+        }
+
+
 
         public async Task<bool> AttractToCustom(string yourMessage, int customId, string userFromName, string userToName, string sentMessage)
         {
