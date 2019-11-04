@@ -8,9 +8,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>@ViewBag.Title – приложение ASP.NET</title>
+    <title>@ViewBag.Title</title>
     <link rel="stylesheet" type="text/css" href="~/Content/Custom/datepicker.css">
-
     <link rel="stylesheet" href="~/Content/Custom/bootstrap-datetimepicker.css" />
     @Styles.Render("~/Content/Custom/css")
     @Scripts.Render("~/bundles/modernizr")
@@ -86,26 +85,23 @@
                             </ul>
                         </nav>
                         <div class="clearfix"></div>
-                        <!-- Main Navigation / End -->
                     </div>
-                    <!-- Left Side Content / End -->
+                   
                     @if (Request.IsAuthenticated)
                     {
-                        <!-- Right Side Content / End -->
                         <div class="right-side">
-                            <!--  User Notifications -->
                             <div class="header-widget hide-on-mobile">
                                 <a href="/Custom/Create" class="button ripple-effect margin-top-18"><i class="icon-feather-plus"></i> Добавить заказ </a>
                             </div>
-                            <!--  User Notifications -->
+                            
                             <div class="header-widget hide-on-mobile">
-                                <!-- Notifications -->
+                                
                                 <div class="header-notifications" id="not-trigger">
-                                    <!-- Trigger -->
+                                    
                                     <div class="header-notifications-trigger">
-                                        <a id="notCl" href="#"><i class="icon-feather-bell"></i></a>
+                                        <a class="notCl" href="#"><i class="icon-feather-bell"></i></a>
                                     </div>
-                                    <!-- Dropdown -->
+                                    
                                     <div class="header-notifications-dropdown">
                                         <div class="header-notifications-headline">
                                             <h4>Уведомления</h4>
@@ -121,12 +117,13 @@
                                         <a href="/chat" class="header-notifications-button ripple-effect button-sliding-icon">Посмотреть все уведомления <i class="icon-material-outline-arrow-right-alt"></i></a>
                                     </div>
                                 </div>
-                                <!-- Messages -->
+                               
                                 <div class="header-notifications">
+
                                     <div class="header-notifications-trigger">
                                         <a href="#" class="messUnread"><i class="icon-feather-mail"></i></a>
                                     </div>
-                                    <!-- Dropdown -->
+                                   
                                     <div class="header-notifications-dropdown">
                                         <div class="header-notifications-headline">
                                             <h4>Сообщения</h4>
@@ -137,7 +134,7 @@
                                         <div class="header-notifications-content">
                                             <div class="header-notifications-scroll" data-simplebar>
                                                 <ul>
-                                                    <!-- Notification -->
+                                                  
                                                     <li class="notifications-not-read">
                                                         <a href="dashboard-messages.html">
                                                             <span class="notification-avatar status-online"><img src="images/user-avatar-small-03.jpg" alt=""></span>
@@ -148,7 +145,7 @@
                                                             </div>
                                                         </a>
                                                     </li>
-                                                    <!-- Notification -->
+                                                    
                                                     <li class="notifications-not-read">
                                                         <a href="dashboard-messages.html">
                                                             <span class="notification-avatar status-online"><img src="images/user-avatar-small-03.jpg" alt=""></span>
@@ -159,7 +156,7 @@
                                                             </div>
                                                         </a>
                                                     </li>
-                                                    <!-- Notification -->
+                                                 
                                                     <li class="notifications-not-read">
                                                         <a href="dashboard-messages.html">
                                                             <span class="notification-avatar status-online"><img src="images/user-avatar-small-03.jpg" alt=""></span>
@@ -176,12 +173,10 @@
                                         <a href="/chat" class="header-notifications-button ripple-effect button-sliding-icon">Посмотреть все сообщения<i class="icon-material-outline-arrow-right-alt"></i></a>
                                     </div>
                                 </div>
-
                             </div>
-                            <!--  User Notifications / End -->
-                            <!-- User Menu -->
+                          
                             <div class="header-widget">
-                                <!-- Messages -->
+                             
                                 <div class="header-notifications user-menu">
                                     <div class="header-notifications-trigger">
                                         @{
@@ -189,18 +184,18 @@
                                         }
                                         <a href="#"><div   class="user-avatar status-online"><img style="height:42px;width:42px" src="@Url.Content(avatar.Value == null ? "~/Content/Custom/images/user-avatar-placeholder.png" : avatar.Value)" alt=""></div></a>
                                     </div>
-                                    <!-- Dropdown -->
+                                 
                                     <div class="header-notifications-dropdown">
-                                        <!-- User Status -->
+                                       
                                         <div class="user-status">
-                                            <!-- User Name / Avatar -->
+                                          
                                             <div class="user-details">
                                                 <div  class="user-avatar status-online"><img style="height:42px;width:42px" src="@Url.Content(avatar.Value == null ? "~/Content/Custom/images/user-avatar-placeholder.png" : avatar.Value)" alt=""></div>
                                                 <div class="user-name">
                                                     @User.Identity.GetUserName() <span></span>
                                                 </div>
                                             </div>
-                                            <!-- User Status Switcher -->
+                                      
                                             <div class="status-switch" id="snackbar-user-status">
                                                 @{
                                                     var status = ((ClaimsIdentity)User.Identity).FindFirst("status");
@@ -208,7 +203,7 @@
 
                                                 <label value="sucess" class="@(status.Value != "true" ? "user-online" : "user-online current-status")">В работе</label>
                                                 <label value="dontworry" class="@(status.Value != "true" ? "user-invisible current-status" : "user-invisible") ">Занят</label>
-                                                <!-- Status Indicator -->
+                                           
                                                 <span class="status-indicator" aria-hidden="true"></span>
                                             </div>
                                         </div>
@@ -227,8 +222,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- User Menu / End -->
-                            <!-- Mobile Navigation Button -->
+                        
                             <span class="mmenu-trigger">
                                 <button class="hamburger hamburger--collapse" type="button">
                                     <span class="hamburger-box">
@@ -240,12 +234,11 @@
                     }
                     else
                     {
-                        <!-- Right Side Content / End -->
                         <div class="right-side">
                             <div class="header-widget">
                                 <a href="#sign-in-dialog" class="popup-with-zoom-anim log-in-button"><i class="icon-feather-log-in"></i> <span>Войти / Регистрация</span></a>
                             </div>
-                            <!-- Mobile Navigation Button -->
+                          
                             <span class="mmenu-trigger">
                                 <button class="hamburger hamburger--collapse" type="button">
                                     <span class="hamburger-box">
@@ -254,14 +247,12 @@
                                 </button>
                             </span>
                         </div>
-                        <!-- Right Side Content / End -->
                     }
                 </div>
             </div>
-            <!-- Header / End -->
+        
         </header>
-        <!-- Sign In Popup
-        ================================================== -->
+  
         <div id="sign-in-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
             <!--Tabs -->
             <div class="sign-in-form">
@@ -365,7 +356,7 @@
         @RenderBody()
 
     </div>
-    <!--Ссылка на библиотеку SignalR -->
+
     @Scripts.Render("~/bundles/jquery")
 
     <script src="~/Scripts/Custom/simplebar.min.js"></script>
@@ -377,18 +368,12 @@
     <script src="~/Scripts/Custom/locale/bootstrap-datepicker.ru.js" charset="UTF-8"></script>
     <script src="~/Scripts/Custom/moment-with-locales.min.js"></script>
     <script src="~/Scripts/Custom/bootstrap-datetimepicker.min.js"></script>
-
-
     <script src="~/signalr/hubs"></script>
     <script src="~/Scripts/util.js"></script>
-    @* <script src="~/Scripts/iwc-all.min.js"></script>*@
-    @* <script src="~/Scripts/signalr-patch.js"></script>*@
-    @*<script src="~/Scripts/iwc-signalr.js"></script>*@
-
-
+  
 
     @Scripts.Render("~/bundles/Scripts/Custom/js")
-    <!-- Snackbar // documentation: https://www.polonel.com/snackbar/ -->
+
     <script>
 
         $('#spass').on('keyup', function () {
@@ -442,37 +427,13 @@
         });
     </script>
 
-    <!-- Google Autocomplete -->
     <script>
-              /*  $('#loginButton').click(function () {
 
-                    var dataForm = {
-                        "userid": $("#emailField").val(),
-                        "password": $("#passwordField").val(),
-                    };
-                    $.ajax({
-                        url: "/Account/ValidateUser",
-                        type: "POST",
-                        data: JSON.stringify(dataForm),
-                        dataType: "json",
-                        contentType: "application/json",
-                        success: function (response) {
-                            if (response.Success) {
-                                $.ajax({
-                                    type: "POST",
-                                    url: "/Account/Login",
-                                    data: dataForm,
-                                    success: function (response) { }
-                                });
-                            } else {
-                                $('#valid').text('Неверный логин');
-                            }
-                        },
-                    });
-                });GetUnreadingMessageCount
+                // подключаемся к хабам
+                var notificationhub = $.connection.notificationHub;
+                var chathub = $.connection.chatHub;
 
-        */
-
+                // Получаем кол-во непрочитанные сообщений
                 $.ajax({
                     type: 'GET',
                     url: '/Home/GetUnreadingMessageCount',
@@ -488,42 +449,41 @@
                     }
                 })
 
-
-
+                // Получаем кол-во непрочитанных уведомлений
                 $.ajax({
                     type: 'GET',
                     url: '/Home/GetUnreadingCount',
                     success: function (response) {
-
+                         if (response != 0) {
+                            if ($(".notiUnreadCount").length == 0) {
+                                $('.notCl').append("<span class='notiUnreadCount'>" + response + "</span>")
+                            }
+                        }
                     },
                     error: function (error) {
                         console.log(error);
                     }
                 })
-                var isSucess = false;
-                $("#not-trigger").on('click', '#notCl', function () {
 
+                var isSucess = false;
+
+                // для clone stick
+                $("#not-trigger").on('click', '.notCl', function () {
                     $.ajax({
                         type: 'GET',
                         url: '/Home/GetAllNotifications',
                         success: function (response) {
                             $('.ncount').text(0);
                             if (!isSucess) {
-                            $('#notifContent').empty();
-                            if (response.length == 0) {
-                                $('#notifContent').append($('<li>Нет данных</li>'));
-                            }
+                                $('#notifContent').empty();
+                                if (response.length == 0) {
+                                    $('#notifContent').append($('<li>Нет данных</li>'));
+                                }
                                 $.each(response, function (index, value) {
-                                    if (value.UserName != "@User.Identity.Name") {
-                                        $('.ncont').prepend($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text"> Пользователь <strong> ' + value.UserName + ' </strong> ' + value.Description + ' <span class="color"> к заказу</span></span></a></li>'));
-                                    }
-                                    else {
-                                        $('.ncont').prepend($('<li class="notifications-not-read"><a href="' + value.Url + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Title + ' <span class="color"> к заказу</span></span></a></li>'));
-                                    }
-                                    })
+                                   $('.ncont').prepend($('<li class="notifications-not-read"><a href=""><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Description + '</span></a></li>'));   
+                                })
                             }
                             isSucess = true;
-
                         },
                         error: function (error) {
                             console.log(error);
@@ -531,8 +491,8 @@
                     })
                 });
 
-
-                    $('#notCl').click(function (e) {
+                // для header
+                $('.notCl').click(function (e) {
                         $.ajax({
                             type: 'GET',
                             url: '/Home/GetAllNotifications',
@@ -547,9 +507,11 @@
 
                                 $.each(response, function (index, value) {
 
-                                   $('#notifContent').prepend($('<li class="notifications-not-read"><a href=""><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.DescriptionTo + '</span></a></li>'));
+                                   $('#notifContent').prepend($('<li class="notifications-not-read"><a href=""><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Description + '</span></a></li>'));
                                     
                                 });
+
+                                $('.notiUnreadCount').remove();
                             },
                             error: function (error) {
                                 console.log(error);
@@ -557,11 +519,9 @@
                         })
                     });
 
-                    var notificationhub = $.connection.notificationHub;
-
-                    var chathub = $.connection.chatHub;
-
-                    chathub.client.displayUnreadCountMessage = function () {
+             
+                // SignalR увеличиваем кол-во непрочитанных сообщений
+                chathub.client.displayUnreadCountMessage = function () {
 
                         if ($("#messUnreadCount").length == 0) {
                             $('.messUnread').append("<span id='messUnreadCount'>1</span>")
@@ -579,18 +539,26 @@
                             duration: 1500,
                             textColor: '#5f9025',
                             backgroundColor: '#EBF6E0',
-
                         });
-                    };
+                };
 
 
-                    notificationhub.client.displayMessage = function (message) {
-                        $('#notific').show();
+                notificationhub.client.displayMessage = function (message) {
+                       /* $('#notific').show();
                         $('.ncount').show();
                         var num = $('#notific').text();
                         var num1 = $('.ncount').text();
                         if (num == '') num = num1 = 0;
-                        $('.ncount').text(parseInt(num) + 1);
+                        $('.ncount').text(parseInt(num) + 1); */
+
+                    if ($(".notiUnreadCount").length == 0) {
+                         
+                            $('.notCl').append("<span class='notiUnreadCount'>1</span>")
+                        } else {
+                          var unreadText = $('.notiUnreadCount').text().charAt(0);
+                          alert(unreadText)
+                            $('.notiUnreadCount').text(parseInt(unreadText) + 1);
+                        }
 
                         Snackbar.show({
                             text: 'Новое уведомление!',
@@ -603,31 +571,10 @@
                             backgroundColor: '#EBF6E0',
 
                         });
-                       // $('#notifContent').prepend($('<li class="notifications-not-read"><a href="dashboard-manage-candidates.html"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text"> <strong>Магамед</strong> предлагает вам <span class="color">оценить работу</span></span></a></li>'));
-                        var audio = new Audio('../Content/intuition.mp3');
-                        audio.play();
+                     
                     };
 
-                    $.connection.hub.start();
-
-
-        /*
-                function initAutocomplete() {
-                    var options = {
-                        types: ['(cities)'],
-                        // componentRestrictions: {country: "us"}
-                    };
-
-                    var input = document.getElementById('autocomplete-input');
-                    var autocomplete = new google.maps.places.Autocomplete(input, options);
-                }
-
-                // Autocomplete adjustment for homepage
-                if ($('.intro-banner-search-form')[0]) {
-                    setTimeout(function () {
-                        $(".pac-container").prependTo(".intro-search-field.with-autocomplete");
-                    }, 300);
-                } */
+                 $.connection.hub.start();
 
     </script>
     @RenderSection("scripts", required: false)

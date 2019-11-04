@@ -9,8 +9,7 @@ namespace HelpMe.Models
     public class Notification
     {
         public int Id { get; set; }
-        public string DescriptionFrom { get; set; }
-        public string DescriptionTo { get; set; }
+        public string Description { get; set; }
         public string UserToId { get; set; }
         public string UserFromId { get; set; }
         public NotificationStatus Status { get; set; }

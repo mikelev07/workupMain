@@ -44,8 +44,7 @@ namespace HelpMe.Controllers
             await db.SaveChangesAsync();
             var notes = await notifications.Select(a => new
             {
-                a.DescriptionFrom,
-                a.DescriptionTo
+               a.Description
             }).Take(5).ToListAsync();
 
             return Json(notes, JsonRequestBehavior.AllowGet);
