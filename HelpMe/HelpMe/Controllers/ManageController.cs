@@ -144,7 +144,13 @@ namespace HelpMe.Controllers
             return View(user);
         }
 
-         public ActionResult LoadPortfolioAttaches(string name)
+        public ActionResult Notifications()
+        {
+            
+            return View();
+        }
+
+        public ActionResult LoadPortfolioAttaches(string name)
         {
             var allPortfolios = db.Portfolioses.Include(c => c.User).Where(c => c.User.UserName == name).ToList();
             return PartialView(allPortfolios);

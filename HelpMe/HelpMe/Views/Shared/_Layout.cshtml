@@ -111,7 +111,10 @@
                                         </div>
                                         <div class="header-notifications-content">
                                             <div class="header-notifications-scroll" data-simplebar>
-                                                <ul class="ncont" id="notifContent"></ul>
+                                                <ul class="ncont" id="notifContent">
+                                                    <div class="lds-ring" id="lds-ring-count"><div></div><div></div><div></div><div></div></div>
+
+                                                </ul>
                                             </div>
                                         </div>
                                         <a href="/chat" class="header-notifications-button ripple-effect button-sliding-icon">Посмотреть все уведомления <i class="icon-material-outline-arrow-right-alt"></i></a>
@@ -468,7 +471,8 @@
                 var isSucess = false;
 
                 // для clone stick
-                $("#not-trigger").on('click', '.notCl', function () {
+        $("#not-trigger").on('click', '.notCl', function () {
+                     $(".lds-ring").children().show();
                     $.ajax({
                         type: 'GET',
                         url: '/Home/GetAllNotifications',
@@ -484,6 +488,7 @@
                                 })
                             }
                             isSucess = true;
+                             $(".lds-ring").children().hide();
                         },
                         error: function (error) {
                             console.log(error);
@@ -492,7 +497,8 @@
                 });
 
                 // для header
-                $('.notCl').click(function (e) {
+        $('.notCl').click(function (e) {
+                     $(".lds-ring").children().show();
                         $.ajax({
                             type: 'GET',
                             url: '/Home/GetAllNotifications',
@@ -510,7 +516,7 @@
                                    $('#notifContent').prepend($('<li class="notifications-not-read"><a href=""><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Description + '</span></a></li>'));
                                     
                                 });
-
+                                 $(".lds-ring").children().hide();
                                 $('.notiUnreadCount').remove();
                             },
                             error: function (error) {
