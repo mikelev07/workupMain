@@ -12,10 +12,13 @@ namespace HelpMe.Models
         public string Description { get; set; }
         public string UserToId { get; set; }
         public string UserFromId { get; set; }
+        public string CustomName { get; set; }
+        public int CustomId { get; set; }
         public NotificationStatus Status { get; set; }
         public string UserId { get; set; }
+       
         public virtual User User { get; set; }
-
+        public string ExecutorName { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
@@ -26,6 +29,9 @@ namespace HelpMe.Models
         public string DescriptionFrom { get; set; }
         public string DescriptionTo { get; set; }
         public string UserToId { get; set; }
+        public string CustomName { get; set; }
+        public int CustomId { get; set; }
+        public string ExecutorName { get; set; }
         public string UserFromId { get; set; }
     }
 

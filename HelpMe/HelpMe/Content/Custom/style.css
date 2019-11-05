@@ -124,19 +124,26 @@
     
 }
 
+.centered-me {
+    left: 50%;
+    text-align: center;
+    vertical-align: middle;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
 /* Style the buttons that are used to open the tab content */
-    .taby button {
-        display: block;
-        background-color: inherit;
-        color: black;
-        padding: 10px 15px;
-        width: 100%;
-        border: none;
-        outline: none;
-        text-align: left;
-        cursor: pointer;
-        transition: 0.3s;
-    }
+.taby button {
+    display: block;
+    background-color: inherit;
+    color: black;
+    padding: 10px 15px;
+    width: 100%;
+    border: none;
+    outline: none;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+}
 
     /* Change background color of buttons on hover */
     .taby button:hover {

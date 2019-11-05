@@ -144,10 +144,11 @@ namespace HelpMe.Controllers
             return View(user);
         }
 
-        public ActionResult Notifications()
+        public async Task<ActionResult> Notifications()
         {
-            
-            return View();
+            string userId = User.Identity.GetUserId();
+            var notifications = await db.Notifications.Include(c => c.User).Where(c => c.UserId == userId).ToListAsync();
+            return View(notifications);
         }
 
         public ActionResult LoadPortfolioAttaches(string name)

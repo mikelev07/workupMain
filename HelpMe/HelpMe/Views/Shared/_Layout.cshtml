@@ -112,12 +112,13 @@
                                         <div class="header-notifications-content">
                                             <div class="header-notifications-scroll" data-simplebar>
                                                 <ul class="ncont" id="notifContent">
-                                                    <div class="lds-ring" id="lds-ring-count"><div></div><div></div><div></div><div></div></div>
-
+                                                    <div class="centered-me">
+                                                        <div class="lds-ring" id="lds-ring-count"><div></div><div></div><div></div><div></div></div>
+                                                    </div>
                                                 </ul>
                                             </div>
                                         </div>
-                                        <a href="/chat" class="header-notifications-button ripple-effect button-sliding-icon">Посмотреть все уведомления <i class="icon-material-outline-arrow-right-alt"></i></a>
+                                        <a href="/Manage/Notifications" class="header-notifications-button ripple-effect button-sliding-icon">Посмотреть все уведомления <i class="icon-material-outline-arrow-right-alt"></i></a>
                                     </div>
                                 </div>
                                
@@ -471,7 +472,7 @@
                 var isSucess = false;
 
                 // для clone stick
-        $("#not-trigger").on('click', '.notCl', function () {
+                $("#not-trigger").on('click', '.notCl', function () {
                      $(".lds-ring").children().show();
                     $.ajax({
                         type: 'GET',
@@ -480,15 +481,17 @@
                             $('.ncount').text(0);
                             if (!isSucess) {
                                 $('#notifContent').empty();
+                                $('.ncont').empty();
                                 if (response.length == 0) {
-                                    $('#notifContent').append($('<li>Нет данных</li>'));
+                                   $('#notifContent').append($('<li class="centered-me">Нет новых уведомлений</li>'));
                                 }
                                 $.each(response, function (index, value) {
-                                   $('.ncont').prepend($('<li class="notifications-not-read"><a href=""><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Description + '</span></a></li>'));   
+                                   $('.ncont').prepend($('<li class="notifications-not-read"><a href="/Custom/Details/'+ value.CustomId +'"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Description + '</span></a></li>'));   
                                 })
                             }
                             isSucess = true;
-                             $(".lds-ring").children().hide();
+                            $(".lds-ring").children().hide();
+                            $('.notiUnreadCount').remove();
                         },
                         error: function (error) {
                             console.log(error);
@@ -506,17 +509,18 @@
                                 $('#notific').hide();
                                 $('.ncount').hide();
                                 $('#notifContent').empty();
-
+                                $('.ncont').empty();
                                 if (response.length == 0) {
-                                    $('#notifContent').append($('<li>Нет данных</li>'));
+                                   $('#notifContent').append($('<li class="centered-me">Нет новых уведомлений</li>'));
                                 }
 
                                 $.each(response, function (index, value) {
 
-                                   $('#notifContent').prepend($('<li class="notifications-not-read"><a href=""><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Description + '</span></a></li>'));
+                                   $('#notifContent').prepend($('<li class="notifications-not-read"><a href="/Custom/Details/'+ value.CustomId +'"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Description + '</span></a></li>'));
                                     
                                 });
-                                 $(".lds-ring").children().hide();
+                                $(".lds-ring").children().hide();
+                               
                                 $('.notiUnreadCount').remove();
                             },
                             error: function (error) {
@@ -562,7 +566,7 @@
                             $('.notCl').append("<span class='notiUnreadCount'>1</span>")
                         } else {
                           var unreadText = $('.notiUnreadCount').text().charAt(0);
-                          alert(unreadText)
+                         
                             $('.notiUnreadCount').text(parseInt(unreadText) + 1);
                         }
 

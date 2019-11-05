@@ -293,6 +293,22 @@
     <Compile Include="Migrations\201911040942099_fixModel.Designer.cs">
       <DependentUpon>201911040942099_fixModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911050742338_andnewfix.cs" />
+    <Compile Include="Migrations\201911050742338_andnewfix.Designer.cs">
+      <DependentUpon>201911050742338_andnewfix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911050745018_andnewfix1.cs" />
+    <Compile Include="Migrations\201911050745018_andnewfix1.Designer.cs">
+      <DependentUpon>201911050745018_andnewfix1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911050829113_andnewfix11.cs" />
+    <Compile Include="Migrations\201911050829113_andnewfix11.Designer.cs">
+      <DependentUpon>201911050829113_andnewfix11.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911050833066_andnewfix11211.cs" />
+    <Compile Include="Migrations\201911050833066_andnewfix11211.Designer.cs">
+      <DependentUpon>201911050833066_andnewfix11211.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\API\CustomApiModel.cs" />
@@ -630,6 +646,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911040942099_fixModel.resx">
       <DependentUpon>201911040942099_fixModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911050742338_andnewfix.resx">
+      <DependentUpon>201911050742338_andnewfix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911050745018_andnewfix1.resx">
+      <DependentUpon>201911050745018_andnewfix1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911050829113_andnewfix11.resx">
+      <DependentUpon>201911050829113_andnewfix11.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911050833066_andnewfix11211.resx">
+      <DependentUpon>201911050833066_andnewfix11211.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

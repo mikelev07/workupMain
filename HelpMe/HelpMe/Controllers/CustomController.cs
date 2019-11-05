@@ -573,7 +573,10 @@ namespace HelpMe.Controllers
                 UserFromId = notif.UserFromId,
                 UserToId = notif.UserToId,
                 UserId = notif.UserFromId,
+                CustomName = notif.CustomName,
+                ExecutorName = notif.ExecutorName,
                 Description = notif.DescriptionFrom,
+                CustomId = notif.CustomId,
                 StartDate = DateTime.Now
             };
 
@@ -583,6 +586,9 @@ namespace HelpMe.Controllers
                 UserFromId = notif.UserFromId,
                 UserToId = notif.UserToId,
                 UserId = notif.UserToId,
+                ExecutorName = notif.ExecutorName,
+                CustomName = notif.CustomName,
+                CustomId = notif.CustomId,
                 Description = notif.DescriptionTo,
                 StartDate = DateTime.Now
             };
@@ -988,6 +994,9 @@ namespace HelpMe.Controllers
                                 UserFromId = User.Identity.GetUserId(),
                                 UserToId = customViewModel.UserId,
                                 DescriptionFrom = "Вы загрузили решение к заказу",
+                                CustomName = customViewModel.Name,
+                                CustomId = customViewModel.Id,
+                                ExecutorName = customViewModel.Executor.UserName,
                                 DescriptionTo = "Исполнитель " + customViewModel.Executor.UserName + " загрузил решение"
                             };
 

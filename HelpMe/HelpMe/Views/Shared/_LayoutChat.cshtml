@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNet.Identity
 @using HelpMe.Models
+@using System.Security.Claims;
 
 <!DOCTYPE html>
 <html>
@@ -7,7 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>@ViewBag.Title – приложение ASP.NET</title>
+    <title>@ViewBag.Title </title>
 
     @Styles.Render("~/Content/Custom/css")
     @Scripts.Render("~/bundles/modernizr")
@@ -16,6 +17,7 @@
         .messages-inbox ul li.active-message {
             background-color: #e7f8ec;
         }
+
         .nav-tag-mess {
             display: inline-block;
             font-weight: 700;
@@ -93,70 +95,45 @@
 
                     @if (Request.IsAuthenticated)
                     {
-                        <!-- Right Side Content / End -->
                         <div class="right-side">
-                            <!--  User Notifications -->
                             <div class="header-widget hide-on-mobile">
                                 <a href="/Custom/Create" class="button ripple-effect margin-top-18"><i class="icon-feather-plus"></i> Добавить заказ </a>
                             </div>
-                            <!--  User Notifications -->
+
                             <div class="header-widget hide-on-mobile">
 
-                                <!-- Notifications -->
-                                <div class="header-notifications">
+                                <div class="header-notifications" id="not-trigger">
 
-                                    <!-- Trigger -->
                                     <div class="header-notifications-trigger">
-                                        <a href="#"><i class="icon-feather-bell"></i><span>4</span></a>
+                                        <a class="notCl" href="#"><i class="icon-feather-bell"></i></a>
                                     </div>
 
-                                    <!-- Dropdown -->
                                     <div class="header-notifications-dropdown">
-
                                         <div class="header-notifications-headline">
                                             <h4>Уведомления</h4>
                                             <button class="mark-as-read ripple-effect-dark" title="Пометить как прочитанное" data-tippy-placement="left">
                                                 <i class="icon-feather-check-square"></i>
                                             </button>
                                         </div>
-
                                         <div class="header-notifications-content">
                                             <div class="header-notifications-scroll" data-simplebar>
-                                                <ul>
-                                                    <!-- Notification -->
-                                                    <li class="notifications-not-read">
-                                                        <a href="dashboard-manage-candidates.html">
-                                                            <span class="notification-icon"><i class="icon-material-outline-group"></i></span>
-                                                            <span class="notification-text">
-                                                                <strong>Магамед</strong> предлагает вам <span class="color">оценить работу</span>
-                                                            </span>
-                                                        </a>
-                                                    </li>
-
-                                                    <!-- Notification -->
-                                                    <li>
-                                                        <a href="dashboard-manage-bidders.html">
-                                                            <span class="notification-icon"><i class=" icon-material-outline-gavel"></i></span>
-                                                            <span class="notification-text">
-                                                                <strong>Ашот</strong> оставил комментарий <span class="color">по созданию шаурмяшной</span>
-                                                            </span>
-                                                        </a>
-                                                    </li>
-
-
+                                                <ul class="ncont" id="notifContent">
+                                                    <div class="centered-me">
+                                                        <div class="lds-ring" id="lds-ring-count"><div></div><div></div><div></div><div></div></div>
+                                                    </div>
                                                 </ul>
                                             </div>
                                         </div>
-
+                                        <a href="/Manage/Notifications" class="header-notifications-button ripple-effect button-sliding-icon">Посмотреть все уведомления <i class="icon-material-outline-arrow-right-alt"></i></a>
                                     </div>
-
                                 </div>
 
                                 <div class="header-notifications">
+
                                     <div class="header-notifications-trigger">
                                         <a href="#" class="messUnread"><i class="icon-feather-mail"></i></a>
                                     </div>
-                                    <!-- Dropdown -->
+
                                     <div class="header-notifications-dropdown">
                                         <div class="header-notifications-headline">
                                             <h4>Сообщения</h4>
@@ -167,7 +144,7 @@
                                         <div class="header-notifications-content">
                                             <div class="header-notifications-scroll" data-simplebar>
                                                 <ul>
-                                                    <!-- Notification -->
+
                                                     <li class="notifications-not-read">
                                                         <a href="dashboard-messages.html">
                                                             <span class="notification-avatar status-online"><img src="images/user-avatar-small-03.jpg" alt=""></span>
@@ -178,7 +155,7 @@
                                                             </div>
                                                         </a>
                                                     </li>
-                                                    <!-- Notification -->
+
                                                     <li class="notifications-not-read">
                                                         <a href="dashboard-messages.html">
                                                             <span class="notification-avatar status-online"><img src="images/user-avatar-small-03.jpg" alt=""></span>
@@ -189,7 +166,7 @@
                                                             </div>
                                                         </a>
                                                     </li>
-                                                    <!-- Notification -->
+
                                                     <li class="notifications-not-read">
                                                         <a href="dashboard-messages.html">
                                                             <span class="notification-avatar status-online"><img src="images/user-avatar-small-03.jpg" alt=""></span>
@@ -206,44 +183,45 @@
                                         <a href="/chat" class="header-notifications-button ripple-effect button-sliding-icon">Посмотреть все сообщения<i class="icon-material-outline-arrow-right-alt"></i></a>
                                     </div>
                                 </div>
-
                             </div>
-                            <!--  User Notifications / End -->
-                            <!-- User Menu -->
+
                             <div class="header-widget">
 
-                                <!-- Messages -->
                                 <div class="header-notifications user-menu">
                                     <div class="header-notifications-trigger">
-                                        <a href="#"><div class="user-avatar status-online"><img src="~/Content/Custom/images/user-avatar-small-01.jpg" alt=""></div></a>
+                                        @{
+                                            var avatar = ((ClaimsIdentity)User.Identity).FindFirst("avatar");
+                                        }
+                                        <a href="#"><div class="user-avatar status-online"><img style="height:42px;width:42px" src="@Url.Content(avatar.Value == null ? "~/Content/Custom/images/user-avatar-placeholder.png" : avatar.Value)" alt=""></div></a>
                                     </div>
 
-                                    <!-- Dropdown -->
                                     <div class="header-notifications-dropdown">
 
-                                        <!-- User Status -->
                                         <div class="user-status">
 
-                                            <!-- User Name / Avatar -->
                                             <div class="user-details">
-                                                <div class="user-avatar status-online"><img src="~/Content/Custom/images/user-avatar-small-01.jpg" alt=""></div>
+                                                <div class="user-avatar status-online"><img style="height:42px;width:42px" src="@Url.Content(avatar.Value == null ? "~/Content/Custom/images/user-avatar-placeholder.png" : avatar.Value)" alt=""></div>
                                                 <div class="user-name">
                                                     @User.Identity.GetUserName() <span></span>
                                                 </div>
                                             </div>
 
-                                            <!-- User Status Switcher -->
                                             <div class="status-switch" id="snackbar-user-status">
-                                                <label class="user-online current-status">Онлайн</label>
-                                                <label class="user-invisible">Невидимка</label>
-                                                <!-- Status Indicator -->
+                                                @{
+                                                    var status = ((ClaimsIdentity)User.Identity).FindFirst("status");
+                                                }
+
+                                                <label value="sucess" class="@(status.Value != "true" ? "user-online" : "user-online current-status")">В работе</label>
+                                                <label value="dontworry" class="@(status.Value != "true" ? "user-invisible current-status" : "user-invisible") ">Занят</label>
+
                                                 <span class="status-indicator" aria-hidden="true"></span>
                                             </div>
                                         </div>
-
                                         <ul class="user-menu-small-nav">
                                             <li><a href="/manage/dashboard"><i class="icon-material-outline-dashboard"></i> Рабочая доска</a></li>
-                                            <li><a href="/wallet"><i class="icon-material-outline-account-balance-wallet"></i> Баланс </a></li>
+                                            <li><a href="/custom/tasks"><i class="icon-material-outline-folder"></i> Мои заказы</a></li>
+                                            <li><a href="/custom/tasksexec"><i class="icon-material-outline-folder-shared"></i> Мои задачи</a></li>
+                                            <li><a href="/wallet"><i class="icon-material-outline-account-balance-wallet"></i> Баланс</a></li>
                                             <li><a href="/manage"><i class="icon-material-outline-settings"></i> Настройки</a></li>
                                             @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
                                             {
@@ -251,14 +229,10 @@
                                                 <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="icon-material-outline-power-settings-new"></i> Выйти</a></li>
                                             }
                                         </ul>
-
                                     </div>
                                 </div>
-
                             </div>
 
-                            <!-- User Menu / End -->
-                            <!-- Mobile Navigation Button -->
                             <span class="mmenu-trigger">
                                 <button class="hamburger hamburger--collapse" type="button">
                                     <span class="hamburger-box">
@@ -266,7 +240,6 @@
                                     </span>
                                 </button>
                             </span>
-
                         </div>
                     }
                     else
@@ -295,115 +268,108 @@
             <!-- Header / End -->
 
         </header>
-        <!-- Sign In Popup
-        ================================================== -->
-        <div id="sign-in-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
 
+        <div id="sign-in-dialog" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
             <!--Tabs -->
             <div class="sign-in-form">
-
                 <ul class="popup-tabs-nav">
                     <li><a href="#login">Войти</a></li>
                     <li><a href="#register">Регистрация</a></li>
                 </ul>
 
-
-
                 <div class="popup-tabs-container">
-
                     <div class="popup-tab-content" id="login">
                         @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
                         {
                             @Html.AntiForgeryToken()
                             <!-- Welcome Text -->
                             <div class="welcome-text">
-                                <h3>Ассаляумалейкум, братуха!</h3>
+                                <h3>Авторизация</h3>
                                 <span>Нет аккаунта? <a href="/Account/register">Создай новый!</a></span>
                             </div>
 
                             <!-- Form -->
-                            <form method="post" id="login-form">
-                                <div class="input-with-icon-left">
-                                    <i class="icon-material-baseline-mail-outline"></i>
-                                    @Html.TextBox("Email", "", new { @class = "input-text with-border", @placeholder = "Ваша почта" })
 
-                                </div>
+                            <div class="input-with-icon-left">
 
-                                <div class="input-with-icon-left">
-                                    <i class="icon-material-outline-lock"></i>
-                                    @Html.Password("Password", "", new { @class = "input-text with-border", @placeholder = "Пароль" })
+                                <i class="icon-material-baseline-mail-outline"></i>
+                                @Html.TextBox("Email", "", new { @class = "input-text with-border", @placeholder = "Ваша почта", @id = "emailField" })
 
-                                </div>
-                                <a href="#" class="forgot-password">Забыл пароль?</a>
+                            </div>
+                            <div class="input-with-icon-left">
+                                <i class="icon-material-outline-lock"></i>
+                                @Html.Password("Password", "", new { @class = "input-text with-border", @placeholder = "Пароль", @id = "passwordField" })
+                            </div>
+                            <div id="valid">
+                                @Html.ValidationMessage("Email", "")
 
-                                <!-- Button -->
-                                <input value="Войти" class="button full-width button-sliding-icon ripple-effect" type="submit">
-                            </form>
+                            </div>
+                            <a href="/Account/ForgotPassword" style="margin-top:5px" class="forgot-password">Забыл пароль?</a>
+                            <!-- Button -->
+                            <input id="loginButton" value="Войти" class="button full-width button-sliding-icon ripple-effect" type="submit">
+
                             <!-- Social Login -->
                             <div class="social-login-separator"><span>или</span></div>
                             <div class="social-login-buttons">
-                                <button class="facebook-login ripple-effect"><i class="icon-brand-facebook-f"></i> Войти via Facebook</button>
+                                <button class="facebook-login ripple-effect"><i class="icon-brand-facebook-f"></i> Войти с Facebook</button>
                                 <button class="google-login ripple-effect"><i class="icon-brand-google-plus-g"></i> Войти via Google+</button>
                             </div>
                         }
                     </div>
-
                     <!-- Register -->
                     <div class="popup-tab-content" id="register">
-
-                        <!-- Welcome Text -->
-                        <div class="welcome-text">
-                            <h3>Давай создадим аккаунт!</h3>
-                        </div>
-
-                        <!-- Account Type -->
-                        <div class="account-type">
-                            <div>
-                                <input type="radio" name="account-type-radio" id="freelancer-radio" class="account-type-radio" checked />
-                                <label for="freelancer-radio" class="ripple-effect-dark"><i class="icon-material-outline-account-circle"></i> Исполнитель</label>
+                        @using (Html.BeginForm("Register", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <!-- Welcome Text -->
+                            <div class="welcome-text">
+                                <h3>Создание аккаунта</h3>
                             </div>
-
-                            <div>
-                                <input type="radio" name="account-type-radio" id="employer-radio" class="account-type-radio" />
-                                <label for="employer-radio" class="ripple-effect-dark"><i class="icon-material-outline-business-center"></i> Заказчик</label>
+                            <!-- Account Type -->
+                            <div class="account-type">
+                                <div>
+                                    <input type="radio" name="RoleName" value="employee" id="freelancer-radio" class="account-type-radio" checked />
+                                    <label for="freelancer-radio" class="ripple-effect-dark"><i class="icon-material-outline-school"></i> Исполнитель</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="RoleName" value="user" id="employer-radio" class="account-type-radio" />
+                                    <label for="employer-radio" class="ripple-effect-dark"><i class="icon-material-outline-business-center"></i> Заказчик</label>
+                                </div>
                             </div>
-                        </div>
-
-                        <!-- Form -->
-                        <form method="post" id="register-account-form">
+                            <!-- Form -->
+                            <div class="input-with-icon-left">
+                                <i class="icon-material-outline-account-circle"></i>
+                                @Html.TextBox("UserName", "", new { @class = "input-text with-border", @id = "usName", @placeholder = "Ваш логин" })
+                            </div>
                             <div class="input-with-icon-left">
                                 <i class="icon-material-baseline-mail-outline"></i>
-                                <input type="text" class="input-text with-border" name="emailaddress-register" id="emailaddress-register" placeholder="Ваша почта" required />
+                                @Html.TextBox("Email", "", new { @class = "input-text with-border", @type = "email", @placeholder = "Ваша почта" })
                             </div>
-
-                            <div class="input-with-icon-left" title="Should be at least 8 characters long" data-tippy-placement="bottom">
+                            <div class="input-with-icon-left" title="Пароль должен быть не менее 6 символов" data-tippy-placement="bottom">
                                 <i class="icon-material-outline-lock"></i>
-                                <input type="password" class="input-text with-border" name="password-register" id="password-register" placeholder="Пароль" required />
+                                @Html.Password("Password", "", new { @class = "input-text with-border", @id = "fpass", @placeholder = "Пароль" })
                             </div>
-
                             <div class="input-with-icon-left">
                                 <i class="icon-material-outline-lock"></i>
-                                <input type="password" class="input-text with-border" name="password-repeat-register" id="password-repeat-register" placeholder="Повторить пароль" required />
+                                @Html.Password("ConfirmPassword", "", new { @class = "input-text with-border", @id = "spass", @placeholder = "Повторите пароль" })
                             </div>
-                        </form>
-
-                        <!-- Button -->
-                        <button class="margin-top-10 button full-width button-sliding-icon ripple-effect" type="submit" form="register-account-form">Создать <i class="icon-material-outline-arrow-right-alt"></i></button>
-
-                        <!-- Social Login -->
-                        <div class="social-login-separator"><span>или</span></div>
-                        <div class="social-login-buttons">
-                            <button class="facebook-login ripple-effect"><i class="icon-brand-facebook-f"></i>Регистрация via Facebook</button>
-                            <button class="google-login ripple-effect"><i class="icon-brand-google-plus-g"></i> Регистрация via Google+</button>
-                        </div>
-
+                            <div style="display:none" class="result"></div>
+                            <!-- Button -->
+                            <input value="Создать" class="button full-width button-sliding-icon ripple-effect" type="submit">
+                            <!-- Social Login -->
+                            <div class="social-login-separator"><span>или</span></div>
+                            <div class="social-login-buttons">
+                                <button class="facebook-login ripple-effect"><i class="icon-brand-facebook-f"></i> Регаться via Facebook</button>
+                                <button class="google-login ripple-effect"><i class="icon-brand-google-plus-g"></i> Регаться via Google+</button>
+                            </div>
+                        }
                     </div>
-
                 </div>
-
             </div>
         </div>
+
         <div class="clearfix"></div>
+
         <div class="dashboard-container">
             <div class="dashboard-sidebar">
                 <div class="dashboard-sidebar-inner" data-simplebar>
@@ -416,39 +382,38 @@
                                     <span class="hamburger-inner"></span>
                                 </span>
                             </span>
-                            <span class="trigger-title">Навигация</span>
+                            <span class="trigger-title">Меню</span>
                         </a>
 
                         <!-- Navigation -->
                         <div class="dashboard-nav">
                             <div class="dashboard-nav-inner">
+                                <ul data-submenu-title="Управление">
+                                    <li>
+                                        <a href="#"><i class="icon-material-outline-business-center"></i>Мои заказы</a>
+                                        <ul>
+                                            <li><a href="/custom/tasks">Список заказов<span class="nav-tag">3</span></a></li>
+                                            <li><a href="/Custom/Create">Разместить задачу</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="icon-material-outline-assignment"></i>Мои задачи</a>
+                                        <ul>
+                                            <li><a href="/custom/tasksexec">Список работ<span class="nav-tag">2</span></a></li>
+                                            <li><a href="/custom/myactivebids">Мои предложения</a></li>
 
+                                        </ul>
+                                    </li>
+                                </ul>
                                 <ul data-submenu-title="Основное">
                                     <li class="active"><a href="/manage/dashboard"><i class="icon-material-outline-dashboard"></i> Рабочая доска</a></li>
                                     <li><a href="/chat"><i class="icon-material-outline-question-answer"></i> Сообщения <span class="nav-tag">2</span></a></li>
                                     <li><a href="/manage/likeit"><i class="icon-material-outline-star-border"></i> Избранное</a></li>
+                                    <li><a href="/manage/notifications"><i class="icon-material-baseline-notifications-none"></i> Уведомления</a></li>
                                     <li><a href="/manage/reviews"><i class="icon-material-outline-rate-review"></i> Отзывы</a></li>
                                 </ul>
 
-                                <ul data-submenu-title="Заказы">
-                                    <li>
-                                        <a href="#"><i class="icon-material-outline-business-center"></i> Задания</a>
-                                        <ul>
-                                            <li><a href="/custom/tasks">Управление задачами <span class="nav-tag">3</span></a></li>
-                                            <li><a href="dashboard-manage-candidates.html">Управление исполнителями </a></li>
-                                            <li><a href="dashboard-post-a-job.html">Разместить задачу</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#"><i class="icon-material-outline-assignment"></i> Задачи</a>
-                                        <ul>
-                                            <li><a href="dashboard-manage-tasks.html">Управлять задачами <span class="nav-tag">2</span></a></li>
-                                            <li><a href="dashboard-manage-bidders.html">Редактировать задачи</a></li>
-                                            <li><a href="dashboard-my-active-bids.html">Мои активные задачи <span class="nav-tag">4</span></a></li>
-                                            <li><a href="dashboard-post-a-task.html">Разместить задачу</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
+
 
                                 <ul data-submenu-title="Аккаунт">
                                     <li><a href="/manage/"><i class="icon-material-outline-settings"></i> Настройки</a></li>
@@ -500,6 +465,213 @@
                 backgroundColor: '#383838'
             });
         });
+
+
+        $('#spass').on('keyup', function () {
+            if ($('#fpass').val() == $('#spass').val()) {
+                $('.result').hide();
+            } else {
+                $('.result').show();
+                $('.result').html('Пароли не совпадают');
+            }
+        });
+
+        $("#usName").bind('keyup', function () {
+            $(this).val($(this).val().replace(/[^a-z ]/i, ""));
+            Snackbar.show({
+                text: 'Только латинские символы!',
+                pos: 'bottom-center',
+                showAction: false,
+                actionText: "Dismiss",
+                duration: 3000,
+                textColor: '#fff',
+                backgroundColor: '#383838'
+            });
+        });
+
+        $('#header .right-side').css('float', 'left')
+        $('#header .right-side').css('float', 'right')
+
+        $('#snackbar-user-status label').click(function () {
+
+            $.ajax({
+                type: 'POST',
+                url: '/User/ChangeStatus/',
+                data: { value: $(this).attr("value") },
+                success: function (response) {
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+
+            Snackbar.show({
+                text: 'Статус изменен!',
+                pos: 'bottom-center',
+                showAction: false,
+                actionText: "Dismiss",
+                duration: 3000,
+                textColor: '#fff',
+                backgroundColor: '#383838'
+            });
+        });
+
+
+        // подключаемся к хабам
+        var notificationhub = $.connection.notificationHub;
+        var chathub = $.connection.chatHub;
+
+        // Получаем кол-во непрочитанные сообщений
+        $.ajax({
+            type: 'GET',
+            url: '/Home/GetUnreadingMessageCount',
+            success: function (response) {
+                if (response != 0) {
+                    if ($("#messUnreadCount").length == 0) {
+                        $('.messUnread').append("<span id='messUnreadCount'>" + response + "</span>")
+                    }
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        })
+
+        // Получаем кол-во непрочитанных уведомлений
+        $.ajax({
+            type: 'GET',
+            url: '/Home/GetUnreadingCount',
+            success: function (response) {
+                if (response != 0) {
+                    if ($(".notiUnreadCount").length == 0) {
+                        $('.notCl').append("<span class='notiUnreadCount'>" + response + "</span>")
+                    }
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        })
+
+        var isSucess = false;
+
+        // для clone stick
+        $("#not-trigger").on('click', '.notCl', function () {
+            $(".lds-ring").children().show();
+            $.ajax({
+                type: 'GET',
+                url: '/Home/GetAllNotifications',
+                success: function (response) {
+                    $('.ncount').text(0);
+                    if (!isSucess) {
+                        $('#notifContent').empty();
+                         $('.ncont').empty();
+                        
+                        if (response.length == 0) {
+                            $('#notifContent').append($('<li class="centered-me">Нет новых уведомлений</li>'));
+                        }
+                        $.each(response, function (index, value) {
+                            $('.ncont').prepend($('<li class="notifications-not-read"><a href="/Custom/Details/'+ value.CustomId +'"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Description + '</span></a></li>'));
+                        })
+                    }
+                    isSucess = true;
+                    $(".lds-ring").children().hide();
+                    $('.notiUnreadCount').remove();
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        });
+
+        // для header
+        $('.notCl').click(function (e) {
+            $(".lds-ring").children().show();
+            $.ajax({
+                type: 'GET',
+                url: '/Home/GetAllNotifications',
+                success: function (response) {
+                    $('#notific').hide();
+                    $('.ncount').hide();
+                    $('#notifContent').empty();
+                    $('.ncont').empty();
+               
+                    if (response.length == 0) {
+                       $('#notifContent').append($('<li class="centered-me">Нет новых уведомлений</li>'));
+                    }
+
+                    $.each(response, function (index, value) {
+
+                        $('#notifContent').prepend($('<li class="notifications-not-read"><a href="/Custom/Details/'+ value.CustomId +'"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Description + '</span></a></li>'));
+
+                    });
+                    $(".lds-ring").children().hide();
+                    $('.notiUnreadCount').remove();
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        });
+
+
+        // SignalR увеличиваем кол-во непрочитанных сообщений
+        chathub.client.displayUnreadCountMessage = function () {
+
+            if ($("#messUnreadCount").length == 0) {
+                $('.messUnread').append("<span id='messUnreadCount'>1</span>")
+            } else {
+                var unreadText = $('#messUnreadCount').text();
+                $('#messUnreadCount').text(parseInt(unreadText) + 1);
+            }
+
+            Snackbar.show({
+                text: 'Новое сообщение!',
+                pos: 'top-right',
+                showAction: false,
+                actionText: "Dismiss",
+                width: 200,
+                duration: 1500,
+                textColor: '#5f9025',
+                backgroundColor: '#EBF6E0',
+            });
+        };
+
+
+        notificationhub.client.displayMessage = function (message) {
+            /* $('#notific').show();
+             $('.ncount').show();
+             var num = $('#notific').text();
+             var num1 = $('.ncount').text();
+             if (num == '') num = num1 = 0;
+             $('.ncount').text(parseInt(num) + 1); */
+
+            if ($(".notiUnreadCount").length == 0) {
+
+                $('.notCl').append("<span class='notiUnreadCount'>1</span>")
+            } else {
+                var unreadText = $('.notiUnreadCount').text().charAt(0);
+               
+                $('.notiUnreadCount').text(parseInt(unreadText) + 1);
+            }
+
+            Snackbar.show({
+                text: 'Новое уведомление!',
+                pos: 'top-right',
+                showAction: false,
+                actionText: "Dismiss",
+                width: 200,
+                duration: 4000,
+                textColor: '#5f9025',
+                backgroundColor: '#EBF6E0',
+
+            });
+
+        };
+
+        $.connection.hub.start();
+
     </script>
 
 
@@ -531,33 +703,33 @@
 
 <script>
 
-                $.ajax({
-                    type: 'GET',
-                    url: '/Home/GetUnreadingMessageCount',
-                    success: function (response) {
-                        if (response != 0) {
-                            if ($("#messUnreadCount").length == 0) {
-                                $('.messUnread').append("<span id='messUnreadCount'>" + response + "</span>")
-                            }
-                        }
-                    },
-                    error: function (error) {
-                        console.log(error);
-                    }
-                })
+    $.ajax({
+        type: 'GET',
+        url: '/Home/GetUnreadingMessageCount',
+        success: function (response) {
+            if (response != 0) {
+                if ($("#messUnreadCount").length == 0) {
+                    $('.messUnread').append("<span id='messUnreadCount'>" + response + "</span>")
+                }
+            }
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    })
 
 
-                var chathub = $.connection.chatHub;
+    var chathub = $.connection.chatHub;
 
-                    chathub.client.displayUnreadCountMessage = function () {
+    chathub.client.displayUnreadCountMessage = function () {
 
-                        if ($("#messUnreadCount").length == 0) {
-                            $('.messUnread').append("<span id='messUnreadCount'>1</span>")
-                        } else {
-                            var unreadText = $('#messUnreadCount').text();
-                            $('#messUnreadCount').text(parseInt(unreadText) + 1);
-                        }
-                    };
+        if ($("#messUnreadCount").length == 0) {
+            $('.messUnread').append("<span id='messUnreadCount'>1</span>")
+        } else {
+            var unreadText = $('#messUnreadCount').text();
+            $('#messUnreadCount').text(parseInt(unreadText) + 1);
+        }
+    };
 
 
 </script>

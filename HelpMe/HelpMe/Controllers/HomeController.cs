@@ -36,15 +36,19 @@ namespace HelpMe.Controllers
         {
             string reqId = User.Identity.GetUserId();
             var notifications = db.Notifications.Where(u => u.UserId == reqId);
-            foreach (var i in notifications)
+            var notificationsUnread = notifications.Where(s => s.Status == NotificationStatus.Unreading);
+
+            foreach (var i in notificationsUnread)
             {
                 db.Entry(i).State = EntityState.Modified;
                 i.Status = NotificationStatus.Reading;
             }
+
             await db.SaveChangesAsync();
             var notes = await notifications.Select(a => new
             {
-               a.Description
+               a.Description,
+               a.CustomId
             }).Take(5).ToListAsync();
 
             return Json(notes, JsonRequestBehavior.AllowGet);
