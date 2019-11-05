@@ -208,17 +208,8 @@
 
         $(".lds-ring").children().hide();
 
-        //$(document).on({
-        //    ajaxStart: function () {
-        //        $(".loading-animation").addClass("loading");
-        //    },
-        //    ajaxStop: function () {
-        //        $(".loading-animation").removeClass("loading");
-        //    }
-        //});
-
-
         $(function () {
+
             var page = 0;
             var pageSize = 4;
             var _inCallback = false;
@@ -325,6 +316,23 @@
                     });
                 }
             }
+
+             $('.bookmark-button').on('click', function (e) {
+                    e.preventDefault();
+                    $(this).toggleClass('bookmarked');
+             });
+
+            $('.bookmark-icon').on('click', function (e) {
+                    e.preventDefault();
+                    $(this).toggleClass('bookmarked');
+                });
+
+            $("#results").on('click','.bookmark-icon', function (e) {
+
+                    e.preventDefault();
+                    $(this).toggleClass('bookmarked');
+            });
+        
 
             function CallIndex() {
                 $("#lds-ring-count").children().show();

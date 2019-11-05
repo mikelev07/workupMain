@@ -240,7 +240,14 @@ namespace HelpMe.Controllers
             bool? customsPaginated, int? customsPage, 
             bool? reviewsSortSelected, int? reviewSortType, bool? reviewsPaginated, int? reviewsPage)
         {
-            if (userName == null)
+
+            /*  if (await UserManager.IsInRoleAsync(userId, "admin"))
+            {
+             * 
+             * 
+             */
+
+                if (userName == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -310,6 +317,9 @@ namespace HelpMe.Controllers
                 var customsList = await db.Customs.Where(c => c.UserId == customerId && c.Status==CustomStatus.Open).ToListAsync();
                 ViewData["CustomsList"] = new SelectList(customsList, "Id", "Name");
             }
+
+
+
 
             return View(user);
 
