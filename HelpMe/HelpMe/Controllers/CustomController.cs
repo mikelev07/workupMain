@@ -478,6 +478,19 @@ namespace HelpMe.Controllers
                 db.Entry(wallet).State = EntityState.Modified;
                 await db.SaveChangesAsync();
 
+                NotificationHubModel notificationHubModel = new NotificationHubModel()
+                {
+                    UserFromId = User.Identity.GetUserId(),
+                    UserToId = attachViewModel.CustomViewModel.UserId,
+                    DescriptionFrom = "Вы купили решение",
+                    DescriptionTo = "Заказчик купил решение",
+                    CustomName = attachViewModel.CustomViewModel.Name,
+                    CustomId = attachViewModel.CustomViewModel.Id,
+                    ExecutorName = attachViewModel.CustomViewModel.Executor.UserName
+                };
+
+                SendM(notificationHubModel);
+
                 return Content("<div class='task-tags'><span>Работа куплена </span></div>", "text/html");
                 // return RedirectToAction("Details", "Custom", new { id = attachViewModel.CustomViewModel.Id });
             }
@@ -561,6 +574,30 @@ namespace HelpMe.Controllers
                 return HttpNotFound();
             }
             return PartialView(allCustoms);
+        }
+
+        private void SendMSingle(NotificationHubModel notif)
+        {
+            var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
+
+            Notification notificationFrom = new Notification
+            {
+                Id = 1,
+                UserFromId = notif.UserFromId,
+                UserToId = notif.UserToId,
+                UserId = notif.UserFromId,
+                CustomName = notif.CustomName,
+                ExecutorName = notif.ExecutorName,
+                Description = notif.DescriptionFrom,
+                CustomId = notif.CustomId,
+                StartDate = DateTime.Now
+            };
+
+            db.Notifications.Add(notificationFrom);
+          
+            db.SaveChanges();
+
+            context.Clients.User(notif.UserFromId).displayMessage(notif.DescriptionFrom);
         }
 
         private void SendM(NotificationHubModel notif)
@@ -1298,6 +1335,17 @@ namespace HelpMe.Controllers
                     customViewModel.DoneInTime = true;
                 }
                 await db.SaveChangesAsync();
+                NotificationHubModel notificationHubModel = new NotificationHubModel()
+                {
+                    UserFromId = User.Identity.GetUserId(),
+                    UserToId = customViewModel.UserId,
+                    DescriptionFrom = "Вы закрыли заказ",
+                    CustomName = customViewModel.Name,
+                    CustomId = customViewModel.Id,
+                    ExecutorName = customViewModel.Executor.UserName
+                };
+
+                SendMSingle(notificationHubModel);
                 //SendMessage("Вы закрыли заказ", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, customViewModel.User.UserName + "подтвердил выполнение заказа");
                 return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
             }
@@ -1320,6 +1368,17 @@ namespace HelpMe.Controllers
 
             customViewModel.Status = CustomStatus.Revision; // на доработку
             await db.SaveChangesAsync();
+            NotificationHubModel notificationHubModel = new NotificationHubModel()
+            {
+                UserFromId = User.Identity.GetUserId(),
+                UserToId = customViewModel.UserId,
+                DescriptionFrom = "Вы отправили заказ на доработку",
+                CustomName = customViewModel.Name,
+                CustomId = customViewModel.Id,
+                ExecutorName = customViewModel.Executor.UserName
+            };
+
+            SendMSingle(notificationHubModel);
             //SendMessage("Вы отправили заказ на доработку", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, customViewModel.User.UserName + "отправил заказ на доработку");
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
         }
@@ -1335,11 +1394,33 @@ namespace HelpMe.Controllers
             if (previousStatus == CustomStatus.Open)
             {
                 customViewModel.Status = CustomStatus.Cancelled; // Отменён
+                NotificationHubModel notificationHubModel = new NotificationHubModel()
+                {
+                    UserFromId = User.Identity.GetUserId(),
+                    UserToId = customViewModel.UserId,
+                    DescriptionFrom = "Вы отменили заказ",
+                    CustomName = customViewModel.Name,
+                    CustomId = customViewModel.Id,
+                    ExecutorName = customViewModel.Executor.UserName
+                };
+
+                SendMSingle(notificationHubModel);
+
+            
                 //SendMessage("Вы отменили заказ", customViewModel.Id, customViewModel.User.UserName);
                 if (usersWithOffers != null)
                 {
                     foreach (var user in usersWithOffers)
                     {
+                        NotificationHubModel notificationHubModel1 = new NotificationHubModel()
+                        {
+                            UserFromId = user.Id,
+                            DescriptionFrom = "Пользователь " + customViewModel.User.UserName + " отменил заказ",
+                            CustomName = customViewModel.Name,
+                            CustomId = customViewModel.Id,
+                            ExecutorName = customViewModel.Executor.UserName
+                        };
+                        SendMSingle(notificationHubModel1);
                         //SendMessage(null, customViewModel.Id, null, user.UserName, customViewModel.User.UserName + " отменил заказ");
                     }
                 }
@@ -1347,11 +1428,31 @@ namespace HelpMe.Controllers
             if (previousStatus == CustomStatus.Cancelled)
             {
                 customViewModel.Status = CustomStatus.Open; // Открыт
-               // SendMessage("Вы переоткрыли заказ", customViewModel.Id, customViewModel.User.UserName);
+                NotificationHubModel notificationHubModel2 = new NotificationHubModel()
+                {
+                    UserFromId = User.Identity.GetUserId(),
+                    UserToId = customViewModel.UserId,
+                    DescriptionFrom = "Вы переоткрыли заказ",
+                    CustomName = customViewModel.Name,
+                    CustomId = customViewModel.Id,
+                    ExecutorName = customViewModel.Executor.UserName
+                };
+
+                SendMSingle(notificationHubModel2);
+                // SendMessage("Вы переоткрыли заказ", customViewModel.Id, customViewModel.User.UserName);
                 if (usersWithOffers != null)
                 {
                     foreach (var user in usersWithOffers)
                     {
+                        NotificationHubModel notificationHubModel1 = new NotificationHubModel()
+                        {
+                            UserFromId = user.Id,
+                            DescriptionFrom = "Пользователь " + customViewModel.User.UserName + " переоткрыл заказ",
+                            CustomName = customViewModel.Name,
+                            CustomId = customViewModel.Id,
+                            ExecutorName = customViewModel.Executor.UserName
+                        };
+                        SendMSingle(notificationHubModel1);
                         //SendMessage(null, customViewModel.Id, null, user.UserName, customViewModel.User.UserName + " переоткрыл заказ");
                     }
                 }
