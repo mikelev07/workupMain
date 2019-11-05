@@ -594,6 +594,7 @@
     <Content Include="Views\Manage\_ReviewsMyReviewsPage.cshtml" />
     <Content Include="Views\Manage\_ReviewsReviewsPage.cshtml" />
     <Content Include="Views\Manage\Notifications.cshtml" />
+    <Content Include="Views\User\DetailsUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
