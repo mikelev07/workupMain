@@ -96,7 +96,7 @@ namespace HelpMe.Models
             // Обратите внимание, что authenticationType должен совпадать с типом, определенным в CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, authenticationType);
             // Здесь добавьте утверждения пользователя
-            userIdentity.AddClaim(new Claim("avatar", this.ImagePath));
+            userIdentity.AddClaim(new Claim("avatar", this.ImagePath ?? "~/Content/Custom/images/user-avatar-big-02.jpg"));
             userIdentity.AddClaim(new Claim("status", this.IsNotBusy.ToString()));
             return userIdentity;
         }
