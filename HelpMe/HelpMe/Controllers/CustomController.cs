@@ -129,6 +129,7 @@ namespace HelpMe.Controllers
         public ActionResult Tasks()
         {
             string userId = User.Identity.GetUserId();
+            ViewBag.UnreadingCount = db.Messages.Where(m => m.UserToId == userId && m.Status == MessageStatus.Undreading).Count();
 
             var tasksModel = db.Customs.Include(c => c.TypeTask)
                 .Include(c => c.CategoryTask)
@@ -144,6 +145,7 @@ namespace HelpMe.Controllers
         public ActionResult TasksExec()
         {
             string userId = User.Identity.GetUserId();
+            ViewBag.UnreadingCount = db.Messages.Where(m => m.UserToId == userId && m.Status == MessageStatus.Undreading).Count();
 
             var tasksModel = db.Customs.Include(c => c.TypeTask)
                 .Include(c => c.CategoryTask)
@@ -171,6 +173,7 @@ namespace HelpMe.Controllers
         public ActionResult MyActiveBids()
         {
             string userId = User.Identity.GetUserId();
+            ViewBag.UnreadingCount = db.Messages.Where(m => m.UserToId == userId && m.Status == MessageStatus.Undreading).Count();
 
             var comms = db.Comments.Include(u => u.User).Include(u => u.CustomViewModel).Where(u => u.UserId == userId);
 
@@ -1171,6 +1174,9 @@ namespace HelpMe.Controllers
         // GET: Custom/Create
         public ActionResult Create()
         {
+            string userId = User.Identity.GetUserId();
+            ViewBag.UnreadingCount = db.Messages.Where(m => m.UserToId == userId && m.Status == MessageStatus.Undreading).Count();
+            
             SelectList types = new SelectList(db.CustomTypes, "Id", "Name"); // выбор типа задачи
             ViewBag.Types = types;
             SelectList categories = new SelectList(db.TaskCategories, "Id", "Name"); // выбор типа задачи

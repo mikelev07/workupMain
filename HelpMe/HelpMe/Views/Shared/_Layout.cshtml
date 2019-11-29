@@ -81,7 +81,9 @@
                                 <li>
                                     <a href="#">Сервисы</a>
                                 </li>
-
+                                <li>
+                                    <a href="#">FAQ</a>
+                                </li>        
                             </ul>
                         </nav>
                         <div class="clearfix"></div>
@@ -90,9 +92,11 @@
                     @if (Request.IsAuthenticated)
                     {
                         <div class="right-side">
-                            <div class="header-widget hide-on-mobile">
+                            @if(User.IsInRole("User")){
+                                <div class="header-widget hide-on-mobile">
                                 <a href="/Custom/Create" class="button ripple-effect margin-top-18"><i class="icon-feather-plus"></i> Добавить заказ </a>
                             </div>
+                            }
                             
                             <div class="header-widget hide-on-mobile">
                                 
@@ -205,7 +209,7 @@
                                                     var status = ((ClaimsIdentity)User.Identity).FindFirst("status");
                                                 }
 
-                                                <label value="sucess" class="@(status.Value != "true" ? "user-online" : "user-online current-status")">В работе</label>
+                                                <label value="sucess" class="@(status.Value != "true" ? "user-online" : "user-online current-status")">Готов</label>
                                                 <label value="dontworry" class="@(status.Value != "true" ? "user-invisible current-status" : "user-invisible") ">Занят</label>
                                            
                                                 <span class="status-indicator" aria-hidden="true"></span>
@@ -273,7 +277,7 @@
                             <!-- Welcome Text -->
                             <div class="welcome-text">
                                 <h3>Авторизация</h3>
-                                <span>Нет аккаунта? <a href="/Account/register">Создай новый!</a></span>
+                                <span>Нет аккаунта? <a href="#" id="create-new-account-link">Создай новый!</a></span>
                             </div>
 
                             <!-- Form -->
@@ -380,6 +384,10 @@
 
     <script>
 
+        $('#create-new-account-link').on('click', function () {
+            $('[href="#register"]').click();
+        });
+
         $('#spass').on('keyup', function () {
             if ($('#fpass').val() == $('#spass').val()) {
                 $('.result').hide();
@@ -390,9 +398,10 @@
         });
 
         $("#usName").bind('keyup', function () {
-            $(this).val($(this).val().replace(/[^a-z ]/i, ""));
-            Snackbar.show({
-                text: 'Только латинские символы!',
+            if ($(this).val().match(/[^a-zA-Z0-9_]/g)) {
+                $(this).val($(this).val().replace(/[^a-zA-Z0-9_]/g, ''));
+                Snackbar.show({
+                text: 'Допустимы только латинские буквы и цифры!',
                 pos: 'bottom-center',
                 showAction: false,
                 actionText: "Dismiss",
@@ -400,6 +409,8 @@
                 textColor: '#fff',
                 backgroundColor: '#383838'
             });
+            }
+            
         });
 
         $('#header .right-side').css('float', 'left')
@@ -407,17 +418,17 @@
        
         $('#snackbar-user-status label').click(function () {
 
-             $.ajax({
-                    type: 'POST',
-                    url: '/User/ChangeStatus/',
-                     data: {value: $(this).attr("value")},
-                    success: function (response) {
-                       
-                    },
-                    error: function (error) {
-                        console.log(error);
-                    }
-                })
+            $.ajax({
+                type: 'POST',
+                url: '/User/ChangeStatus/',
+                data: { value: $(this).attr("value") },
+                success: function (response) {
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
 
             Snackbar.show({
                 text: 'Статус изменен!',

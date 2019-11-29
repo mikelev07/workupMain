@@ -15,6 +15,8 @@ namespace HelpMe.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
+
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -76,6 +78,15 @@ namespace HelpMe.Controllers
             // Сбои при входе не приводят к блокированию учетной записи
             // Чтобы ошибки при вводе пароля инициировали блокирование учетной записи, замените на shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(signedUser.UserName, model.Password, model.RememberMe, shouldLockout: false);
+
+            if (String.IsNullOrEmpty(returnUrl))
+            {
+                returnUrl = System.Web.HttpContext.Current.Request.UrlReferrer.LocalPath;
+                if (!Url.IsLocalUrl(returnUrl))
+                {
+                    returnUrl = null;
+                }
+            }
             switch (result)
             {
                 case SignInStatus.Success:
@@ -152,15 +163,29 @@ namespace HelpMe.Controllers
             if (ModelState.IsValid)
             {
                 var userName = model.UserName;
-              /*  int index = userName.IndexOf("@");
-                if (index > 0)
-                    userName = userName.Substring(0, index); */
+                /*  int index = userName.IndexOf("@");
+                  if (index > 0)
+                      userName = userName.Substring(0, index); */
+
+                
+
                 var user = new User { UserName = userName, Email = model.Email, RegistrationDate = DateTime.Now };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    var wallet = new Wallet()
+                    {
+                        Id = 1,
+                        Summ = 0,
+                        UserId = user.Id
+                    };
+
+                    db.Wallets.Add(wallet);
+                    await db.SaveChangesAsync();
                     await UserManager.AddToRoleAsync(user.Id, model.RoleName);
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+
+                    
                     
                     // Дополнительные сведения о включении подтверждения учетной записи и сброса пароля см. на странице https://go.microsoft.com/fwlink/?LinkID=320771.
                     // Отправка сообщения электронной почты с этой ссылкой

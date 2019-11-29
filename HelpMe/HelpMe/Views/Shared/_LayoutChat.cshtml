@@ -96,9 +96,12 @@
                     @if (Request.IsAuthenticated)
                     {
                         <div class="right-side">
-                            <div class="header-widget hide-on-mobile">
+                            @if (User.IsInRole("User"))
+                            {
+                                <div class="header-widget hide-on-mobile">
                                 <a href="/Custom/Create" class="button ripple-effect margin-top-18"><i class="icon-feather-plus"></i> Добавить заказ </a>
                             </div>
+                            }
 
                             <div class="header-widget hide-on-mobile">
 
@@ -211,7 +214,7 @@
                                                     var status = ((ClaimsIdentity)User.Identity).FindFirst("status");
                                                 }
 
-                                                <label value="sucess" class="@(status.Value != "true" ? "user-online" : "user-online current-status")">В работе</label>
+                                                <label value="sucess" class="@(status.Value != "true" ? "user-online" : "user-online current-status")">Готов</label>
                                                 <label value="dontworry" class="@(status.Value != "true" ? "user-invisible current-status" : "user-invisible") ">Занят</label>
 
                                                 <span class="status-indicator" aria-hidden="true"></span>
@@ -389,34 +392,39 @@
                         <div class="dashboard-nav">
                             <div class="dashboard-nav-inner">
                                 <ul data-submenu-title="Управление">
-                                    <li>
-                                        <a href="#"><i class="icon-material-outline-business-center"></i>Мои заказы</a>
-                                        <ul>
-                                            <li><a href="/custom/tasks">Список заказов<span class="nav-tag">3</span></a></li>
-                                            <li><a href="/Custom/Create">Разместить задачу</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#"><i class="icon-material-outline-assignment"></i>Мои задачи</a>
-                                        <ul>
-                                            <li><a href="/custom/tasksexec">Список работ<span class="nav-tag">2</span></a></li>
-                                            <li><a href="/custom/myactivebids">Мои предложения</a></li>
-
-                                        </ul>
-                                    </li>
+                                    @if (User.IsInRole("User"))
+                                    {
+                                        <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "custom" ? "active" : "")">
+                                            <a href="#"><i class="icon-material-outline-business-center"></i>Мои заказы</a>
+                                            <ul>
+                                                <li><a href="/custom/tasks">Список заказов@*<span class="nav-tag">3</span>*@</a></li>
+                                                <li><a href="/Custom/Create">Разместить задачу</a></li>
+                                            </ul>
+                                        </li>
+                                    }
+                                    @if (User.IsInRole("employee"))
+                                    {
+                                        <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "custom" ? "active" : "")">
+                                            <a href="#"><i class="icon-material-outline-assignment"></i>Мои задачи</a>
+                                            <ul>
+                                                <li><a href="/custom/tasksexec">Список работ@*<span class="nav-tag">2</span>*@</a></li>
+                                                <li><a href="/custom/myactivebids">Мои предложения</a></li>
+                                            </ul>
+                                        </li>
+                                    }
                                 </ul>
                                 <ul data-submenu-title="Основное">
-                                    <li class="active"><a href="/manage/dashboard"><i class="icon-material-outline-dashboard"></i> Рабочая доска</a></li>
-                                    <li><a href="/chat"><i class="icon-material-outline-question-answer"></i> Сообщения <span class="nav-tag">2</span></a></li>
-                                    <li><a href="/manage/likeit"><i class="icon-material-outline-star-border"></i> Избранное</a></li>
-                                    <li><a href="/manage/notifications"><i class="icon-material-baseline-notifications-none"></i> Уведомления</a></li>
-                                    <li><a href="/manage/reviews"><i class="icon-material-outline-rate-review"></i> Отзывы</a></li>
+                                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "dashboard" ? "active" : "")"><a href="/manage/dashboard"><i class="icon-material-outline-dashboard"></i> Рабочая доска</a></li>
+                                    <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "chat" ? "active" : "")"><a href="/chat"><i class="icon-material-outline-question-answer"></i> Сообщения @*<span class="nav-tag">2</span>*@</a></li>
+                                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "likeit" ? "active" : "")"><a href="/manage/likeit"><i class="icon-material-outline-star-border"></i> Избранное</a></li>
+                                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "notifications" ? "active" : "")"><a href="/manage/notifications"><i class="icon-material-baseline-notifications-none"></i> Уведомления</a></li>
+                                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "reviews" ? "active" : "")"><a href="/manage/reviews"><i class="icon-material-outline-rate-review"></i> Отзывы</a></li>
                                 </ul>
 
 
 
                                 <ul data-submenu-title="Аккаунт">
-                                    <li><a href="/manage/"><i class="icon-material-outline-settings"></i> Настройки</a></li>
+                                    <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "manage" ? "active" : "")"><a href="/manage/"><i class="icon-material-outline-settings"></i> Настройки</a></li>
                                     <li><a href="index-logged-out.html"><i class="icon-material-outline-power-settings-new"></i> Выход</a></li>
                                 </ul>
 
@@ -454,17 +462,17 @@
 
 
         // Snackbar for user status switcher
-        $('#snackbar-user-status label').click(function () {
-            Snackbar.show({
-                text: 'Your status has been changed!',
-                pos: 'bottom-center',
-                showAction: false,
-                actionText: "Dismiss",
-                duration: 3000,
-                textColor: '#fff',
-                backgroundColor: '#383838'
-            });
-        });
+        //$('#snackbar-user-status label').click(function () {
+        //    Snackbar.show({
+        //        text: 'Your status has been changed!',
+        //        pos: 'bottom-center',
+        //        showAction: false,
+        //        actionText: "Dismiss",
+        //        duration: 3000,
+        //        textColor: '#fff',
+        //        backgroundColor: '#383838'
+        //    });
+        //});
 
 
         $('#spass').on('keyup', function () {
@@ -504,7 +512,7 @@
                 error: function (error) {
                     console.log(error);
                 }
-            })
+            });
 
             Snackbar.show({
                 text: 'Статус изменен!',

@@ -47,7 +47,6 @@
 
                                 <li>
                                     <a href="#">FAQ</a>
-
                                 </li>
 
                             </ul>
@@ -61,9 +60,12 @@
                     @if (Request.IsAuthenticated)
                     {
                         <div class="right-side">
-                            <div class="header-widget hide-on-mobile">
-                                <a href="/Custom/Create" class="button ripple-effect margin-top-18"><i class="icon-feather-plus"></i> Добавить заказ </a>
-                            </div>
+                            @if (User.IsInRole("User"))
+                            {
+                                <div class="header-widget hide-on-mobile">
+                                    <a href="/Custom/Create" class="button ripple-effect margin-top-18"><i class="icon-feather-plus"></i> Добавить заказ </a>
+                                </div>
+                            }
 
                             <div class="header-widget hide-on-mobile">
 
@@ -176,7 +178,7 @@
                                                     var status = ((ClaimsIdentity)User.Identity).FindFirst("status");
                                                 }
 
-                                                <label value="sucess" class="@(status.Value != "true" ? "user-online" : "user-online current-status")">В работе</label>
+                                                <label value="sucess" class="@(status.Value != "true" ? "user-online" : "user-online current-status")">Готов</label>
                                                 <label value="dontworry" class="@(status.Value != "true" ? "user-invisible current-status" : "user-invisible") ">Занят</label>
 
                                                 <span class="status-indicator" aria-hidden="true"></span>
@@ -352,34 +354,51 @@
                         <div class="dashboard-nav">
                             <div class="dashboard-nav-inner">
                                 <ul data-submenu-title="Управление">
-                                    <li>
-                                        <a href="#"><i class="icon-material-outline-business-center"></i>Мои заказы</a>
-                                        <ul>
-                                            <li><a href="/custom/tasks">Список заказов<span class="nav-tag">3</span></a></li>
-                                            <li><a href="/Custom/Create">Разместить задачу</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#"><i class="icon-material-outline-assignment"></i>Мои задачи</a>
-                                        <ul>
-                                            <li><a href="/custom/tasksexec">Список работ<span class="nav-tag">2</span></a></li>
-                                            <li><a href="/custom/myactivebids">Мои предложения</a></li>
+                                    @if (User.IsInRole("User"))
+                                    {
+                                        <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "custom" ? "active" : "")">
+                                            <a href="#"><i class="icon-material-outline-business-center"></i>Мои заказы</a>
+                                            <ul>
+                                                <li><a href="/custom/tasks">Список заказов@*<span class="nav-tag">3</span>*@</a></li>
+                                                <li><a href="/Custom/Create">Разместить задачу</a></li>
+                                            </ul>
+                                        </li>
+                                    }
+                                    @if (User.IsInRole("employee"))
+                                    {
+                                        <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "custom" ? "active" : "")">
+                                            <a href="#"><i class="icon-material-outline-assignment"></i>Мои задачи</a>
+                                            <ul>
+                                                <li><a href="/custom/tasksexec">Список работ@*<span class="nav-tag">2</span>*@</a></li>
+                                                <li><a href="/custom/myactivebids">Мои предложения</a></li>
 
-                                        </ul>
-                                    </li>
+                                            </ul>
+                                        </li>
+                                    }
                                 </ul>
                                 <ul data-submenu-title="Основное">
-                                    <li class="active"><a href="/manage/dashboard"><i class="icon-material-outline-dashboard"></i> Рабочая доска</a></li>
-                                    <li><a href="/chat"><i class="icon-material-outline-question-answer"></i> Сообщения <span class="nav-tag">2</span></a></li>
-                                    <li><a href="/manage/likeit"><i class="icon-material-outline-star-border"></i> Избранное</a></li>
-                                    <li><a href="/manage/notifications"><i class="icon-material-baseline-notifications-none"></i> Уведомления</a></li>
-                                    <li><a href="/manage/reviews"><i class="icon-material-outline-rate-review"></i> Отзывы</a></li>
+                                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "dashboard" ? "active" : "")"><a href="/manage/dashboard"><i class="icon-material-outline-dashboard"></i> Рабочая доска</a></li>
+                                    <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "chat" ? "active" : "")">
+                                        <a href="/chat">
+                                            <i class="icon-material-outline-question-answer"></i> Сообщения
+                                            @{
+                                                int unreadingCount = ViewBag.UnreadingCount;
+                                                if (ViewBag.UnreadingCount > 0)
+                                                {
+                                                    <span class="nav-tag">@unreadingCount</span>
+                                                }
+                                            }
+                                        </a>
+                                    </li>
+                                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "likeit" ? "active" : "")"><a href="/manage/likeit"><i class="icon-material-outline-star-border"></i> Избранное</a></li>
+                                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "notifications" ? "active" : "")"><a href="/manage/notifications"><i class="icon-material-baseline-notifications-none"></i> Уведомления</a></li>
+                                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "reviews" ? "active" : "")"><a href="/manage/reviews"><i class="icon-material-outline-rate-review"></i> Отзывы</a></li>
                                 </ul>
 
 
 
                                 <ul data-submenu-title="Аккаунт">
-                                    <li><a href="/manage/"><i class="icon-material-outline-settings"></i> Настройки</a></li>
+                                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")"><a href="/manage/"><i class="icon-material-outline-settings"></i> Настройки</a></li>
                                     <li><a href="index-logged-out.html"><i class="icon-material-outline-power-settings-new"></i> Выход</a></li>
                                 </ul>
 
@@ -414,17 +433,17 @@
 
     <script>
         // Snackbar for user status switcher
-        $('#snackbar-user-status label').click(function () {
-            Snackbar.show({
-                text: 'Ваш статус изменен!',
-                pos: 'bottom-center',
-                showAction: false,
-                actionText: "Dismiss",
-                duration: 3000,
-                textColor: '#fff',
-                backgroundColor: '#383838'
-            });
-        });
+        //$('#snackbar-user-status label').click(function () {
+        //    Snackbar.show({
+        //        text: 'Ваш статус изменен!',
+        //        pos: 'bottom-center',
+        //        showAction: false,
+        //        actionText: "Dismiss",
+        //        duration: 3000,
+        //        textColor: '#fff',
+        //        backgroundColor: '#383838'
+        //    });
+        //});
 
 
         $('#spass').on('keyup', function () {
@@ -464,7 +483,7 @@
                 error: function (error) {
                     console.log(error);
                 }
-            })
+            });
 
             Snackbar.show({
                 text: 'Статус изменен!',
@@ -526,12 +545,12 @@
                     $('.ncount').text(0);
                     if (!isSucess) {
                         $('#notifContent').empty();
-                       // $('.ncont').empty();
+                        // $('.ncont').empty();
                         if (response.length == 0) {
                             $('#notifContent').append($('<li class="centered-me">Нет новых уведомлений</li>'));
                         }
                         $.each(response, function (index, value) {
-                            $('.ncont').prepend($('<li class="notifications-not-read"><a href="/Custom/Details/'+ value.CustomId +'"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Description + '</span></a></li>'));
+                            $('.ncont').prepend($('<li class="notifications-not-read"><a href="/Custom/Details/' + value.CustomId + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Description + '</span></a></li>'));
                         })
                     }
                     isSucess = true;
@@ -554,14 +573,14 @@
                     $('#notific').hide();
                     $('.ncount').hide();
                     $('#notifContent').empty();
-                   // $('.ncont').empty();
+                    // $('.ncont').empty();
                     if (response.length == 0) {
                         $('#notifContent').append($('<li class="centered-me">Нет новых уведомлений</li>'));
                     }
 
                     $.each(response, function (index, value) {
 
-                        $('#notifContent').prepend($('<li class="notifications-not-read"><a href="/Custom/Details/'+ value.CustomId +'"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Description + '</span></a></li>'));
+                        $('#notifContent').prepend($('<li class="notifications-not-read"><a href="/Custom/Details/' + value.CustomId + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Description + '</span></a></li>'));
 
                     });
                     $(".lds-ring").children().hide();
@@ -610,7 +629,7 @@
                 $('.notCl').append("<span class='notiUnreadCount'>1</span>")
             } else {
                 var unreadText = $('.notiUnreadCount').text().charAt(0);
-                
+
                 $('.notiUnreadCount').text(parseInt(unreadText) + 1);
             }
 

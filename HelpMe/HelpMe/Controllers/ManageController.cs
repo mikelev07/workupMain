@@ -73,6 +73,7 @@ namespace HelpMe.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
+            ViewBag.UnreadingCount = db.Messages.Where(m => m.UserToId == userId && m.Status == MessageStatus.Undreading).Count();
             var user = db.Users.Include(s => s.Skills).Include(s =>s.Portfolios)
                                 .Where(u => u.Id == userId).FirstOrDefault();
             ViewBag.Image = user.ImagePath ?? "~/Content/Custom/images/user-avatar-placeholder.png";
@@ -141,6 +142,7 @@ namespace HelpMe.Controllers
         {
             string userId = User.Identity.GetUserId();
             var user = await db.Users.Include(u => u.Notes).SingleAsync(u => u.Id == userId);
+            ViewBag.UnreadingCount = await db.Messages.Where(m => m.UserToId == userId && m.Status==MessageStatus.Undreading).CountAsync();
             return View(user);
         }
 
@@ -148,6 +150,7 @@ namespace HelpMe.Controllers
         {
             string userId = User.Identity.GetUserId();
             var notifications = await db.Notifications.Include(c => c.User).Where(c => c.UserId == userId).ToListAsync();
+            ViewBag.UnreadingCount = await db.Messages.Where(m => m.UserToId == userId && m.Status == MessageStatus.Undreading).CountAsync();
             return View(notifications);
         }
 
@@ -441,6 +444,7 @@ namespace HelpMe.Controllers
         {
             // var customViewModels = db.Customs.Include(c => c.Comments).Include(c => c.User).OrderBy(x => x.Id);
             string userId = User.Identity.GetUserId();
+            ViewBag.UnreadingCount = db.Messages.Where(m => m.UserToId == userId && m.Status == MessageStatus.Undreading).Count();
 
             var rewsModel = db.Reviews.Where(t => t.UserId == userId).ToList();
             
@@ -511,6 +515,8 @@ namespace HelpMe.Controllers
 
         public ActionResult Likeit()
         {
+            var userId = User.Identity.GetUserId();
+            ViewBag.UnreadingCount = db.Messages.Where(m => m.UserToId == userId && m.Status == MessageStatus.Undreading).Count();
             // var customViewModels = db.Customs.Include(c => c.Comments).Include(c => c.User).OrderBy(x => x.Id);
             return View();
         }
