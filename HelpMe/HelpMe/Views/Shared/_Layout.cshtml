@@ -217,8 +217,14 @@
                                         </div>
                                         <ul class="user-menu-small-nav">
                                             <li><a href="/manage/dashboard"><i class="icon-material-outline-dashboard"></i> Рабочая доска</a></li>
-                                            <li><a href="/custom/tasks"><i class="icon-material-outline-folder"></i> Мои заказы</a></li>
-                                            <li><a href="/custom/tasksexec"><i class="icon-material-outline-folder-shared"></i> Мои задачи</a></li>
+                                            @if (User.IsInRole("User"))
+                                            {
+                                                <li><a href="/custom/tasks"><i class="icon-material-outline-folder"></i> Мои заказы</a></li>
+                                            }
+                                            @if (User.IsInRole("employee"))
+                                            {
+                                                <li><a href="/custom/tasksexec"><i class="icon-material-outline-folder-shared"></i> Мои задачи</a></li>
+                                            }
                                             <li><a href="/wallet"><i class="icon-material-outline-account-balance-wallet"></i> Баланс</a></li>
                                             <li><a href="/manage"><i class="icon-material-outline-settings"></i> Настройки</a></li>
                                             @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))

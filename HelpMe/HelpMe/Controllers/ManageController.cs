@@ -138,13 +138,13 @@ namespace HelpMe.Controllers
 
         }
 
-        public async Task<ActionResult> Dashboard()
-        {
-            string userId = User.Identity.GetUserId();
-            var user = await db.Users.Include(u => u.Notes).SingleAsync(u => u.Id == userId);
-            ViewBag.UnreadingCount = await db.Messages.Where(m => m.UserToId == userId && m.Status==MessageStatus.Undreading).CountAsync();
-            return View(user);
-        }
+        //public async Task<ActionResult> Dashboard()
+        //{
+        //    string userId = User.Identity.GetUserId();
+        //    var user = await db.Users.Include(u => u.Notes).SingleAsync(u => u.Id == userId);
+        //    ViewBag.UnreadingCount = await db.Messages.Where(m => m.UserToId == userId && m.Status==MessageStatus.Undreading).CountAsync();
+        //    return View(user);
+        //}
 
         public async Task<ActionResult> Notifications()
         {
