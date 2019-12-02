@@ -17,11 +17,12 @@ namespace HelpMe.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Wallet
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            string id = User.Identity.GetUserId();
-            Wallet wallet =  db.Wallets.Where(x => x.UserId == id).FirstOrDefault();
-            
+            string userId = User.Identity.GetUserId();
+            Wallet wallet =  await db.Wallets.Where(x => x.UserId == userId).FirstOrDefaultAsync();
+            ViewBag.UnreadingCount = await db.Messages.Where(m => m.UserToId == userId && m.Status == MessageStatus.Undreading).CountAsync();
+
             return View(wallet);
         }
 

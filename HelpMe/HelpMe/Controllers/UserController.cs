@@ -98,12 +98,12 @@ namespace HelpMe.Controllers
 
             if (!String.IsNullOrEmpty(name))
             {
-                users = (users ?? db.Users).Where(b => b.UserName.StartsWith(name));
+                users = (users ?? db.Users.Where(u=>u.Roles.Any(r=>r.RoleId== "b7da93e6-5276-4947-8406-bd5e2a60983c"))).Where(b => b.UserName.StartsWith(name));
                 //worksUsersCount = users.Count();
             }
             if (taskId != 0 && taskId != null)
             {
-                users = (users ?? db.Users).Where(m => m.TaskCategories.Any(b => b.Id == taskId));
+                users = (users ?? db.Users.Where(u => u.Roles.Any(r => r.RoleId == "b7da93e6-5276-4947-8406-bd5e2a60983c"))).Where(m => m.TaskCategories.Any(b => b.Id == taskId));
                 //worksUsersCount = users.Count();
 
                 if (skillId != 0 && skillId != null)
@@ -115,15 +115,15 @@ namespace HelpMe.Controllers
 
             if(isOnline==true)
             {
-                users = (users ?? db.Users).Where(m => m.IsOnline == isOnline);
+                users = (users ?? db.Users.Where(u => u.Roles.Any(r => r.RoleId == "b7da93e6-5276-4947-8406-bd5e2a60983c"))).Where(m => m.IsOnline == isOnline);
             }
 
             if (isNotBusy == true)
             {
-                users = (users ?? db.Users).Where(m => m.IsNotBusy == isNotBusy);
+                users = (users ?? db.Users.Where(u => u.Roles.Any(r => r.RoleId == "b7da93e6-5276-4947-8406-bd5e2a60983c"))).Where(m => m.IsNotBusy == isNotBusy);
             }
 
-            users = (users ?? db.Users).Where(m=>(m.PositiveThumbs+m.NegativeThumbs)>=worksCount);
+            users = (users ?? db.Users.Where(u => u.Roles.Any(r => r.RoleId == "b7da93e6-5276-4947-8406-bd5e2a60983c"))).Where(m=>(m.PositiveThumbs+m.NegativeThumbs)>=worksCount);
             //worksUsersCount = users.Count();
 
             var roles = RoleManager.Roles.ToList();

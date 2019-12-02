@@ -405,7 +405,7 @@
 
                                 <ul data-submenu-title="Аккаунт">
                                     <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")"><a href="/manage/"><i class="icon-material-outline-settings"></i> Настройки</a></li>
-                                    <li><a href="index-logged-out.html"><i class="icon-material-outline-power-settings-new"></i> Выход</a></li>
+                                    <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="icon-material-outline-power-settings-new"></i> Выход</a></li>
                                 </ul>
 
                             </div>
@@ -432,6 +432,9 @@
     <script src="~/Scripts/iwc-all.min.js"></script>
     <script src="~/Scripts/signalr-patch.js"></script>
     <script src="~/Scripts/iwc-signalr.js"></script>
+    <script src="~/Scripts/inputmask/inputmask.js"></script>
+    <script src="~/Scripts/inputmask/inputmask.extensions.js"></script>
+    <script src="~/Scripts/inputmask/jquery.inputmask.js"></script>
 
 
     @Scripts.Render("~/bundles/Scripts/Custom/js")

@@ -66,7 +66,7 @@
                                     <div class="col-xl-6">
                                         <div class="submit-field">
                                             <h5>Телефон</h5>
-                                            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.PhoneNumber } })
+                                            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { id = "user-phone", type = "tel", @Value = "", @class = "with-border", @placeholder = Model.PhoneNumber } })
                                         </div>
                                     </div>
 
@@ -82,15 +82,23 @@
                                         <div class="submit-field">
                                             <h5>Тип аккаунта</h5>
                                             <div class="account-type">
-                                                <div>
-                                                    <input type="radio" name="account-type-radio" id="freelancer-radio-1" class="account-type-radio" checked />
-                                                    <label for="freelancer-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-account-circle"></i>Исполнитель</label>
-                                                </div>
-
-                                                @*<div>
-                                                        <input type="radio" name="account-type-radio" id="employer-radio-1" class="account-type-radio"  disabled/>
-                                                        <label for="employer-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-business-center"></i>Заказчик</label>
-                                                    </div>*@
+                                                @if (User.IsInRole("employee"))
+                                                {
+                                                    <div>
+                                                        <input type="radio" name="account-type-radio" id="freelancer-radio-1" class="account-type-radio" checked />
+                                                        <label for="freelancer-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-school"></i> Исполнитель</label>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    if (User.IsInRole("User"))
+                                                    {
+                                                        <div>
+                                                            <input type="radio" name="account-type-radio" id="employee-radio-1" class="account-type-radio" checked />
+                                                            <label for="employee-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-business-center"></i> Заказчик</label>
+                                                        </div>
+                                                    }
+                                                }
                                             </div>
                                         </div>
                                     </div>
@@ -109,7 +117,71 @@
                     </div>
                 </div>
             </div>
-          
+
+            <div class="col-xl-12">
+                <div id="test1" class="dashboard-box">
+
+                    <!-- Headline -->
+                    <div class="headline">
+                        <h3><i class="icon-material-outline-lock"></i> Пароль</h3>
+                    </div>
+                    @using (Html.BeginForm("ChangePassword", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="content with-padding">
+                            <div class="row">
+                                <div class="col-xl-4">
+                                    <div class="submit-field">
+                                        <h5>Текущий пароль</h5>
+                                        <input name="OldPassword" type="password" class="with-border">
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-4">
+                                    <div class="submit-field">
+                                        <h5>Новый пароль</h5>
+                                        <input name="NewPassword" type="password" class="with-border">
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-4">
+                                    <div class="submit-field">
+                                        <h5>Повторить пароль</h5>
+                                        <input name="ConfirmPassword" type="password" class="with-border">
+                                    </div>
+                                </div>
+                                @*
+                                    <div class="col-xl-12">
+                                        <div class="checkbox">
+                                            <input type="checkbox" id="two-step" checked>
+                                            <label for="two-step"><span class="checkbox-icon"></span> Включить двухфакторную авторизацию</label>
+                                        </div>
+                                    </div>
+                                *@
+                            </div>
+                            <div class="col-xl-12">
+                                <input type="submit" value="Сохранить изменения" class="button ripple-effect big margin-top-30" />
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+            <div class="col-xl-12">
+                <div class="dashboard-box">
+                    <!-- Headline -->
+                    <div class="headline">
+                        <h3><i class="icon-material-outline-description"></i> Расскажите о себе</h3>
+                    </div>
+
+                    <div class="submit-field">
+                        <textarea cols="30" rows="5" class="with-border" placeholder="Расскажите подробно о себе...">@Model.Description</textarea>
+                    </div>
+                </div>
+
+            </div>
+
             <!-- Dashboard Box -->
             <div class="col-xl-12">
                 <div class="dashboard-box">
@@ -145,13 +217,13 @@
                                                                     <span class='keyword-text'>@b.Name</span>
                                                                 </span>
                                                             }
-                                                            </div>
+                                                        </div>
                                                     </div>
                                                 }
-                                               
+
                                             </div>
 
-                          
+
                                             <br />
                                         </div>
                                     </div>
@@ -194,73 +266,12 @@
                                     </div>
                                 </div>
                             </li>
-                            <li>
-                                <div class="row">
-
-
-                                    <div class="col-xl-12">
-                                        <div class="submit-field">
-                                            <h5>Расскажите о себе</h5>
-                                            <textarea cols="30" rows="5" class="with-border">Привет всем, кто я такой?.</textarea>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <div class="col-xl-12">
-                <div id="test1" class="dashboard-box">
 
-                    <!-- Headline -->
-                    <div class="headline">
-                        <h3><i class="icon-material-outline-lock"></i> Пароль</h3>
-                    </div>
-                    @using (Html.BeginForm("ChangePassword", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <div class="content with-padding">
-                            <div class="row">
-                                <div class="col-xl-4">
-                                    <div class="submit-field">
-                                        <h5>Текущий пароль</h5>
-                                        <input name="OldPassword" type="password" class="with-border">
-                                    </div>
-                                </div>
-
-                                <div class="col-xl-4">
-                                    <div class="submit-field">
-                                        <h5>Новый пароль</h5>
-                                        <input name="NewPassword" type="password" class="with-border">
-                                    </div>
-                                </div>
-
-                                <div class="col-xl-4">
-                                    <div class="submit-field">
-                                        <h5>Повторить пароль</h5>
-                                        <input name="ConfirmPassword" type="password" class="with-border">
-                                    </div>
-                                </div>
-                                @*
-                                <div class="col-xl-12">
-                                    <div class="checkbox">
-                                        <input type="checkbox" id="two-step" checked>
-                                        <label for="two-step"><span class="checkbox-icon"></span> Включить двухфакторную авторизацию</label>
-                                    </div>
-                                </div>
-                                 *@
-                            </div>
-                            <div class="col-xl-12">
-                                <input type="submit" value="Сохранить изменения" class="button ripple-effect big margin-top-30" />
-                            </div>
-                        </div>
-                    }
-
-                    </div>
-            </div>
 
 
         </div>
@@ -354,12 +365,13 @@
         </div>
     </div>
 </div>
-
 <!-- Dashboard Content / End -->
 @section Scripts {
     <script>
 
-       'use strict';
+        'use strict';
+
+        $("#user-phone").inputmask("+7 (999) 99-99-999");
 
         ; (function (document, window, index) {
             // обнаруживаем другидруп
@@ -642,7 +654,7 @@
                 });
 
 
-              
+
               $("#"+idCheck).prop("checked", false);
 
               keywordsList.css({ 'height': 'auto' }).height();

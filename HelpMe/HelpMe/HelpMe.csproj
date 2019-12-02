@@ -309,6 +309,10 @@
     <Compile Include="Migrations\201911050833066_andnewfix11211.Designer.cs">
       <DependentUpon>201911050833066_andnewfix11211.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912021201451_IndexViewModel.cs" />
+    <Compile Include="Migrations\201912021201451_IndexViewModel.Designer.cs">
+      <DependentUpon>201912021201451_IndexViewModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\API\CustomApiModel.cs" />
@@ -453,6 +457,26 @@
     <Content Include="Scripts\Custom\slick.min.js" />
     <Content Include="Scripts\Custom\snackbar.js" />
     <Content Include="Scripts\Custom\tippy.all.min.js" />
+    <Content Include="Scripts\inputmask\bindings\inputmask.binding.js" />
+    <Content Include="Scripts\inputmask\dependencyLibs\inputmask.dependencyLib.jqlite.js" />
+    <Content Include="Scripts\inputmask\dependencyLibs\inputmask.dependencyLib.jquery.js" />
+    <Content Include="Scripts\inputmask\dependencyLibs\inputmask.dependencyLib.js" />
+    <Content Include="Scripts\inputmask\global\window.js" />
+    <Content Include="Scripts\inputmask\inputmask.date.extensions.js" />
+    <Content Include="Scripts\inputmask\inputmask.extensions.js" />
+    <Content Include="Scripts\inputmask\inputmask.js" />
+    <Content Include="Scripts\inputmask\inputmask.numeric.extensions.js" />
+    <Content Include="Scripts\inputmask\jquery.inputmask.js" />
+    <Content Include="Scripts\inputmask\min\bindings\inputmask.binding.min.js" />
+    <Content Include="Scripts\inputmask\min\dependencyLibs\inputmask.dependencyLib.jqlite.min.js" />
+    <Content Include="Scripts\inputmask\min\dependencyLibs\inputmask.dependencyLib.jquery.min.js" />
+    <Content Include="Scripts\inputmask\min\dependencyLibs\inputmask.dependencyLib.min.js" />
+    <Content Include="Scripts\inputmask\min\global\window.min.js" />
+    <Content Include="Scripts\inputmask\min\inputmask.date.extensions.min.js" />
+    <Content Include="Scripts\inputmask\min\inputmask.extensions.min.js" />
+    <Content Include="Scripts\inputmask\min\inputmask.min.js" />
+    <Content Include="Scripts\inputmask\min\inputmask.numeric.extensions.min.js" />
+    <Content Include="Scripts\inputmask\min\jquery.inputmask.min.js" />
     <Content Include="Scripts\iwc-all.min.js" />
     <Content Include="Scripts\iwc-signalr.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -659,6 +683,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911050833066_andnewfix11211.resx">
       <DependentUpon>201911050833066_andnewfix11211.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912021201451_IndexViewModel.resx">
+      <DependentUpon>201912021201451_IndexViewModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
