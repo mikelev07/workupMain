@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using PagedList;
 using HelpMe.Hubs;
+using HelpMe.Helpers;
 using System.Security.Claims;
 using System.Security.Principal;
 using Microsoft.Owin.Security;
@@ -176,7 +177,6 @@ namespace HelpMe.Controllers
 
         private IEnumerable<UserViewModel> GetUsersPage(IEnumerable<UserViewModel> usersWithRoles, int page)
         {
-
             var usersToSkip = page * pageSize;
             var users = usersWithRoles.Skip(usersToSkip).Take(pageSize);
             return users.ToList();
@@ -184,21 +184,24 @@ namespace HelpMe.Controllers
 
         private IEnumerable<UserViewModel> SortUsers(IEnumerable<UserViewModel> usersWithRoles, int sortId)
         {
-            //by rating 
+            //by rating (default)
             if (sortId == 1)
             {
-                usersWithRoles = usersWithRoles.OrderByDescending(m => (double)(m.PositiveThumbs - m.NegativeThumbs) / (m.PositiveThumbs + m.NegativeThumbs)).
-                    OrderByDescending(m => (m.PositiveThumbs + m.NegativeThumbs));
+                usersWithRoles = usersWithRoles.OrderByDescending(m => HtmlExtensions.FindUserRating(m.PositiveThumbs, m.NegativeThumbs)).ThenByDescending(m => m.PositiveThumbs + m.NegativeThumbs);
             }
-
+            //by finished works 
+            if (sortId == 2)
+            {
+                usersWithRoles = usersWithRoles.OrderByDescending(m => m.Customs.Count(c=>c.DoneInTime==true));
+            }
             //by registration date ascending order
-            if(sortId==2)
+            if(sortId==3)
             {
                 usersWithRoles = usersWithRoles.OrderBy(m => m.RegistrationDate);
             }
 
             //by registration date descending order
-            if (sortId == 3)
+            if (sortId == 4)
             {
                 usersWithRoles = usersWithRoles.OrderByDescending(m => m.RegistrationDate);
             }

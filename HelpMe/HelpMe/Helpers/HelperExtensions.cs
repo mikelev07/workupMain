@@ -30,7 +30,18 @@ namespace HelpMe.Helpers
             return MvcHtmlString.Create(lnk.ToString().Replace(repID, linkText));
         }
         
+        public static double FindUserRating(int positiveThumbs, int negativeThumbs)
+        {
+            var totalThumbs = positiveThumbs + negativeThumbs;
+            double rating = 0.0;
 
+            if(totalThumbs>0)
+            {
+                rating = Math.Round((double)positiveThumbs / totalThumbs * 5, 1);
+            }
+
+            return rating;
+        }
 
         public static MvcHtmlString Nl2Br(this HtmlHelper htmlHelper, string text)
         {

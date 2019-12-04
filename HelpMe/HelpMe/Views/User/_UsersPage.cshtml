@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<HelpMe.Models.UserViewModel>
-
+@using HelpMe.Helpers;
 @{
 
 }
@@ -45,7 +45,7 @@
                     int dislikes = i.NegativeThumbs;
                     if (likes + dislikes > 0)
                     {
-                        rate = Math.Round((double)likes / (likes + dislikes) * 5, 1).ToString().Replace(',', '.');
+                        rate = HtmlExtensions.FindUserRating(likes, dislikes).ToString().Replace(',', '.');
                     }
                     if (rate.Length == 1)
                     {
@@ -82,9 +82,9 @@
         <div class="freelancer-details">
             <div class="freelancer-details-list">
                 <ul>
-                    <li>Рейтинг<strong><i style="color:green" class="icon-material-outline-thumb-up"></i> @i.PositiveThumbs <i style="color:red" class="icon-material-outline-thumb-down"></i> @i.NegativeThumbs</strong></li>
-                    <li>Отзывов <strong>@i.Reviews.Count()</strong></li>
-                    <li>Выполнено<strong>@(i.PositiveThumbs + i.NegativeThumbs) работ</strong></li>
+                    <li>Рейтинг: <strong><i style="color:green" class="icon-material-outline-thumb-up"></i> @i.PositiveThumbs <i style="color:red" class="icon-material-outline-thumb-down"></i> @i.NegativeThumbs</strong></li>
+                    <li>Отзывов: <strong>@i.Reviews.Count()</strong></li>
+                    <li>Выполнено: <strong>@(i.Customs.Count(c=>c.DoneInTime==true)) работ</strong></li>
 
                 </ul>
             </div>
