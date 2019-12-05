@@ -8,11 +8,11 @@
             <div class="col-md-12">
                 <div class="single-page-header-inner">
                     <div class="left-side">
-                        <div class="header-image" data-tippy-placement="bottom" title="@Model.TypeTask.Name">
+                        <div class="avatar-wrapper" data-tippy-placement="bottom" title="@Model.TypeTask.Name">
                             @*<a href="single-company-profile.html">
                                     <img src="@Model.TypeTask.ImagePath" alt="@Model.TypeTask.Name" />
                                 </a>*@
-                            <img src="@Url.Content(Model.TypeTask.ImagePath)" alt="@Model.TypeTask.Name" />
+                            <img class="profile-pic" src="@Url.Content(Model.TypeTask.ImagePath)" alt="@Model.TypeTask.Name" />
                         </div>
                         <div class="header-details">
 
@@ -124,7 +124,7 @@
 
             </div>
             <br />
-            @if ((Model.ExecutorId == User.Identity.GetUserId() || Model.UserId == User.Identity.GetUserId()) && Request.IsAuthenticated)
+            @if ((Model.ExecutorId == User.Identity.GetUserId() || Model.UserId == User.Identity.GetUserId()) && Request.IsAuthenticated && !new[] {HelpMe.Models.CustomStatus.Open, HelpMe.Models.CustomStatus.Cancelled}.Contains(Model.Status))
             {
                 <div style="margin-bottom: 30px;" class="single-page-section">
                     <h3>Готовые решения исполнителя<span style="color: white" class="nav-tag" id="MainAttaches">@Model.MainAttachments.Count </span></h3>
@@ -496,7 +496,7 @@
 
                                                             <!-- Price Slider -->
                                                             <div class="bidding-value">
-                                                                <span id="edit-comment-bidding-value"></span> руб. <button type="button" id="edit-comment-show-price"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button>
+                                                                <span id="edit-comment-bidding-value"></span> руб. <button type="button" id="edit-comment-show-price"><i title="Редактировать" data-tippy-placement="top" style="color:green" class="icon-line-awesome-pencil"></i></button>
                                                                 <input id="edit-comment-price-value" name="OfferPrice" class="no-spinners" style="margin-bottom:5px; display:none"
                                                                        placeholder="Укажите стоимость" type="number" value="0"
                                                                        oninput="validity.valid||(value='');" min="0" max="50000"
@@ -847,7 +847,7 @@
                                 <!-- Form -->
                                 <div class="row">
                                     <!-- Dashboard Box -->
-                                    <div>
+                                    <div style="margin: 0 auto;">
                                         <div class="dashboard-box margin-top-0">
 
                                             <!-- Headline -->
@@ -905,56 +905,51 @@
                                                     <div>
                                                         <div class="submit-field">
                                                             <h5>Дата сдачи задания</h5>
-                                                            <div class="col-xl-12">
-
-                                                                <div style="display:inline">
-                                                                    <div class="input-group date" data-provide="datepicker">
+                                                            <div style="display:inline">
+                                                                <div class="input-group date" data-provide="datepicker">
+                                                                    <div class="input-with-icon-left no-border">
+                                                                        <i class="icon-material-outline-date-range"></i>
+                                                                        <input id="EndingDate" placeholder="Дата сдачи" name="EndingDate" type="text" class="form-control">
+                                                                    </div>
+                                                                    <div class="input-group-addon">
+                                                                        <span class="glyphicon glyphicon-th"></span>
+                                                                    </div>
+                                                                </div>
+                                                                <h5>Время сдачи</h5>
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
                                                                         <div class="input-with-icon-left no-border">
-                                                                            <i class="icon-material-outline-date-range"></i>
-                                                                            <input id="EndingDate" placeholder="Дата сдачи" name="EndingDate" type="text" class="form-control">
+                                                                            <i class="icon-material-outline-access-time"></i>
+                                                                            <input id="datetimepicker3" placeholder="Время сдачи" type="text" class="form-control" />
                                                                         </div>
-                                                                        <div class="input-group-addon">
-                                                                            <span class="glyphicon glyphicon-th"></span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <h5>Время сдачи</h5>
-                                                                    <div class="form-group">
-                                                                        <div class="input-group">
-                                                                            <div class="input-with-icon-left no-border">
-                                                                                <i class="icon-material-outline-access-time"></i>
-                                                                                <input id="datetimepicker3" placeholder="Время сдачи" type="text" class="form-control" />
-                                                                            </div>
-                                                                            <span class="input-group-addon">
-                                                                                <i class="glyphicon glyphicon-calendar"></i>
-                                                                            </span>
-                                                                        </div>
+                                                                        <span class="input-group-addon">
+                                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                                        </span>
                                                                     </div>
                                                                 </div>
-                                                                <div class="checkbox">
-                                                                    <input type="checkbox" id="checkboxDate">
-                                                                    <label for="checkboxDate"><span class="checkbox-icon"></span>Срок неизвестен</label>
-                                                                </div>
+                                                            </div>
+                                                            <div class="checkbox">
+                                                                <input type="checkbox" id="checkboxDate">
+                                                                <label for="checkboxDate"><span class="checkbox-icon"></span>Срок неизвестен</label>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <div>
-                                                        <div class="col-xl-12">
-                                                            <div class="submit-field">
-                                                                <h5>Бюджет задания</h5>
+                                                        <div class="submit-field">
+                                                            <h5>Бюджет задания</h5>
 
-                                                                <div class="row">
-                                                                    <div class="col-xl-8">
-                                                                        <div class="input-with-icon">
-                                                                            @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @id = "min", @min = "0", @max = "25000", @class = "with-border disabled no-spinners", @placeholder = "Цена", @oninput = "validity.valid||(value = '');" } })
-                                                                            <i class="currency">Руб.</i>
-                                                                        </div>
+                                                            <div class="row">
+                                                                <div class="col-xl-8">
+                                                                    <div class="input-with-icon">
+                                                                        @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @id = "min", @min = "0", @max = "25000", @class = "with-border disabled no-spinners", @placeholder = "Цена", @oninput = "validity.valid||(value = '');" } })
+                                                                        <i class="currency">Руб.</i>
                                                                     </div>
                                                                 </div>
-                                                                <div class="checkbox">
-                                                                    <input type="checkbox" id="checkboxNew">
-                                                                    <label for="checkboxNew"><span class="checkbox-icon"></span>По договоренности</label>
-                                                                </div>
+                                                            </div>
+                                                            <div class="checkbox">
+                                                                <input type="checkbox" id="checkboxNew">
+                                                                <label for="checkboxNew"><span class="checkbox-icon"></span>По договоренности</label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1010,11 +1005,12 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div>
+                                            <input type="submit" value="Подтвердить изменения" class="button ripple-effect margin-top-20" />
+                                        </div>
                                     </div>
 
-                                    <div>
-                                        <input type="submit" value="Подтвердить изменения" class="button ripple-effect margin-top-20" />
-                                    </div>
+
 
                                 </div>
                             }
@@ -1170,7 +1166,7 @@
 
                                 <!-- Price Slider -->
                                 <div class="bidding-value">
-                                    <span id="add-offer-bidding-value"></span> руб. <button id="add-offer-show-price"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button>
+                                    <span id="add-offer-bidding-value"></span> руб. <button id="add-offer-show-price"><i title="Редактировать" data-tippy-placement="top" style="color:green" class="icon-line-awesome-pencil"></i></button>
                                 </div>
                                 <input id="add-offer-price-value" class="no-spinners" style="margin-bottom:5px; display:none"
                                        placeholder="Укажите стоимость" type="number" value="@Model.Price"
@@ -1234,7 +1230,14 @@
 
         'use strict';
 
-        ; (function (document, window, index) {
+        $('#EndingDate').datepicker({
+            startDate: new Date(),
+            language: 'ru',
+            autoclose: true,
+            format: "dd M yyyy"
+        }); //Initialise any date pickers
+
+        (function (document, window, index) {
             // обнаруживаем другидруп
             var isAdvancedUpload = function () {
                 var div = document.createElement('div');
@@ -1961,7 +1964,7 @@
                         + '<input type="hidden" id="edit-comment-description" value = "' + data.CreationDate + '" name="CreationDate" />'
 
                         + '<span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>'
-                        + '<div class="bidding-value"><span id="edit-comment-bidding-value"></span> руб. <button type="button" id="edit-comment-show-price"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button>'
+                        + '<div class="bidding-value"><span id="edit-comment-bidding-value"></span> руб. <button type="button" id="edit-comment-show-price"><i title="Редактировать" data-tippy-placement="top" style="color:green" class="icon-line-awesome-pencil"></i></button>'
 
                         +'<input id="edit-comment-price-value" name="OfferPrice" class="no-spinners" style="margin-bottom:5px; display:none"'
                         +'placeholder="Укажите стоимость" type="number" value="0"'
@@ -2328,7 +2331,7 @@
                                 var addOfferContainer = '<div class="bidding-widget">'
                                     + '<div class="bidding-headline"><h3>Добавить предложение</h3></div>'
                                     + '<div class="bidding-inner"><span class="bidding-detail">Укажите <strong>стоимость работы</strong></span>'
-                                    + '<div class="bidding-value"><span id="add-offer-bidding-value"></span> руб. <button id="add-offer-show-price"><i title="Редактировать" style="color:green" class="icon-line-awesome-pencil"></i></button></div>'
+                                    + '<div class="bidding-value"><span id="add-offer-bidding-value"></span> руб. <button id="add-offer-show-price"><i title="Редактировать" data-tippy-placement="top" style="color:green" class="icon-line-awesome-pencil"></i></button></div>'
 
                                     +'<input id="add-offer-price-value" class="no-spinners" style="margin-bottom:5px; display:none" '
                                     +'placeholder="Укажите стоимость" type="number" value="@Model.Price" '
@@ -2609,13 +2612,6 @@
                 $("#datetimepicker3").attr("placeholder", "Время сдачи");
             }
         });
-
-
-        $('#EndingDate').datepicker({
-            language: 'ru',
-            autoclose: true,
-            format: "dd M yyyy"
-        }); //Initialise any date pickers
 
 
     });

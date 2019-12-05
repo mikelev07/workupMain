@@ -93,8 +93,6 @@ namespace HelpMe.Controllers
             return customsToPage.ToList();
         }
 
-
-
         public IQueryable<CustomViewModel> SortCustoms(IQueryable<CustomViewModel> customs, int sortId)
         {
             //by new customs
@@ -126,6 +124,8 @@ namespace HelpMe.Controllers
             return (int)TempData["CustomsFound"];
         }
 
+
+        [Authorize(Roles = "User")]
         public ActionResult Tasks()
         {
             string userId = User.Identity.GetUserId();
@@ -142,6 +142,7 @@ namespace HelpMe.Controllers
             return View(tasksModel);
         }
 
+        [Authorize(Roles = "employee")]
         public ActionResult TasksExec()
         {
             string userId = User.Identity.GetUserId();
@@ -158,6 +159,7 @@ namespace HelpMe.Controllers
             return View(tasksModel);
         }
 
+        [Authorize(Roles = "User")]
         public ActionResult Bidders(int? id)
         {
             var customViewModels = db.Customs.Include(c => c.Comments)
@@ -170,6 +172,8 @@ namespace HelpMe.Controllers
             return View(comms);
         }
 
+
+        [Authorize(Roles = "employee")]
         public ActionResult MyActiveBids()
         {
             string userId = User.Identity.GetUserId();
@@ -513,6 +517,7 @@ namespace HelpMe.Controllers
         /// <param name="userId"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult> ChooseExecutor(int? CustId)
         {
             if (CustId == null)
@@ -738,18 +743,21 @@ namespace HelpMe.Controllers
 
         private string FindExecutorRating(User user)
         {
-            var likes = user.PositiveThumbs;
-            var dislikes = user.NegativeThumbs;
-            var rate = "0.0";
-            if (likes + dislikes > 0)
-            {
-                rate = Math.Round((double)likes / (likes + dislikes) * 5, 1).ToString().Replace(',', '.');
-            }
-            if (rate.Length == 1)
-            {
-                rate = rate + ".0";
-            }
-            return rate;
+            var rating = HtmlExtensions.FindUserRating(user.PositiveThumbs, user.NegativeThumbs).ToString().Replace(',', '.');
+
+            //var likes = user.PositiveThumbs;
+            //var dislikes = user.NegativeThumbs;
+            //var rate = "0.0";
+            //if (likes + dislikes > 0)
+            //{
+            //    rate = Math.Round((double)likes / (likes + dislikes) * 5, 1).ToString().Replace(',', '.');
+            //}
+            //if (rate.Length == 1)
+            //{
+            //    rate = rate + ".0";
+            //}
+
+            return rating;
         }
 
         /// <summary>
@@ -1171,7 +1179,9 @@ namespace HelpMe.Controllers
             return View(customViewModel);
         }
 
+
         // GET: Custom/Create
+        [Authorize(Roles = "User")]
         public ActionResult Create()
         {
             string userId = User.Identity.GetUserId();
@@ -1247,14 +1257,14 @@ namespace HelpMe.Controllers
                                 db.MyAttachments.Add(attach);
                                 // SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
                                 await db.SaveChangesAsync();
-                                count = customViewModel.MyAttachments.Count;
+                                //count = customViewModel.MyAttachments.Count;
                             }
                         }
                     }
                 }
                 //string uName = db.Users.Where(c => c.Id == customViewModel.UserId).FirstOrDefault().UserName;
                 // SendMessage("Добавлен новый заказ", customViewModel.Id, uName);
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
             }
 
             return View(customViewModel);
@@ -1396,6 +1406,7 @@ namespace HelpMe.Controllers
 
             db.Entry(customViewModel).State = EntityState.Modified;
 
+            //Если заказ был открыт, то отменяем; если он был отменён - возвращаем
             var previousStatus = customViewModel.Status;
             if (previousStatus == CustomStatus.Open)
             {
@@ -1403,17 +1414,15 @@ namespace HelpMe.Controllers
                 NotificationHubModel notificationHubModel = new NotificationHubModel()
                 {
                     UserFromId = User.Identity.GetUserId(),
-                    UserToId = customViewModel.UserId,
+                    //UserToId = customViewModel.UserId,
                     DescriptionFrom = "Вы отменили заказ",
                     CustomName = customViewModel.Name,
-                    CustomId = customViewModel.Id,
-                    ExecutorName = customViewModel.Executor.UserName
+                    CustomId = customViewModel.Id/*,
+                    ExecutorName = customViewModel.Executor.UserName*/
                 };
 
                 SendMSingle(notificationHubModel);
 
-            
-                //SendMessage("Вы отменили заказ", customViewModel.Id, customViewModel.User.UserName);
                 if (usersWithOffers != null)
                 {
                     foreach (var user in usersWithOffers)
@@ -1421,13 +1430,12 @@ namespace HelpMe.Controllers
                         NotificationHubModel notificationHubModel1 = new NotificationHubModel()
                         {
                             UserFromId = user.Id,
-                            DescriptionFrom = "Пользователь " + customViewModel.User.UserName + " отменил заказ",
+                            DescriptionFrom = "Заказчик " + customViewModel.User.UserName + " отменил заказ",
                             CustomName = customViewModel.Name,
-                            CustomId = customViewModel.Id,
-                            ExecutorName = customViewModel.Executor.UserName
+                            CustomId = customViewModel.Id/*,
+                            ExecutorName = customViewModel.Executor.UserName*/
                         };
                         SendMSingle(notificationHubModel1);
-                        //SendMessage(null, customViewModel.Id, null, user.UserName, customViewModel.User.UserName + " отменил заказ");
                     }
                 }
             }
@@ -1437,11 +1445,11 @@ namespace HelpMe.Controllers
                 NotificationHubModel notificationHubModel2 = new NotificationHubModel()
                 {
                     UserFromId = User.Identity.GetUserId(),
-                    UserToId = customViewModel.UserId,
+                    //UserToId = customViewModel.UserId,
                     DescriptionFrom = "Вы переоткрыли заказ",
                     CustomName = customViewModel.Name,
-                    CustomId = customViewModel.Id,
-                    ExecutorName = customViewModel.Executor.UserName
+                    CustomId = customViewModel.Id/*,
+                    ExecutorName = customViewModel.Executor.UserName*/
                 };
 
                 SendMSingle(notificationHubModel2);
@@ -1453,10 +1461,10 @@ namespace HelpMe.Controllers
                         NotificationHubModel notificationHubModel1 = new NotificationHubModel()
                         {
                             UserFromId = user.Id,
-                            DescriptionFrom = "Пользователь " + customViewModel.User.UserName + " переоткрыл заказ",
+                            DescriptionFrom = "Заказчик " + customViewModel.User.UserName + " переоткрыл заказ",
                             CustomName = customViewModel.Name,
-                            CustomId = customViewModel.Id,
-                            ExecutorName = customViewModel.Executor.UserName
+                            CustomId = customViewModel.Id/*,
+                            ExecutorName = customViewModel.Executor.UserName*/
                         };
                         SendMSingle(notificationHubModel1);
                         //SendMessage(null, customViewModel.Id, null, user.UserName, customViewModel.User.UserName + " переоткрыл заказ");
@@ -1502,6 +1510,36 @@ namespace HelpMe.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(customViewModel).State = EntityState.Modified;
+                var usersWithOffers = await db.Comments.Include(c=>c.User).Where(c=>c.CustomViewModelId==customViewModel.Id).Select(c=>c.User).ToListAsync();
+
+                NotificationHubModel notificationHubModel = new NotificationHubModel()
+                {
+                    UserFromId = User.Identity.GetUserId(),
+                    //UserToId = customViewModel.UserId,
+                    DescriptionFrom = "Вы отредактировали заказ",
+                    CustomName = customViewModel.Name,
+                    CustomId = customViewModel.Id/*,
+                    ExecutorName = customViewModel.Executor.UserName*/
+                };
+
+                SendMSingle(notificationHubModel);
+
+                if (usersWithOffers != null)
+                {
+                    foreach (var user in usersWithOffers)
+                    {
+                        NotificationHubModel notificationHubModel1 = new NotificationHubModel()
+                        {
+                            UserFromId = user.Id,
+                            DescriptionFrom = "Заказчик " + User.Identity.GetUserName() + " редактировал заказ",
+                            CustomName = customViewModel.Name,
+                            CustomId = customViewModel.Id/*,
+                            ExecutorName = customViewModel.Executor.UserName*/
+                        };
+                        SendMSingle(notificationHubModel1);
+                    }
+                }
+
                 await db.SaveChangesAsync();
 
                 return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
