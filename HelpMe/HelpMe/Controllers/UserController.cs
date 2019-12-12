@@ -55,9 +55,9 @@ namespace HelpMe.Controllers
 
         private ApplicationUserManager _userManager;
 
-        private const int pageSize = 3;
-        private const int customsPageSize = 3;    //for Details.cshtml in Works History tab
-        private const int reviewsPageSize = 3;    //for Details.cshtml in Reviews tab
+        private const int pageSize = 15;
+        private const int customsPageSize = 5;    //for Details.cshtml in Works History tab
+        private const int reviewsPageSize = 5;    //for Details.cshtml in Reviews tab
 
         public UserController()
         {
@@ -225,13 +225,13 @@ namespace HelpMe.Controllers
             switch (sortType)
             {
                 case 2://по давним
-                    reviews = reviews.OrderBy(r => r.Date);
+                    reviews = reviews.OrderByDescending(r => r.Date);
                     break;
                 case 3://по рейтингу
                     reviews = reviews.OrderByDescending(r => r.Rating);
                     break;
                 default://по новым(по умолчанию)
-                    reviews = reviews.OrderByDescending(r => r.Date);
+                    reviews = reviews.OrderBy(r => r.Date);
                     break;
             }
             return reviews;

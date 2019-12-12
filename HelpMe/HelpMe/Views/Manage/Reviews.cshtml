@@ -31,7 +31,7 @@
 
                     <!-- Headline -->
                     <div class="headline">
-                        <h3><i class="icon-material-outline-business"></i> Мои отзывы</h3>
+                        <h3><i class="icon-material-outline-business"></i> Оставленные мной</h3>
                         <div class="sort-by">
                             <select class="selectpicker hide-tick" id="sortReviews" autocomplete="off">
                                 <option value="1" selected>Новые</option>
@@ -147,9 +147,6 @@
             //console.log(url);
             $.ajax({
                 url: url,
-                data: {
-
-                },
                 success: function (result) {
                     ChangeUrl('index', url);
                     $('.dashboard-box-list.my-reviews').html(result);
@@ -165,9 +162,6 @@
             //console.log(url);
             $.ajax({
                 url: url,
-                data: {
-
-                },
                 success: function (result) {
                     ChangeUrl('index', url);
                     $('.dashboard-box-list.reviews-about-me').html(result);
@@ -179,84 +173,19 @@
 
         $('#sortMyReviews').on('change', function () {
             var sortType = $(this).val();
-            $(".dashboard-box-list.my-reviews").load('@Url.Action("Reviews", "Manage")?myReviewsSortSelected=true&myReviewsSortType=' + sortType);
-
-            //var sortingType = $(this).val();
-            ////console.log('sortingType = '+sortingType);
-            //var initialComments = $('.my-reviews');
-            //var sortedComments;
-
-            //switch (sortingType) {
-            //    case '2'://по давним
-            //        //console.log('sortComments = по давним');
-            //        sortedComments = initialComments.sort(function (a, b) {
-            //            var first = $(a).find('.date-of-my-review').text();
-            //            var second = $(b).find('.date-of-my-review').text();
-            //            return (first < second) ? -1 : (first > second) ? 1 : 0;
-            //        });
-            //        break;
-
-
-            //    case '3'://по рейтингу
-            //        //console.log('sortComments = по рейтингу');
-            //        sortedComments = initialComments.sort(function (a, b) {
-            //            var firstDiv = $(a).find('.star-rating').data('rating');
-            //            var secondDiv = $(b).find('.star-rating').data('rating');
-            //            return (firstDiv > secondDiv) ? -1 : (firstDiv < secondDiv) ? 1 : 0;
-            //        });
-            //        break;
-
-            //    default://по дате отзыва (по умолчанию)
-            //        //console.log('sortComments = по дате отзыва');
-            //        sortedComments = initialComments.sort(function (a, b) {
-            //            var first = $(a).find('.date-of-my-review').text();
-            //            var second = $(b).find('.date-of-my-review').text();
-            //            return (first > second) ? -1 : (first < second) ? 1 : 0;
-            //        });
-            //        break;
-            //}
-            //$('.dashboard-box-list.my-reviews').append(sortedComments);
+            $(".dashboard-box-list.my-reviews").load('@Url.Action("Reviews", "Manage")?myReviewsSortSelected=true&myReviewsSortType=' + sortType, function () {
+                starRating('.dashboard-box-list.my-reviews .star-rating');
+            });
+            
         });
 
 
         $('#sortReviews').on('change', function () {
             var sortType = $(this).val();
-            $(".dashboard-box-list.reviews-about-me").load('@Url.Action("Reviews", "Manage")?reviewsSortSelected=true&reviewsSortType=' + sortType);
-
-            //var sortingType = $(this).val();
-            ////console.log('sortingType = '+sortingType);
-            //var initialComments = $('.reviews-about-me');
-            //var sortedComments;
-
-            //switch (sortingType) {
-            //    case '2'://по давним
-            //        //console.log('sortComments = по давним');
-            //        sortedComments = initialComments.sort(function (a, b) {
-            //            var first = $(a).find('.date-of-review').text();
-            //            var second = $(b).find('.date-of-review').text();
-            //            return (first < second) ? -1 : (first > second) ? 1 : 0;
-            //        });
-            //        break;
-
-            //    case '3'://по рейтингу
-            //        //console.log('sortComments = по рейтингу');
-            //        sortedComments = initialComments.sort(function (a, b) {
-            //            var firstDiv = $(a).find('.star-rating').data('rating');
-            //            var secondDiv = $(b).find('.star-rating').data('rating');
-            //            return (firstDiv > secondDiv) ? -1 : (firstDiv < secondDiv) ? 1 : 0;
-            //        });
-            //        break;
-
-            //    default://по новым (по умолчанию)
-            //        //console.log('sortComments = по дате отзыва');
-            //        sortedComments = initialComments.sort(function (a, b) {
-            //            var first = $(a).find('.date-of-review').text();
-            //            var second = $(b).find('.date-of-review').text();
-            //            return (first > second) ? -1 : (first < second) ? 1 : 0;
-            //        });
-            //        break;
-            //}
-            //$('.dashboard-box-list.reviews-about-me').append(sortedComments);
+            $(".dashboard-box-list.reviews-about-me").load('@Url.Action("Reviews", "Manage")?reviewsSortSelected=true&reviewsSortType=' + sortType, function () {
+                starRating('.dashboard-box-list.reviews-about-me .star-rating');
+            });
+            
         });
     </script>
 }

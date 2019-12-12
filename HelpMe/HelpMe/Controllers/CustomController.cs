@@ -21,7 +21,7 @@ namespace HelpMe.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        int pageSize = 20; // количество объектов на страницу
+        int pageSize = 15; // количество объектов на страницу
 
         // GET: Custom
         public ActionResult Index(int? id, string name, int? typeTaskId, int? taskCategoryId, int? skillId,
@@ -49,12 +49,12 @@ namespace HelpMe.Controllers
 
             if (minPrice != null && minPrice != 0)
             {
-                customViewModels = customViewModels.Where(m => m.Price >= minPrice);
+                customViewModels = customViewModels.Where(m => m.Price >= minPrice || m.Price==null);
             }
 
             if (maxPrice != null)
             {
-                customViewModels = customViewModels.Where(m => m.Price <= maxPrice);
+                customViewModels = customViewModels.Where(m => m.Price <= maxPrice || m.Price == null);
             }
 
             if (customsWithoutOffers == true)
@@ -743,7 +743,7 @@ namespace HelpMe.Controllers
 
         private string FindExecutorRating(User user)
         {
-            var rating = HtmlExtensions.FindUserRating(user.PositiveThumbs, user.NegativeThumbs).ToString().Replace(',', '.');
+            var rating = HtmlExtensions.FindUserRatingString(user.PositiveThumbs, user.NegativeThumbs);
 
             //var likes = user.PositiveThumbs;
             //var dislikes = user.NegativeThumbs;

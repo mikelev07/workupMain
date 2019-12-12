@@ -42,15 +42,7 @@
                                     @{
                                         var likes = Model.PositiveThumbs;
                                         var dislikes = Model.NegativeThumbs;
-                                        string userRating = "0.0";
-                                        if (likes + dislikes > 0)
-                                        {
-                                            userRating = Math.Round((double)Model.PositiveThumbs / (Model.PositiveThumbs + Model.NegativeThumbs) * 5, 1).ToString().Replace(',', '.');
-                                        }
-                                        if (userRating.Length == 1)
-                                        {
-                                            userRating = userRating + ".0";
-                                        }
+                                        var userRating = HtmlExtensions.FindUserRatingString(likes, dislikes);
                                     }
                                     <div class="star-rating" data-rating="@userRating"></div>
                                 </li>
@@ -279,11 +271,7 @@
 
                         <!-- Indicator -->
                         @{
-                            var goodReviews = 0;
-                            if (likes + dislikes > 0)
-                            {
-                                goodReviews = (int)Math.Round((double)Model.PositiveThumbs / (Model.PositiveThumbs + Model.NegativeThumbs) * 100, 0);
-                            }
+                            var goodReviews = HtmlExtensions.FindUserPercentRating(likes, dislikes);
                         }
                         <div class="indicator">
                             <strong>@goodReviews%</strong>
@@ -566,8 +554,9 @@
         $('#sortReviews').on('change', function () {
             var sortType = $(this).val();
             //console.log('sortType = ' + sortType);
-            $("#rew").load('@Url.Action("Details", "User")?userName=@Model.UserName&reviewsSortSelected=true&reviewSortType=' + sortType);
-
+            $("#rew").load('@Url.Action("Details", "User")?userName=@Model.UserName&reviewsSortSelected=true&reviewSortType=' + sortType, function () {
+                starRating('#rew .star-rating');
+            });
         });
 
 

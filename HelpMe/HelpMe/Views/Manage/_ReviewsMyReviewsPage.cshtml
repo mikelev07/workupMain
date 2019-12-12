@@ -47,19 +47,24 @@
         @*<a href="#small-dialog-2" class="popup-with-zoom-anim button ripple-effect margin-top-5 margin-bottom-10"><i class="icon-material-outline-thumb-up"></i> Оставить отзыв пользователю</a>*@
     </li>
 }
+
 <!-- Pagination -->
 <div class="clearfix"></div>
-<div class="pagination-container margin-top-40 margin-bottom-10">
-    <nav class="pagination">
-        <ul>
-            @Html.PagedListPager(Model, x => Url.Action("Reviews",
-           new
-                {
-               myReviewsPaginated = true,
-               myReviewsPage = x
-           }))
-        </ul>
-    </nav>
-</div>
-<div class="clearfix"></div>
+<!-- Короче мысль такая: ежели у нас только одна страница в pageList, то и на кой нам пагинация? онли баги из-за неё при таком кейсе -->
+@if (Model.HasNextPage || Model.HasPreviousPage)
+{
+    <div class="pagination-container margin-top-40 margin-bottom-10">
+        <nav class="pagination">
+            <ul>
+                @Html.PagedListPager(Model, x => Url.Action("Reviews",
+               new
+                    {
+                   myReviewsPaginated = true,
+                   myReviewsPage = x
+               }))
+            </ul>
+        </nav>
+    </div>
+    <div class="clearfix"></div>
+}
 <!-- Pagination / End -->

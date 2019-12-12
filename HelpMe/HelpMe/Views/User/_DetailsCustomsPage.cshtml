@@ -11,10 +11,10 @@
                 <div class="item-details margin-top-10">
                     <div class="detail-item"><i class="icon-material-outline-date-range"></i> @custom.StartDate.ToString("dd MMMM yyyy HH:mm:ss")</div>
                 </div>
-                @{ 
+                @{
                     string customResultText = "Сделано в срок";
                     string textColour = "#28b661";
-                    if(!(bool)custom.DoneInTime)
+                    if (!(bool)custom.DoneInTime)
                     {
                         customResultText = "Сделано с опозданием";
                         textColour = "#de0909";
@@ -29,17 +29,21 @@
 }
 <!-- Pagination -->
 <div class="clearfix"></div>
-<div class="pagination-container margin-top-40 margin-bottom-10">
-    <nav class="pagination">
-        <ul>
-            @Html.PagedListPager(Model, x => Url.Action("Details",
-           new {
-               userName = Model.FirstOrDefault().Executor.UserName,
-               customsPaginated =true,
-               customsPage = x
-           }))
-        </ul>
-    </nav>
-</div>
-<div class="clearfix"></div>
+@if (Model.HasNextPage || Model.HasPreviousPage)
+{
+    <div class="pagination-container margin-top-40 margin-bottom-10">
+        <nav class="pagination">
+            <ul>
+                @Html.PagedListPager(Model, x => Url.Action("Details",
+               new
+                    {
+                   userName = Model.FirstOrDefault().Executor.UserName,
+                   customsPaginated = true,
+                   customsPage = x
+               }))
+            </ul>
+        </nav>
+    </div>
+    <div class="clearfix"></div>
+}
 <!-- Pagination / End -->

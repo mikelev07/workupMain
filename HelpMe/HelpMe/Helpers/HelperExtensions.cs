@@ -30,14 +30,34 @@ namespace HelpMe.Helpers
             return MvcHtmlString.Create(lnk.ToString().Replace(repID, linkText));
         }
         
-        public static double FindUserRating(int positiveThumbs, int negativeThumbs)
+        //5-star rating of user based on the number of likes and dislikes
+        public static double FindUserRating(int likes, int dislikes)
         {
-            var totalThumbs = positiveThumbs + negativeThumbs;
+            var total = likes + dislikes;
             double rating = 0.0;
 
-            if(totalThumbs>0)
+            if(total>0)
             {
-                rating = Math.Round((double)positiveThumbs / totalThumbs * 5, 1);
+                rating = Math.Round((double)likes / total * 5, 1);
+            }
+
+            return rating;
+        }
+
+        //return 5-star rating in string format
+        public static string FindUserRatingString(int likes, int dislikes)
+        {
+            return FindUserRating(likes, dislikes).ToString("F1").Replace(',', '.');
+        }
+
+        //percent rating of user
+        public static int FindUserPercentRating(int likes, int dislikes)
+        {
+            int total = likes + dislikes;
+            int rating = 0;
+            if (total > 0)
+            {
+                rating = (int)Math.Round((double) likes /total * 100, 0);
             }
 
             return rating;
