@@ -29,6 +29,11 @@ namespace HelpMe.Helpers
             var lnk = ajaxHelper.ActionLink(repID, actionName, controllerName, routeValues, ajaxOptions, htmlAttributes);
             return MvcHtmlString.Create(lnk.ToString().Replace(repID, linkText));
         }
+
+        public static int GetMaxCustomPrice()
+        {
+            return 50000;
+        }
         
         //5-star rating of user based on the number of likes and dislikes
         public static double FindUserRating(int likes, int dislikes)

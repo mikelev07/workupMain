@@ -2,6 +2,10 @@
 @using HelpMe.Helpers
 @model HelpMe.Models.CustomViewModel
 
+@{ 
+    int maxCustomPrice = HelpMe.Helpers.HtmlExtensions.GetMaxCustomPrice();
+}
+
 <div class="single-page-header" data-background-image="images/single-task.jpg">
     <div class="container">
         <div class="row">
@@ -224,7 +228,7 @@
                                                     <div class="input-with-icon-left no-border">
                                                         <i class="icon-material-outline-local-atm"></i>
                                                         <input style="width:250px" name="ExecutorPrice" id="ExecutorPrice"
-                                                               type="number" min="0" max="50000" step="1" class="input-text no-spinners"
+                                                               type="number" min="0" max="@maxCustomPrice" step="1" class="input-text no-spinners"
                                                                oninput="validity.valid||(value='');" placeholder="Цена">
                                                         <div class="checkbox">
                                                             <input type="checkbox" id="checkbox1" autocomplete="off">
@@ -499,13 +503,13 @@
                                                                 <span id="edit-comment-bidding-value"></span> руб. <button type="button" id="edit-comment-show-price"><i title="Редактировать" data-tippy-placement="top" style="color:green" class="icon-line-awesome-pencil"></i></button>
                                                                 <input id="edit-comment-price-value" name="OfferPrice" class="no-spinners" style="margin-bottom:5px; display:none"
                                                                        placeholder="Укажите стоимость" type="number" value="0"
-                                                                       oninput="validity.valid||(value='');" min="0" max="50000"
+                                                                       oninput="validity.valid||(value='');" min="0" max="@maxCustomPrice"
                                                                        data-tippy-placement="top" />
                                                             </div>
 
                                                             <input id="edit-comment-slider-price" class="bidding-slider" type="text" value="@Model.Price"
                                                                    data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
-                                                                   data-slider-max="50000" data-slider-value="@Model.Price" data-slider-step="50"
+                                                                   data-slider-max="@maxCustomPrice" data-slider-value="@Model.Price" data-slider-step="50"
                                                                    data-slider-tooltip="hide" />
 
                                                             <!-- Headline -->
@@ -579,7 +583,7 @@
                                                     <!-- Button -->
                                                     <button id="delete-comment-button" class="button full-width button-sliding-icon ripple-effect"
                                                             type="submit" onclick="return OnClickDeleteComment(@c.Id)">
-                                                        Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i>
+                                                        Подтвердить <i class="icon-material-outline-arrow-right-alt"></i>
                                                     </button>
                                                 </div>
 
@@ -942,7 +946,7 @@
                                                             <div class="row">
                                                                 <div class="col-xl-8">
                                                                     <div class="input-with-icon">
-                                                                        @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @id = "min", @min = "0", @max = "25000", @class = "with-border disabled no-spinners", @placeholder = "Цена", @oninput = "validity.valid||(value = '');" } })
+                                                                        @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @id = "min", @min = "0", @max = maxCustomPrice, @class = "with-border disabled no-spinners", @placeholder = "Цена", @oninput = "validity.valid||(value = '');" } })
                                                                         <i class="currency">Руб.</i>
                                                                     </div>
                                                                 </div>
@@ -1154,7 +1158,7 @@
                     </div>
                 }
 
-                @if (Request.IsAuthenticated && Model.UserId != User.Identity.GetUserId() && Model.ExecutorId == null && Model.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() < 1)
+                @if (Request.IsAuthenticated && Model.UserId != User.Identity.GetUserId() && User.IsInRole("employee") && Model.ExecutorId == null  && Model.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() < 1)
                 {
 
                     <div class="sidebar-widget" id="add-offer-container">
@@ -1170,12 +1174,12 @@
                                 </div>
                                 <input id="add-offer-price-value" class="no-spinners" style="margin-bottom:5px; display:none"
                                        placeholder="Укажите стоимость" type="number" value="@Model.Price"
-                                       oninput="validity.valid||(value='');" min="0" max="50000"
+                                       oninput="validity.valid||(value='');" min="0" max="@maxCustomPrice"
                                        data-tippy-placement="top" />
 
                                 <input id="add-offer-slider-price" class="bidding-slider" type="text" value="@Model.Price"
                                        data-slider-handle="custom" data-slider-currency="$" data-slider-min="0"
-                                       data-slider-max="50000" data-slider-value="@Model.Price" data-slider-step="50"
+                                       data-slider-max="@maxCustomPrice" data-slider-value="@Model.Price" data-slider-step="50"
                                        data-slider-tooltip="hide" />
 
                                 <!-- Headline -->
@@ -1968,11 +1972,11 @@
 
                         +'<input id="edit-comment-price-value" name="OfferPrice" class="no-spinners" style="margin-bottom:5px; display:none"'
                         +'placeholder="Укажите стоимость" type="number" value="0"'
-                        +'oninput="validity.valid||(value=\'\');" min="0" max="50000"'
+                        +'oninput="validity.valid||(value=\'\');" min="0" max="@maxCustomPrice"'
                         +'data-tippy-placement="top"/></div>'
 
                         + '<input id="edit-comment-slider-price" name="OfferPrice" class="bidding-slider" type="text" value="'
-                        + '" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="50000" data-slider-value="'
+                        + '" data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" data-slider-max="@maxCustomPrice" data-slider-value="'
                         + data.OfferPrice + '" data-slider-step="50" data-slider-tooltip="hide"/>'
 
                         + '<div class="bidding-widget"><span class="bidding-detail margin-top-30">Укажите время выполнения</span>'
@@ -2008,7 +2012,7 @@
                         + '<div class="bidding-widget">'
                         + '<div class="form-actions no-color"><span class="bidding-detail margin-top-30">Действительно хотите удалить предложение?</span>'
                         + '</div></div>'
-                        + '<button class="button full-width button-sliding-icon ripple-effect" onclick="return OnClickDeleteComment(' + data.Id + ')" type="submit">Удалить предложение <i class="icon-material-outline-arrow-right-alt"></i></button>'
+                        + '<button class="button full-width button-sliding-icon ripple-effect" onclick="return OnClickDeleteComment(' + data.Id + ')" type="submit">Подтвердить <i class="icon-material-outline-arrow-right-alt"></i></button>'
                         + '</div></div></div></div>';
 
                     var votes = $("#votes");
@@ -2335,12 +2339,12 @@
 
                                     +'<input id="add-offer-price-value" class="no-spinners" style="margin-bottom:5px; display:none" '
                                     +'placeholder="Укажите стоимость" type="number" value="@Model.Price" '
-                                    + ' min="0" max="50000" data-tippy-placement="top" '
+                                    + ' min="0" max="@maxCustomPrice" data-tippy-placement="top" '
                                     + 'oninput="validity.valid||(value=\'\');"/>'
 
                                     + '<input id="add-offer-slider-price" class="bidding-slider" type="text" value="@Model.Price" '
                                     + 'data-slider-handle="custom" data-slider-currency="$" data-slider-min="0" '
-                                    + 'data-slider-max="50000" data-slider-value="@Model.Price" data-slider-step="50" data-slider-tooltip="hide"/>'
+                                    + 'data-slider-max="@maxCustomPrice" data-slider-value="@Model.Price" data-slider-step="50" data-slider-tooltip="hide"/>'
 
                                     + '<span class="bidding-detail margin-top-30">Укажите <strong>срок выполнения</strong></span>'
                                     + '<div class="bidding-fields"><div class="bidding-field">'

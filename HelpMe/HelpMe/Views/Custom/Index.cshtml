@@ -7,6 +7,8 @@
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @{
     ViewBag.Title = "Заказы";
+
+    int maxCustomPrice = HelpMe.Helpers.HtmlExtensions.GetMaxCustomPrice();
 }
 <!-- Page Content
 ================================================== -->
@@ -47,7 +49,7 @@
 
                     <!-- Range Slider -->
                     <input id="budget-range-slider" class="range-slider" type="text" value="" data-slider-currency="" data-slider-min="0"
-                           data-slider-max="50000" data-slider-step="50" data-slider-value="[0,50000]" autocomplete="off" />
+                           data-slider-max="@maxCustomPrice" data-slider-step="50" data-slider-value="[0,@maxCustomPrice]" autocomplete="off" />
                 </div>
 
                 <div class="clearfix"></div>
@@ -77,7 +79,7 @@
 
             <div class="notify-box margin-top-15">
                 <div class="switch-container">
-                    <label class="switch"><input type="checkbox" id="customs-without-offers"><span class="switch-button"></span><span class="switch-text">Заказы без предложений</span></label>
+                    <label class="switch"><input type="checkbox" id="customs-without-offers"  autocomplete="off"><span class="switch-button"></span><span class="switch-text">Заказы без предложений</span></label>
                 </div>
 
                 <div class="sort-by">
@@ -219,18 +221,38 @@
             //load more executors button event
             $("#more-customs-button").click(function () {
                 $(".lds-ring").children().show();
-                loadItems();
+                MakeFieldsInactive(function () {
+                    loadItems(function () {
+                        MakeFieldsActive();
+                    });
+                });
             });
 
             //filtration event handlers
-            $("#name").keyup(CallIndex);
-
-            $('#TaskList').change(function () {
-                GetSkills();
-                CallIndex();
+            $("#name").keyup(function () {
+                MakeFieldsInactive(function () {
+                    CallIndex(function () {
+                        MakeFieldsActive();
+                    });
+                });
             });
 
-            $('#SkillList').change(CallIndex).selectpicker("refresh");
+            $('#TaskList').change(function () {
+                MakeFieldsInactive(function () {
+                    GetSkills();
+                    CallIndex(function () {
+                        MakeFieldsActive();
+                    });
+                });
+            });
+
+            $('#SkillList').change(function () {
+                MakeFieldsInactive(function () {
+                    CallIndex(function () {
+                        MakeFieldsActive();
+                    });
+                });
+            }).selectpicker("refresh");
 
 
             $('#budget-range-slider').slider().on('slideStart', function (ev) {
@@ -242,7 +264,11 @@
                 if ((ev.value[0] != sliderMinValue) || (ev.value[1] != sliderMaxValue)) {
                     sliderMinValue = ev.value[0];
                     sliderMaxValue = ev.value[1];
-                    CallIndex();
+                    MakeFieldsInactive(function () {
+                        CallIndex(function () {
+                            MakeFieldsActive();
+                        });
+                    });
                 }
             });
 
@@ -250,23 +276,65 @@
                 if ((this.value[0] != sliderMinValue) || (this.value[1] != sliderMaxValue)) {
                     sliderMinValue = this.value[0];
                     sliderMaxValue = this.value[1];
-                    CallIndex();
+
+                    MakeFieldsInactive(function () {
+                        CallIndex(function () {
+                            MakeFieldsActive();
+                        });
+                    });
                 }
             });
 
-            $("#customs-without-offers").change(CallIndex);
+            $("#customs-without-offers").change(function () {
+                MakeFieldsInactive(function () {
+                    CallIndex(function () {
+                        MakeFieldsActive();
+                    });
+                });
+            });
 
 
-            $('#sort-customs-field').change(CallIndex);
+            $('#sort-customs-field').change(function () {
+                MakeFieldsInactive(function () {
+                    CallIndex(function () {
+                        MakeFieldsActive();
+                    });
+                });
+            });
 
             $("#reset-customs").click(function () {
-                ResetCustoms();
+                MakeFieldsInactive(function () {
+                    ResetCustoms(function () {
+                        MakeFieldsActive();
+                    });
+                });
             });
 
 
 
 //****************************common functions**********************
-            function loadItems() {
+
+            function MakeFieldsInactive(callback) {
+                //this function will make inactive all search fields, reset button, switchers, and sorting dropdown
+                //while ajax query is being done.
+                //But it should end before CallIndex, resetbutton click, or loadItems
+                //or it could be GetUsersCount Error
+                //so we use callback functions in these functions
+
+                $("#name").prop("disabled", true);
+                $("#TaskList").prop("disabled", true);
+                $("#SkillList").prop("disabled", true);
+                $("#budget-range-slider").prop("disabled", true);
+                $("#reset-customs").prop("disabled", true);
+                $("#customs-without-offers").prop("disabled", true);
+                $("#sort-customs-field").prop("disabled", true);
+                $("#more-customs-button").prop("disabled", true);
+
+                callback();
+            }
+
+
+            function loadItems(callback) {
                 $("#more-customs-text").hide();
                 if (page > -1 && !_inCallback) {
                     _inCallback = true;
@@ -315,6 +383,8 @@
                         }
                     });
                 }
+
+                callback();
             }
 
              $('.bookmark-button').on('click', function (e) {
@@ -334,7 +404,7 @@
             });
         
 
-            function CallIndex() {
+            function CallIndex(callback) {
                 $("#lds-ring-count").children().show();
                 page = 0;
                 var orderName = $("#name").val();
@@ -378,16 +448,20 @@
                                 }
                                 $("#found-customs-count").html("Найдено заказов: " + data);
                                 $("#lds-ring-count").children().hide();
+
+                                callback();
                             },
                             error: function () {
                                 $("#lds-ring-count").children().hide();
-                                //alert('error in GetCustomCount!!');
+                                //alert(data.responseText);
+                                callback();
                             }
                         });
                     },
                     error: function (data) {
                         $("#lds-ring-count").children().hide();
-                        alert(data.responseText);
+                        //alert(data.responseText);
+                        callback();
                     }
                 });
             }
@@ -423,7 +497,7 @@
                 });
             }
 
-            function ResetCustoms() {
+            function ResetCustoms(callback) {
                 page = 0;
                 var orderName = $("#name").val();
                 var taskListId = $("#TaskList").val();
@@ -477,19 +551,36 @@
                                     }
                                     $("#found-customs-count").html("Найдено заказов: " + data);
                                     $("#lds-ring-count").children().hide();
+
+                                    callback();
                                 },
                                 error: function () {
                                     $("#lds-ring-count").children().hide();
-                                    //alert('error in GetCustomCount!!');
+                                    //alert(data.responseText);
+
+                                    callback();
                                 }
                             });
                         },
                         error: function (data) {
                             $("#lds-ring-count").children().hide();
                             //alert(data.responseText);
+
+                            callback();
                         }
                     });
                 }
+            }
+
+            function MakeFieldsActive() {
+                $("#name").prop("disabled", false);
+                $("#TaskList").prop("disabled", false);
+                $("#SkillList").prop("disabled", false);
+                $("#budget-range-slider").prop("disabled", false);
+                $("#reset-customs").prop("disabled", false);
+                $("#customs-without-offers").prop("disabled", false);
+                $("#sort-customs-field").prop("disabled", false);
+                $("#more-customs-button").prop("disabled", false);
             }
 
         });
