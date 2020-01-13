@@ -36,6 +36,7 @@ namespace HelpMe.Controllers
             {
                 customViewModels = customViewModels.Where(m => m.Name.Contains(name));
             }
+            //count = customViewModels.Count();
 
             if (taskCategoryId != null && taskCategoryId != 0)
             {
@@ -46,16 +47,19 @@ namespace HelpMe.Controllers
                     customViewModels = customViewModels.Where(m => m.SkillId == skillId);
                 }
             }
+            //count = customViewModels.Count();
 
             if (minPrice != null && minPrice != 0)
             {
                 customViewModels = customViewModels.Where(m => m.Price >= minPrice || m.Price==null);
             }
+            //count = customViewModels.Count();
 
             if (maxPrice != null)
             {
-                customViewModels = customViewModels.Where(m => m.Price <= maxPrice || m.Price == null);
+                customViewModels = customViewModels.Where(m => (m.Price==null  || m.Price <= maxPrice));
             }
+            //count = customViewModels.Count();
 
             if (customsWithoutOffers == true)
             {
