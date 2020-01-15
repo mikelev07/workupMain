@@ -173,6 +173,9 @@ namespace HelpMe.Controllers
 
             var comms = customViewModels.Comments.ToList();
 
+            string userId = User.Identity.GetUserId();
+            ViewBag.UnreadingCount = db.Messages.Where(m => m.UserToId == userId && m.Status == MessageStatus.Undreading).Count();
+
             return View(comms);
         }
 
@@ -1346,6 +1349,19 @@ namespace HelpMe.Controllers
                 db.Entry(customViewModel).State = EntityState.Modified;
                 customViewModel.Status = CustomStatus.Close;
                 customViewModel.IsRevision = false;
+
+                //если у отзыва от 3 до 5 звёзд, то исполнителю палец_вверх++, иначе - палец_вниз++
+                if (review.Rating >= 3)
+                {
+                    user.PositiveThumbs++;
+                }
+                else
+                {
+                    user.NegativeThumbs--;
+                }
+                
+
+                //если дата заказа была указана, и исполнитель успел в срок, то проставляем в атрибут DoneInTime
                 if (customViewModel.EndingDate != null)
                 {
                     customViewModel.DoneInTime = DateTime.Now < customViewModel.EndingDate;

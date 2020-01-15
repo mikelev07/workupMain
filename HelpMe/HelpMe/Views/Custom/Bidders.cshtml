@@ -14,7 +14,7 @@
                 var customId = Model.FirstOrDefault()?.CustomViewModelId;
                 if (customId != null)
                 {
-                    <span class="margin-top-7">Управление для <a href="@Url.Action("Details","Custom", new { id = customId})" target="_blank">@(Model.FirstOrDefault().CustomViewModel.Name)</a></span>
+                    <span class="margin-top-7">Задание <a href="@Url.Action("Details","Custom", new { id = customId})" target="_blank">@(Model.FirstOrDefault().CustomViewModel.Name)</a></span>
                 }
             }
 

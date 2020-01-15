@@ -30,18 +30,29 @@ namespace HelpMe.Helpers
             return MvcHtmlString.Create(lnk.ToString().Replace(repID, linkText));
         }
 
+        //returns max price for customer's order
         public static int GetMaxCustomPrice()
         {
             return 50000;
         }
-        
+
+
+        public static int DoneInTimePercentage(int customsNumber, int doneInTimeNumber)
+        {
+            if (customsNumber > 0)
+            {
+                return (int)Math.Round((double)doneInTimeNumber / customsNumber * 100, 0) ;
+            }
+            return 0;
+        }
+
         //5-star rating of user based on the number of likes and dislikes
         public static double FindUserRating(int likes, int dislikes)
         {
             var total = likes + dislikes;
             double rating = 0.0;
 
-            if(total>0)
+            if (total > 0)
             {
                 rating = Math.Round((double)likes / total * 5, 1);
             }
@@ -62,7 +73,7 @@ namespace HelpMe.Helpers
             int rating = 0;
             if (total > 0)
             {
-                rating = (int)Math.Round((double) likes /total * 100, 0);
+                rating = (int)Math.Round((double)likes / total * 100, 0);
             }
 
             return rating;

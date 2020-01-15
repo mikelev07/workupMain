@@ -2,7 +2,7 @@
 @using HelpMe.Helpers
 @model HelpMe.Models.CustomViewModel
 
-@{ 
+@{
     int maxCustomPrice = HelpMe.Helpers.HtmlExtensions.GetMaxCustomPrice();
 }
 
@@ -95,17 +95,17 @@
                         </form>
 
                         @*
-                            <div>
-                                <div class="uploadButton margin-top-30">
-                                    <input type="hidden" name="CustomViewModelId" id="CustomViewModelId" value="@Model.Id" />
-                                    <input class="uploadButton-input" type="file" name="upload" id="uploadFile" /><br />
-                                    <label class="uploadButton-button ripple-effect" for="uploadFile">Прикрепить вложение</label>
-                                    <span class="uploadButton-file-name">Загрузите файл вложения любого формата</span>
-                                </div>
-                                <div class="progress"></div>
+                        <div>
+                            <div class="uploadButton margin-top-30">
+                                <input type="hidden" name="CustomViewModelId" id="CustomViewModelId" value="@Model.Id" />
+                                <input class="uploadButton-input" type="file" name="upload" id="uploadFile" /><br />
+                                <label class="uploadButton-button ripple-effect" for="uploadFile">Прикрепить вложение</label>
+                                <span class="uploadButton-file-name">Загрузите файл вложения любого формата</span>
+                            </div>
+                            <div class="progress"></div>
 
-                                <input id="submitAttach" type="submit" value="Загрузить" class="button ripple-effect margin-top-10" />
-                            </div>*@
+                            <input id="submitAttach" type="submit" value="Загрузить" class="button ripple-effect margin-top-10" />
+                        </div>*@
                     }
 
 
@@ -128,7 +128,7 @@
 
             </div>
             <br />
-            @if ((Model.ExecutorId == User.Identity.GetUserId() || Model.UserId == User.Identity.GetUserId()) && Request.IsAuthenticated && !new[] {HelpMe.Models.CustomStatus.Open, HelpMe.Models.CustomStatus.Cancelled}.Contains(Model.Status))
+            @if ((Model.ExecutorId == User.Identity.GetUserId() || Model.UserId == User.Identity.GetUserId()) && Request.IsAuthenticated && !new[] { HelpMe.Models.CustomStatus.Open, HelpMe.Models.CustomStatus.Cancelled }.Contains(Model.Status))
             {
                 <div style="margin-bottom: 30px;" class="single-page-section">
                     <h3>Готовые решения исполнителя<span style="color: white" class="nav-tag" id="MainAttaches">@Model.MainAttachments.Count </span></h3>
@@ -274,17 +274,17 @@
                                                 })
 
                                             @*@Ajax.RawActionLink(
-                                                "<i  id='fDelbuy" + i.Id + "' class='icon-feather-edit'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach", "Custom",
-                                                new { id = i.Id },
-                                                new AjaxOptions { OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
-                                                new
-                                                     {
-                                                    id = "delete-attach",
-                                                    @class = "button  ripple-effect ico",
-                                                    @style = "  margin-left:5px;  padding: 3px 5px 3px 3px; ",
-                                                    title = "Удалить решение",
-                                                    data_tippy_placement = "top"
-                                                })*@
+                                            "<i  id='fDelbuy" + i.Id + "' class='icon-feather-edit'></i><div id='ldsDelAttach" + i.Id + "' style='display:none' class='lds-ring'><div></div><div></div><div></div><div></div></div>", "DeleteAttach", "Custom",
+                                            new { id = i.Id },
+                                            new AjaxOptions { OnBegin = "return ConfirmDone()", HttpMethod = "POST", OnSuccess = "OnSuccessDeleteAttach('" + @i.Id + "')" },
+                                            new
+                                                 {
+                                                id = "delete-attach",
+                                                @class = "button  ripple-effect ico",
+                                                @style = "  margin-left:5px;  padding: 3px 5px 3px 3px; ",
+                                                title = "Удалить решение",
+                                                data_tippy_placement = "top"
+                                            })*@
                                         }
 
                                         @if (Model.UserId == User.Identity.GetUserId())
@@ -337,14 +337,14 @@
             }
 
             @*<div class="single-page-section">
-                    <h3>Необходимые навыки</h3>
-                    <div class="task-tags">
-                        <span>iOS</span>
-                        <span>Android</span>
-                        <span>mobile apps</span>
-                        <span>design</span>
-                    </div>
-                </div>*@
+                <h3>Необходимые навыки</h3>
+                <div class="task-tags">
+                    <span>iOS</span>
+                    <span>Android</span>
+                    <span>mobile apps</span>
+                    <span>design</span>
+                </div>
+            </div>*@
             <div class="clearfix"></div>
 
             <div class="boxed-list margin-bottom-60">
@@ -549,7 +549,7 @@
                                                         <textarea id="edit-comment-desсription" name="Description" cols="30" rows="5" class="with-border" maxlength="200" placeholder="Оставьте своё предложение для заказчика...">@c.Description</textarea>
                                                         //Для проверки
                                                         @*<div>commentId=@c.Id</div>
-                                                            <div>description=@c.Description</div>*@
+                                                        <div>description=@c.Description</div>*@
 
 
                                                         <!-- Button -->
@@ -682,34 +682,34 @@
                                 </div>
 
                                 @*<!--Tabs -->
-                                    <div class="sign-in-form">
+                                <div class="sign-in-form">
 
-                                        <ul class="popup-tabs-nav">
-                                            <li><a href="#tab2">Отправка сообщения</a></li>
-                                        </ul>
+                                    <ul class="popup-tabs-nav">
+                                        <li><a href="#tab2">Отправка сообщения</a></li>
+                                    </ul>
 
-                                        <div class="popup-tabs-container">
+                                    <div class="popup-tabs-container">
 
-                                            <!-- Tab -->
-                                            <div class="popup-tab-content" id="tab2">
+                                        <!-- Tab -->
+                                        <div class="popup-tab-content" id="tab2">
 
-                                                <!-- Welcome Text -->
-                                                <div class="welcome-text">
-                                                    <h3>Отправить сообщение @c.User.UserName</h3>
-                                                </div>
-
-                                                <!-- Form -->
-                                                <form method="post" id="send-pm">
-                                                    <textarea name="textarea" cols="10" placeholder="Оставьте сообщение..." class="with-border" required></textarea>
-                                                </form>
-
-                                                <!-- Button -->
-                                                <a class="button full-width button-sliding-icon ripple-effect" type="submit" form="send-pm" target="_blank">Отправить <i class="icon-material-outline-arrow-right-alt"></i></a>
-
+                                            <!-- Welcome Text -->
+                                            <div class="welcome-text">
+                                                <h3>Отправить сообщение @c.User.UserName</h3>
                                             </div>
 
+                                            <!-- Form -->
+                                            <form method="post" id="send-pm">
+                                                <textarea name="textarea" cols="10" placeholder="Оставьте сообщение..." class="with-border" required></textarea>
+                                            </form>
+
+                                            <!-- Button -->
+                                            <a class="button full-width button-sliding-icon ripple-effect" type="submit" form="send-pm" target="_blank">Отправить <i class="icon-material-outline-arrow-right-alt"></i></a>
+
                                         </div>
-                                    </div>*@
+
+                                    </div>
+                                </div>*@
                             </div>
 
                         }
@@ -721,45 +721,46 @@
         </div>
 
 
-        @if (Request.IsAuthenticated && Model.UserId == User.Identity.GetUserId() && Model.ExecutorId != null)
+        @if (Request.IsAuthenticated && Model.UserId == User.Identity.GetUserId())
         {
-            if (Model.Status == HelpMe.Models.CustomStatus.Check || Model.Status == HelpMe.Models.CustomStatus.Revision)
+            if (Model.ExecutorId != null)
             {
-                <div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+                if (Model.Status == HelpMe.Models.CustomStatus.Check || Model.Status == HelpMe.Models.CustomStatus.Revision)
+                {
+                    <div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
 
-                    <!--Tabs -->
-                    <div class="sign-in-form">
+                        <!--Tabs -->
+                        <div class="sign-in-form">
 
-                        <ul class="popup-tabs-nav">
-                            <li><a href="#tab1">Отклонить исполнителя</a></li>
-                        </ul>
+                            <ul class="popup-tabs-nav">
+                                <li><a href="#tab1">Отклонить исполнителя</a></li>
+                            </ul>
 
-                        <div class="popup-tabs-container">
+                            <div class="popup-tabs-container">
 
-                            <!-- Tab -->
-                            <div class="popup-tab-content" id="tab">
+                                <!-- Tab -->
+                                <div class="popup-tab-content" id="tab">
 
-                                <!-- Welcome Text -->
-                                <div class="welcome-text">
-                                    <h3>Вы уверены, что хотите отказаться от услуг исполнителя @Model.Executor.UserName? </h3>
+                                    <!-- Welcome Text -->
+                                    <div class="welcome-text">
+                                        <h3>Вы уверены, что хотите отказаться от услуг исполнителя @Model.Executor.UserName? </h3>
+                                    </div>
+
+                                    <div class="radio">
+                                        <input id="radio-reject-executor" name="radio" type="radio" required autocomplete="off"
+                                               oninvalid="setCustomValidity('Сперва нужно ознакомиться с правилами!')"
+                                               oninput="setCustomValidity('')" />
+                                        <label for="radio-reject-executor"><span class="radio-label"></span>  Я ознакомился с правилами</label>
+                                    </div>
+                                    <input id="reject-executor" class="margin-top-15 button full-width button-sliding-icon ripple-effect"
+                                           type="button" value="Подтвердить" />
+
                                 </div>
-
-                                <div class="radio">
-                                    <input id="radio-reject-executor" name="radio" type="radio" required autocomplete="off"
-                                           oninvalid="setCustomValidity('Сперва нужно ознакомиться с правилами!')"
-                                           oninput="setCustomValidity('')" />
-                                    <label for="radio-reject-executor"><span class="radio-label"></span>  Я ознакомился с правилами</label>
-                                </div>
-                                <input id="reject-executor" class="margin-top-15 button full-width button-sliding-icon ripple-effect"
-                                       type="button" value="Подтвердить" />
-
                             </div>
                         </div>
                     </div>
-                </div>
-            }
-            else
-            {
+
+                }
                 <!-- Leave a Review Popup
                 ================================================== -->
                 <div id="small-dialog-4" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
@@ -807,7 +808,7 @@
                                         {
                                        rows = "5",
                                             cols = "7",
-                                       @placeholder = "Оставьте отзыв об исполнителе, которого он заслуживает (по желанию)...",
+                                       @placeholder = "Оставьте ваш отзыв об исполнителе (по желанию)",
                                        id = "create-review-description",
                                        @class = "with-border"
                                         })
@@ -822,142 +823,141 @@
                 </div>
                 <!-- Leave a Review Popup / End -->
             }
-        }
-        @if (Request.IsAuthenticated && Model.UserId == User.Identity.GetUserId() && Model.ExecutorId == null)
-        {
-            <div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+            else
+            {
+                <div id="small-dialog-3" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
 
-                <!--Tabs -->
-                <div class="sign-in-form">
+                    <!--Tabs -->
+                    <div class="sign-in-form">
 
-                    <ul class="popup-tabs-nav">
-                        <li><a href="#tab1">Редактировать заказ</a></li>
-                    </ul>
+                        <ul class="popup-tabs-nav">
+                            <li><a href="#tab1">Редактировать заказ</a></li>
+                        </ul>
 
-                    <div class="popup-tabs-container">
+                        <div class="popup-tabs-container">
 
-                        <!-- Tab -->
-                        <div class="popup-tab-content" id="tab">
+                            <!-- Tab -->
+                            <div class="popup-tab-content" id="tab">
 
-                            @using (Html.BeginForm("Edit", "Custom", FormMethod.Post))
-                            {
-                                @Html.AntiForgeryToken()
-                                @Html.Hidden("Id", Model.Id)
-                                @Html.Hidden("UserId", Model.UserId)
-                                @Html.Hidden("StartDate", Model.StartDate)
-                                @Html.Hidden("ExecutorStartDate", Model.ExecutorStartDate)
+                                @using (Html.BeginForm("Edit", "Custom", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("Id", Model.Id)
+                                    @Html.Hidden("UserId", Model.UserId)
+                                    @Html.Hidden("StartDate", Model.StartDate)
+                                    @Html.Hidden("ExecutorStartDate", Model.ExecutorStartDate)
 
-                                <!-- Welcome Text -->
-                                <!-- Form -->
-                                <div class="row">
-                                    <!-- Dashboard Box -->
-                                    <div style="margin: 0 auto;">
-                                        <div class="dashboard-box margin-top-0">
+                                    <!-- Welcome Text -->
+                                    <!-- Form -->
+                                    <div class="row">
+                                        <!-- Dashboard Box -->
+                                        <div style="margin: 0 auto;">
+                                            <div class="dashboard-box margin-top-0">
 
-                                            <!-- Headline -->
-                                            <div class="headline">
-                                                <h3><i class="icon-feather-edit"></i> Редактирование заказа</h3>
-                                            </div>
+                                                <!-- Headline -->
+                                                <div class="headline">
+                                                    <h3><i class="icon-feather-edit"></i> Редактирование заказа</h3>
+                                                </div>
 
 
-                                            <div class="content with-padding padding-bottom-10">
-                                                <div>
-
+                                                <div class="content with-padding padding-bottom-10">
                                                     <div>
-                                                        <div class="submit-field">
-                                                            <h5>Название задания</h5>
-                                                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "with-border", @placeholder = "Название задания" } })
+
+                                                        <div>
+                                                            <div class="submit-field">
+                                                                <h5>Название задания</h5>
+                                                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "with-border", @placeholder = "Название задания" } })
+                                                            </div>
                                                         </div>
-                                                    </div>
 
-                                                    <div>
-                                                        <div class="submit-field">
-                                                            <h5>Дисциплина</h5>
-                                                            @Html.DropDownListFor(model => model.CategoryTaskId, ViewBag.Tasks as SelectList,
-                                                            "Укажите дисциплину", new { @class = "selectpicker with-border", @id = "TaskList", autocomplete = "off" })
+                                                        <div>
+                                                            <div class="submit-field">
+                                                                <h5>Дисциплина</h5>
+                                                                @Html.DropDownListFor(model => model.CategoryTaskId, ViewBag.Tasks as SelectList,
+                                                                "Укажите дисциплину", new { @class = "selectpicker with-border", @id = "TaskList", autocomplete = "off" })
+                                                            </div>
                                                         </div>
-                                                    </div>
 
-                                                    <div>
-                                                        <div class="submit-field">
-                                                            <h5>Предмет</h5>
-                                                            @Html.DropDownListFor(model => model.SkillId, Enumerable.Empty<SelectListItem>(),
-                                                                "Укажите предмет", new { @class = "selectpicker with-border", id = "SkillList", @disabled = "disabled", autocomplete = "off" })
+                                                        <div>
+                                                            <div class="submit-field">
+                                                                <h5>Предмет</h5>
+                                                                @Html.DropDownListFor(model => model.SkillId, Enumerable.Empty<SelectListItem>(),
+                                                                    "Укажите предмет", new { @class = "selectpicker with-border", id = "SkillList", @disabled = "disabled", autocomplete = "off" })
+                                                            </div>
                                                         </div>
-                                                    </div>
 
-                                                    <div>
-                                                        <div class="submit-field">
-                                                            <h5>Тип задания</h5>
-                                                            @Html.DropDownListFor(model => model.TypeTaskId, ViewBag.Types as SelectList, new { @class = "selectpicker with-border" })
+                                                        <div>
+                                                            <div class="submit-field">
+                                                                <h5>Тип задания</h5>
+                                                                @Html.DropDownListFor(model => model.TypeTaskId, ViewBag.Types as SelectList, new { @class = "selectpicker with-border" })
+                                                            </div>
                                                         </div>
-                                                    </div>
 
-                                                    <div>
-                                                        <div class="submit-field">
-                                                            <h5>Описание задания</h5>
-                                                            @Html.TextAreaFor(model => model.Description, new { rows = "5", cols = "30", @class = "with-border" })
+                                                        <div>
+                                                            <div class="submit-field">
+                                                                <h5>Описание задания</h5>
+                                                                @Html.TextAreaFor(model => model.Description, new { rows = "5", cols = "30", @class = "with-border" })
 
-                                                            @*<div class="uploadButton margin-top-30">
+                                                                @*<div class="uploadButton margin-top-30">
                                                                     <input multiple="multiple" class="uploadButton-input" type="file" name="AttachFile" id="AttachFile" required />
                                                                     <label class="uploadButton-button ripple-effect" for="AttachFile">Прикрепить задания</label>
                                                                     <span style="padding-left:10px" class="uploadButton-file">Вы можете прикрепить несколько вложений</span>
                                                                 </div>*@
+                                                            </div>
                                                         </div>
-                                                    </div>
 
-                                                    <div>
-                                                        <div class="submit-field">
-                                                            <h5>Дата сдачи задания</h5>
-                                                            <div style="display:inline">
-                                                                <div class="input-group date" data-provide="datepicker">
-                                                                    <div class="input-with-icon-left no-border">
-                                                                        <i class="icon-material-outline-date-range"></i>
-                                                                        <input id="EndingDate" placeholder="Дата сдачи" name="EndingDate" type="text" class="form-control">
-                                                                    </div>
-                                                                    <div class="input-group-addon">
-                                                                        <span class="glyphicon glyphicon-th"></span>
-                                                                    </div>
-                                                                </div>
-                                                                <h5>Время сдачи</h5>
-                                                                <div class="form-group">
-                                                                    <div class="input-group">
+                                                        <div>
+                                                            <div class="submit-field">
+                                                                <h5>Дата сдачи задания</h5>
+                                                                <div style="display:inline">
+                                                                    <div class="input-group date" data-provide="datepicker">
                                                                         <div class="input-with-icon-left no-border">
-                                                                            <i class="icon-material-outline-access-time"></i>
-                                                                            <input id="datetimepicker3" placeholder="Время сдачи" type="text" class="form-control" />
+                                                                            <i class="icon-material-outline-date-range"></i>
+                                                                            <input id="EndingDate" placeholder="Дата сдачи" name="EndingDate" type="text" class="form-control">
                                                                         </div>
-                                                                        <span class="input-group-addon">
-                                                                            <i class="glyphicon glyphicon-calendar"></i>
-                                                                        </span>
+                                                                        <div class="input-group-addon">
+                                                                            <span class="glyphicon glyphicon-th"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <h5>Время сдачи</h5>
+                                                                    <div class="form-group">
+                                                                        <div class="input-group">
+                                                                            <div class="input-with-icon-left no-border">
+                                                                                <i class="icon-material-outline-access-time"></i>
+                                                                                <input id="datetimepicker3" placeholder="Время сдачи" type="text" class="form-control" />
+                                                                            </div>
+                                                                            <span class="input-group-addon">
+                                                                                <i class="glyphicon glyphicon-calendar"></i>
+                                                                            </span>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="checkbox">
-                                                                <input type="checkbox" id="checkboxDate">
-                                                                <label for="checkboxDate"><span class="checkbox-icon"></span>Срок неизвестен</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div>
-                                                        <div class="submit-field">
-                                                            <h5>Бюджет задания</h5>
-
-                                                            <div class="row">
-                                                                <div class="col-xl-8">
-                                                                    <div class="input-with-icon">
-                                                                        @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @id = "min", @min = "0", @max = maxCustomPrice, @class = "with-border disabled no-spinners", @placeholder = "Цена", @oninput = "validity.valid||(value = '');" } })
-                                                                        <i class="currency">Руб.</i>
-                                                                    </div>
+                                                                <div class="checkbox">
+                                                                    <input type="checkbox" id="checkboxDate">
+                                                                    <label for="checkboxDate"><span class="checkbox-icon"></span>Срок неизвестен</label>
                                                                 </div>
                                                             </div>
-                                                            <div class="checkbox">
-                                                                <input type="checkbox" id="checkboxNew">
-                                                                <label for="checkboxNew"><span class="checkbox-icon"></span>По договоренности</label>
+                                                        </div>
+
+                                                        <div>
+                                                            <div class="submit-field">
+                                                                <h5>Бюджет задания</h5>
+
+                                                                <div class="row">
+                                                                    <div class="col-xl-8">
+                                                                        <div class="input-with-icon">
+                                                                            @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @id = "min", @min = "0", @max = maxCustomPrice, @class = "with-border disabled no-spinners", @placeholder = "Цена", @oninput = "validity.valid||(value = '');" } })
+                                                                            <i class="currency">Руб.</i>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="checkbox">
+                                                                    <input type="checkbox" id="checkboxNew">
+                                                                    <label for="checkboxNew"><span class="checkbox-icon"></span>По договоренности</label>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    @*<div>
+                                                        @*<div>
                                                             <div class="submit-field">
                                                                 <h5>Срок блокировки оплаты</h5>
                                                                 <select class="selectpicker-filter">
@@ -970,7 +970,7 @@
                                                                 </select>
                                                             </div>
                                                         </div>*@
-                                                    @*<div>
+                                                        @*<div>
                                                             <div class="submit-field">
                                                                 <h5>Проверка на плагиат</h5>
                                                                 <div class="col-xl-6">
@@ -986,11 +986,11 @@
                                                             </div>
                                                         </div>*@
 
-                                                    @*<div id="fileUpCreate" style="border-bottom: 1px solid #e4e4e4;">
+                                                        @*<div id="fileUpCreate" style="border-bottom: 1px solid #e4e4e4;">
 
                                                         </div>*@
 
-                                                    @*<div style="margin-top:20px">
+                                                        @*<div style="margin-top:20px">
                                                             <div class="submit-field">
                                                                 <h5>Платные услуги</h5>
 
@@ -1006,23 +1006,24 @@
                                                             </div>
                                                         </div>*@
 
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <div>
+                                                <input type="submit" value="Подтвердить изменения" class="button ripple-effect margin-top-20" />
+                                            </div>
                                         </div>
-                                        <div>
-                                            <input type="submit" value="Подтвердить изменения" class="button ripple-effect margin-top-20" />
-                                        </div>
+
+
+
                                     </div>
+                                }
 
-
-
-                                </div>
-                            }
-
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
         }
 
         <!-- Spacer -->
@@ -1158,7 +1159,7 @@
                     </div>
                 }
 
-                @if (Request.IsAuthenticated && Model.UserId != User.Identity.GetUserId() && User.IsInRole("employee") && Model.ExecutorId == null  && Model.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() < 1)
+                @if (Request.IsAuthenticated && Model.UserId != User.Identity.GetUserId() && User.IsInRole("employee") && Model.ExecutorId == null && Model.Comments.Where(c => c.UserId == User.Identity.GetUserId()).Count() < 1)
                 {
 
                     <div class="sidebar-widget" id="add-offer-container">
@@ -1346,6 +1347,9 @@
                                     // alert(num + (droppedFiles.length))
                                     if (parseInt(parseInt(parseInt(num) + parseInt(globFiles.length))) < 11) {
                                         votes.text(parseInt(parseInt(num) + parseInt(globFiles.length)));
+                                        Snackbar.show({
+                                            text: 'Ожидайте проверки заказчика.',
+                                        });
                                     } else {
                                         Snackbar.show({
                                             text: 'Максимум 10 файлов решений!',
@@ -1360,7 +1364,7 @@
                                     form.classList.add(data.success != true ? 'is-success' : 'is-error');
                                     if (!data.success) errorMsg.textContent = data.error;
                                 }
-                                else { alert('Ошибка! Дайте пизды создателю'); $("#textLab").text("Прикрепить решения"); }
+                                else { alert('Ошибка!'); $("#textLab").text("Прикрепить решения"); }
                             };
                         } else {
                              ajax.onload = function () {
