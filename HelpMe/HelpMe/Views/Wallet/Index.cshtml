@@ -21,10 +21,14 @@
 
         <!-- Dashboard Headline -->
         <div class="dashboard-headline">
-            <h3>Мой баланс - <b style="color:#36bd78">@if (Model != null)
-            {@Model.Summ }
-        else
-        { <text>0</text>} руб.</b></h3>
+            <h3>
+                Мой баланс - <b style="color:#36bd78">
+                    @if (Model != null)
+                    {@Model.Summ }
+                else
+                { <text>0</text>} руб.
+                </b>
+            </h3>
 
             <span>Пополняйте ваш счет для оплаты заказов!</span>
 
@@ -63,8 +67,120 @@
                 <div class="fun-fact-icon"><i class="icon-material-outline-redo"></i></div>
             </div>
         </div>
-        <!-- Row / End -->
 
+        <!-- Row -->
+        <div class="row">
+
+
+            <div class="col-xl-12">
+                <div class="dashboard-box">
+                    <div class="headline">
+                        <h3><i class="icon-material-outline-assignment"></i> Операции с балансом</h3>
+                        <div class="sort-by">
+                            <select class="selectpicker hide-tick" id="filterByTypeOfTransaction" autocomplete="off">
+                                <option value="1" selected>Все операции</option>
+                                <option value="2">Исходящие операции</option>
+                                <option value="3">Входящие операции</option>
+                                <option value="4">Пополнение баланса</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <ul class="dashboard-box-list">
+                            @foreach (var transaction in (List<HelpMe.Models.Transaction>)ViewData["Transactions"])
+                            {
+                                //если самоличное пополнение баланса
+                                if (transaction.FromUserId == transaction.ToUserId)
+                                {
+                                    <li class="transactions balance-replenish">
+                                        <div class="invoice-list-item">
+                                            <strong>Пополнение баланса на @transaction.Price руб</strong>
+                                            <ul>
+                                                <li><span class="paid">Завершена</span></li>
+                                                <li>Дата: @transaction.Date.ToString()</li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+                                else
+                                {
+                                    //если выплата из текущего кошелька
+                                    if (transaction.FromUserId == User.Identity.GetUserId())
+                                    {
+                                        <li class="transactions balance-payment">
+                                            <div class="invoice-list-item">
+                                                <strong>Выплата  @transaction.Price рублей исполнителю @(transaction.ToUser?.UserName)</strong>
+                                                <ul>
+                                                    <li>
+                                                        @if (transaction.Status == HelpMe.Models.TransactionStatus.Success)
+                                                        {
+                                                            <span class="paid">Завершена</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="unpaid">Незавершена</span>
+                                                        }
+                                                    </li>
+                                                    <li>Дата: @transaction.Date.ToString()</li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        //если пришёл гонорар
+                                        if (transaction.ToUserId == User.Identity.GetUserId())
+                                        {
+                                            <li class="transactions balance-reward">
+                                                <div class="invoice-list-item">
+                                                    <strong>Получено @transaction.Price рублей от заказчика @(transaction.FromUser?.UserName)</strong>
+                                                    <ul>
+                                                        <li>
+                                                            @if (transaction.Status == HelpMe.Models.TransactionStatus.Success)
+                                                            {
+                                                                <span class="paid">Завершена</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="unpaid">Незавершена</span>
+                                                            }
+                                                        </li>
+                                                        <li>Дата: @transaction.Date.ToString()</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        }
+                                    }
+                                }
+                            }
+                            @*<li>
+            <div class="invoice-list-item">
+                <strong>Оплата заказ по матешке</strong>
+                <ul>
+                    <li><span class="unpaid">Незавершеннная</span></li>
+                    <li>Заказ: #326</li>
+                    <li>Дата: 12/08/2018</li>
+                </ul>
+            </div>
+        </li>
+        <li>
+            <div class="invoice-list-item">
+                <strong>Оплата философии курсач</strong>
+                <ul>
+                    <li><span class="paid">Оплачено</span></li>
+                    <li>Заказ: #264</li>
+                    <li>Дата: 10/07/2018</li>
+                </ul>
+            </div>
+        </li>*@
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- Row / End -->
         <!-- Footer -->
         <div class="dashboard-footer-spacer"></div>
         <div class="small-footer margin-top-15">
@@ -108,5 +224,31 @@
     <!-- Chart.js // documentation: http://www.chartjs.org/docs/latest/ -->
     <script src="~/Scripts/Custom/chart.min.js"></script>
 
+    <script type="text/javascript">
 
+        $('#filterByTypeOfTransaction').on('change', function () {
+            var sortingType = $(this).val();
+
+            switch (sortingType) {
+                case '2'://исходящие операции
+                    $('.transactions').hide();
+                    $('.transactions.balance-payment').show();
+                    break;
+
+                case '3'://входящие операции
+                    $('.transactions').hide();
+                    $('.transactions.balance-reward').show();
+                    break;
+
+                case '4'://пополнение баланса
+                    $('.transactions').hide();
+                    $('.transactions.balance-replenish').show();
+                    break;
+
+                default://все операции со счётом
+                    $('.transactions').show();
+                    break;
+            }
+        });
+    </script>
 }

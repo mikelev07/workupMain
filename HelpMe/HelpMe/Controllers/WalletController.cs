@@ -22,7 +22,7 @@ namespace HelpMe.Controllers
             string userId = User.Identity.GetUserId();
             Wallet wallet =  await db.Wallets.Where(x => x.UserId == userId).FirstOrDefaultAsync();
             ViewBag.UnreadingCount = await db.Messages.Where(m => m.UserToId == userId && m.Status == MessageStatus.Undreading).CountAsync();
-
+            ViewData["Transactions"] = await db.Transactions.Include(t=>t.FromUser).Include(t => t.ToUser).Where(t => t.FromUserId == userId || t.ToUserId == userId).OrderByDescending(t=>t.Date).ToListAsync();
             return View(wallet);
         }
 
@@ -74,12 +74,24 @@ namespace HelpMe.Controllers
                     walletBalance.Summ += wallet.Summ;
                 }
 
+                var transaction = new Transaction()
+                {
+                    Id = 1,
+                    Date = DateTime.Now,
+                    DateBlockEnd = DateTime.Now,
+                    FromUserId = id,
+                    ToUserId = id,
+                    Price = wallet.Summ,
+                    Status = TransactionStatus.Success
+                };
+                db.Transactions.Add(transaction);
+
                 await db.SaveChangesAsync();
 
                 if (!string.IsNullOrEmpty(returnUrl))
                     return Redirect(returnUrl);
                 else
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Wallet");
             }
 
             return View(wallet);
