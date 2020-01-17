@@ -89,6 +89,11 @@
                         <ul class="dashboard-box-list">
                             @foreach (var transaction in (List<HelpMe.Models.Transaction>)ViewData["Transactions"])
                             {
+                                if (transaction.Price == 0)
+                                {
+                                     continue;
+                                }
+
                                 //если самоличное пополнение баланса
                                 if (transaction.FromUserId == transaction.ToUserId)
                                 {
@@ -154,25 +159,25 @@
                                 }
                             }
                             @*<li>
-            <div class="invoice-list-item">
-                <strong>Оплата заказ по матешке</strong>
-                <ul>
-                    <li><span class="unpaid">Незавершеннная</span></li>
-                    <li>Заказ: #326</li>
-                    <li>Дата: 12/08/2018</li>
-                </ul>
-            </div>
-        </li>
-        <li>
-            <div class="invoice-list-item">
-                <strong>Оплата философии курсач</strong>
-                <ul>
-                    <li><span class="paid">Оплачено</span></li>
-                    <li>Заказ: #264</li>
-                    <li>Дата: 10/07/2018</li>
-                </ul>
-            </div>
-        </li>*@
+                                    <div class="invoice-list-item">
+                                        <strong>Оплата заказ по матешке</strong>
+                                        <ul>
+                                            <li><span class="unpaid">Незавершеннная</span></li>
+                                            <li>Заказ: #326</li>
+                                            <li>Дата: 12/08/2018</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="invoice-list-item">
+                                        <strong>Оплата философии курсач</strong>
+                                        <ul>
+                                            <li><span class="paid">Оплачено</span></li>
+                                            <li>Заказ: #264</li>
+                                            <li>Дата: 10/07/2018</li>
+                                        </ul>
+                                    </div>
+                                </li>*@
 
                         </ul>
                     </div>
