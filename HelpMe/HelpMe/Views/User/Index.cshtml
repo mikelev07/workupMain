@@ -22,13 +22,13 @@
                 <!-- Category -->
                 <div class="sidebar-widget">
                     <h3>Дисциплина</h3>
-                    @Html.DropDownList("Все дисциплины",  ViewBag.Tasks as SelectList,
-                   "Все дисциплины", new { @class = "selectpicker-filterdropdown", id ="TaskList", autocomplete = "off"})
+                    @Html.DropDownList("Все дисциплины", ViewBag.Tasks as SelectList,
+                   "Все дисциплины", new { @class = "selectpicker-filterdropdown", id = "TaskList", autocomplete = "off" })
                     <br>
                     @*@Html.DropDownList("Все предметы", ViewBag.Skills as SelectList,
                         new { @class = "selectpicker", id="SkillList" })*@
                     @Html.DropDownList("Все предметы", Enumerable.Empty<SelectListItem>(),
-                   "Все предметы", new { @class = "selectpicker-filterdropdown", id = "SkillList", @disabled="disabled", autocomplete = "off"})
+                   "Все предметы", new { @class = "selectpicker-filterdropdown", id = "SkillList", @disabled = "disabled", autocomplete = "off" })
                     @*<select class="selectpicker" data-live-search="true" title="Все предметы">
                             <option>Математик</option>
                             <option>Физик</option>
@@ -108,11 +108,11 @@
                     </div>*@
 
                 <div class="switch-container">
-                    <label class="switch"><input type="checkbox" id="executors-online"><span class="switch-button"></span><span class="switch-text">Сейчас онлайн</span></label>
+                    <label class="switch"><input type="checkbox" id="executors-online" autocomplete = "off"><span class="switch-button"></span><span class="switch-text">Сейчас онлайн</span></label>
                 </div>
 
                 <div class="switch-container" style="margin-left:5px">
-                    <label class="switch"><input type="checkbox" id="executors-ready"><span class="switch-button"></span><span class="switch-text">Не занят</span></label>
+                    <label class="switch"><input type="checkbox" id="executors-ready" autocomplete = "off"><span class="switch-button"></span><span class="switch-text">Не занят</span></label>
                 </div>
 
                 <div class="sort-by">
@@ -120,8 +120,8 @@
                     <select class="selectpicker hide-tick" id="sortField" autocomplete="off">
                         <option value="1" selected>Рейтингу</option>
                         <option value="2">Количеству работ</option>
-                        <option value="2">Давним</option>
-                        <option value="3">Новым</option>
+                        <option value="3">Давним</option>
+                        <option value="4">Новым</option>
                     </select>
                 </div>
             </div>
@@ -301,22 +301,65 @@
             //load more executors button event
             $("#load-more-button").click(function () {
                 $(".lds-ring").children().show();
-                loadItems();
-
+                MakeFieldsInactive(function () {
+                    loadItems(function () {
+                        MakeFieldsActive();
+                    });
+                });
             });
 
             //filtration event handlers
-            $("#autocomplete-input").keyup(CallIndex);
-            $('#TaskList').change(function () {
-                GetSkills();
-                CallIndex();
+            $("#autocomplete-input").keyup(function () {
+                MakeFieldsInactive(function () {
+                    CallIndex(function () {
+                        MakeFieldsActive();
+                    });
+                });
             });
-            $('#SkillList').change(CallIndex).selectpicker("refresh");
+
+            $('#TaskList').change(function () {
+                MakeFieldsInactive(function () {
+                    GetSkills();
+                    CallIndex(function () {
+                        MakeFieldsActive();
+                    });
+                });
+            });
+
+            $('#SkillList').change(function () {
+                MakeFieldsInactive(function () {
+                    CallIndex(function () {
+                        MakeFieldsActive();
+                    });
+                });
+            }).selectpicker("refresh");
+
             //$("#tag1").click(CallIndex);
             //$("#tag2").click(CallIndex);
-            $("#executors-online").change(CallIndex);
-            $("#executors-ready").change(CallIndex);
-            $('#sortField').change(CallIndex);
+
+            $("#executors-online").change(function () {
+                MakeFieldsInactive(function () {
+                    CallIndex(function () {
+                        MakeFieldsActive();
+                    });
+                });
+            });
+
+            $("#executors-ready").change(function () {
+                MakeFieldsInactive(function () {
+                    CallIndex(function () {
+                        MakeFieldsActive();
+                    });
+                });
+            });
+
+            $('#sortField').change(function () {
+                MakeFieldsInactive(function () {
+                    CallIndex(function () {
+                        MakeFieldsActive();
+                    });
+                });
+            });
 
 
             $('#work-range').slider().on('slideStart', function (ev) {
@@ -326,84 +369,113 @@
             $("#work-range").slider().on('slideStop', function (ev) {
                 var sliderNewVal = $(this).data('slider').getValue();
                 if (sliderOriginalVal != sliderNewVal) {
-                    CallIndex();
+                    MakeFieldsInactive(function () {
+                        CallIndex(function () {
+                            MakeFieldsActive();
+                        });
+                    });
                 }
             });
 
             //reset filtration event handler
             $("#reset-filter-button").click(function () {
-                page = 0;
-                var nickName = $("#autocomplete-input").val();
-                var taskListId = $("#TaskList").val();
-                var skillListId = $("#SkillList").val();
-                var sortingId = $("#sortField").val();
-                var count = $("#work-range").val();
-                var executorsOnline = $("#executors-online").is(':checked');
-                var executorsReady = $("#executors-ready").is(':checked');
-                //var isOnline = $("#tag1").is(':checked');
-                //var isNotBusy = $("#tag2").is(':checked');
-                if (nickName || taskListId || skillListId || count != 0 || executorsOnline || executorsReady) {
-                    $("#lds-ring-count").children().show();
-                    $("#work-range").slider('refresh');
-                    $("#autocomplete-input").val("");
-                    $("#TaskList").val('').selectpicker("render");
-                    $("#SkillList").val('').selectpicker("render");
-                    $("#executors-online").prop('checked', false);
-                    $("#executors-ready").prop('checked', false);
-                    //$("#tag1").prop('checked', false);
-                    //$("#tag2").prop('checked', false);
-                    $.ajax({
-                        type: 'GET',
-                        url: '/User/Index',
-                        data: {
-                            'id': page,
-                            'name': "",
-                            'taskId': 0,
-                            'skillId': 0,
-                            'worksCount': 0,
-                            'isOnline': false,
-                            'isNotBusy': false,
-                            'sortId': sortingId
-                        },
-                        success: function (data) {
-                            $("#SkillList").attr("disabled", true);
-                            $('#freelancers-container').empty();
-                            $('#freelancers-container').html(data);
-                            $("#freelancers-container .star-rating").each(function (index, element) {
-                                if (element.childElementCount == 0) {
-                                    starRating(element);
-                                }
-                            });
-                            $.ajax({
-                                type: 'GET',
-                                url: "/User/GetUsersCount",
-                                success: function (data) {
-                                    if (data > pageSize) {
-                                        $("#load-more-button").show();
+                MakeFieldsInactive(function () {
+                    page = 0;
+                    var nickName = $("#autocomplete-input").val();
+                    var taskListId = $("#TaskList").val();
+                    var skillListId = $("#SkillList").val();
+                    var sortingId = $("#sortField").val();
+                    var count = $("#work-range").val();
+                    var executorsOnline = $("#executors-online").is(':checked');
+                    var executorsReady = $("#executors-ready").is(':checked');
+                    //var isOnline = $("#tag1").is(':checked');
+                    //var isNotBusy = $("#tag2").is(':checked');
+                    if (nickName || taskListId || skillListId || count != 0 || executorsOnline || executorsReady) {
+                        $("#lds-ring-count").children().show();
+                        $("#work-range").slider('refresh');
+                        $("#autocomplete-input").val("");
+                        $("#TaskList").val('').selectpicker("render");
+                        $("#SkillList").val('').selectpicker("render");
+                        $("#executors-online").prop('checked', false);
+                        $("#executors-ready").prop('checked', false);
+                        //$("#tag1").prop('checked', false);
+                        //$("#tag2").prop('checked', false);
+                        $.ajax({
+                            type: 'GET',
+                            url: '/User/Index',
+                            data: {
+                                'id': page,
+                                'name': "",
+                                'taskId': 0,
+                                'skillId': 0,
+                                'worksCount': 0,
+                                'isOnline': false,
+                                'isNotBusy': false,
+                                'sortId': sortingId
+                            },
+                            success: function (data) {
+                                $("#SkillList").prop("disabled", true);
+                                $('#freelancers-container').empty();
+                                $('#freelancers-container').html(data);
+                                $("#freelancers-container .star-rating").each(function (index, element) {
+                                    if (element.childElementCount == 0) {
+                                        starRating(element);
                                     }
-                                    else {
-                                        $("#load-more-button").hide();
+                                });
+                                $.ajax({
+                                    type: 'GET',
+                                    url: "/User/GetUsersCount",
+                                    success: function (data) {
+                                        if (data > pageSize) {
+                                            $("#load-more-button").show();
+                                        }
+                                        else {
+                                            $("#load-more-button").hide();
+                                        }
+                                        $("#found-users-count").html("Найдено исполнителей: " + data);
+                                        $("#lds-ring-count").children().hide();
+                                        MakeFieldsActive();
+                                    },
+                                    error: function (data) {
+                                        $("#lds-ring-count").children().hide();
+                                        //alert(data.responseText);
+                                        MakeFieldsActive();
                                     }
-                                    $("#found-users-count").html("Найдено исполнителей: " + data);
-                                    $("#lds-ring-count").children().hide();
-                                },
-                                error: function (data) {
-                                    $("#lds-ring-count").children().hide();
-                                    //alert(data.responseText);
-                                }
-                            });
+                                });
 
-                        },
-                        error: function (data) {
-                            $("#lds-ring-count").children().hide();
-                            //alert(data.responseText);
-                        }
-                    });
-                }
+                            },
+                            error: function (data) {
+                                $("#lds-ring-count").children().hide();
+                                //alert(data.responseText);
+                                MakeFieldsActive();
+                            }
+                        });
+                    }
+                });
             });
 
             //common functions
-            function loadItems() {
+
+            function MakeFieldsInactive(callback) {
+                //this function will make inactive all search fields, reset button, switchers, and sorting dropdown
+                //while ajax query is being done.
+                //But it should end before CallIndex, resetbutton click, or loadItems
+                //or it could be GetUsersCount Error
+                //so we use callback functions in these functions
+                $("#autocomplete-input").prop("disabled", true);
+                $("#TaskList").prop("disabled", true);
+                $("#SkillList").prop("disabled", true);
+                $("#work-range").prop("disabled", true);
+                $("#reset-filter-button").prop("disabled", true);
+                $("#executors-online").prop("disabled", true);
+                $("#executors-ready").prop("disabled", true);
+                $("#sortField").prop("disabled", true);
+                $("#load-more-button").prop("disabled", true);
+
+                callback();
+            }
+
+            function loadItems(callback) {
                 $("#more-executors-text").hide();
                // $(".lds-ring").children().show();
                 //$(".lds-ring").children().css("border-color", "#fff transparent transparent transparent");
@@ -463,9 +535,11 @@
                         }
                     });
                 }
+
+                callback();
             }
 
-            function CallIndex() {
+            function CallIndex(callback) {
                 $("#lds-ring-count").children().show();
                 page = 0;
                 var nickName = $("#autocomplete-input").val();
@@ -516,16 +590,20 @@
                                 }
                                 $("#found-users-count").html("Найдено исполнителей: " + data);
                                 $("#lds-ring-count").children().hide();
+
+                                callback();
                             },
                             error: function (data) {
                                 $("#lds-ring-count").children().hide();
                                 //alert(data.responseText);
+                                callback();
                             }
                         });
                     },
                     error: function (data) {
                         $("#lds-ring-count").children().hide();
                         //alert(data.responseText);
+                        callback();
                     }
                 });
             }
@@ -543,7 +621,7 @@
                     success: function (data) {
                         $('#SkillList').empty();
                         if (id != 0) {
-                            $('#SkillList').attr('disabled',false);
+                            $('#SkillList').prop('disabled',false);
                             $('#SkillList').append("<option value=''>Все предметы</option>");
                             $.each(data, function (i, item) {
                                 $('#SkillList').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
@@ -551,7 +629,7 @@
                         }
                         else {
                             $('#SkillList').append("<option value=''>Все предметы</option>");
-                            $('#SkillList').attr("disabled", true);
+                            $('#SkillList').prop("disabled", true);
                         }
                         $('#SkillList').selectpicker("refresh");
                     },
@@ -559,6 +637,18 @@
                         //alert(data.responseText);
                     }
                 });
+            }
+
+            function MakeFieldsActive() {
+                $("#autocomplete-input").prop('disabled', false);
+                $("#TaskList").prop('disabled', false);
+                $("#SkillList").prop('disabled', false);
+                $("#work-range").prop('disabled', false);
+                $("#reset-filter-button").prop('disabled', false);
+                $("#executors-online").prop('disabled', false);
+                $("#executors-ready").prop('disabled', false);
+                $("#sortField").prop('disabled', false);
+                $("#load-more-button").prop("disabled", false);
             }
         });
     </script>

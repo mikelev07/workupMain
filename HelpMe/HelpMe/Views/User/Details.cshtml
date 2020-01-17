@@ -235,7 +235,7 @@
 
                 <!-- Кнопки -->
                 <div class="profile-overview">
-                    <div class="overview-item"><strong>@(Model.PositiveThumbs + Model.NegativeThumbs)</strong><span> Всего работ</span></div>
+                    <div class="overview-item"><strong>@Model.Customs.Count()</strong><span> Всего работ</span></div>
                     <div class="overview-item"><strong>@Model.PositiveThumbs</strong><span>Положительных отзывов</span></div>
                     <div class="overview-item"><strong>@Model.NegativeThumbs</strong><span>Отрицательных отзывов</span></div>
                 </div>
@@ -259,8 +259,8 @@
                             int procent = 0;
                             if (total > 0)
                             {
-                                var inTime = Model.Customs.Where(c => c.DoneInTime == true).Count();
-                                procent = (int)Math.Round((double)inTime / total, 0);
+                                procent = HelpMe.Helpers.HtmlExtensions.DoneInTimePercentage(total, 
+                                    Model.Customs.Where(c => c.DoneInTime == true).Count());
                             }
                         }
                         <div class="indicator">

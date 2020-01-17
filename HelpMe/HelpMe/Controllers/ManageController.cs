@@ -149,7 +149,7 @@ namespace HelpMe.Controllers
         public async Task<ActionResult> Notifications()
         {
             string userId = User.Identity.GetUserId();
-            var notifications = await db.Notifications.Include(c => c.User).Where(c => c.UserId == userId).ToListAsync();
+            var notifications = await db.Notifications.Include(c => c.User).Where(c => c.UserId == userId).OrderByDescending(c=>c.StartDate).ToListAsync();
             ViewBag.UnreadingCount = await db.Messages.Where(m => m.UserToId == userId && m.Status == MessageStatus.Undreading).CountAsync();
             return View(notifications);
         }

@@ -36,6 +36,7 @@ namespace HelpMe.Controllers
             {
                 customViewModels = customViewModels.Where(m => m.Name.Contains(name));
             }
+            //count = customViewModels.Count();
 
             if (taskCategoryId != null && taskCategoryId != 0)
             {
@@ -46,16 +47,19 @@ namespace HelpMe.Controllers
                     customViewModels = customViewModels.Where(m => m.SkillId == skillId);
                 }
             }
+            //count = customViewModels.Count();
 
             if (minPrice != null && minPrice != 0)
             {
                 customViewModels = customViewModels.Where(m => m.Price >= minPrice || m.Price==null);
             }
+            //count = customViewModels.Count();
 
             if (maxPrice != null)
             {
-                customViewModels = customViewModels.Where(m => m.Price <= maxPrice || m.Price == null);
+                customViewModels = customViewModels.Where(m => (m.Price==null  || m.Price <= maxPrice));
             }
+            //count = customViewModels.Count();
 
             if (customsWithoutOffers == true)
             {
@@ -168,6 +172,9 @@ namespace HelpMe.Controllers
                                             .Where(i => i.Id == id).FirstOrDefault();
 
             var comms = customViewModels.Comments.ToList();
+
+            string userId = User.Identity.GetUserId();
+            ViewBag.UnreadingCount = db.Messages.Where(m => m.UserToId == userId && m.Status == MessageStatus.Undreading).Count();
 
             return View(comms);
         }
@@ -1343,6 +1350,19 @@ namespace HelpMe.Controllers
                 db.Entry(customViewModel).State = EntityState.Modified;
                 customViewModel.Status = CustomStatus.Close;
                 customViewModel.IsRevision = false;
+
+                //если у отзыва от 3 до 5 звёзд, то исполнителю палец_вверх++, иначе - палец_вниз++
+                if (review.Rating >= 3)
+                {
+                    user.PositiveThumbs++;
+                }
+                else
+                {
+                    user.NegativeThumbs--;
+                }
+                
+
+                //если дата заказа была указана, и исполнитель успел в срок, то проставляем в атрибут DoneInTime
                 if (customViewModel.EndingDate != null)
                 {
                     customViewModel.DoneInTime = DateTime.Now < customViewModel.EndingDate;
