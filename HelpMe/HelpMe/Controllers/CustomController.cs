@@ -540,20 +540,21 @@ namespace HelpMe.Controllers
 
                 if (wallet.Summ - commentViewModel.OfferPrice >= 0)
                 {
-
                     Transaction transaction = new Transaction()
                     {
                         Date = DateTime.Now,
                         CustomId = customViewModel.Id,
                         Status = TransactionStatus.Waiting
                     };
+
                     transaction.Id = 1;
                     wallet.Summ -= commentViewModel.OfferPrice;
                     transaction.Price = commentViewModel.OfferPrice;
                     transaction.FromUserId = myId;
                     transaction.ToUserId = customViewModel.ExecutorId;
-                    transaction.TimeBlock = 1;
+                    transaction.TimeBlock = customViewModel.TimeBlock;
                     transaction.DateBlockEnd = transaction.Date.AddDays(transaction.TimeBlock);
+
                     db.Transactions.Add(transaction);
                     await db.SaveChangesAsync();
                 }

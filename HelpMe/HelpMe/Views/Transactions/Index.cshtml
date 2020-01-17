@@ -118,7 +118,7 @@
             var countDownDate = new Date(value);
 
             var x = setInterval(function () {
-                var now = new Date().getTime();
+                var now = new Date('@DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")').getTime();
                 var distance = countDownDate - now;
                 var days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
