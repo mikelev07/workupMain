@@ -43,78 +43,85 @@
                     <div class="headline">
                         <h3><i class="icon-material-outline-account-circle"></i> Мой аккаунт</h3>
                     </div>
+                    @using (Html.BeginForm("Index", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                <div class="content with-padding padding-bottom-0">
+                    <div class="row">
 
-                    <div class="content with-padding padding-bottom-0">
-                        <div class="row">
-                            <div class="col-auto">
-                                <div class="avatar-wrapper" data-tippy-placement="bottom" title="Изменить аватар">
-                                    <img class="profile-pic" src="@Url.Content(ViewBag.Image)" alt="" />
-                                    <div class="upload-button"></div>
-                                    <input class="file-upload" type="file" name="ImageFile" id="ImageFile" />
-                                </div>
-                            </div>
-
-                            <div class="col">
-                                <div class="row">
-                                    <div class="col-xl-6">
-                                        <div class="submit-field">
-                                            <h5>Ник</h5>
-                                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Name } })
-                                        </div>
-                                    </div>
-
-                                    <div class="col-xl-6">
-                                        <div class="submit-field">
-                                            <h5>Телефон</h5>
-                                            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { id = "user-phone", type = "tel", @Value = "", @class = "with-border", @placeholder = Model.PhoneNumber } })
-                                        </div>
-                                    </div>
-
-                                    @*<div class="col-xl-6">
-                                            <div class="submit-field">
-                                                <h5>Возраст</h5>
-                                                @Html.EditorFor(model => model.Age, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Age } })
-                                            </div>
-                                        </div>*@
-
-                                    <div class="col-xl-6">
-                                        <!-- Account Type -->
-                                        <div class="submit-field">
-                                            <h5>Тип аккаунта</h5>
-                                            <div class="account-type">
-                                                @if (User.IsInRole("employee"))
-                                                {
-                                                    <div>
-                                                        <input type="radio" name="account-type-radio" id="freelancer-radio-1" class="account-type-radio" checked />
-                                                        <label for="freelancer-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-school"></i> Исполнитель</label>
-                                                    </div>
-                                                }
-                                                else
-                                                {
-                                                    if (User.IsInRole("User"))
-                                                    {
-                                                        <div>
-                                                            <input type="radio" name="account-type-radio" id="employee-radio-1" class="account-type-radio" checked />
-                                                            <label for="employee-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-business-center"></i> Заказчик</label>
-                                                        </div>
-                                                    }
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-xl-6">
-                                        <div class="submit-field">
-                                            <h5>Почта</h5>
-                                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Email } })
-                                        </div>
-                                    </div>
-
-                                </div>
+                        @Html.AntiForgeryToken()
+                        <div class="col-auto">
+                            <div class="avatar-wrapper" data-tippy-placement="bottom" title="Изменить аватар">
+                                <img class="profile-pic" src="@Url.Content(ViewBag.Image)" alt="" />
+                                <div class="upload-button"></div>
+                                <input class="file-upload" type="file" name="ImageFile" id="ImageFile" />
                             </div>
                         </div>
 
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <div class="submit-field">
+                                        <h5>Ник</h5>
+                                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Name } })
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-6">
+                                    <div class="submit-field">
+                                        <h5>Телефон</h5>
+                                        @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { id = "user-phone", type = "tel", @Value = "", @class = "with-border", @placeholder = Model.PhoneNumber } })
+                                    </div>
+                                </div>
+
+                                @*<div class="col-xl-6">
+                    <div class="submit-field">
+                        <h5>Возраст</h5>
+                        @Html.EditorFor(model => model.Age, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Age } })
                     </div>
+                </div>*@
+
+                                <div class="col-xl-6">
+                                    <!-- Account Type -->
+                                    <div class="submit-field">
+                                        <h5>Тип аккаунта</h5>
+                                        <div class="account-type">
+                                            @if (User.IsInRole("employee"))
+                                            {
+                                                <div>
+                                                    <input type="radio" name="account-type-radio" id="freelancer-radio-1" class="account-type-radio" checked />
+                                                    <label for="freelancer-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-school"></i> Исполнитель</label>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                if (User.IsInRole("User"))
+                                                {
+                                                    <div>
+                                                        <input type="radio" name="account-type-radio" id="employee-radio-1" class="account-type-radio" checked />
+                                                        <label for="employee-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-business-center"></i> Заказчик</label>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-6">
+                                    <div class="submit-field">
+                                        <h5>Почта</h5>
+                                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Email } })
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-xl-12">
+                            <input type="submit" value="Сохранить изменения" class="button ripple-effect big margin-top-30" />
+                        </div>
+                    </div>
+                  
+                </div>
+                    }
                 </div>
             </div>
 
