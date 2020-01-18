@@ -71,6 +71,14 @@
 
                                 <div class="header-notifications" id="not-trigger">
 
+
+                                    @*
+                                            //для отладки нужно было
+                                            //позволяет быстро сделать все уведомления непрочитанными
+                                            <div>
+                                            <button id="TEST" type="button">TEST!!!</button>
+                                        </div>*@
+
                                     <div class="header-notifications-trigger">
                                         <a class="notCl" href="#"><i class="icon-feather-bell"></i></a>
                                     </div>
@@ -78,7 +86,7 @@
                                     <div class="header-notifications-dropdown">
                                         <div class="header-notifications-headline">
                                             <h4>Уведомления</h4>
-                                            <button class="mark-as-read ripple-effect-dark" title="Пометить как прочитанное" data-tippy-placement="left">
+                                            <button id="mark-notes-as-read" class="mark-as-read ripple-effect-dark" title="Пометить как прочитанное" data-tippy-placement="left">
                                                 <i class="icon-feather-check-square"></i>
                                             </button>
                                         </div>
@@ -542,63 +550,143 @@
             }
         })
 
-        var isSucess = false;
+        var isSuccess = false;
 
         // для clone stick
-        $("#not-trigger").on('click', '.notCl', function () {
-            $(".lds-ring").children().show();
-            $.ajax({
-                type: 'GET',
-                url: '/Home/GetAllNotifications',
-                success: function (response) {
-                    $('.ncount').text(0);
-                    if (!isSucess) {
-                        $('#notifContent').empty();
-                        // $('.ncont').empty();
-                        if (response.length == 0) {
-                            $('#notifContent').append($('<li class="centered-me">Нет новых уведомлений</li>'));
-                        }
-                        $.each(response, function (index, value) {
-                            $('.ncont').prepend($('<li class="notifications-not-read"><a href="/Custom/Details/' + value.CustomId + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Description + '</span></a></li>'));
-                        })
-                    }
-                    isSucess = true;
-                    $(".lds-ring").children().hide();
-                    $('.notiUnreadCount').remove();
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            })
-        });
+        //$("#not-trigger").on('click', '.notCl', function () {
+        //    //console.log('clone stick');
+        //    $(".lds-ring").children().show();
+        //    $.ajax({
+        //        type: 'GET',
+        //        url: '/Home/GetAllNotifications',
+        //        success: function (response) {
+        //            $('.ncount').text(0);
+        //            if (!isSuccess) {
+        //                $('#notifContent').empty();
+        //                // $('.ncont').empty();
+        //                if (response.length == 0) {
+        //                    $('#notifContent').append($('<li class="centered-me">Нет новых уведомлений</li>'));
+        //                }
+        //                $.each(response, function (index, value) {
+        //                    $('.ncont').prepend($('<li class="notifications-not-read"><a href="/Custom/Details/' + value.CustomId + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Description + '</span></a></li>'));
+        //                })
+        //            }
+        //            isSuccess = true;
+        //            $(".lds-ring").children().hide();
+        //            $('.notiUnreadCount').remove();
+        //        },
+        //        error: function (error) {
+        //            console.log(error);
+        //        }
+        //    })
+        //});
 
-        // для header
-        $('.notCl').click(function (e) {
-            $(".lds-ring").children().show();
+        function GetAllNotificationsHeader() {
+            //console.log('header bell');
+            $("header-notifications-scroll .lds-ring").children().show();
             $.ajax({
                 type: 'GET',
                 url: '/Home/GetAllNotifications',
                 success: function (response) {
+
                     $('#notific').hide();
                     $('.ncount').hide();
                     $('#notifContent').empty();
                     // $('.ncont').empty();
+
                     if (response.length == 0) {
+                        $('.notiUnreadCount').remove();
+                        $('#mark-notes-as-read').prop('disabled', true);
                         $('#notifContent').append($('<li class="centered-me">Нет новых уведомлений</li>'));
                     }
+                    else {
+                        $('#mark-notes-as-read').prop('disabled', false);
 
-                    $.each(response, function (index, value) {
+                        $.each(response, function (index, value) {
 
-                        $('#notifContent').prepend($('<li class="notifications-not-read"><a href="/Custom/Details/' + value.CustomId + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Description + '</span></a></li>'));
+                            $('#notifContent').prepend($('<li class="notifications-not-read" data-notification-id="'
+                                + value.Id
+                                + '"><a href="/Custom/Details/'
+                                + value.CustomId
+                                + '"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">'
+                                + value.Description
+                                + '</span></a></li>'));
 
-                    });
-                    $(".lds-ring").children().hide();
-                    $('.notiUnreadCount').remove();
+                        });
+                    }
+
+                    $("header-notifications-scroll .lds-ring").children().hide();
                 },
                 error: function (error) {
                     console.log(error);
                 }
             })
+        }
+
+        // для header
+        $('.notCl').click(function (e) {
+            //подгружаем уведомления, только если дропдаун с уведомлениями еще НЕ открыт
+            //просто раньше каждое нажатие на колокольчик осуществляло запрос на сервер (даже с открытым дропдауном)
+            if (!$('#not-trigger').hasClass('active')) {
+                GetAllNotificationsHeader();
+            }
+        });
+
+        //для отладки нужно было
+        //позволяет быстро сделать все уведомления непрочитанными
+        @*$('#TEST').click(function () {
+            $.ajax({
+                type: 'GET',
+                url: '/Home/TestMakeAllUnread',
+                data: {
+                    userId: "@User.Identity.GetUserId()"
+                },
+                success: function (response) {
+                    console.log("success of test");
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });*@
+
+        //действие галочки в шапке в дропдауне уведомлений
+        $('#mark-notes-as-read').click(function () {
+            $(this).prop('disable', true);
+            var notUnreadCount = $('.notiUnreadCount').text();
+            var mid = notUnreadCount.length / 2;
+            var countOfUnreadNotifications = parseInt(notUnreadCount.slice(0, mid));
+            if (countOfUnreadNotifications > 0) {
+
+                var unreadNotificationsId = [];
+
+                $('#notifContent .notifications-not-read').each(function () {
+                    countOfUnreadNotifications--;
+                    unreadNotificationsId.push($(this).attr('data-notification-id'));
+                });
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/MarkHeaderNotesAsRead',
+                    data: {
+                        ids: unreadNotificationsId
+                    },
+                    success: function (response) {
+                        GetAllNotificationsHeader();
+                        if (countOfUnreadNotifications > 0) {
+                            $('.notiUnreadCount').text(countOfUnreadNotifications);
+                        }
+                        else {
+                            $('.notiUnreadCount').remove();
+                        }
+                        $(this).prop('disable', false);
+                    },
+                    error: function (error) {
+                        $(this).prop('disable', false);
+                        console.log(error);
+                    }
+                });
+            }
         });
 
 

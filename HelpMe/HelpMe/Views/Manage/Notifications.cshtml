@@ -23,24 +23,41 @@
                 <div class="dashboard-box">
                     <div class="headline">
                         <h3><i class="icon-material-baseline-notifications-none"></i> Уведомления</h3>
-                        <button class="mark-as-read ripple-effect-dark" data-tippy-placement="left" title="Отметить как прочитанное">
+                        <button id="mark-all-as-read" class="mark-as-read ripple-effect-dark" data-tippy-placement="left" title="Отметить все уведомления как прочитанные" type="button">
                             <i class="icon-feather-check-square"></i>
                         </button>
                     </div>
                     <div class="content">
                         <ul class="dashboard-box-list">
 
-                            @foreach (var i in Model) {
-                                <li>
-                                    <span class="notification-icon"><i class="icon-material-outline-group"></i></span>
-                                    <span class="notification-text">
-                                       @i.Description 
-                                    </span>
-                                    <!-- Buttons -->
-                                    <div class="buttons-to-right">
-                                        <a href="#" class="button ripple-effect ico" title="Пометить как прочитанное" data-tippy-placement="left"><i class="icon-feather-check-square"></i></a>
-                                    </div>
-                                </li>
+                            @foreach (var i in Model)
+                            {
+                                if (i.Status == HelpMe.Models.NotificationStatus.Reading)
+                                {
+                                    <li>
+                                        <span class="notification-icon"><i class="icon-material-outline-group"></i></span>
+                                        <span class="notification-text">
+                                            @i.Description
+                                        </span>
+                                        <!-- Buttons -->
+                                        @*<div class="buttons-to-right">
+                                                <a href="/Manage/MarkMessageAsRead" class="button ripple-effect ico" title="Отметить уведомление как прочитанное" data-tippy-placement="left"><i class="icon-feather-check-square"></i></a>
+                                            </div>*@
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li id="unread-note-@i.Id" class="notification-not-read">
+                                        <span class="notification-icon"><i class="icon-material-outline-group"></i></span>
+                                        <span class="notification-text">
+                                            @i.Description
+                                        </span>
+                                        <!-- Buttons -->
+                                        <div class="buttons-to-right">
+                                            <button class="button ripple-effect ico mark-note-as-read" data-id="@i.Id" title="Отметить уведомление как прочитанное" data-tippy-placement="left" type="button"><i class="icon-feather-check-square"></i></button>
+                                        </div>
+                                    </li>
+                                }
                             }
 
                         </ul>
@@ -49,7 +66,76 @@
             </div>
 
         </div>
-      
+
 
     </div>
 </div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+        $('.mark-note-as-read').click(function () {
+            //нажатие галки прочесть данное уведомление
+            $(this).prop('disable', true);
+
+            var noteId = $(this).attr('data-id');
+            var notUnreadCount = $('.notiUnreadCount').text();
+            var mid = notUnreadCount.length / 2;
+            var countOfUnreadNotifications = parseInt(notUnreadCount.slice(0, mid));
+
+            $.ajax({
+                type: 'POST',
+                url: '/Home/MarkNoteAsRead',
+                data: noteId,
+                success: function (response) {
+
+                    $('#unread-note-' + noteId).removeClass('notification-not-read');
+
+                    //если перед нажатием оставалось более 1 непрочитанного сообщения
+                    if (countOfUnreadNotifications > 1) {
+                        $('.notiUnreadCount').text(countOfUnreadNotifications - 1);
+                    }
+                    //если оставалось только одно непрочитанное сообщение
+                    if (countOfUnreadNotifications == 1) {
+                        $('.notiUnreadCount').remove();
+                    }
+
+                    $(this).prop('disable', false);
+                },
+                error: function (error) {
+                    $(this).prop('disable', false);
+                    console.log(error);
+                }
+            });
+        });
+
+        $('#mark-all-as-read').click(function () {
+            //нажатие галки прочесть все уведомления
+            $(this).prop('disable', true);
+            var notUnreadCount = $('.notiUnreadCount').text();
+            var mid = notUnreadCount.length / 2;
+            var countOfUnreadNotifications = parseInt(notUnreadCount.slice(0, mid));
+
+            if (countOfUnreadNotifications > 0) {
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/MarkAllNotesAsRead',
+                    success: function (response) {
+
+                        $('.notification-not-read').each(function () {
+                            $(this).removeClass('notification-not-read');
+                        });
+
+                        $('.notiUnreadCount').remove();
+                        $(this).prop('disable', false);
+                    },
+                    error: function (error) {
+                        $(this).prop('disable', false);
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    </script>
+}
