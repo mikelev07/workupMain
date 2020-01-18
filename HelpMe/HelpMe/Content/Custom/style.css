@@ -16073,6 +16073,11 @@ ul.dashboard-box-list {
 }
 
 
+.notification-not-read {
+    background-color: #fafafa;
+}
+
+
 /* ---------------------------------- */
 /* Dashboard Messages
 ------------------------------------- */
