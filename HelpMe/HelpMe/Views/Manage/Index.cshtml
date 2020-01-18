@@ -207,9 +207,9 @@
                                             <div style="margin-top:-100px;" id="myDisp">
                                                 @foreach (var i in Model.MyTaskCategories)
                                                 {
-                                                    <div style='margin-top:55px' id="@i.Id-detail">
+                                                    <div style='margin-top:55px' id="@i.Id-disp-detail">
                                                         <div class='headerForDisp'>@i.Name</div>
-                                                        <div class='keywords-list'>
+                                                        <div style="height:auto" class='keywords-list'>
                                                             @foreach (var b in i.Skills.Where(m => ViewBag.SendIds.Contains(m.Id)))
                                                             {
                                                                 <span id="lab-@b.Id" class='keyword'>
@@ -218,7 +218,9 @@
                                                                 </span>
                                                             }
                                                         </div>
+                                                       
                                                     </div>
+                                                   
                                                 }
 
                                             </div>
@@ -576,38 +578,48 @@
             evt.currentTarget.className += " active";
         }
 
+        var keywordsList = $(".keywords-list");
 
-        $(".checkboxI").change(function() {
+        $(".checkboxI").change(function () {
+
             if (this.checked) {
                 var idVal = $(this).attr("id");
-                addKeywordSub($("label[for='" + idVal + "']").text(), "lab-" + idVal)
-
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("ChooseSpecialization", "Custom")/' + idVal,
-                    dataType: 'JSON',
-                    success: function (data) {
-                        Snackbar.show({
-                            text: 'Добавлен предмет в вашу специализацию'
-                        });
-                    },
-                    error: function (data) {
-                         Snackbar.show({
-                            text: 'Возникла ошибка добавления'
-                        });
-                    }
-                });
-
+                var vall = $("label[for='" + idVal + "']").text();
+                if ($('.keywords-list:contains("' + vall + '")').length < 1) {
+                    addKeywordSub($("label[for='" + idVal + "']").text(), "lab-" + idVal)
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("ChooseSpecialization", "Custom")/' + idVal,
+                        dataType: 'JSON',
+                        success: function (data) {
+                            Snackbar.show({
+                                text: 'Добавлен предмет в вашу специализацию'
+                            });
+                        },
+                        error: function (data) {
+                            Snackbar.show({
+                                text: 'Возникла ошибка добавления'
+                            });
+                        }
+                    });
+                }
+            }
+            else
+            {
+                
+                var idValRem = $(this).attr("id");
+               
+                $("#lab-" + idValRem).children().first().trigger("click");
             }
              keywordsList.css({ 'height': 'auto' }).height();
         });
 
-        var keywordsList = $(".keywords-list");
+    
 
         function addKeywordSub(str, i) {
             var tabText = $(".taby button.active").text()
             var tabId = $(".taby button.active").attr("id") + "-detail";
-
+           
             if ($("#" + tabId).length == 0) {
                 $("#myDisp").append("<div style='margin-top:55px' id='" + tabId + "'></div>")
                 $("#" + tabId).append("<div class='headerForDisp'></div>")
@@ -615,8 +627,9 @@
 
 
             if (!($('#'+tabId+' .headerForDisp h4:contains(' + tabText + ')').length > 0)) {
-                $("#"+tabId + " .headerForDisp").append("<h4>" + tabText + "</h4>")
+                    $("#"+tabId + " .headerForDisp").append("<h4>" + tabText + "</h4>")
                 }
+
             }
 
            keywordsList = $("#"+tabId + " .keywords-list");
@@ -626,6 +639,7 @@
 
           $(document).on("click", ".keyword-remove", function () {
               $(this).parent().addClass('keyword-removed');
+
               var listId = $(this).parent().parent().parent().attr("id");
               var keyListName = $(this).parent().parent().attr("class");
 
@@ -652,8 +666,6 @@
                         });
                     }
                 });
-
-
 
               $("#"+idCheck).prop("checked", false);
 
