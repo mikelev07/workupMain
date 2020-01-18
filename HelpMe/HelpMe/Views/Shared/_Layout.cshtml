@@ -59,7 +59,7 @@
 <body>
     <!-- Wrapper -->
     <div id="wrapper">
-        <header id="header-container" class="fullwidth ">
+        <header id="header-container" class="fullwidth">
             <!-- Header -->
             <div id="header">
                 <div class="container">
@@ -101,7 +101,14 @@
 
                             <div class="header-widget hide-on-mobile">
 
-                                <div class="header-notifications" id="not-trigger">
+                                <div class="header-notifications not-trigger">
+
+
+                                    @*//для отладки нужно было
+                                            //позволяет быстро сделать все уведомления непрочитанными
+                                            <div>
+                                            <button id="TEST" type="button">TEST!!!</button>
+                                        </div>*@
 
                                     <div class="header-notifications-trigger">
                                         <a class="notCl" href="#"><i class="icon-feather-bell"></i></a>
@@ -110,7 +117,7 @@
                                     <div class="header-notifications-dropdown">
                                         <div class="header-notifications-headline">
                                             <h4>Уведомления</h4>
-                                            <button id="mark-notes-as-read" class="mark-as-read ripple-effect-dark" title="Пометить как прочитанное" data-tippy-placement="left">
+                                            <button class="mark-as-read ripple-effect-dark mark-notes-as-read" title="Пометить как прочитанное" data-tippy-placement="left">
                                                 <i class="icon-feather-check-square"></i>
                                             </button>
                                         </div>
@@ -487,36 +494,10 @@
             }
         })
 
-        var isSuccess = false;
 
-        // для clone stick
-        //$("#not-trigger").on('click', '.notCl', function () {
-        //     $(".lds-ring").children().show();
-        //    $.ajax({
-        //        type: 'GET',
-        //        url: '/Home/GetAllNotifications',
-        //        success: function (response) {
-        //            $('.ncount').text(0);
-        //            if (!isSucess) {
-        //                $('#notifContent').empty();
-        //                //$('.ncont').empty();
-        //                if (response.length == 0) {
-        //                   $('#notifContent').append($('<li class="centered-me">Нет новых уведомлений</li>'));
-        //                }
-        //                $.each(response, function (index, value) {
-        //                   $('.ncont').prepend($('<li class="notifications-not-read"><a href="/Custom/Details/'+ value.CustomId +'"><span class="notification-icon"><i class="icon-material-outline-group"></i></span><span class="notification-text">' + value.Description + '</span></a></li>'));
-        //                })
-        //            }
-        //            isSucess = true;
-        //            $(".lds-ring").children().hide();
-        //            $('.notiUnreadCount').remove();
-        //        },
-        //        error: function (error) {
-        //            console.log(error);
-        //        }
-        //    })
-        //});
 
+
+        //var isSuccess = false;
 
         function GetAllNotificationsHeader() {
             //console.log('header bell');
@@ -531,17 +512,15 @@
                     $('#notifContent').empty();
                     // $('.ncont').empty();
 
+                    $('.mark-notes-as-read').prop('disabled', true);
                     if (response.length == 0) {
                         $('.notiUnreadCount').remove();
-                        $('#mark-notes-as-read').prop('disabled', true);
-                        $('#notifContent').append($('<li class="centered-me">Нет новых уведомлений</li>'));
+                        $('.ncont').append($('<li class="centered-me">Нет новых уведомлений</li>'));
                     }
                     else {
-                        $('#mark-notes-as-read').prop('disabled', false);
-
                         $.each(response, function (index, value) {
 
-                            $('#notifContent').prepend($('<li class="notifications-not-read" data-notification-id="'
+                            $('.ncont').prepend($('<li class="notifications-not-read" data-notification-id="'
                                 + value.Id
                                 + '"><a href="/Custom/Details/'
                                 + value.CustomId
@@ -552,6 +531,7 @@
                         });
                     }
 
+                    $('.mark-notes-as-read').prop('disabled', false);
                     $("header-notifications-scroll .lds-ring").children().hide();
                 },
                 error: function (error) {
@@ -560,11 +540,32 @@
             })
         }
 
+
+        // для clone stick
+        //$(".fullwidth.cloned.sticky").on('click', '.notCl', function () {
+        //    console.log('cloned sticky');
+        //    //подгружаем уведомления, только если дропдаун с уведомлениями еще НЕ открыт
+        //    //просто раньше каждое нажатие на колокольчик осуществляло запрос на сервер (даже с открытым дропдауном)
+        //    $sticky = $('.fullwidth.cloned.sticky #not-trigger');
+        //    if (!$sticky.hasClass('active')) {
+        //        GetAllNotificationsHeader();
+        //    }
+        //});
+
         // для header
         $('.notCl').click(function (e) {
+            //console.log('header');
             //подгружаем уведомления, только если дропдаун с уведомлениями еще НЕ открыт
             //просто раньше каждое нажатие на колокольчик осуществляло запрос на сервер (даже с открытым дропдауном)
-            if (!$('#not-trigger').hasClass('active')) {
+            //$header = $('.not-trigger');
+
+            var dropdownactive = false;
+            $('.not-trigger').each(function () {
+                if ($(this).hasClass('active')) {
+                    dropdownactive = true;
+                }
+            });
+            if (!dropdownactive) {
                 GetAllNotificationsHeader();
             }
         });
@@ -588,7 +589,7 @@
         });*@
 
         //действие галочки в шапке в дропдауне уведомлений
-        $('#mark-notes-as-read').click(function () {
+        $('.mark-notes-as-read').click(function () {
             $(this).prop('disable', true);
             var notUnreadCount = $('.notiUnreadCount').text();
             var mid = notUnreadCount.length / 2;

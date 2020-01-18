@@ -151,17 +151,17 @@ namespace HelpMe.Controllers
         //позволяет быстро сделать все уведомления непрочитанными
         //смотри в Layout, LayoutDash и LayoutChat
 
-        //public async Task<ActionResult> TestMakeAllUnread(string userId)
-        //{
-        //    var unreadNotes = await db.Notifications.Where(n => n.UserId == userId && n.Status == NotificationStatus.Reading).ToListAsync();
-        //    foreach(var n in unreadNotes)
-        //    {
-        //        n.Status = NotificationStatus.Unreading;
-        //    }
-        //    await db.SaveChangesAsync();
+        public async Task<ActionResult> TestMakeAllUnread(string userId)
+        {
+            var unreadNotes = await db.Notifications.Where(n => n.UserId == userId && n.Status == NotificationStatus.Reading).ToListAsync();
+            foreach (var n in unreadNotes)
+            {
+                n.Status = NotificationStatus.Unreading;
+            }
+            await db.SaveChangesAsync();
 
-        //    return Json(true);
-        //}
+            return Json(true);
+        }
 
 
         public ActionResult Contact()

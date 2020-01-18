@@ -51,13 +51,13 @@ namespace HelpMe.Controllers
 
             if (minPrice != null && minPrice != 0)
             {
-                customViewModels = customViewModels.Where(m => m.Price >= minPrice || m.Price==null);
+                customViewModels = customViewModels.Where(m => m.Price >= minPrice || m.Price == null);
             }
             //count = customViewModels.Count();
 
             if (maxPrice != null)
             {
-                customViewModels = customViewModels.Where(m => (m.Price==null  || m.Price <= maxPrice));
+                customViewModels = customViewModels.Where(m => (m.Price == null || m.Price <= maxPrice));
             }
             //count = customViewModels.Count();
 
@@ -245,6 +245,10 @@ namespace HelpMe.Controllers
             return await db.Attachments.Where(a => a.CustomViewModelId == id).CountAsync(a => a.AttachStatus == AttachStatus.NotPurchased);
         }
 
+
+        [HttpPost]
+        [Authorize(Roles = "employee")]
+        //удаление готового решения (исполнителем)
         public async Task<JsonResult> DeleteMainAttach(int? id)
         {
             var mainAttach = await db.MainAttachments.FindAsync(id);
@@ -269,6 +273,10 @@ namespace HelpMe.Controllers
             return Json(true);
         }
 
+
+        [HttpPost]
+        [Authorize(Roles = "employee")]
+        //удаление доработки (исполнителем)
         public async Task<JsonResult> DeleteAttach(int? id)
         {
             AttachModel attach = await db.Attachments.FindAsync(id);
@@ -307,55 +315,59 @@ namespace HelpMe.Controllers
             return Json(true);
         }
 
+        //[HttpPost]
+        //public async Task<JsonResult> UploadAttach()
+        //{
+        //    var idCustom = Convert.ToInt32(Request.Form["CustomViewModelId"]);
+        //    CustomViewModel customViewModel = await db.Customs.Include(c => c.User).Include(a => a.Attachments).Include(a => a.MyAttachments).FirstOrDefaultAsync(c => c.Id == idCustom);
+        //    var count = customViewModel.MyAttachments.Count;
+
+        //    if (count < 10)
+        //    {
+        //        MyAttachModel attach = new MyAttachModel();
+
+        //        foreach (string file in Request.Files)
+        //        {
+        //            var upload = Request.Files[file];
+
+        //            if (upload != null)
+        //            {
+        //                // получаем имя файла
+        //                string fileName = System.IO.Path.GetFileName(upload.FileName);
+        //                // сохраняем файл в папку Files в проекте
+        //                upload.SaveAs(Server.MapPath("~/Files/" + fileName));
+        //                string path = Server.MapPath("~/Files/" + fileName);
+        //                // сохраняем файл в папку Files в проекте
+        //                upload.SaveAs(path);
+        //                attach.Id = 1;
+
+        //                attach.CustomViewModelId = Convert.ToInt32(Request.Form["CustomViewModelId"]);
+        //                attach.AttachFilePath = path;
+
+        //                attach.UserId = User.Identity.GetUserId();
+        //                db.MyAttachments.Add(attach);
+
+
+        //                NotificationHubModel notificationHubModel = new NotificationHubModel()
+        //                {
+        //                    UserFromId = User.Identity.GetUserId(),
+        //                    UserToId = customViewModel.ExecutorId,
+        //                    DescriptionFrom = "Вы загрузили решение к заказу",
+        //                    DescriptionTo = "Исполнитель " + customViewModel.Executor.UserName + " загрузил решение"
+        //                };
+        //                SendM(notificationHubModel);
+        //                // SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
+        //                await db.SaveChangesAsync();
+        //            }
+        //        }
+        //    }
+        //    return Json("Файл загружен");
+        //}
+
+
         [HttpPost]
-        public async Task<JsonResult> UploadAttach()
-        {
-            var idCustom = Convert.ToInt32(Request.Form["CustomViewModelId"]);
-            CustomViewModel customViewModel = await db.Customs.Include(c => c.User).Include(a => a.Attachments).Include(a => a.MyAttachments).FirstOrDefaultAsync(c => c.Id == idCustom);
-            var count = customViewModel.MyAttachments.Count;
-
-            if (count < 10)
-            {
-                MyAttachModel attach = new MyAttachModel();
-
-                foreach (string file in Request.Files)
-                {
-                    var upload = Request.Files[file];
-
-                    if (upload != null)
-                    {
-                        // получаем имя файла
-                        string fileName = System.IO.Path.GetFileName(upload.FileName);
-                        // сохраняем файл в папку Files в проекте
-                        upload.SaveAs(Server.MapPath("~/Files/" + fileName));
-                        string path = Server.MapPath("~/Files/" + fileName);
-                        // сохраняем файл в папку Files в проекте
-                        upload.SaveAs(path);
-                        attach.Id = 1;
-
-                        attach.CustomViewModelId = Convert.ToInt32(Request.Form["CustomViewModelId"]);
-                        attach.AttachFilePath = path;
-
-                        attach.UserId = User.Identity.GetUserId();
-                        db.MyAttachments.Add(attach);
-                        NotificationHubModel notificationHubModel = new NotificationHubModel()
-                        {
-                            UserFromId = User.Identity.GetUserId(),
-                            UserToId = customViewModel.ExecutorId,
-                            DescriptionFrom = "Вы загрузили решение к заказу",
-                            DescriptionTo = "Исполнитель " + customViewModel.Executor.UserName + " загрузил решение"
-                        };
-
-                        SendM(notificationHubModel);
-                        // SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
-                        await db.SaveChangesAsync();
-                    }
-                }
-            }
-            return Json("Файл загружен");
-        }
-
-        [HttpPost]
+        [Authorize(Roles = "employee")]
+        //добавление файла доработки (исполнителем)
         public async Task<JsonResult> UploadRevision()
         {
             var idCustom = Convert.ToInt32(Request.Form["CustomViewModelId"]);
@@ -408,14 +420,17 @@ namespace HelpMe.Controllers
                         attach.UserId = User.Identity.GetUserId();
                         db.Attachments.Add(attach);
 
+
                         NotificationHubModel notificationHubModel = new NotificationHubModel()
                         {
                             UserFromId = User.Identity.GetUserId(),
-                            UserToId = customViewModel.ExecutorId,
-                            DescriptionFrom = "Вы загрузили решение к заказу",
-                            DescriptionTo = "Исполнитель " + customViewModel.Executor.UserName + " загрузил решение"
+                            UserToId = customViewModel.UserId,
+                            DescriptionFrom = "Вы добавили файл доработки для заказа \"" + customViewModel.Name.Substring(0, 25) + "...\"",
+                            CustomName = customViewModel.Name,
+                            CustomId = customViewModel.Id,
+                            ExecutorName = customViewModel.Executor.UserName,
+                            DescriptionTo = "Исполнитель (" + customViewModel.Executor.UserName + ") добавил  файл доработки для заказа \"" + customViewModel.Name.Substring(0, 25) + "...\""
                         };
-
                         SendM(notificationHubModel);
 
                         //SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
@@ -439,6 +454,9 @@ namespace HelpMe.Controllers
             return walletSum >= attachPrice;
         }
 
+        [HttpPost]
+        [Authorize(Roles = "User")]
+        //покупка файла доработки
         public async Task<ActionResult> Buy(int? id)
         {
             if (id == null)
@@ -452,6 +470,8 @@ namespace HelpMe.Controllers
                 .Include(c => c.CustomViewModel)
                 .Include(c => c.CustomViewModel.Attachments)
                 .FirstOrDefaultAsync(c => c.Id == id);
+
+            var custom = attachViewModel.CustomViewModel;
 
             if (attachViewModel.AttachStatus != AttachStatus.Purchased)
             {
@@ -473,8 +493,8 @@ namespace HelpMe.Controllers
 
                     transaction.Price = attachViewModel.ExecutorPrice;
                     transaction.FromUserId = myId;
-                    transaction.ToUserId = attachViewModel.CustomViewModel.ExecutorId;
-                    transaction.TimeBlock = attachViewModel.CustomViewModel.TimeBlock;
+                    transaction.ToUserId = custom.ExecutorId;
+                    transaction.TimeBlock = custom.TimeBlock;
                     transaction.DateBlockEnd = transaction.Date.AddDays(transaction.TimeBlock);
 
                     db.Transactions.Add(transaction);
@@ -485,24 +505,25 @@ namespace HelpMe.Controllers
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
                 attachViewModel.AttachStatus = AttachStatus.Purchased;
-                if (attachViewModel.CustomViewModel.Attachments.Where(c => c.AttachStatus == AttachStatus.NotPurchased).Count() == 0)
+                if (custom.Attachments.Where(c => c.AttachStatus == AttachStatus.NotPurchased).Count() == 0)
                 {
-                    attachViewModel.CustomViewModel.Status = CustomStatus.CheckCustom;//проверяется заказчиком
+                    custom.Status = CustomStatus.CheckCustom;//проверяется заказчиком
                 }
                 db.Entry(wallet).State = EntityState.Modified;
                 await db.SaveChangesAsync();
 
+
+
                 NotificationHubModel notificationHubModel = new NotificationHubModel()
                 {
                     UserFromId = User.Identity.GetUserId(),
-                    UserToId = attachViewModel.CustomViewModel.UserId,
-                    DescriptionFrom = "Вы купили решение",
-                    DescriptionTo = "Заказчик купил решение",
-                    CustomName = attachViewModel.CustomViewModel.Name,
-                    CustomId = attachViewModel.CustomViewModel.Id,
-                    ExecutorName = attachViewModel.CustomViewModel.Executor.UserName
+                    UserToId = custom.UserId,
+                    DescriptionFrom = "Вы купили решение для заказа \"" + custom.Name.Substring(0, 25) + "...\"",
+                    DescriptionTo = "Заказчик (" + custom.User.UserName + ") купил решение для заказа \"" + custom.Name.Substring(0, 25) + "...\"",
+                    CustomName = custom.Name,
+                    CustomId = custom.Id,
+                    ExecutorName = custom.Executor.UserName
                 };
-
                 SendM(notificationHubModel);
 
                 return Content("<div class='task-tags'><span>Работа куплена </span></div>", "text/html");
@@ -563,6 +584,30 @@ namespace HelpMe.Controllers
                     transaction.DateBlockEnd = transaction.Date.AddDays(transaction.TimeBlock);
 
                     db.Transactions.Add(transaction);
+
+
+
+                    NotificationHubModel notificationHubModel = new NotificationHubModel()
+                    {
+                        UserFromId = User.Identity.GetUserId(),
+                        UserToId = customViewModel.UserId,
+                        DescriptionFrom = "Вы выбрали исполнителя (" + customViewModel.Executor.UserName + ") для заказа \"" + customViewModel.Name.Substring(0, 25) + "\"",
+                        CustomName = customViewModel.Name,
+                        CustomId = customViewModel.Id/*,
+                        ExecutorName = customViewModel.Executor.UserName*/
+                    };
+                    SendMSingle(notificationHubModel);
+
+                    NotificationHubModel notificationHubModel1 = new NotificationHubModel()
+                    {
+                        UserFromId = customViewModel.ExecutorId,
+                        DescriptionFrom = "Заказчик (" + User.Identity.GetUserName() + ") выбрал Вас исполнителем заказа \"" + customViewModel.Name.Substring(0, 25) + "...\"",
+                        CustomName = customViewModel.Name,
+                        CustomId = customViewModel.Id/*,
+                        ExecutorName = customViewModel.Executor.UserName*/
+                    };
+                    SendMSingle(notificationHubModel1);
+
                     await db.SaveChangesAsync();
                 }
                 else
@@ -575,7 +620,7 @@ namespace HelpMe.Controllers
             }
             string uName = db.Users.Where(c => c.Id == customViewModel.UserId).FirstOrDefault().UserName;
             string exName = db.Users.Where(c => c.Id == customViewModel.ExecutorId).FirstOrDefault().UserName;
-           // SendMessage();
+            // SendMessage();
 
             await db.SaveChangesAsync();
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
@@ -610,7 +655,7 @@ namespace HelpMe.Controllers
             };
 
             db.Notifications.Add(notificationFrom);
-          
+
             db.SaveChanges();
 
             context.Clients.User(notif.UserFromId).displayMessage(notif.DescriptionFrom);
@@ -653,7 +698,7 @@ namespace HelpMe.Controllers
             context.Clients.User(notif.UserFromId).displayMessage(notif.DescriptionFrom);
             context.Clients.User(notif.UserToId).displayMessage(notif.DescriptionTo);
         }
-        
+
         [HttpPost]
         public async Task<ActionResult> SendSolution(int? id, HttpPostedFileBase upload)
         {
@@ -822,6 +867,7 @@ namespace HelpMe.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "employee")]
         public async Task<JsonResult> EditComment([Bind(Include = "Id,Name,Description,UserId,OfferPrice, CreationDate, Days,Hours,CustomViewModelId")] CommentViewModel commentViewModel)
         {
             if (ModelState.IsValid)
@@ -851,6 +897,8 @@ namespace HelpMe.Controllers
 
         //[HttpPost]
         //[ValidateAntiForgeryToken]
+        [HttpPost]
+        [Authorize(Roles = "employee")]
         public async Task<bool> DeleteComment(int? id)
         {
             var commentViewModel = await db.Comments.FindAsync(id);
@@ -940,6 +988,8 @@ namespace HelpMe.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "User")]
+        //загрузка заказчиком файлов задания
         public async Task<JsonResult> UploadTestMultiMyAttach(int? id)
         {
             CustomViewModel customViewModel = await db.Customs.Include(c => c.User).Include(a => a.MyAttachments).Include(a => a.Attachments).FirstOrDefaultAsync(c => c.Id == id);
@@ -986,18 +1036,75 @@ namespace HelpMe.Controllers
 
                             attach.UserId = User.Identity.GetUserId();
                             db.MyAttachments.Add(attach);
+
                             // SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
-                            await db.SaveChangesAsync();
+
                             count = customViewModel.MyAttachments.Count;
                         }
                     }
                 }
+
+                //добавляем нотификации заказчику и либо исполнителю (если он есть), либо всем, оставившим предложения
+                //но только в случае, если заказ ещё не закрыт или не отменён
+
+                if (!(customViewModel.Status == CustomStatus.Close || customViewModel.Status == CustomStatus.Cancelled)){
+
+                    NotificationHubModel notificationHubModel = new NotificationHubModel()
+                    {
+                        UserFromId = User.Identity.GetUserId(),
+                        //UserToId = customViewModel.UserId,
+                        DescriptionFrom = "Вы загрузили вложение в заказе \"" + customViewModel.Name.Substring(0, 25) + "\"",
+                        CustomName = customViewModel.Name,
+                        CustomId = customViewModel.Id/*,
+                    ExecutorName = customViewModel.Executor.UserName*/
+                    };
+                    SendMSingle(notificationHubModel);
+
+
+                    //если у заказа нет исполнителя, то рассылаем уведомление всем, оставившим предложение
+                    if (customViewModel.ExecutorId != null)
+                    {
+                        var usersWithOffers = customViewModel.Comments.Select(c => c.User);
+                        if (usersWithOffers != null)
+                        {
+                            foreach (var user in usersWithOffers)
+                            {
+                                NotificationHubModel notificationHubModel1 = new NotificationHubModel()
+                                {
+                                    UserFromId = user.Id,
+                                    DescriptionFrom = "Заказчик (" + customViewModel.User.UserName + ") добавил вложение к заказу \"" + customViewModel.Name.Substring(0, 25) + "\"",
+                                    CustomName = customViewModel.Name,
+                                    CustomId = customViewModel.Id/*,
+                            ExecutorName = customViewModel.Executor.UserName*/
+                                };
+                                SendMSingle(notificationHubModel1);
+                            }
+                        }
+                    }
+                    //иначе - высылаем только исполнителю
+                    else
+                    {
+                        NotificationHubModel notificationHubModel1 = new NotificationHubModel()
+                        {
+                            UserFromId = customViewModel.ExecutorId,
+                            DescriptionFrom = "Заказчик (" + User.Identity.GetUserName() + ") добавил вложение к заказу \"" + customViewModel.Name.Substring(0, 25) + "...\"",
+                            CustomName = customViewModel.Name,
+                            CustomId = customViewModel.Id/*,
+                        ExecutorName = customViewModel.Executor.UserName*/
+                        };
+                        SendMSingle(notificationHubModel1);
+                    }
+                }
+                await db.SaveChangesAsync();
             }
+
             return Json("Файл загружен");
         }
 
 
         [HttpPost]
+        [Authorize(Roles = "employee")]
+        //загрузка исполнителем готовых решений
         public async Task<JsonResult> UploadTestMultiAttach(int? id)
         {
             CustomViewModel customViewModel = await db.Customs.Include(c => c.User).Include(a => a.MainAttachments).Include(a => a.Attachments).FirstOrDefaultAsync(c => c.Id == id);
@@ -1049,13 +1156,12 @@ namespace HelpMe.Controllers
                             {
                                 UserFromId = User.Identity.GetUserId(),
                                 UserToId = customViewModel.UserId,
-                                DescriptionFrom = "Вы загрузили решение к заказу",
+                                DescriptionFrom = "Вы добавили решение для заказа \"" + customViewModel.Name.Substring(0, 25) + "...\"",
                                 CustomName = customViewModel.Name,
                                 CustomId = customViewModel.Id,
                                 ExecutorName = customViewModel.Executor.UserName,
-                                DescriptionTo = "Исполнитель " + customViewModel.Executor.UserName + " загрузил решение"
+                                DescriptionTo = "Исполнитель (" + customViewModel.Executor.UserName + ") добавил решение для заказа \"" + customViewModel.Name.Substring(0, 25) + "...\""
                             };
-
                             SendM(notificationHubModel);
 
                             // SendMessage("Вы загрузили решение", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, "загрузил решение");
@@ -1118,6 +1224,9 @@ namespace HelpMe.Controllers
             return File(path, file_type, file_name);
         }
 
+
+        [HttpPost]
+        [Authorize(Roles = "User")]
         //действие для скачки готового решения заказчиком 
         //осуществляется следующая проверка: остались ли еще решения для скачивания
         public async Task<bool> DownloadMainAttachment(int fileId, int customId)
@@ -1194,7 +1303,7 @@ namespace HelpMe.Controllers
         {
             string userId = User.Identity.GetUserId();
             ViewBag.UnreadingCount = db.Messages.Where(m => m.UserToId == userId && m.Status == MessageStatus.Undreading).Count();
-            
+
             SelectList types = new SelectList(db.CustomTypes, "Id", "Name"); // выбор типа задачи
             ViewBag.Types = types;
             SelectList categories = new SelectList(db.TaskCategories, "Id", "Name"); // выбор типа задачи
@@ -1209,6 +1318,7 @@ namespace HelpMe.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,AttachFilePath,AttachFile,UserId,TypeTaskId,CategoryTaskId,SkillId,TimeBlock,PlagiarismPercentage,EndingDate,Price")] CustomViewModel customViewModel)
         {
             if (ModelState.IsValid)
@@ -1298,6 +1408,9 @@ namespace HelpMe.Controllers
         }
 
         // GET: Custom/Create
+        [HttpPost]
+        [Authorize(Roles = "User")]
+        //подтвердить выполнение заказа
         public async Task<ActionResult> Accept(int? id, [Bind(Include = "Id,Rating,Description,Date,UserId,OwnerId")] Review review)
         {
             if (ModelState.IsValid)
@@ -1360,7 +1473,7 @@ namespace HelpMe.Controllers
                 {
                     user.NegativeThumbs--;
                 }
-                
+
 
                 //если дата заказа была указана, и исполнитель успел в срок, то проставляем в атрибут DoneInTime
                 if (customViewModel.EndingDate != null)
@@ -1371,27 +1484,43 @@ namespace HelpMe.Controllers
                 {
                     customViewModel.DoneInTime = true;
                 }
-                await db.SaveChangesAsync();
+
                 NotificationHubModel notificationHubModel = new NotificationHubModel()
                 {
                     UserFromId = User.Identity.GetUserId(),
                     UserToId = customViewModel.UserId,
-                    DescriptionFrom = "Вы закрыли заказ",
+                    DescriptionFrom = "Вы закрыли заказ \"" + customViewModel.Name.Substring(0, 25) + "...\"",
                     CustomName = customViewModel.Name,
-                    CustomId = customViewModel.Id,
-                    ExecutorName = customViewModel.Executor.UserName
+                    CustomId = customViewModel.Id/*,
+                    ExecutorName = customViewModel.Executor.UserName*/
                 };
-
                 SendMSingle(notificationHubModel);
+
+
+                NotificationHubModel notificationHubModel1 = new NotificationHubModel()
+                {
+                    UserFromId = customViewModel.ExecutorId,
+                    DescriptionFrom = "Заказчик (" + User.Identity.GetUserName() + ") подтвердил выполнение заказа \"" + customViewModel.Name.Substring(0, 25) + "...\"",
+                    CustomName = customViewModel.Name,
+                    CustomId = customViewModel.Id/*,
+                ExecutorName = customViewModel.Executor.UserName*/
+                };
+                SendMSingle(notificationHubModel1);
+
+                await db.SaveChangesAsync();
                 //SendMessage("Вы закрыли заказ", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, customViewModel.User.UserName + "подтвердил выполнение заказа");
                 return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
             }
             return new HttpNotFoundResult("Model of review is not valid!");
         }
 
+
+        [HttpPost]
+        [Authorize(Roles = "User")]
+        //отправка на доработку
         public async Task<ActionResult> Revision(int? id)
         {
-            // optimaize
+            // надо оптимизировать
             CustomViewModel customViewModel = await db.Customs.Include(c => c.Comments)
                                                               .Include(c => c.CategoryTask)
                                                               .Include(c => c.TypeTask)
@@ -1402,24 +1531,39 @@ namespace HelpMe.Controllers
             db.Entry(customViewModel).State = EntityState.Modified;
 
             customViewModel.IsRevision = true;//см. коммент в методе Accept
-
             customViewModel.Status = CustomStatus.Revision; // на доработку
-            await db.SaveChangesAsync();
+
             NotificationHubModel notificationHubModel = new NotificationHubModel()
             {
                 UserFromId = User.Identity.GetUserId(),
                 UserToId = customViewModel.UserId,
-                DescriptionFrom = "Вы отправили заказ на доработку",
+                DescriptionFrom = "Вы отправили на доработку заказ \"" + customViewModel.Name.Substring(0, 25) + "\"",
                 CustomName = customViewModel.Name,
-                CustomId = customViewModel.Id,
-                ExecutorName = customViewModel.Executor.UserName
+                CustomId = customViewModel.Id/*,
+                ExecutorName = customViewModel.Executor.UserName*/
             };
-
             SendMSingle(notificationHubModel);
+
+            NotificationHubModel notificationHubModel1 = new NotificationHubModel()
+            {
+                UserFromId = customViewModel.ExecutorId,
+                DescriptionFrom = "Заказчик (" + User.Identity.GetUserName() + ") отправил на доработку заказ \"" + customViewModel.Name.Substring(0, 25) + "...\"",
+                CustomName = customViewModel.Name,
+                CustomId = customViewModel.Id/*,
+                ExecutorName = customViewModel.Executor.UserName*/
+            };
+            SendMSingle(notificationHubModel1);
+
+            await db.SaveChangesAsync();
             //SendMessage("Вы отправили заказ на доработку", customViewModel.Id, customViewModel.Executor.UserName, customViewModel.User.UserName, customViewModel.User.UserName + "отправил заказ на доработку");
             return RedirectToAction("Details", "Custom", new { id = customViewModel.Id });
         }
 
+
+
+        //отмена заказа или его переоткрытие, если заказ уже отменён
+        [HttpPost]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult> Cancel(int? id)
         {
             var customViewModel = await db.Customs.Include(c => c.Comments).Include(c => c.User).FirstOrDefaultAsync(c => c.Id == id);
@@ -1432,16 +1576,17 @@ namespace HelpMe.Controllers
             if (previousStatus == CustomStatus.Open)
             {
                 customViewModel.Status = CustomStatus.Cancelled; // Отменён
+
+
                 NotificationHubModel notificationHubModel = new NotificationHubModel()
                 {
                     UserFromId = User.Identity.GetUserId(),
                     //UserToId = customViewModel.UserId,
-                    DescriptionFrom = "Вы отменили заказ",
+                    DescriptionFrom = "Вы отменили заказ \"" + customViewModel.Name.Substring(0, 25) + "\"",
                     CustomName = customViewModel.Name,
                     CustomId = customViewModel.Id/*,
                     ExecutorName = customViewModel.Executor.UserName*/
                 };
-
                 SendMSingle(notificationHubModel);
 
                 if (usersWithOffers != null)
@@ -1451,7 +1596,7 @@ namespace HelpMe.Controllers
                         NotificationHubModel notificationHubModel1 = new NotificationHubModel()
                         {
                             UserFromId = user.Id,
-                            DescriptionFrom = "Заказчик " + customViewModel.User.UserName + " отменил заказ",
+                            DescriptionFrom = "Заказчик (" + customViewModel.User.UserName + ") отменил заказ \"" + customViewModel.Name.Substring(0, 25) + "\"",
                             CustomName = customViewModel.Name,
                             CustomId = customViewModel.Id/*,
                             ExecutorName = customViewModel.Executor.UserName*/
@@ -1467,7 +1612,7 @@ namespace HelpMe.Controllers
                 {
                     UserFromId = User.Identity.GetUserId(),
                     //UserToId = customViewModel.UserId,
-                    DescriptionFrom = "Вы переоткрыли заказ",
+                    DescriptionFrom = "Вы переоткрыли заказ \"" + customViewModel.Name.Substring(0, 25) + "\"",
                     CustomName = customViewModel.Name,
                     CustomId = customViewModel.Id/*,
                     ExecutorName = customViewModel.Executor.UserName*/
@@ -1482,7 +1627,7 @@ namespace HelpMe.Controllers
                         NotificationHubModel notificationHubModel1 = new NotificationHubModel()
                         {
                             UserFromId = user.Id,
-                            DescriptionFrom = "Заказчик " + customViewModel.User.UserName + " переоткрыл заказ",
+                            DescriptionFrom = "Заказчик (" + customViewModel.User.UserName + ") переоткрыл заказ \"" + customViewModel.Name.Substring(0, 25) + "\"",
                             CustomName = customViewModel.Name,
                             CustomId = customViewModel.Id/*,
                             ExecutorName = customViewModel.Executor.UserName*/
@@ -1526,18 +1671,19 @@ namespace HelpMe.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult> Edit([Bind(Include = "Id, Name, Description, TypeTaskId, CategoryTaskId, SkillId, UserId, StartDate, EndingDate, ExecutorStartDate, Price")] CustomViewModel customViewModel)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(customViewModel).State = EntityState.Modified;
-                var usersWithOffers = await db.Comments.Include(c=>c.User).Where(c=>c.CustomViewModelId==customViewModel.Id).Select(c=>c.User).ToListAsync();
+                var usersWithOffers = await db.Comments.Include(c => c.User).Where(c => c.CustomViewModelId == customViewModel.Id).Select(c => c.User).ToListAsync();
 
                 NotificationHubModel notificationHubModel = new NotificationHubModel()
                 {
                     UserFromId = User.Identity.GetUserId(),
                     //UserToId = customViewModel.UserId,
-                    DescriptionFrom = "Вы отредактировали заказ",
+                    DescriptionFrom = "Вы отредактировали заказ \"" + customViewModel.Name.Substring(0, 25) + "...\"",
                     CustomName = customViewModel.Name,
                     CustomId = customViewModel.Id/*,
                     ExecutorName = customViewModel.Executor.UserName*/
@@ -1552,7 +1698,7 @@ namespace HelpMe.Controllers
                         NotificationHubModel notificationHubModel1 = new NotificationHubModel()
                         {
                             UserFromId = user.Id,
-                            DescriptionFrom = "Заказчик " + User.Identity.GetUserName() + " редактировал заказ",
+                            DescriptionFrom = "Заказчик (" + User.Identity.GetUserName() + ") отредактировал заказ \"" + customViewModel.Name.Substring(0, 25) + "...\"",
                             CustomName = customViewModel.Name,
                             CustomId = customViewModel.Id/*,
                             ExecutorName = customViewModel.Executor.UserName*/
