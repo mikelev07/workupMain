@@ -421,15 +421,16 @@ namespace HelpMe.Controllers
                         db.Attachments.Add(attach);
 
 
+                        var shortCustomName = MakeShortName(customViewModel.Name, 25);
                         NotificationHubModel notificationHubModel = new NotificationHubModel()
                         {
                             UserFromId = User.Identity.GetUserId(),
                             UserToId = customViewModel.UserId,
-                            DescriptionFrom = "Вы добавили файл доработки для заказа \"" + customViewModel.Name.Substring(0, 25) + "...\"",
+                            DescriptionFrom = "Вы добавили файл доработки для заказа \"" + shortCustomName + "\"",
                             CustomName = customViewModel.Name,
                             CustomId = customViewModel.Id,
                             ExecutorName = customViewModel.Executor.UserName,
-                            DescriptionTo = "Исполнитель (" + customViewModel.Executor.UserName + ") добавил  файл доработки для заказа \"" + customViewModel.Name.Substring(0, 25) + "...\""
+                            DescriptionTo = "Исполнитель (" + customViewModel.Executor.UserName + ") добавил  файл доработки для заказа \"" + shortCustomName + "\""
                         };
                         SendM(notificationHubModel);
 
@@ -441,6 +442,16 @@ namespace HelpMe.Controllers
                 }
             }
             return Json("Файл загружен");
+        }
+
+        private string MakeShortName(string oldName, int desiredLength)
+        {
+            var shortName = oldName;
+            if (shortName.Length > desiredLength && desiredLength>=3)
+            {
+                shortName = shortName.Substring(0, desiredLength - 3) + "...";
+            }
+            return shortName;
         }
 
         public async Task<bool> EnoughMoneyForBuying(int? id)
@@ -513,13 +524,13 @@ namespace HelpMe.Controllers
                 await db.SaveChangesAsync();
 
 
-
+                var shortCustomName = MakeShortName(custom.Name, 25);
                 NotificationHubModel notificationHubModel = new NotificationHubModel()
                 {
                     UserFromId = User.Identity.GetUserId(),
                     UserToId = custom.UserId,
-                    DescriptionFrom = "Вы купили решение для заказа \"" + custom.Name.Substring(0, 25) + "...\"",
-                    DescriptionTo = "Заказчик (" + custom.User.UserName + ") купил решение для заказа \"" + custom.Name.Substring(0, 25) + "...\"",
+                    DescriptionFrom = "Вы купили решение для заказа \"" + shortCustomName + "\"",
+                    DescriptionTo = "Заказчик (" + custom.User.UserName + ") купил решение для заказа \"" + shortCustomName + "\"",
                     CustomName = custom.Name,
                     CustomId = custom.Id,
                     ExecutorName = custom.Executor.UserName
@@ -586,12 +597,12 @@ namespace HelpMe.Controllers
                     db.Transactions.Add(transaction);
 
 
-
+                    var shortCustomName = MakeShortName(customViewModel.Name, 25);
                     NotificationHubModel notificationHubModel = new NotificationHubModel()
                     {
                         UserFromId = User.Identity.GetUserId(),
                         UserToId = customViewModel.UserId,
-                        DescriptionFrom = "Вы выбрали исполнителя (" + customViewModel.Executor.UserName + ") для заказа \"" + customViewModel.Name.Substring(0, 25) + "\"",
+                        DescriptionFrom = "Вы выбрали исполнителя (" + customViewModel.Executor.UserName + ") для заказа \"" + shortCustomName + "\"",
                         CustomName = customViewModel.Name,
                         CustomId = customViewModel.Id/*,
                         ExecutorName = customViewModel.Executor.UserName*/
@@ -601,7 +612,7 @@ namespace HelpMe.Controllers
                     NotificationHubModel notificationHubModel1 = new NotificationHubModel()
                     {
                         UserFromId = customViewModel.ExecutorId,
-                        DescriptionFrom = "Заказчик (" + User.Identity.GetUserName() + ") выбрал Вас исполнителем заказа \"" + customViewModel.Name.Substring(0, 25) + "...\"",
+                        DescriptionFrom = "Заказчик (" + User.Identity.GetUserName() + ") выбрал Вас исполнителем заказа \"" + shortCustomName + "\"",
                         CustomName = customViewModel.Name,
                         CustomId = customViewModel.Id/*,
                         ExecutorName = customViewModel.Executor.UserName*/
@@ -1047,13 +1058,15 @@ namespace HelpMe.Controllers
                 //добавляем нотификации заказчику и либо исполнителю (если он есть), либо всем, оставившим предложения
                 //но только в случае, если заказ ещё не закрыт или не отменён
 
+                var shortCustomName = MakeShortName(customViewModel.Name, 25);
                 if (!(customViewModel.Status == CustomStatus.Close || customViewModel.Status == CustomStatus.Cancelled)){
 
+                    
                     NotificationHubModel notificationHubModel = new NotificationHubModel()
                     {
                         UserFromId = User.Identity.GetUserId(),
                         //UserToId = customViewModel.UserId,
-                        DescriptionFrom = "Вы загрузили вложение в заказе \"" + customViewModel.Name.Substring(0, 25) + "\"",
+                        DescriptionFrom = "Вы загрузили вложение в заказе \"" + shortCustomName + "\"",
                         CustomName = customViewModel.Name,
                         CustomId = customViewModel.Id/*,
                     ExecutorName = customViewModel.Executor.UserName*/
@@ -1072,7 +1085,7 @@ namespace HelpMe.Controllers
                                 NotificationHubModel notificationHubModel1 = new NotificationHubModel()
                                 {
                                     UserFromId = user.Id,
-                                    DescriptionFrom = "Заказчик (" + customViewModel.User.UserName + ") добавил вложение к заказу \"" + customViewModel.Name.Substring(0, 25) + "\"",
+                                    DescriptionFrom = "Заказчик (" + customViewModel.User.UserName + ") добавил вложение к заказу \"" + shortCustomName + "\"",
                                     CustomName = customViewModel.Name,
                                     CustomId = customViewModel.Id/*,
                             ExecutorName = customViewModel.Executor.UserName*/
@@ -1087,7 +1100,7 @@ namespace HelpMe.Controllers
                         NotificationHubModel notificationHubModel1 = new NotificationHubModel()
                         {
                             UserFromId = customViewModel.ExecutorId,
-                            DescriptionFrom = "Заказчик (" + User.Identity.GetUserName() + ") добавил вложение к заказу \"" + customViewModel.Name.Substring(0, 25) + "...\"",
+                            DescriptionFrom = "Заказчик (" + User.Identity.GetUserName() + ") добавил вложение к заказу \"" + shortCustomName + "\"",
                             CustomName = customViewModel.Name,
                             CustomId = customViewModel.Id/*,
                         ExecutorName = customViewModel.Executor.UserName*/
@@ -1152,15 +1165,16 @@ namespace HelpMe.Controllers
                             attach.UserId = User.Identity.GetUserId();
                             db.MainAttachments.Add(attach);
 
+                            var shortCustomName = MakeShortName(customViewModel.Name, 25);
                             NotificationHubModel notificationHubModel = new NotificationHubModel()
                             {
                                 UserFromId = User.Identity.GetUserId(),
                                 UserToId = customViewModel.UserId,
-                                DescriptionFrom = "Вы добавили решение для заказа \"" + customViewModel.Name.Substring(0, 25) + "...\"",
+                                DescriptionFrom = "Вы добавили решение для заказа \"" + shortCustomName + "\"",
                                 CustomName = customViewModel.Name,
                                 CustomId = customViewModel.Id,
                                 ExecutorName = customViewModel.Executor.UserName,
-                                DescriptionTo = "Исполнитель (" + customViewModel.Executor.UserName + ") добавил решение для заказа \"" + customViewModel.Name.Substring(0, 25) + "...\""
+                                DescriptionTo = "Исполнитель (" + customViewModel.Executor.UserName + ") добавил решение для заказа \"" + shortCustomName + "\""
                             };
                             SendM(notificationHubModel);
 
@@ -1485,11 +1499,12 @@ namespace HelpMe.Controllers
                     customViewModel.DoneInTime = true;
                 }
 
+                var shortCustomName = MakeShortName(customViewModel.Name, 25);
                 NotificationHubModel notificationHubModel = new NotificationHubModel()
                 {
                     UserFromId = User.Identity.GetUserId(),
                     UserToId = customViewModel.UserId,
-                    DescriptionFrom = "Вы закрыли заказ \"" + customViewModel.Name.Substring(0, 25) + "...\"",
+                    DescriptionFrom = "Вы закрыли заказ \"" + shortCustomName + "\"",
                     CustomName = customViewModel.Name,
                     CustomId = customViewModel.Id/*,
                     ExecutorName = customViewModel.Executor.UserName*/
@@ -1500,7 +1515,7 @@ namespace HelpMe.Controllers
                 NotificationHubModel notificationHubModel1 = new NotificationHubModel()
                 {
                     UserFromId = customViewModel.ExecutorId,
-                    DescriptionFrom = "Заказчик (" + User.Identity.GetUserName() + ") подтвердил выполнение заказа \"" + customViewModel.Name.Substring(0, 25) + "...\"",
+                    DescriptionFrom = "Заказчик (" + User.Identity.GetUserName() + ") подтвердил выполнение заказа \"" + shortCustomName + "\"",
                     CustomName = customViewModel.Name,
                     CustomId = customViewModel.Id/*,
                 ExecutorName = customViewModel.Executor.UserName*/
@@ -1533,11 +1548,12 @@ namespace HelpMe.Controllers
             customViewModel.IsRevision = true;//см. коммент в методе Accept
             customViewModel.Status = CustomStatus.Revision; // на доработку
 
+            var shortCustomName = MakeShortName(customViewModel.Name, 25);
             NotificationHubModel notificationHubModel = new NotificationHubModel()
             {
                 UserFromId = User.Identity.GetUserId(),
                 UserToId = customViewModel.UserId,
-                DescriptionFrom = "Вы отправили на доработку заказ \"" + customViewModel.Name.Substring(0, 25) + "\"",
+                DescriptionFrom = "Вы отправили на доработку заказ \"" + shortCustomName + "\"",
                 CustomName = customViewModel.Name,
                 CustomId = customViewModel.Id/*,
                 ExecutorName = customViewModel.Executor.UserName*/
@@ -1547,7 +1563,7 @@ namespace HelpMe.Controllers
             NotificationHubModel notificationHubModel1 = new NotificationHubModel()
             {
                 UserFromId = customViewModel.ExecutorId,
-                DescriptionFrom = "Заказчик (" + User.Identity.GetUserName() + ") отправил на доработку заказ \"" + customViewModel.Name.Substring(0, 25) + "...\"",
+                DescriptionFrom = "Заказчик (" + User.Identity.GetUserName() + ") отправил на доработку заказ \"" + shortCustomName + "\"",
                 CustomName = customViewModel.Name,
                 CustomId = customViewModel.Id/*,
                 ExecutorName = customViewModel.Executor.UserName*/
@@ -1573,16 +1589,17 @@ namespace HelpMe.Controllers
 
             //Если заказ был открыт, то отменяем; если он был отменён - возвращаем
             var previousStatus = customViewModel.Status;
+            var shortCustomName = MakeShortName(customViewModel.Name, 25);
             if (previousStatus == CustomStatus.Open)
             {
                 customViewModel.Status = CustomStatus.Cancelled; // Отменён
 
-
+                
                 NotificationHubModel notificationHubModel = new NotificationHubModel()
                 {
                     UserFromId = User.Identity.GetUserId(),
                     //UserToId = customViewModel.UserId,
-                    DescriptionFrom = "Вы отменили заказ \"" + customViewModel.Name.Substring(0, 25) + "\"",
+                    DescriptionFrom = "Вы отменили заказ \"" + shortCustomName + "\"",
                     CustomName = customViewModel.Name,
                     CustomId = customViewModel.Id/*,
                     ExecutorName = customViewModel.Executor.UserName*/
@@ -1596,7 +1613,7 @@ namespace HelpMe.Controllers
                         NotificationHubModel notificationHubModel1 = new NotificationHubModel()
                         {
                             UserFromId = user.Id,
-                            DescriptionFrom = "Заказчик (" + customViewModel.User.UserName + ") отменил заказ \"" + customViewModel.Name.Substring(0, 25) + "\"",
+                            DescriptionFrom = "Заказчик (" + customViewModel.User.UserName + ") отменил заказ \"" + shortCustomName + "\"",
                             CustomName = customViewModel.Name,
                             CustomId = customViewModel.Id/*,
                             ExecutorName = customViewModel.Executor.UserName*/
@@ -1612,7 +1629,7 @@ namespace HelpMe.Controllers
                 {
                     UserFromId = User.Identity.GetUserId(),
                     //UserToId = customViewModel.UserId,
-                    DescriptionFrom = "Вы переоткрыли заказ \"" + customViewModel.Name.Substring(0, 25) + "\"",
+                    DescriptionFrom = "Вы переоткрыли заказ \"" + shortCustomName + "\"",
                     CustomName = customViewModel.Name,
                     CustomId = customViewModel.Id/*,
                     ExecutorName = customViewModel.Executor.UserName*/
@@ -1627,7 +1644,7 @@ namespace HelpMe.Controllers
                         NotificationHubModel notificationHubModel1 = new NotificationHubModel()
                         {
                             UserFromId = user.Id,
-                            DescriptionFrom = "Заказчик (" + customViewModel.User.UserName + ") переоткрыл заказ \"" + customViewModel.Name.Substring(0, 25) + "\"",
+                            DescriptionFrom = "Заказчик (" + customViewModel.User.UserName + ") переоткрыл заказ \"" + shortCustomName + "\"",
                             CustomName = customViewModel.Name,
                             CustomId = customViewModel.Id/*,
                             ExecutorName = customViewModel.Executor.UserName*/
@@ -1678,12 +1695,12 @@ namespace HelpMe.Controllers
             {
                 db.Entry(customViewModel).State = EntityState.Modified;
                 var usersWithOffers = await db.Comments.Include(c => c.User).Where(c => c.CustomViewModelId == customViewModel.Id).Select(c => c.User).ToListAsync();
-
+                var shortCustomName = MakeShortName(customViewModel.Name, 25);
                 NotificationHubModel notificationHubModel = new NotificationHubModel()
                 {
                     UserFromId = User.Identity.GetUserId(),
                     //UserToId = customViewModel.UserId,
-                    DescriptionFrom = "Вы отредактировали заказ \"" + customViewModel.Name.Substring(0, 25) + "...\"",
+                    DescriptionFrom = "Вы отредактировали заказ \"" + shortCustomName + "\"",
                     CustomName = customViewModel.Name,
                     CustomId = customViewModel.Id/*,
                     ExecutorName = customViewModel.Executor.UserName*/
@@ -1698,7 +1715,7 @@ namespace HelpMe.Controllers
                         NotificationHubModel notificationHubModel1 = new NotificationHubModel()
                         {
                             UserFromId = user.Id,
-                            DescriptionFrom = "Заказчик (" + User.Identity.GetUserName() + ") отредактировал заказ \"" + customViewModel.Name.Substring(0, 25) + "...\"",
+                            DescriptionFrom = "Заказчик (" + User.Identity.GetUserName() + ") отредактировал заказ \"" + shortCustomName + "\"",
                             CustomName = customViewModel.Name,
                             CustomId = customViewModel.Id/*,
                             ExecutorName = customViewModel.Executor.UserName*/
