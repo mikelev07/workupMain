@@ -1530,7 +1530,6 @@ namespace HelpMe.Controllers
         }
 
 
-        [HttpPost]
         [Authorize(Roles = "User")]
         //отправка на доработку
         public async Task<ActionResult> Revision(int? id)
@@ -1578,7 +1577,6 @@ namespace HelpMe.Controllers
 
 
         //отмена заказа или его переоткрытие, если заказ уже отменён
-        [HttpPost]
         [Authorize(Roles = "User")]
         public async Task<ActionResult> Cancel(int? id)
         {
