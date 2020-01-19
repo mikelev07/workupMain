@@ -562,8 +562,8 @@
 
                     $('#notific').hide();
                     $('.ncount').hide();
-                    $('#notifContent').empty();
-                    // $('.ncont').empty();
+                    $('.ncont').empty();
+                    // $('#notifContent').empty();
 
                     $('.mark-notes-as-read').prop('disabled', true);
                     if (response.length == 0) {
@@ -652,7 +652,7 @@
                 var unreadNotificationsId = [];
 
                 $('#notifContent .notifications-not-read').each(function () {
-                    countOfUnreadNotifications--;
+                    countOfUnreadNotifications -= 0.5;
                     unreadNotificationsId.push($(this).attr('data-notification-id'));
                 });
 

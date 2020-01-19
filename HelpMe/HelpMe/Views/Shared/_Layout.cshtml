@@ -105,10 +105,10 @@
 
 
                                     @*//для отладки нужно было
-                                            //позволяет быстро сделать все уведомления непрочитанными
+                                            //позволяет быстро сделать все уведомления непрочитанными*@
                                             <div>
                                             <button id="TEST" type="button">TEST!!!</button>
-                                        </div>*@
+                                        </div>
 
                                     <div class="header-notifications-trigger">
                                         <a class="notCl" href="#"><i class="icon-feather-bell"></i></a>
@@ -509,8 +509,8 @@
 
                     $('#notific').hide();
                     $('.ncount').hide();
-                    $('#notifContent').empty();
-                    // $('.ncont').empty();
+                    $('.ncont').empty();
+                    // $('#notific').empty();
 
                     $('.mark-notes-as-read').prop('disabled', true);
                     if (response.length == 0) {
@@ -572,7 +572,7 @@
 
         //для отладки нужно было
         //позволяет быстро сделать все уведомления непрочитанными
-        @*$('#TEST').click(function () {
+        $('#TEST').click(function () {
             $.ajax({
                 type: 'GET',
                 url: '/Home/TestMakeAllUnread',
@@ -586,7 +586,7 @@
                     console.log(error);
                 }
             });
-        });*@
+        });
 
         //действие галочки в шапке в дропдауне уведомлений
         $('.mark-notes-as-read').click(function () {
@@ -599,7 +599,7 @@
                 var unreadNotificationsId = [];
 
                 $('#notifContent .notifications-not-read').each(function () {
-                    countOfUnreadNotifications--;
+                    countOfUnreadNotifications -= 0.5;
                     unreadNotificationsId.push($(this).attr('data-notification-id'));
                 });
 
