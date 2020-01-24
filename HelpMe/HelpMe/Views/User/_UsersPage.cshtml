@@ -60,9 +60,13 @@
                             <div class="input-with-icon-left" title="Ваш никнейм" data-tippy-placement="bottom">
 
                             </div>*@
-                        @foreach (var tag in i.TaskCategories.Take(1))
+                        @if (i.Skills.Count != 0)
                         {
-                            <span title="+ 7 дисциплин">@tag.Name</span>
+                            foreach (var tag in i.Skills.Take(1))
+                            {
+
+                                <span title="+ @i.Skills.Count предметов">@tag.Name</span>
+                            }
                         }
                     </div></span>
                     <div class="freelancer-rating">

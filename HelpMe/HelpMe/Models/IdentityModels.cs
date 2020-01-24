@@ -29,7 +29,6 @@ namespace HelpMe.Models
         public ICollection<TaskCategory> TaskCategories { get; set; }
         public ICollection<Skill> Skills { get; set; }
         public ICollection<CustomViewModel> Customs { get; set; }
-
         public ICollection<Review> Reviews { get; set; }
     }
 

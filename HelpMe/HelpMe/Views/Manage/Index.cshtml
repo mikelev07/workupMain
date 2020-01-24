@@ -21,267 +21,298 @@
         <div class="dashboard-headline">
             <h3>Настройки</h3>
 
-            <!-- Breadcrumbs -->
-            <nav id="breadcrumbs" class="dark">
-                <ul>
-                    <li><a href="#">Главная</a></li>
-                    <li><a href="#">Дашборд</a></li>
-                    <li>Настройка</li>
-                </ul>
-            </nav>
+            @* <!-- Breadcrumbs -->
+                <nav id="breadcrumbs" class="dark">
+                    <ul>
+                        <li><a href="#">Главная</a></li>
+                        <li><a href="#">Дашборд</a></li>
+                        <li>Настройка</li>
+                    </ul>
+                </nav>
+              *@
         </div>
 
-
-        <!-- Row -->
         <div class="row">
 
-            <!-- Dashboard Box -->
-            <div class="col-xl-12">
-                <div class="dashboard-box margin-top-0">
+            <div class="col-xl-12" >
 
-                    <!-- Headline -->
-                    <div class="headline">
-                        <h3><i class="icon-material-outline-account-circle"></i> Мой аккаунт</h3>
-                    </div>
-                    @using (Html.BeginForm("Index", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                    {
-                <div class="content with-padding padding-bottom-0">
-                    <div class="row">
+                <div class="accordion js-accordion">
 
-                        @Html.AntiForgeryToken()
-                        <div class="col-auto">
-                            <div class="avatar-wrapper" data-tippy-placement="bottom" title="Изменить аватар">
-                                <img class="profile-pic" src="@Url.Content(ViewBag.Image)" alt="" />
-                                <div class="upload-button"></div>
-                                <input class="file-upload" type="file" name="ImageFile" id="ImageFile" />
-                            </div>
+                    <div class="accordion__item js-accordion-item active">
+                        <div style="color:#333; font-size: 18px; background-color:white;  border-radius: 4px; padding: 20px 35px" class="accordion-header js-accordion-header">
+                            <i class="icon-material-outline-info"></i> Общая информация
                         </div>
 
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-xl-6">
-                                    <div class="submit-field">
-                                        <h5>Ник</h5>
-                                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Name } })
-                                    </div>
-                                </div>
+                        <div class="accordion-body js-accordion-body">
 
-                                <div class="col-xl-6">
-                                    <div class="submit-field">
-                                        <h5>Телефон</h5>
-                                        @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { id = "user-phone", type = "tel", @Value = "", @class = "with-border", @placeholder = Model.PhoneNumber } })
-                                    </div>
-                                </div>
+                            <div class="accordion-body__contents">
+                                <div class="margin-top-0">
 
-                                @*<div class="col-xl-6">
-                    <div class="submit-field">
-                        <h5>Возраст</h5>
-                        @Html.EditorFor(model => model.Age, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Age } })
-                    </div>
-                </div>*@
+                                    @using (Html.BeginForm("Index", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                    {
+                                        <div class="content with-padding padding-bottom-0">
+                                            <div class="row">
 
-                                <div class="col-xl-6">
-                                    <!-- Account Type -->
-                                    <div class="submit-field">
-                                        <h5>Тип аккаунта</h5>
-                                        <div class="account-type">
-                                            @if (User.IsInRole("employee"))
-                                            {
-                                                <div>
-                                                    <input type="radio" name="account-type-radio" id="freelancer-radio-1" class="account-type-radio" checked />
-                                                    <label for="freelancer-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-school"></i> Исполнитель</label>
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                if (User.IsInRole("User"))
-                                                {
-                                                    <div>
-                                                        <input type="radio" name="account-type-radio" id="employee-radio-1" class="account-type-radio" checked />
-                                                        <label for="employee-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-business-center"></i> Заказчик</label>
+                                                @Html.AntiForgeryToken()
+                                                <div class="col-auto">
+                                                    <div class="avatar-wrapper" data-tippy-placement="bottom" title="Изменить аватар">
+                                                        <img class="profile-pic" src="@Url.Content(ViewBag.Image)" alt="" />
+                                                        <div class="upload-button"></div>
+                                                        <input class="file-upload" type="file" name="ImageFile" id="ImageFile" />
                                                     </div>
-                                                }
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
+                                                </div>
 
-                                <div class="col-xl-6">
-                                    <div class="submit-field">
-                                        <h5>Почта</h5>
-                                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Email } })
-                                    </div>
-                                </div>
+                                                <div class="col">
+                                                    <div class="row">
+                                                        <div class="col-xl-6">
 
-                            </div>
-                        </div>
-                        <div class="col-xl-12">
-                            <input type="submit" value="Сохранить изменения" class="button ripple-effect big margin-top-30" />
-                        </div>
-                    </div>
-                  
-                </div>
-                    }
-                </div>
-            </div>
-
-            <div class="col-xl-12">
-                <div id="test1" class="dashboard-box">
-
-                    <!-- Headline -->
-                    <div class="headline">
-                        <h3><i class="icon-material-outline-lock"></i> Пароль</h3>
-                    </div>
-                    @using (Html.BeginForm("ChangePassword", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <div class="content with-padding">
-                            <div class="row">
-                                <div class="col-xl-4">
-                                    <div class="submit-field">
-                                        <h5>Текущий пароль</h5>
-                                        <input name="OldPassword" type="password" class="with-border">
-                                    </div>
-                                </div>
-
-                                <div class="col-xl-4">
-                                    <div class="submit-field">
-                                        <h5>Новый пароль</h5>
-                                        <input name="NewPassword" type="password" class="with-border">
-                                    </div>
-                                </div>
-
-                                <div class="col-xl-4">
-                                    <div class="submit-field">
-                                        <h5>Повторить пароль</h5>
-                                        <input name="ConfirmPassword" type="password" class="with-border">
-                                    </div>
-                                </div>
-                                @*
-                                    <div class="col-xl-12">
-                                        <div class="checkbox">
-                                            <input type="checkbox" id="two-step" checked>
-                                            <label for="two-step"><span class="checkbox-icon"></span> Включить двухфакторную авторизацию</label>
-                                        </div>
-                                    </div>
-                                *@
-                            </div>
-                            <div class="col-xl-12">
-                                <input type="submit" value="Сохранить изменения" class="button ripple-effect big margin-top-30" />
-                            </div>
-                        </div>
-                    }
-
-                </div>
-            </div>
-
-            <div class="col-xl-12">
-                <div class="dashboard-box">
-                    <!-- Headline -->
-                    <div class="headline">
-                        <h3><i class="icon-material-outline-description"></i> Расскажите о себе</h3>
-                    </div>
-
-                    <div class="submit-field">
-                        <textarea cols="30" rows="5" class="with-border" placeholder="Расскажите подробно о себе...">@Model.Description</textarea>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Dashboard Box -->
-            <div class="col-xl-12">
-                <div class="dashboard-box">
-
-                    <!-- Headline -->
-                    <div class="headline">
-                        <h3><i class="icon-material-outline-face"></i> Мой профиль</h3>
-                    </div>
-
-                    <div class="content">
-                        <ul class="fields-ul">
-                            <li>
-                                <div class="row">
-
-                                    <div class="col-xl-6">
-                                        <div class="submit-field">
-                                            <h5>Дисциплины</h5>
-
-
-                                            <a href="#small-dialog" class="apply-now-button popup-with-zoom-anim margin-bottom-50">Выбрать специализацию <i class="icon-material-outline-arrow-right-alt"></i></a>
-
-                                            <br />
-                                            <div style="margin-top:-100px;" id="myDisp">
-                                                @foreach (var i in Model.MyTaskCategories)
-                                                {
-                                                    <div style='margin-top:55px' id="@i.Id-disp-detail">
-                                                        <div class='headerForDisp'>@i.Name</div>
-                                                        <div style="height:auto" class='keywords-list'>
-                                                            @foreach (var b in i.Skills.Where(m => ViewBag.SendIds.Contains(m.Id)))
-                                                            {
-                                                                <span id="lab-@b.Id" class='keyword'>
-                                                                    <span class='keyword-remove'></span>
-                                                                    <span class='keyword-text'>@b.Name</span>
-                                                                </span>
-                                                            }
+                                                            <div class="submit-field">
+                                                                <h5>Никнэйм</h5>
+                                                                @*   <a style="display: inline;" href="#" id="username" data-type="text" data-pk="1" data-title="Enter username" class="editable editable-click">@Model.Name</a>*@
+                                                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Name } })
+                                                            </div>
                                                         </div>
-                                                       
+
+                                                        <div class="col-xl-6">
+
+                                                            <div class="submit-field">
+                                                                <h5>Телефон</h5>
+                                                                @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { id = "user-phone", type = "tel", @Value = "", @class = "with-border", @placeholder = Model.PhoneNumber } })
+                                                            </div>
+                                                        </div>
+
+                                                        @*<div class="col-xl-6">
+                                                    <div class="submit-field">
+                                                        <h5>Возраст</h5>
+                                                        @Html.EditorFor(model => model.Age, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Age } })
                                                     </div>
-                                                   
-                                                }
+                                                </div>*@
+
+                                                        <div class="col-xl-6">
+                                                            <!-- Account Type -->
+                                                            <div class="submit-field">
+                                                                <h5>Тип аккаунта</h5>
+                                                                <div class="account-type">
+                                                                    @if (User.IsInRole("employee"))
+                                                                    {
+                                                                        <div>
+                                                                            <input type="radio" name="account-type-radio" id="freelancer-radio-1" class="account-type-radio" checked />
+                                                                            <label for="freelancer-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-school"></i> Исполнитель</label>
+                                                                        </div>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (User.IsInRole("User"))
+                                                                        {
+                                                                            <div>
+                                                                                <input type="radio" name="account-type-radio" id="employee-radio-1" class="account-type-radio" checked />
+                                                                                <label for="employee-radio-1" class="ripple-effect-dark"><i class="icon-material-outline-business-center"></i> Заказчик</label>
+                                                                            </div>
+                                                                        }
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xl-6">
+                                                            <div class="submit-field">
+                                                                <h5>Почта</h5>
+                                                                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @Value = "", @class = "with-border", @placeholder = Model.Email } })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-12">
+                                                            <div class="submit-field">
+                                                                <textarea value="@Model.Description" id="Description" name="Description" cols="30" rows="5" class="with-border" placeholder="Расскажите подробно о себе...">@Model.Description</textarea>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
 
                                             </div>
-
-
-                                            <br />
-                                        </div>
-                                    </div>
-
-                                    <div style="margin-top: 10px;" class="col-xl-12">
-                                        <div class="submit-field">
-                                            <h5>Портфолио <span style="display: inline-block;font-weight: 700;height: 19px;width: 19px;line-height: 19px;text-align: center;color: #fff;font-size: 11px;background-color: #66676b;border-radius: 50%;position: relative;background-color: #28b661; margin: 0 0 0 4px;" class="nav-tag-custom" id="PortfolioAttaches">@Model.PortfoliosCount</span></h5>
-                                            <form method="post" action="/Manage/UploadPortfolioMultiAttach/?name=@User.Identity.Name" enctype="multipart/form-data" novalidate="" class="box has-advanced-upload">
-                                                <div class="box__input">
-                                                    <svg class="box__icon" xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43"><path d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z"></path></svg>
-
-                                                    <div style="justify-content:center" class="uploadButton">
-                                                        <input class="uploadButton-input box__file" type="file" id="file" name="upload" data-multiple-caption="{count} файлов выбрано" multiple="multiple" /><br />
-                                                        <label id="textLab" class="uploadButton-button ripple-effect" for="file">Прикрепить портфолио</label><span style="margin-left:15px;margin-top:6px; font-size:18px" class="box__dragndrop"> или перетащите файлы сюда</span>.
-                                                    </div>
-                                                    <button type="submit" class="box__button">Загрузить</button>
-                                                </div>
-                                                <div style="margin-bottom:40px" class="box__uploading"><p>Загружаем портфолио</p><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>
-                                                <div class="box__success">Успешно! <a href="//?" class="box__restart" role="button">Загрузить еще?</a></div>
-                                                <div class="box__error">Ошибка загрузки! <span></span>. <a href="//?" class="box__restart" role="button">Попробовать снова!</a></div>
-                                                <input type="hidden" name="ajax" value="1">
-                                            </form>
-                                            <br />
-                                            <!-- Attachments -->
-                                            <div class="col-xl-6">
-                                                <div id="Portfolio" class="attachments-container margin-top-0 margin-bottom-0">
-
-                                                    <div class="attachment-box ripple-effect">
-                                                        <span>Cover Letter</span>
-                                                        <i>PDF</i>
-                                                        <button class="remove-attachment" data-tippy-placement="top" title="Remove"></button>
-                                                    </div>
-
-                                                </div>
+                                            <div class="col-xl-12">
+                                                <input type="submit" value="Сохранить изменения" class="button ripple-effect big margin-top-30" />
                                             </div>
-                                            <div class="clearfix"></div>
-
-
                                         </div>
-                                    </div>
+                                    }
                                 </div>
-                            </li>
-                        </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <br />
+            </div>
+          
+            <div class="col-xl-12" style="margin-bottom:20px">
+
+                <div class="accordion js-accordion">
+
+                    <div class="accordion__item js-accordion-item active">
+                        <div style="color:#333; font-size: 18px; background-color:white;  border-radius: 4px; padding: 20px 35px" class="accordion-header js-accordion-header">
+                            <i class="icon-material-outline-lock"></i> Изменение пароля
+                        </div>
+
+                        <div class="accordion-body js-accordion-body">
+
+                            <div class="accordion-body__contents">
+                                <div id="test1" >
+
+                                    @using (Html.BeginForm("ChangePassword", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <div class="content with-padding">
+                                            <div class="row">
+                                                <div class="col-xl-4">
+                                                    <div class="submit-field">
+                                                        <h5>Текущий пароль</h5>
+                                                        <input name="OldPassword" type="password" class="with-border">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xl-4">
+                                                    <div class="submit-field">
+                                                        <h5>Новый пароль</h5>
+                                                        <input name="NewPassword" type="password" class="with-border">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xl-4">
+                                                    <div class="submit-field">
+                                                        <h5>Повторить пароль</h5>
+                                                        <input name="ConfirmPassword" type="password" class="with-border">
+                                                    </div>
+                                                </div>
+                                                @*
+                        <div class="col-xl-12">
+                            <div class="checkbox">
+                                <input type="checkbox" id="two-step" checked>
+                                <label for="two-step"><span class="checkbox-icon"></span> Включить двухфакторную авторизацию</label>
+                            </div>
+                        </div>
+                                                *@
+                                            </div>
+                                            <div class="col-xl-12">
+                                                <input type="submit" value="Сохранить изменения" class="button ripple-effect big margin-top-30" />
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- Accordion Body / End -->
+                    </div>
+                </div>
+
             </div>
 
+            <div class="col-xl-12" style="margin-bottom:20px">
+
+                <div class="accordion js-accordion">
+
+                    <div class="accordion__item js-accordion-item active">
+                        <div style="color:#333; font-size: 18px;  background-color: white; border-radius: 4px; padding: 20px 35px" class="accordion-header js-accordion-header">
+                            <i class="icon-material-outline-book"></i> Мои дисциплины
+                        </div>
+
+                        <div class="accordion-body js-accordion-body">
+
+                            <div class="accordion-body__contents">
+                                <div class="">
+
+                                    <div class="content">
+                                        <ul style="border-bottom:none" class="fields-ul">
+                                            <li>
+                                                <div class="row">
+
+                                                    <div class="col-xl-6">
+                                                        <div class="submit-field">
+                                                            <h5>Дисциплины</h5>
+                                                            <a href="#small-dialog" class="apply-now-button popup-with-zoom-anim margin-bottom-50">Выбрать специализацию <i class="icon-material-outline-arrow-right-alt"></i></a>
+
+                                                            <br />
+                                                            <div style="margin-top:-100px;" id="myDisp">
+                                                                @foreach (var i in Model.MyTaskCategories)
+                                                                {
+                                                                    <div style='margin-top:55px' id="@i.Id-disp-detail">
+                                                                        <div class='headerForDisp'>@i.Name</div>
+                                                                        <div style="height:auto" class='keywords-list'>
+                                                                            @foreach (var b in i.Skills.Where(m => ViewBag.SendIds.Contains(m.Id)))
+                                                                            {
+                                                                                <span id="lab-@b.Id" class='keyword'>
+                                                                                    <span class='keyword-remove'></span>
+                                                                                    <span class='keyword-text'>@b.Name</span>
+                                                                                </span>
+                                                                            }
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                }
+
+                                                            </div>
 
 
+                                                            <br />
+                                                        </div>
+                                                    </div>
+
+                                                    @*
+                            <div style="margin-top: 10px;" class="col-xl-12">
+                                <div class="submit-field">
+                                    <h5>Портфолио <span style="display: inline-block;font-weight: 700;height: 19px;width: 19px;line-height: 19px;text-align: center;color: #fff;font-size: 11px;background-color: #66676b;border-radius: 50%;position: relative;background-color: #28b661; margin: 0 0 0 4px;" class="nav-tag-custom" id="PortfolioAttaches">@Model.PortfoliosCount</span></h5>
+                                    <form method="post" action="/Manage/UploadPortfolioMultiAttach/?name=@User.Identity.Name" enctype="multipart/form-data" novalidate="" class="box has-advanced-upload">
+                                        <div class="box__input">
+                                            <svg class="box__icon" xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43"><path d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z"></path></svg>
+
+                                            <div style="justify-content:center" class="uploadButton">
+                                                <input class="uploadButton-input box__file" type="file" id="file" name="upload" data-multiple-caption="{count} файлов выбрано" multiple="multiple" /><br />
+                                                <label id="textLab" class="uploadButton-button ripple-effect" for="file">Прикрепить портфолио</label><span style="margin-left:15px;margin-top:6px; font-size:18px" class="box__dragndrop"> или перетащите файлы сюда</span>.
+                                            </div>
+                                            <button type="submit" class="box__button">Загрузить</button>
+                                        </div>
+                                        <div style="margin-bottom:40px" class="box__uploading"><p>Загружаем портфолио</p><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>
+                                        <div class="box__success">Успешно! <a href="//?" class="box__restart" role="button">Загрузить еще?</a></div>
+                                        <div class="box__error">Ошибка загрузки! <span></span>. <a href="//?" class="box__restart" role="button">Попробовать снова!</a></div>
+                                        <input type="hidden" name="ajax" value="1">
+                                    </form>
+                                    <br />
+                                    <!-- Attachments -->
+                                    <div class="col-xl-6">
+                                        <div id="Portfolio" class="attachments-container margin-top-0 margin-bottom-0">
+
+                                            <div class="attachment-box ripple-effect">
+                                                <span>Cover Letter</span>
+                                                <i>PDF</i>
+                                                <button class="remove-attachment" data-tippy-placement="top" title="Remove"></button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+
+
+                                </div>
+                            </div>
+                                                    *@
+
+
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <!-- Accordion Body / End -->
+                    </div>
+                </div>
+
+            </div>
 
         </div>
 
@@ -378,7 +409,47 @@
 @section Scripts {
     <script>
 
+
         'use strict';
+          //editables 
+        $('#username').editable({
+               url: '/post',
+               type: 'text',
+               pk: 1,
+               name: 'username',
+               title: 'Enter username'
+        });
+
+        $(document).on('change', '#ImageFile', function () {
+
+              var formData = new FormData();
+              var totalFiles = document.getElementById("ImageFile").files.length;
+
+              for (var i = 0; i < totalFiles; i++) {
+                var file = document.getElementById("ImageFile").files[i];
+                formData.append("ImageFile", file);
+                
+              }
+
+              $.ajax({
+                type: 'POST',
+                url: '/Manage/ChangeAvatar',
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                      Snackbar.show({
+                            text: 'Аватар успешно изменен!'
+                        });
+                },
+                error: function (error) {
+                    alert("errror");
+                }
+              });
+                
+        });
+
 
         $("#user-phone").inputmask("+7 (999) 99-99-999");
 
@@ -639,7 +710,7 @@
 
             }
 
-           keywordsList = $("#"+tabId + " .keywords-list");
+            keywordsList = $("#"+tabId + " .keywords-list");
             var $newKeyword = $("<span id='" + i + "' class='keyword'><span class='keyword-remove'></span><span class='keyword-text'>" + str + "</span></span>");
             keywordsList.append($newKeyword).trigger('resizeContainer');
         }
@@ -674,12 +745,12 @@
                     }
                 });
 
-              $("#"+idCheck).prop("checked", false);
+              $("#" + idCheck).prop("checked", false);
 
               keywordsList.css({ 'height': 'auto' }).height();
 
-              if ($('#' + listId +' .' + keyListName).children().length == 1) {
-                  $('#'+listId).remove();
+              if ($('#' + listId + ' .' + keyListName).children().length == 1 || $('#' + listId + ' .' + keyListName).children().length == 0) {
+                  $('#' + listId).remove();
               }
 
            });

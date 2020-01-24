@@ -1322,7 +1322,8 @@ namespace HelpMe.Controllers
             ViewBag.Types = types;
             SelectList categories = new SelectList(db.TaskCategories, "Id", "Name"); // выбор типа задачи
             ViewBag.Categories = categories;
-            ViewBag.Tasks = new SelectList(db.TaskCategories, "Id", "Name");
+            SelectList cattypes = new SelectList(db.TaskCategories, "Id", "Name");
+            ViewBag.Tasks = cattypes;
             return View();
         }
 

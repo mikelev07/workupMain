@@ -99,12 +99,12 @@ namespace HelpMe.Controllers
 
             if (!String.IsNullOrEmpty(name))
             {
-                users = (users ?? db.Users.Where(u=>u.Roles.Any(r=>r.RoleId== "b7da93e6-5276-4947-8406-bd5e2a60983c"))).Where(b => b.UserName.StartsWith(name));
+                users = (users ?? db.Users.Include(c=>c.Skills).Where(u=>u.Roles.Any(r=>r.RoleId== "b7da93e6-5276-4947-8406-bd5e2a60983c"))).Where(b => b.UserName.StartsWith(name));
                 //worksUsersCount = users.Count();
             }
             if (taskId != 0 && taskId != null)
             {
-                users = (users ?? db.Users.Where(u => u.Roles.Any(r => r.RoleId == "b7da93e6-5276-4947-8406-bd5e2a60983c"))).Where(m => m.TaskCategories.Any(b => b.Id == taskId));
+                users = (users ?? db.Users.Include(c => c.Skills).Where(u => u.Roles.Any(r => r.RoleId == "b7da93e6-5276-4947-8406-bd5e2a60983c"))).Where(m => m.TaskCategories.Any(b => b.Id == taskId));
                 //worksUsersCount = users.Count();
 
                 if (skillId != 0 && skillId != null)
@@ -116,15 +116,15 @@ namespace HelpMe.Controllers
 
             if(isOnline==true)
             {
-                users = (users ?? db.Users.Where(u => u.Roles.Any(r => r.RoleId == "b7da93e6-5276-4947-8406-bd5e2a60983c"))).Where(m => m.IsOnline == isOnline);
+                users = (users ?? db.Users.Include(c => c.Skills).Where(u => u.Roles.Any(r => r.RoleId == "b7da93e6-5276-4947-8406-bd5e2a60983c"))).Where(m => m.IsOnline == isOnline);
             }
 
             if (isNotBusy == true)
             {
-                users = (users ?? db.Users.Where(u => u.Roles.Any(r => r.RoleId == "b7da93e6-5276-4947-8406-bd5e2a60983c"))).Where(m => m.IsNotBusy == isNotBusy);
+                users = (users ?? db.Users.Include(c => c.Skills).Where(u => u.Roles.Any(r => r.RoleId == "b7da93e6-5276-4947-8406-bd5e2a60983c"))).Where(m => m.IsNotBusy == isNotBusy);
             }
 
-            users = (users ?? db.Users.Where(u => u.Roles.Any(r => r.RoleId == "b7da93e6-5276-4947-8406-bd5e2a60983c"))).Where(m=>(m.PositiveThumbs+m.NegativeThumbs)>=worksCount);
+            users = (users ?? db.Users.Include(c => c.Skills).Where(u => u.Roles.Any(r => r.RoleId == "b7da93e6-5276-4947-8406-bd5e2a60983c"))).Where(m=>(m.PositiveThumbs+m.NegativeThumbs)>=worksCount);
             //worksUsersCount = users.Count();
 
             var roles = RoleManager.Roles.ToList();
@@ -142,6 +142,7 @@ namespace HelpMe.Controllers
                                       user.Reviews,
                                       user.Customs,
                                       user.PositiveThumbs,
+                                      user.Skills,
                                       user.NegativeThumbs
                                   }).ToList().Select(p => new UserViewModel()
                                   {
@@ -155,6 +156,7 @@ namespace HelpMe.Controllers
                                       TaskCategories = p.TaskCategories,
                                       Reviews = p.Reviews,
                                       Customs = p.Customs,
+                                      Skills = p.Skills,
                                       PositiveThumbs = p.PositiveThumbs,
                                       NegativeThumbs = p.NegativeThumbs
                                   });
@@ -259,7 +261,7 @@ namespace HelpMe.Controllers
                 .Include(u => u.Customs)
                 .Include(u => u.Reviews)
                 .Include(u => u.TaskCategories)
-                .Include(u => u.Skills)
+                .Include(u => u.Skills.Select(c=>c.TaskCategory))
                 .SingleAsync(u => u.UserName == userName);
 
             if (user == null)

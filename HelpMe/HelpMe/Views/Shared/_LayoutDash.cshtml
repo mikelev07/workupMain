@@ -10,6 +10,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>@ViewBag.Title </title>
 
+    <style>
+
+    </style>
+
+
+
     @Styles.Render("~/Content/Custom/css")
     @Scripts.Render("~/bundles/modernizr")
 
@@ -19,7 +25,6 @@
     <div id="wrapper">
         <header id="header-container" class="fullwidth ">
 
-            <!-- Header -->
             <div id="header">
                 <div class="container">
                     <div class="left-side">
@@ -186,14 +191,14 @@
                                                     var status = ((ClaimsIdentity)User.Identity).FindFirst("status");
                                                 }
 
-                                                <label value="sucess" class="@(status.Value != "true" ? "user-online" : "user-online current-status")">Готов</label>
+                                                <label value="sucess"    class="@(status.Value != "true" ? "user-online" : "user-online current-status")">Готов</label>
                                                 <label value="dontworry" class="@(status.Value != "true" ? "user-invisible current-status" : "user-invisible") ">Занят</label>
 
                                                 <span class="status-indicator" aria-hidden="true"></span>
                                             </div>
                                         </div>
                                         <ul class="user-menu-small-nav">
-                                            <li><a href="/manage/dashboard"><i class="icon-material-outline-dashboard"></i> Рабочая доска</a></li>
+                                            <li><a href="/user/details?userName=@User.Identity.Name"><i class="icon-material-outline-dashboard"></i> Моя страница</a></li>
                                             @if (User.IsInRole("User"))
                                             {
                                                 <li><a href="/custom/tasks"><i class="icon-material-outline-folder"></i> Мои заказы</a></li>
@@ -444,6 +449,12 @@
     <script src="~/Scripts/inputmask/inputmask.extensions.js"></script>
     <script src="~/Scripts/inputmask/jquery.inputmask.js"></script>
 
+    
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+
 
     @Scripts.Render("~/bundles/Scripts/Custom/js")
 
@@ -599,7 +610,7 @@
         //    console.log('cloned sticky');
         //    //подгружаем уведомления, только если дропдаун с уведомлениями еще НЕ открыт
         //    //просто раньше каждое нажатие на колокольчик осуществляло запрос на сервер (даже с открытым дропдауном)
-        //    $sticky = $('.fullwidth.cloned.sticky #not-trigger'); 
+        //    $sticky = $('.fullwidth.cloned.sticky #not-trigger');
         //    if (!$sticky.hasClass('active')) {
         //        GetAllNotificationsHeader();
         //    }

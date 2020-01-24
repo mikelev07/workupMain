@@ -11,6 +11,8 @@ using System.Data.Entity;
 using System.IO;
 using System.Collections.Generic;
 using PagedList;
+using System.Security.Claims;
+using System.Threading;
 
 namespace HelpMe.Controllers
 {
@@ -86,9 +88,10 @@ namespace HelpMe.Controllers
 
             var model = new IndexViewModel
             {
-                Name = User.Identity.Name,
+                Name = user.UserName,
                 Age = user.Age,
                 Email = user.Email,
+                Description = user.Description,
                 ImagePath = user.ImagePath,
                 ImageFile = user.ImageFile,
                 HasPassword = HasPassword(),
@@ -114,28 +117,83 @@ namespace HelpMe.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Index(IndexViewModel model)
         {
-            string fileName = Path.GetFileName(model.ImageFile?.FileName);
+            //string fileName = Path.GetFileName(model.ImageFile?.FileName);
 
-            string path = Server.MapPath("~/Files/" + fileName);
+            //string path = Server.MapPath("~/Files/" + fileName);
             // сохраняем файл в папку Files в проекте
-            model.ImageFile.SaveAs(path);
+           // model.ImageFile.SaveAs(path);
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
 
-            user.ImagePath = "~/Files/" + fileName;
+            //user.ImagePath = "~/Files/" + fileName;
 
-            if (model.Email != null && model.Name != null)
+            if (model.Email != null)
             {
                 user.Email = model.Email;
+            }
+
+            if (model.Name != null)
+            {
                 user.UserName = model.Name;
             }
 
-            user.Age = model.Age;
+            if (model.PhoneNumber != null)
+            {
+                user.PhoneNumber = model.PhoneNumber;
+            }
+
+            if (model.Description != null)
+            {
+                user.Description = model.Description;
+            }
 
             var updateResult = await UserManager.UpdateAsync(user);
             await db.SaveChangesAsync();
 
             return RedirectToAction("Index");
 
+        }
+
+
+        [HttpPost]
+        // upload avatar
+        public async Task<JsonResult> ChangeAvatar()
+        {
+                string usId = User.Identity.GetUserId();
+                User user = db.Users.Where(c => c.Id == usId).FirstOrDefault();
+
+            
+
+            for (var i = 0; i < Request.Files.Count; i++)
+                {
+                        var upload = Request.Files.Get(i);
+
+                        if (Request.Files.Get(i).FileName == "") continue;
+
+                        if (upload != null)
+                        {
+                            // получаем имя файла
+                            string fileName = System.IO.Path.GetFileName(upload.FileName);
+                            // сохраняем файл в папку Files в проекте
+                            upload.SaveAs(Server.MapPath("~/Files/" + fileName));
+                            string path = Server.MapPath("~/Files/" + fileName);
+
+                    
+
+                            db.Entry(user).State = EntityState.Modified;
+                                    user.ImagePath = "~/Files/" + fileName;
+
+
+                            User.AddUpdateClaim("avatar", user.ImagePath);
+
+
+                           // UserManager.AddClaim(usId, new Claim("avatar", user.ImagePath ?? "~/Content/Custom/images/user-avatar-big-02.jpg"));
+                            await db.SaveChangesAsync();
+                          
+                        }
+                    
+                }
+            
+            return Json("Файл загружен");
         }
 
         //public async Task<ActionResult> Dashboard()

@@ -831,7 +831,7 @@
                     <div class="sign-in-form">
 
                         <ul class="popup-tabs-nav">
-                            <li><a href="#tab1">Редактировать заказ</a></li>
+                            <li><a href="#tab1">Редактирование заказа</a></li>
                         </ul>
 
                         <div class="popup-tabs-container">
@@ -851,7 +851,7 @@
                                     <!-- Form -->
                                     <div class="row">
                                         <!-- Dashboard Box -->
-                                        <div style="margin: 0 auto;">
+                                        <div class="col-12" style="margin: 0 auto;">
                                             <div class="dashboard-box margin-top-0">
 
                                                 <!-- Headline -->
@@ -919,7 +919,7 @@
                                                                             <span class="glyphicon glyphicon-th"></span>
                                                                         </div>
                                                                     </div>
-                                                                    <h5>Время сдачи</h5>
+                                                                    @* <h5>Время сдачи</h5>
                                                                     <div class="form-group">
                                                                         <div class="input-group">
                                                                             <div class="input-with-icon-left no-border">
@@ -930,7 +930,7 @@
                                                                                 <i class="glyphicon glyphicon-calendar"></i>
                                                                             </span>
                                                                         </div>
-                                                                    </div>
+                                                                    </div>*@
                                                                 </div>
                                                                 <div class="checkbox">
                                                                     <input type="checkbox" id="checkboxDate">
@@ -1233,14 +1233,13 @@
 @section Scripts {
     <script type="text/javascript">
 
-        'use strict';
+    $('#EndingDate').datepicker({
+                startDate: new Date(),
+                language: 'ru',
+                autoclose: true,
+               format: "dd M yyyy",
 
-        $('#EndingDate').datepicker({
-            startDate: new Date(),
-            language: 'ru',
-            autoclose: true,
-            format: "dd M yyyy"
-        }); //Initialise any date pickers
+        });
 
         (function (document, window, index) {
             // обнаруживаем другидруп
@@ -2189,6 +2188,14 @@
 
         $('#boxed-list-ul').on('click', 'a[href="#small-dialog-3"]', function () {
             //alert('delete');
+
+           $('#EndingDate').datepicker({
+                startDate: new Date(),
+                language: 'ru',
+                autoclose: true,
+               format: "dd M yyyy",
+            });
+
             var el = $('#small-dialog-3');
             $.magnificPopup.open({
                 items: {

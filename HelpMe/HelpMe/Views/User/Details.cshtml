@@ -87,7 +87,7 @@
 
             <!-- Page Content -->
             <div class="single-page-section">
-                <h3 class="margin-bottom-25">Информация</h3>
+                <h3 class="margin-bottom-25">Информация <a href="/manage/"><i class="icon-line-awesome-pencil"></i></a></h3>
                 <p>О себе:</p>
                 <p style="-moz-hyphens: auto;-webkit-hyphens: auto;-ms-hyphens: auto;"><em> @Model.Description </em></p>
             </div>
@@ -95,18 +95,17 @@
 
             <!--Disciplines & Skills content-->
             <div class="single-page-section">
-                <h3>Дисциплины</h3>
-                @foreach (var discipline in Model.TaskCategories)
+                <h3>Специализация <a href="/manage/"><i class="icon-line-awesome-pencil"></i></a></h3> 
+                @foreach (var discipline in Model.Skills.Distinct())
                 {
-                    <div style="margin-top:10px">
+
+
+                    <div style="margin-top:5px; display:inline-block" class="task-tags">
+
                         <span>@discipline.Name</span>
-                        <div style="margin-top:5px; display:inline-block" class="task-tags">
-                            @foreach (var skill in discipline.Skills)
-                            {
-                                <span>@skill.Name</span>
-                            }
-                        </div>
+
                     </div>
+
                 }
             </div>
 
@@ -147,6 +146,7 @@
                 </div>
             </div>
             <br />
+
             <div class="accordion js-accordion" id="reviews-history">
                 <!-- Accordion Item -->
                 <div class="accordion__item js-accordion-item active">
@@ -259,7 +259,7 @@
                             int procent = 0;
                             if (total > 0)
                             {
-                                procent = HelpMe.Helpers.HtmlExtensions.DoneInTimePercentage(total, 
+                                procent = HelpMe.Helpers.HtmlExtensions.DoneInTimePercentage(total,
                                     Model.Customs.Where(c => c.DoneInTime == true).Count());
                             }
                         }
@@ -281,33 +281,34 @@
 
                         <!-- Indicator -->
                         <!--
-                        <div class="indicator">
-                            <strong>90%</strong>
-                            <div class="indicator-bar" data-indicator-percentage="90"><span></span></div>
-                            <span>Вовремя</span>
-                        </div>
-                        -->
+            <div class="indicator">
+                <strong>90%</strong>
+                <div class="indicator-bar" data-indicator-percentage="90"><span></span></div>
+                <span>Вовремя</span>
+            </div>
+            -->
                         <!-- Indicator -->
                         <!--
-                        <div class="indicator">
-                            <strong>80%</strong>
-                            <div class="indicator-bar" data-indicator-percentage="80"><span></span></div>
-                            <span>Бюджет</span>
-                        </div>
-                        -->
+            <div class="indicator">
+                <strong>80%</strong>
+                <div class="indicator-bar" data-indicator-percentage="80"><span></span></div>
+                <span>Бюджет</span>
+            </div>
+            -->
                     </div>
                 </div>
 
 
                 <!-- Widget -->
                 <!-- Widget -->
-                <div class="sidebar-widget">
-                    <h3>Портфолио</h3>
-                    <div class="attachments-container">
-                        <a href="#" class="attachment-box ripple-effect"><span>Cover Letter</span><i>PDF</i></a>
-                        <a href="#" class="attachment-box ripple-effect"><span>Contract</span><i>DOCX</i></a>
-                    </div>
-                </div>
+                @*
+        <div class="sidebar-widget">
+            <h3>Портфолио</h3>
+            <div class="attachments-container">
+                <a href="#" class="attachment-box ripple-effect"><span>Cover Letter</span><i>PDF</i></a>
+                <a href="#" class="attachment-box ripple-effect"><span>Contract</span><i>DOCX</i></a>
+            </div>
+        </div>*@
 
                 <!-- Sidebar Widget -->
                 <div class="sidebar-widget">
